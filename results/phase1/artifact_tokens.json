@@ -1,0 +1,4877 @@
+{
+ "n_drifts": 150,
+ "artifacts": [
+  "diff_json",
+  "diff_prose",
+  "v2_declaration",
+  "c_decl_suffix",
+  "dprime_suffix",
+  "cd_note"
+ ],
+ "encoders": {
+  "chars_div_4": {
+   "note": "September convention",
+   "summary": {
+    "means": {
+     "diff_json": 32.973333333333336,
+     "diff_prose": 25.626666666666665,
+     "v2_declaration": 205.92666666666668,
+     "c_decl_suffix": 27.626666666666665,
+     "dprime_suffix": 10.473333333333333,
+     "cd_note": 78.54666666666667
+    },
+    "ratio_diff_json_to_v2_declaration": 0.16012172618084108
+   },
+   "per_drift": {
+    "book_flight::default_change": {
+     "diff_json": 24,
+     "diff_prose": 17,
+     "v2_declaration": 232,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "book_flight::enum_tighten": {
+     "diff_json": 26,
+     "diff_prose": 22,
+     "v2_declaration": 230,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 15,
+     "cd_note": 70
+    },
+    "book_flight::rename": {
+     "diff_json": 26,
+     "diff_prose": 27,
+     "v2_declaration": 234,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 8,
+     "cd_note": 70
+    },
+    "book_flight::required": {
+     "diff_json": 36,
+     "diff_prose": 28,
+     "v2_declaration": 226,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 16,
+     "cd_note": 80
+    },
+    "book_flight::type_change": {
+     "diff_json": 65,
+     "diff_prose": 46,
+     "v2_declaration": 236,
+     "c_decl_suffix": 48,
+     "dprime_suffix": 15,
+     "cd_note": 110
+    },
+    "book_meeting_room::default_change": {
+     "diff_json": 23,
+     "diff_prose": 16,
+     "v2_declaration": 207,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "book_meeting_room::enum_tighten": {
+     "diff_json": 26,
+     "diff_prose": 22,
+     "v2_declaration": 208,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 73
+    },
+    "book_meeting_room::rename": {
+     "diff_json": 25,
+     "diff_prose": 26,
+     "v2_declaration": 209,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 72
+    },
+    "book_meeting_room::required": {
+     "diff_json": 32,
+     "diff_prose": 24,
+     "v2_declaration": 203,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "book_meeting_room::type_change": {
+     "diff_json": 58,
+     "diff_prose": 39,
+     "v2_declaration": 210,
+     "c_decl_suffix": 41,
+     "dprime_suffix": 12,
+     "cd_note": 105
+    },
+    "compress_folder::default_change": {
+     "diff_json": 23,
+     "diff_prose": 16,
+     "v2_declaration": 219,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "compress_folder::enum_tighten": {
+     "diff_json": 23,
+     "diff_prose": 19,
+     "v2_declaration": 220,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 11,
+     "cd_note": 69
+    },
+    "compress_folder::rename": {
+     "diff_json": 24,
+     "diff_prose": 24,
+     "v2_declaration": 221,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "compress_folder::required": {
+     "diff_json": 34,
+     "diff_prose": 26,
+     "v2_declaration": 214,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 80
+    },
+    "compress_folder::type_change": {
+     "diff_json": 70,
+     "diff_prose": 52,
+     "v2_declaration": 218,
+     "c_decl_suffix": 54,
+     "dprime_suffix": 21,
+     "cd_note": 117
+    },
+    "copy_file::default_change": {
+     "diff_json": 24,
+     "diff_prose": 18,
+     "v2_declaration": 205,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "copy_file::enum_tighten": {
+     "diff_json": 25,
+     "diff_prose": 22,
+     "v2_declaration": 204,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 13,
+     "cd_note": 68
+    },
+    "copy_file::rename": {
+     "diff_json": 24,
+     "diff_prose": 24,
+     "v2_declaration": 206,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 7,
+     "cd_note": 67
+    },
+    "copy_file::required": {
+     "diff_json": 32,
+     "diff_prose": 24,
+     "v2_declaration": 200,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 75
+    },
+    "copy_file::type_change": {
+     "diff_json": 54,
+     "diff_prose": 35,
+     "v2_declaration": 202,
+     "c_decl_suffix": 37,
+     "dprime_suffix": 14,
+     "cd_note": 97
+    },
+    "create_channel::default_change": {
+     "diff_json": 24,
+     "diff_prose": 17,
+     "v2_declaration": 182,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "create_channel::enum_tighten": {
+     "diff_json": 23,
+     "diff_prose": 20,
+     "v2_declaration": 184,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "create_channel::rename": {
+     "diff_json": 24,
+     "diff_prose": 25,
+     "v2_declaration": 185,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "create_channel::required": {
+     "diff_json": 32,
+     "diff_prose": 25,
+     "v2_declaration": 178,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 78
+    },
+    "create_channel::type_change": {
+     "diff_json": 64,
+     "diff_prose": 46,
+     "v2_declaration": 186,
+     "c_decl_suffix": 48,
+     "dprime_suffix": 16,
+     "cd_note": 110
+    },
+    "create_contact::default_change": {
+     "diff_json": 26,
+     "diff_prose": 19,
+     "v2_declaration": 204,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 6,
+     "cd_note": 72
+    },
+    "create_contact::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 20,
+     "v2_declaration": 206,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "create_contact::rename": {
+     "diff_json": 24,
+     "diff_prose": 25,
+     "v2_declaration": 205,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "create_contact::required": {
+     "diff_json": 34,
+     "diff_prose": 26,
+     "v2_declaration": 197,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 80
+    },
+    "create_contact::type_change": {
+     "diff_json": 50,
+     "diff_prose": 32,
+     "v2_declaration": 206,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 96
+    },
+    "create_dashboard_widget::default_change": {
+     "diff_json": 24,
+     "diff_prose": 17,
+     "v2_declaration": 220,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 74
+    },
+    "create_dashboard_widget::enum_tighten": {
+     "diff_json": 23,
+     "diff_prose": 19,
+     "v2_declaration": 220,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 73
+    },
+    "create_dashboard_widget::rename": {
+     "diff_json": 24,
+     "diff_prose": 23,
+     "v2_declaration": 219,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 8,
+     "cd_note": 74
+    },
+    "create_dashboard_widget::required": {
+     "diff_json": 33,
+     "diff_prose": 25,
+     "v2_declaration": 214,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 14,
+     "cd_note": 83
+    },
+    "create_dashboard_widget::type_change": {
+     "diff_json": 66,
+     "diff_prose": 47,
+     "v2_declaration": 224,
+     "c_decl_suffix": 49,
+     "dprime_suffix": 16,
+     "cd_note": 116
+    },
+    "create_event::default_change": {
+     "diff_json": 25,
+     "diff_prose": 18,
+     "v2_declaration": 208,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "create_event::enum_tighten": {
+     "diff_json": 26,
+     "diff_prose": 22,
+     "v2_declaration": 209,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 71
+    },
+    "create_event::rename": {
+     "diff_json": 23,
+     "diff_prose": 22,
+     "v2_declaration": 207,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 8,
+     "cd_note": 68
+    },
+    "create_event::required": {
+     "diff_json": 34,
+     "diff_prose": 26,
+     "v2_declaration": 203,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 78
+    },
+    "create_event::type_change": {
+     "diff_json": 54,
+     "diff_prose": 36,
+     "v2_declaration": 211,
+     "c_decl_suffix": 38,
+     "dprime_suffix": 10,
+     "cd_note": 99
+    },
+    "create_invoice::default_change": {
+     "diff_json": 24,
+     "diff_prose": 16,
+     "v2_declaration": 188,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "create_invoice::enum_tighten": {
+     "diff_json": 23,
+     "diff_prose": 20,
+     "v2_declaration": 189,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "create_invoice::rename": {
+     "diff_json": 23,
+     "diff_prose": 23,
+     "v2_declaration": 190,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "create_invoice::required": {
+     "diff_json": 34,
+     "diff_prose": 26,
+     "v2_declaration": 184,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 80
+    },
+    "create_invoice::type_change": {
+     "diff_json": 58,
+     "diff_prose": 40,
+     "v2_declaration": 194,
+     "c_decl_suffix": 42,
+     "dprime_suffix": 11,
+     "cd_note": 104
+    },
+    "create_reminder::default_change": {
+     "diff_json": 24,
+     "diff_prose": 17,
+     "v2_declaration": 206,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "create_reminder::enum_tighten": {
+     "diff_json": 25,
+     "diff_prose": 21,
+     "v2_declaration": 210,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 71
+    },
+    "create_reminder::rename": {
+     "diff_json": 22,
+     "diff_prose": 22,
+     "v2_declaration": 208,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "create_reminder::required": {
+     "diff_json": 32,
+     "diff_prose": 25,
+     "v2_declaration": 201,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 78
+    },
+    "create_reminder::type_change": {
+     "diff_json": 56,
+     "diff_prose": 38,
+     "v2_declaration": 209,
+     "c_decl_suffix": 40,
+     "dprime_suffix": 12,
+     "cd_note": 103
+    },
+    "export_dataset::default_change": {
+     "diff_json": 25,
+     "diff_prose": 18,
+     "v2_declaration": 218,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 6,
+     "cd_note": 71
+    },
+    "export_dataset::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 20,
+     "v2_declaration": 218,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 11,
+     "cd_note": 69
+    },
+    "export_dataset::rename": {
+     "diff_json": 22,
+     "diff_prose": 22,
+     "v2_declaration": 220,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "export_dataset::required": {
+     "diff_json": 33,
+     "diff_prose": 26,
+     "v2_declaration": 212,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 79
+    },
+    "export_dataset::type_change": {
+     "diff_json": 66,
+     "diff_prose": 47,
+     "v2_declaration": 223,
+     "c_decl_suffix": 49,
+     "dprime_suffix": 16,
+     "cd_note": 112
+    },
+    "hail_ride::default_change": {
+     "diff_json": 24,
+     "diff_prose": 16,
+     "v2_declaration": 218,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "hail_ride::enum_tighten": {
+     "diff_json": 25,
+     "diff_prose": 21,
+     "v2_declaration": 220,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 12,
+     "cd_note": 68
+    },
+    "hail_ride::rename": {
+     "diff_json": 28,
+     "diff_prose": 28,
+     "v2_declaration": 216,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 9,
+     "cd_note": 71
+    },
+    "hail_ride::required": {
+     "diff_json": 35,
+     "diff_prose": 28,
+     "v2_declaration": 214,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 14,
+     "cd_note": 78
+    },
+    "hail_ride::type_change": {
+     "diff_json": 57,
+     "diff_prose": 38,
+     "v2_declaration": 223,
+     "c_decl_suffix": 40,
+     "dprime_suffix": 11,
+     "cd_note": 100
+    },
+    "log_interaction::default_change": {
+     "diff_json": 24,
+     "diff_prose": 16,
+     "v2_declaration": 206,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "log_interaction::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 20,
+     "v2_declaration": 210,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "log_interaction::rename": {
+     "diff_json": 22,
+     "diff_prose": 21,
+     "v2_declaration": 206,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "log_interaction::required": {
+     "diff_json": 32,
+     "diff_prose": 25,
+     "v2_declaration": 202,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 79
+    },
+    "log_interaction::type_change": {
+     "diff_json": 54,
+     "diff_prose": 36,
+     "v2_declaration": 210,
+     "c_decl_suffix": 38,
+     "dprime_suffix": 10,
+     "cd_note": 101
+    },
+    "monitor_keyword::default_change": {
+     "diff_json": 26,
+     "diff_prose": 19,
+     "v2_declaration": 214,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 6,
+     "cd_note": 72
+    },
+    "monitor_keyword::enum_tighten": {
+     "diff_json": 25,
+     "diff_prose": 21,
+     "v2_declaration": 213,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 12,
+     "cd_note": 71
+    },
+    "monitor_keyword::rename": {
+     "diff_json": 23,
+     "diff_prose": 23,
+     "v2_declaration": 215,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "monitor_keyword::required": {
+     "diff_json": 34,
+     "diff_prose": 26,
+     "v2_declaration": 209,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 80
+    },
+    "monitor_keyword::type_change": {
+     "diff_json": 59,
+     "diff_prose": 41,
+     "v2_declaration": 217,
+     "c_decl_suffix": 43,
+     "dprime_suffix": 12,
+     "cd_note": 105
+    },
+    "place_order::default_change": {
+     "diff_json": 24,
+     "diff_prose": 17,
+     "v2_declaration": 190,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "place_order::enum_tighten": {
+     "diff_json": 27,
+     "diff_prose": 23,
+     "v2_declaration": 191,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 13,
+     "cd_note": 71
+    },
+    "place_order::rename": {
+     "diff_json": 26,
+     "diff_prose": 26,
+     "v2_declaration": 190,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 8,
+     "cd_note": 70
+    },
+    "place_order::required": {
+     "diff_json": 32,
+     "diff_prose": 25,
+     "v2_declaration": 186,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 76
+    },
+    "place_order::type_change": {
+     "diff_json": 50,
+     "diff_prose": 32,
+     "v2_declaration": 192,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 95
+    },
+    "post_job_opening::default_change": {
+     "diff_json": 24,
+     "diff_prose": 18,
+     "v2_declaration": 220,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 6,
+     "cd_note": 71
+    },
+    "post_job_opening::enum_tighten": {
+     "diff_json": 26,
+     "diff_prose": 22,
+     "v2_declaration": 221,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 73
+    },
+    "post_job_opening::rename": {
+     "diff_json": 25,
+     "diff_prose": 25,
+     "v2_declaration": 222,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "post_job_opening::required": {
+     "diff_json": 35,
+     "diff_prose": 28,
+     "v2_declaration": 216,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 14,
+     "cd_note": 82
+    },
+    "post_job_opening::type_change": {
+     "diff_json": 64,
+     "diff_prose": 46,
+     "v2_declaration": 226,
+     "c_decl_suffix": 48,
+     "dprime_suffix": 14,
+     "cd_note": 111
+    },
+    "refund_payment::default_change": {
+     "diff_json": 23,
+     "diff_prose": 16,
+     "v2_declaration": 201,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "refund_payment::enum_tighten": {
+     "diff_json": 30,
+     "diff_prose": 26,
+     "v2_declaration": 198,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 18,
+     "cd_note": 76
+    },
+    "refund_payment::rename": {
+     "diff_json": 24,
+     "diff_prose": 25,
+     "v2_declaration": 204,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "refund_payment::required": {
+     "diff_json": 32,
+     "diff_prose": 24,
+     "v2_declaration": 196,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 78
+    },
+    "refund_payment::type_change": {
+     "diff_json": 58,
+     "diff_prose": 40,
+     "v2_declaration": 206,
+     "c_decl_suffix": 42,
+     "dprime_suffix": 11,
+     "cd_note": 104
+    },
+    "request_time_off::default_change": {
+     "diff_json": 24,
+     "diff_prose": 17,
+     "v2_declaration": 196,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 71
+    },
+    "request_time_off::enum_tighten": {
+     "diff_json": 25,
+     "diff_prose": 22,
+     "v2_declaration": 196,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 72
+    },
+    "request_time_off::rename": {
+     "diff_json": 24,
+     "diff_prose": 25,
+     "v2_declaration": 197,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "request_time_off::required": {
+     "diff_json": 35,
+     "diff_prose": 27,
+     "v2_declaration": 188,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 15,
+     "cd_note": 82
+    },
+    "request_time_off::type_change": {
+     "diff_json": 56,
+     "diff_prose": 38,
+     "v2_declaration": 199,
+     "c_decl_suffix": 40,
+     "dprime_suffix": 12,
+     "cd_note": 103
+    },
+    "reserve_hotel::default_change": {
+     "diff_json": 26,
+     "diff_prose": 19,
+     "v2_declaration": 216,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 6,
+     "cd_note": 71
+    },
+    "reserve_hotel::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 21,
+     "v2_declaration": 216,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 12,
+     "cd_note": 70
+    },
+    "reserve_hotel::rename": {
+     "diff_json": 30,
+     "diff_prose": 30,
+     "v2_declaration": 215,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 10,
+     "cd_note": 75
+    },
+    "reserve_hotel::required": {
+     "diff_json": 34,
+     "diff_prose": 27,
+     "v2_declaration": 212,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 14,
+     "cd_note": 80
+    },
+    "reserve_hotel::type_change": {
+     "diff_json": 50,
+     "diff_prose": 32,
+     "v2_declaration": 218,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 96
+    },
+    "run_report::default_change": {
+     "diff_json": 27,
+     "diff_prose": 20,
+     "v2_declaration": 197,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "run_report::enum_tighten": {
+     "diff_json": 22,
+     "diff_prose": 19,
+     "v2_declaration": 193,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 11,
+     "cd_note": 66
+    },
+    "run_report::rename": {
+     "diff_json": 24,
+     "diff_prose": 24,
+     "v2_declaration": 194,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 7,
+     "cd_note": 68
+    },
+    "run_report::required": {
+     "diff_json": 33,
+     "diff_prose": 26,
+     "v2_declaration": 188,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 77
+    },
+    "run_report::type_change": {
+     "diff_json": 58,
+     "diff_prose": 39,
+     "v2_declaration": 197,
+     "c_decl_suffix": 41,
+     "dprime_suffix": 12,
+     "cd_note": 101
+    },
+    "save_bookmark::default_change": {
+     "diff_json": 24,
+     "diff_prose": 17,
+     "v2_declaration": 206,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "save_bookmark::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 20,
+     "v2_declaration": 206,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "save_bookmark::rename": {
+     "diff_json": 22,
+     "diff_prose": 20,
+     "v2_declaration": 206,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "save_bookmark::required": {
+     "diff_json": 33,
+     "diff_prose": 25,
+     "v2_declaration": 200,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 14,
+     "cd_note": 78
+    },
+    "save_bookmark::type_change": {
+     "diff_json": 50,
+     "diff_prose": 32,
+     "v2_declaration": 208,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 95
+    },
+    "schedule_message::default_change": {
+     "diff_json": 25,
+     "diff_prose": 18,
+     "v2_declaration": 229,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 6,
+     "cd_note": 72
+    },
+    "schedule_message::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 20,
+     "v2_declaration": 231,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 11,
+     "cd_note": 71
+    },
+    "schedule_message::rename": {
+     "diff_json": 25,
+     "diff_prose": 25,
+     "v2_declaration": 230,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "schedule_message::required": {
+     "diff_json": 32,
+     "diff_prose": 24,
+     "v2_declaration": 224,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "schedule_message::type_change": {
+     "diff_json": 52,
+     "diff_prose": 34,
+     "v2_declaration": 231,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 98
+    },
+    "send_message::default_change": {
+     "diff_json": 24,
+     "diff_prose": 17,
+     "v2_declaration": 207,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "send_message::enum_tighten": {
+     "diff_json": 25,
+     "diff_prose": 21,
+     "v2_declaration": 208,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "send_message::rename": {
+     "diff_json": 27,
+     "diff_prose": 28,
+     "v2_declaration": 208,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "send_message::required": {
+     "diff_json": 32,
+     "diff_prose": 25,
+     "v2_declaration": 202,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 77
+    },
+    "send_message::type_change": {
+     "diff_json": 63,
+     "diff_prose": 44,
+     "v2_declaration": 211,
+     "c_decl_suffix": 46,
+     "dprime_suffix": 15,
+     "cd_note": 108
+    },
+    "send_payment::default_change": {
+     "diff_json": 24,
+     "diff_prose": 16,
+     "v2_declaration": 191,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "send_payment::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 20,
+     "v2_declaration": 192,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 69
+    },
+    "send_payment::rename": {
+     "diff_json": 22,
+     "diff_prose": 22,
+     "v2_declaration": 192,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "send_payment::required": {
+     "diff_json": 36,
+     "diff_prose": 29,
+     "v2_declaration": 186,
+     "c_decl_suffix": 31,
+     "dprime_suffix": 16,
+     "cd_note": 81
+    },
+    "send_payment::type_change": {
+     "diff_json": 55,
+     "diff_prose": 37,
+     "v2_declaration": 197,
+     "c_decl_suffix": 39,
+     "dprime_suffix": 10,
+     "cd_note": 100
+    },
+    "set_permissions::default_change": {
+     "diff_json": 24,
+     "diff_prose": 16,
+     "v2_declaration": 207,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "set_permissions::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 21,
+     "v2_declaration": 208,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 71
+    },
+    "set_permissions::rename": {
+     "diff_json": 28,
+     "diff_prose": 28,
+     "v2_declaration": 207,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 9,
+     "cd_note": 74
+    },
+    "set_permissions::required": {
+     "diff_json": 32,
+     "diff_prose": 24,
+     "v2_declaration": 202,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 78
+    },
+    "set_permissions::type_change": {
+     "diff_json": 65,
+     "diff_prose": 46,
+     "v2_declaration": 212,
+     "c_decl_suffix": 48,
+     "dprime_suffix": 16,
+     "cd_note": 111
+    },
+    "submit_expense::default_change": {
+     "diff_json": 24,
+     "diff_prose": 16,
+     "v2_declaration": 212,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "submit_expense::enum_tighten": {
+     "diff_json": 24,
+     "diff_prose": 20,
+     "v2_declaration": 212,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "submit_expense::rename": {
+     "diff_json": 21,
+     "diff_prose": 19,
+     "v2_declaration": 212,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "submit_expense::required": {
+     "diff_json": 34,
+     "diff_prose": 26,
+     "v2_declaration": 208,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 80
+    },
+    "submit_expense::type_change": {
+     "diff_json": 55,
+     "diff_prose": 37,
+     "v2_declaration": 218,
+     "c_decl_suffix": 39,
+     "dprime_suffix": 10,
+     "cd_note": 101
+    },
+    "track_shipment::default_change": {
+     "diff_json": 23,
+     "diff_prose": 16,
+     "v2_declaration": 210,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "track_shipment::enum_tighten": {
+     "diff_json": 26,
+     "diff_prose": 23,
+     "v2_declaration": 212,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 14,
+     "cd_note": 72
+    },
+    "track_shipment::rename": {
+     "diff_json": 26,
+     "diff_prose": 26,
+     "v2_declaration": 213,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 8,
+     "cd_note": 71
+    },
+    "track_shipment::required": {
+     "diff_json": 34,
+     "diff_prose": 26,
+     "v2_declaration": 205,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 80
+    },
+    "track_shipment::type_change": {
+     "diff_json": 60,
+     "diff_prose": 42,
+     "v2_declaration": 214,
+     "c_decl_suffix": 44,
+     "dprime_suffix": 12,
+     "cd_note": 106
+    },
+    "update_deal::default_change": {
+     "diff_json": 26,
+     "diff_prose": 18,
+     "v2_declaration": 188,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "update_deal::enum_tighten": {
+     "diff_json": 27,
+     "diff_prose": 23,
+     "v2_declaration": 186,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 16,
+     "cd_note": 71
+    },
+    "update_deal::rename": {
+     "diff_json": 26,
+     "diff_prose": 27,
+     "v2_declaration": 186,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 8,
+     "cd_note": 71
+    },
+    "update_deal::required": {
+     "diff_json": 32,
+     "diff_prose": 24,
+     "v2_declaration": 181,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 12,
+     "cd_note": 76
+    },
+    "update_deal::type_change": {
+     "diff_json": 57,
+     "diff_prose": 38,
+     "v2_declaration": 191,
+     "c_decl_suffix": 40,
+     "dprime_suffix": 10,
+     "cd_note": 101
+    },
+    "update_listing::default_change": {
+     "diff_json": 23,
+     "diff_prose": 16,
+     "v2_declaration": 189,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "update_listing::enum_tighten": {
+     "diff_json": 26,
+     "diff_prose": 22,
+     "v2_declaration": 188,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 72
+    },
+    "update_listing::rename": {
+     "diff_json": 25,
+     "diff_prose": 26,
+     "v2_declaration": 190,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 8,
+     "cd_note": 71
+    },
+    "update_listing::required": {
+     "diff_json": 32,
+     "diff_prose": 25,
+     "v2_declaration": 186,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 78
+    },
+    "update_listing::type_change": {
+     "diff_json": 58,
+     "diff_prose": 40,
+     "v2_declaration": 194,
+     "c_decl_suffix": 42,
+     "dprime_suffix": 12,
+     "cd_note": 104
+    },
+    "web_search::default_change": {
+     "diff_json": 25,
+     "diff_prose": 18,
+     "v2_declaration": 196,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "web_search::enum_tighten": {
+     "diff_json": 26,
+     "diff_prose": 22,
+     "v2_declaration": 195,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 13,
+     "cd_note": 69
+    },
+    "web_search::rename": {
+     "diff_json": 27,
+     "diff_prose": 27,
+     "v2_declaration": 196,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 8,
+     "cd_note": 70
+    },
+    "web_search::required": {
+     "diff_json": 31,
+     "diff_prose": 24,
+     "v2_declaration": 192,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 12,
+     "cd_note": 75
+    },
+    "web_search::type_change": {
+     "diff_json": 56,
+     "diff_prose": 38,
+     "v2_declaration": 198,
+     "c_decl_suffix": 40,
+     "dprime_suffix": 12,
+     "cd_note": 100
+    }
+   }
+  },
+  "o200k_base": {
+   "note": "tiktoken",
+   "summary": {
+    "means": {
+     "diff_json": 43.92,
+     "diff_prose": 23.493333333333332,
+     "v2_declaration": 215.78666666666666,
+     "c_decl_suffix": 25.493333333333332,
+     "dprime_suffix": 10.073333333333334,
+     "cd_note": 80.92
+    },
+    "ratio_diff_json_to_v2_declaration": 0.20353435491843797
+   },
+   "per_drift": {
+    "book_flight::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 248,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "book_flight::enum_tighten": {
+     "diff_json": 37,
+     "diff_prose": 23,
+     "v2_declaration": 245,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 15,
+     "cd_note": 75
+    },
+    "book_flight::rename": {
+     "diff_json": 37,
+     "diff_prose": 27,
+     "v2_declaration": 249,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 8,
+     "cd_note": 75
+    },
+    "book_flight::required": {
+     "diff_json": 46,
+     "diff_prose": 25,
+     "v2_declaration": 244,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 84
+    },
+    "book_flight::type_change": {
+     "diff_json": 88,
+     "diff_prose": 48,
+     "v2_declaration": 253,
+     "c_decl_suffix": 50,
+     "dprime_suffix": 16,
+     "cd_note": 126
+    },
+    "book_meeting_room::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 221,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 72
+    },
+    "book_meeting_room::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 219,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 74
+    },
+    "book_meeting_room::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 222,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 74
+    },
+    "book_meeting_room::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 216,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 83
+    },
+    "book_meeting_room::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 224,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 111
+    },
+    "compress_folder::default_change": {
+     "diff_json": 31,
+     "diff_prose": 14,
+     "v2_declaration": 230,
+     "c_decl_suffix": 16,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "compress_folder::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 232,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "compress_folder::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 231,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "compress_folder::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 225,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "compress_folder::type_change": {
+     "diff_json": 89,
+     "diff_prose": 49,
+     "v2_declaration": 231,
+     "c_decl_suffix": 51,
+     "dprime_suffix": 20,
+     "cd_note": 125
+    },
+    "copy_file::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 218,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "copy_file::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 218,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 70
+    },
+    "copy_file::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 219,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "copy_file::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 213,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "copy_file::type_change": {
+     "diff_json": 69,
+     "diff_prose": 30,
+     "v2_declaration": 217,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 11,
+     "cd_note": 105
+    },
+    "create_channel::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 194,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "create_channel::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 194,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "create_channel::rename": {
+     "diff_json": 35,
+     "diff_prose": 25,
+     "v2_declaration": 196,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "create_channel::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 189,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "create_channel::type_change": {
+     "diff_json": 80,
+     "diff_prose": 40,
+     "v2_declaration": 198,
+     "c_decl_suffix": 42,
+     "dprime_suffix": 14,
+     "cd_note": 116
+    },
+    "create_contact::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 218,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "create_contact::enum_tighten": {
+     "diff_json": 35,
+     "diff_prose": 21,
+     "v2_declaration": 222,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 14,
+     "cd_note": 71
+    },
+    "create_contact::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 218,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "create_contact::required": {
+     "diff_json": 45,
+     "diff_prose": 24,
+     "v2_declaration": 213,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 81
+    },
+    "create_contact::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 220,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 12,
+     "cd_note": 109
+    },
+    "create_dashboard_widget::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 228,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 71
+    },
+    "create_dashboard_widget::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 228,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 71
+    },
+    "create_dashboard_widget::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 228,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "create_dashboard_widget::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 223,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 81
+    },
+    "create_dashboard_widget::type_change": {
+     "diff_json": 81,
+     "diff_prose": 41,
+     "v2_declaration": 233,
+     "c_decl_suffix": 43,
+     "dprime_suffix": 14,
+     "cd_note": 119
+    },
+    "create_event::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 211,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "create_event::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 211,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "create_event::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 211,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "create_event::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 207,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "create_event::type_change": {
+     "diff_json": 69,
+     "diff_prose": 30,
+     "v2_declaration": 214,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 105
+    },
+    "create_invoice::default_change": {
+     "diff_json": 33,
+     "diff_prose": 17,
+     "v2_declaration": 197,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "create_invoice::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 199,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 15,
+     "cd_note": 72
+    },
+    "create_invoice::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 198,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "create_invoice::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 193,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "create_invoice::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 201,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 109
+    },
+    "create_reminder::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 224,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "create_reminder::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 226,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 72
+    },
+    "create_reminder::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 224,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "create_reminder::required": {
+     "diff_json": 45,
+     "diff_prose": 24,
+     "v2_declaration": 219,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 83
+    },
+    "create_reminder::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 227,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 109
+    },
+    "export_dataset::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 227,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "export_dataset::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 227,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "export_dataset::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 228,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "export_dataset::required": {
+     "diff_json": 46,
+     "diff_prose": 25,
+     "v2_declaration": 219,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 15,
+     "cd_note": 82
+    },
+    "export_dataset::type_change": {
+     "diff_json": 85,
+     "diff_prose": 45,
+     "v2_declaration": 232,
+     "c_decl_suffix": 47,
+     "dprime_suffix": 16,
+     "cd_note": 121
+    },
+    "hail_ride::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 232,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "hail_ride::enum_tighten": {
+     "diff_json": 35,
+     "diff_prose": 21,
+     "v2_declaration": 233,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 73
+    },
+    "hail_ride::rename": {
+     "diff_json": 38,
+     "diff_prose": 27,
+     "v2_declaration": 231,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 9,
+     "cd_note": 76
+    },
+    "hail_ride::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 228,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "hail_ride::type_change": {
+     "diff_json": 75,
+     "diff_prose": 36,
+     "v2_declaration": 236,
+     "c_decl_suffix": 38,
+     "dprime_suffix": 11,
+     "cd_note": 113
+    },
+    "log_interaction::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 217,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "log_interaction::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 219,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 72
+    },
+    "log_interaction::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 217,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "log_interaction::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 212,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 81
+    },
+    "log_interaction::type_change": {
+     "diff_json": 69,
+     "diff_prose": 30,
+     "v2_declaration": 220,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 107
+    },
+    "monitor_keyword::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 215,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "monitor_keyword::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 215,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 70
+    },
+    "monitor_keyword::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 216,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "monitor_keyword::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 211,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "monitor_keyword::type_change": {
+     "diff_json": 72,
+     "diff_prose": 33,
+     "v2_declaration": 218,
+     "c_decl_suffix": 35,
+     "dprime_suffix": 10,
+     "cd_note": 108
+    },
+    "place_order::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 199,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "place_order::enum_tighten": {
+     "diff_json": 35,
+     "diff_prose": 21,
+     "v2_declaration": 200,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 71
+    },
+    "place_order::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 199,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "place_order::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 195,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "place_order::type_change": {
+     "diff_json": 67,
+     "diff_prose": 28,
+     "v2_declaration": 201,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 9,
+     "cd_note": 103
+    },
+    "post_job_opening::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 229,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 72
+    },
+    "post_job_opening::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 230,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 74
+    },
+    "post_job_opening::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 230,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 74
+    },
+    "post_job_opening::required": {
+     "diff_json": 47,
+     "diff_prose": 26,
+     "v2_declaration": 226,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 13,
+     "cd_note": 87
+    },
+    "post_job_opening::type_change": {
+     "diff_json": 79,
+     "diff_prose": 40,
+     "v2_declaration": 233,
+     "c_decl_suffix": 42,
+     "dprime_suffix": 13,
+     "cd_note": 119
+    },
+    "refund_payment::default_change": {
+     "diff_json": 31,
+     "diff_prose": 14,
+     "v2_declaration": 201,
+     "c_decl_suffix": 16,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "refund_payment::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 199,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 15,
+     "cd_note": 72
+    },
+    "refund_payment::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 202,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "refund_payment::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 196,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "refund_payment::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 205,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 109
+    },
+    "request_time_off::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 208,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "request_time_off::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 209,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 72
+    },
+    "request_time_off::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 209,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 72
+    },
+    "request_time_off::required": {
+     "diff_json": 45,
+     "diff_prose": 24,
+     "v2_declaration": 203,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 83
+    },
+    "request_time_off::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 211,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 109
+    },
+    "reserve_hotel::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 224,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "reserve_hotel::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 224,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 74
+    },
+    "reserve_hotel::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 223,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 74
+    },
+    "reserve_hotel::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 220,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "reserve_hotel::type_change": {
+     "diff_json": 68,
+     "diff_prose": 29,
+     "v2_declaration": 226,
+     "c_decl_suffix": 31,
+     "dprime_suffix": 9,
+     "cd_note": 106
+    },
+    "run_report::default_change": {
+     "diff_json": 36,
+     "diff_prose": 20,
+     "v2_declaration": 203,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 7,
+     "cd_note": 72
+    },
+    "run_report::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 200,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "run_report::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 201,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "run_report::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 195,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "run_report::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 203,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 11,
+     "cd_note": 109
+    },
+    "save_bookmark::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 224,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "save_bookmark::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 224,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 71
+    },
+    "save_bookmark::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 224,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "save_bookmark::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 218,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 13,
+     "cd_note": 82
+    },
+    "save_bookmark::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 226,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 12,
+     "cd_note": 111
+    },
+    "schedule_message::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 240,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "schedule_message::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 240,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 70
+    },
+    "schedule_message::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 241,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "schedule_message::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 235,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "schedule_message::type_change": {
+     "diff_json": 66,
+     "diff_prose": 27,
+     "v2_declaration": 242,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 8,
+     "cd_note": 102
+    },
+    "send_message::default_change": {
+     "diff_json": 34,
+     "diff_prose": 17,
+     "v2_declaration": 222,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "send_message::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 222,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "send_message::rename": {
+     "diff_json": 37,
+     "diff_prose": 27,
+     "v2_declaration": 223,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 8,
+     "cd_note": 73
+    },
+    "send_message::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 217,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "send_message::type_change": {
+     "diff_json": 81,
+     "diff_prose": 41,
+     "v2_declaration": 227,
+     "c_decl_suffix": 43,
+     "dprime_suffix": 14,
+     "cd_note": 117
+    },
+    "send_payment::default_change": {
+     "diff_json": 33,
+     "diff_prose": 17,
+     "v2_declaration": 195,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "send_payment::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 196,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "send_payment::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 195,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "send_payment::required": {
+     "diff_json": 46,
+     "diff_prose": 25,
+     "v2_declaration": 191,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 82
+    },
+    "send_payment::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 199,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 9,
+     "cd_note": 107
+    },
+    "set_permissions::default_change": {
+     "diff_json": 31,
+     "diff_prose": 14,
+     "v2_declaration": 218,
+     "c_decl_suffix": 16,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "set_permissions::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 219,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "set_permissions::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 218,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "set_permissions::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 213,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "set_permissions::type_change": {
+     "diff_json": 81,
+     "diff_prose": 41,
+     "v2_declaration": 223,
+     "c_decl_suffix": 43,
+     "dprime_suffix": 14,
+     "cd_note": 117
+    },
+    "submit_expense::default_change": {
+     "diff_json": 33,
+     "diff_prose": 17,
+     "v2_declaration": 226,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "submit_expense::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 224,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 72
+    },
+    "submit_expense::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 226,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "submit_expense::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 222,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "submit_expense::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 230,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 9,
+     "cd_note": 109
+    },
+    "track_shipment::default_change": {
+     "diff_json": 34,
+     "diff_prose": 18,
+     "v2_declaration": 206,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "track_shipment::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 207,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 74
+    },
+    "track_shipment::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 208,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 72
+    },
+    "track_shipment::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 201,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 13,
+     "cd_note": 82
+    },
+    "track_shipment::type_change": {
+     "diff_json": 72,
+     "diff_prose": 35,
+     "v2_declaration": 210,
+     "c_decl_suffix": 37,
+     "dprime_suffix": 11,
+     "cd_note": 110
+    },
+    "update_deal::default_change": {
+     "diff_json": 33,
+     "diff_prose": 17,
+     "v2_declaration": 208,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 5,
+     "cd_note": 71
+    },
+    "update_deal::enum_tighten": {
+     "diff_json": 38,
+     "diff_prose": 24,
+     "v2_declaration": 207,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 17,
+     "cd_note": 76
+    },
+    "update_deal::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 206,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 74
+    },
+    "update_deal::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 201,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 81
+    },
+    "update_deal::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 210,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 111
+    },
+    "update_listing::default_change": {
+     "diff_json": 31,
+     "diff_prose": 14,
+     "v2_declaration": 195,
+     "c_decl_suffix": 16,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "update_listing::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 194,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 15,
+     "cd_note": 72
+    },
+    "update_listing::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 196,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "update_listing::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 191,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "update_listing::type_change": {
+     "diff_json": 72,
+     "diff_prose": 33,
+     "v2_declaration": 198,
+     "c_decl_suffix": 35,
+     "dprime_suffix": 10,
+     "cd_note": 108
+    },
+    "web_search::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 204,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "web_search::enum_tighten": {
+     "diff_json": 35,
+     "diff_prose": 21,
+     "v2_declaration": 202,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 71
+    },
+    "web_search::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 203,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "web_search::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 199,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "web_search::type_change": {
+     "diff_json": 70,
+     "diff_prose": 31,
+     "v2_declaration": 206,
+     "c_decl_suffix": 33,
+     "dprime_suffix": 10,
+     "cd_note": 106
+    }
+   }
+  },
+  "qwen2.5": {
+   "note": "Qwen/Qwen2.5-7B-Instruct",
+   "summary": {
+    "means": {
+     "diff_json": 43.96,
+     "diff_prose": 23.513333333333332,
+     "v2_declaration": 217.23333333333332,
+     "c_decl_suffix": 25.513333333333332,
+     "dprime_suffix": 10.1,
+     "cd_note": 80.89333333333333
+    },
+    "ratio_diff_json_to_v2_declaration": 0.20236305048335126
+   },
+   "per_drift": {
+    "book_flight::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 251,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "book_flight::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 249,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 72
+    },
+    "book_flight::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 251,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "book_flight::required": {
+     "diff_json": 46,
+     "diff_prose": 25,
+     "v2_declaration": 247,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 82
+    },
+    "book_flight::type_change": {
+     "diff_json": 88,
+     "diff_prose": 48,
+     "v2_declaration": 256,
+     "c_decl_suffix": 50,
+     "dprime_suffix": 16,
+     "cd_note": 124
+    },
+    "book_meeting_room::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 224,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 73
+    },
+    "book_meeting_room::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 222,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 74
+    },
+    "book_meeting_room::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 225,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 74
+    },
+    "book_meeting_room::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 219,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 83
+    },
+    "book_meeting_room::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 227,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 111
+    },
+    "compress_folder::default_change": {
+     "diff_json": 31,
+     "diff_prose": 14,
+     "v2_declaration": 231,
+     "c_decl_suffix": 16,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "compress_folder::enum_tighten": {
+     "diff_json": 35,
+     "diff_prose": 21,
+     "v2_declaration": 235,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 14,
+     "cd_note": 71
+    },
+    "compress_folder::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 232,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "compress_folder::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 226,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "compress_folder::type_change": {
+     "diff_json": 89,
+     "diff_prose": 49,
+     "v2_declaration": 232,
+     "c_decl_suffix": 51,
+     "dprime_suffix": 20,
+     "cd_note": 125
+    },
+    "copy_file::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 217,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "copy_file::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 217,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 70
+    },
+    "copy_file::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 218,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "copy_file::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 212,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "copy_file::type_change": {
+     "diff_json": 69,
+     "diff_prose": 30,
+     "v2_declaration": 216,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 11,
+     "cd_note": 105
+    },
+    "create_channel::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 194,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "create_channel::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 194,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "create_channel::rename": {
+     "diff_json": 35,
+     "diff_prose": 25,
+     "v2_declaration": 196,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "create_channel::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 189,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "create_channel::type_change": {
+     "diff_json": 80,
+     "diff_prose": 40,
+     "v2_declaration": 198,
+     "c_decl_suffix": 42,
+     "dprime_suffix": 14,
+     "cd_note": 116
+    },
+    "create_contact::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 221,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "create_contact::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 223,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "create_contact::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 221,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "create_contact::required": {
+     "diff_json": 45,
+     "diff_prose": 24,
+     "v2_declaration": 216,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 81
+    },
+    "create_contact::type_change": {
+     "diff_json": 77,
+     "diff_prose": 38,
+     "v2_declaration": 223,
+     "c_decl_suffix": 40,
+     "dprime_suffix": 14,
+     "cd_note": 113
+    },
+    "create_dashboard_widget::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 227,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "create_dashboard_widget::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 227,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 71
+    },
+    "create_dashboard_widget::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 227,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "create_dashboard_widget::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 222,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 81
+    },
+    "create_dashboard_widget::type_change": {
+     "diff_json": 81,
+     "diff_prose": 41,
+     "v2_declaration": 232,
+     "c_decl_suffix": 43,
+     "dprime_suffix": 14,
+     "cd_note": 119
+    },
+    "create_event::default_change": {
+     "diff_json": 34,
+     "diff_prose": 17,
+     "v2_declaration": 214,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "create_event::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 214,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "create_event::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 214,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "create_event::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 210,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "create_event::type_change": {
+     "diff_json": 69,
+     "diff_prose": 30,
+     "v2_declaration": 217,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 105
+    },
+    "create_invoice::default_change": {
+     "diff_json": 33,
+     "diff_prose": 17,
+     "v2_declaration": 201,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "create_invoice::enum_tighten": {
+     "diff_json": 38,
+     "diff_prose": 24,
+     "v2_declaration": 203,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 17,
+     "cd_note": 74
+    },
+    "create_invoice::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 202,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "create_invoice::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 197,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "create_invoice::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 205,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 109
+    },
+    "create_reminder::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 225,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "create_reminder::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 227,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 72
+    },
+    "create_reminder::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 225,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "create_reminder::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 221,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "create_reminder::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 228,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 109
+    },
+    "export_dataset::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 227,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "export_dataset::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 227,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "export_dataset::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 228,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "export_dataset::required": {
+     "diff_json": 46,
+     "diff_prose": 25,
+     "v2_declaration": 219,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 15,
+     "cd_note": 82
+    },
+    "export_dataset::type_change": {
+     "diff_json": 85,
+     "diff_prose": 45,
+     "v2_declaration": 232,
+     "c_decl_suffix": 47,
+     "dprime_suffix": 16,
+     "cd_note": 121
+    },
+    "hail_ride::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 234,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 72
+    },
+    "hail_ride::enum_tighten": {
+     "diff_json": 35,
+     "diff_prose": 21,
+     "v2_declaration": 235,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 75
+    },
+    "hail_ride::rename": {
+     "diff_json": 38,
+     "diff_prose": 27,
+     "v2_declaration": 233,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 9,
+     "cd_note": 78
+    },
+    "hail_ride::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 230,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 84
+    },
+    "hail_ride::type_change": {
+     "diff_json": 75,
+     "diff_prose": 36,
+     "v2_declaration": 238,
+     "c_decl_suffix": 38,
+     "dprime_suffix": 11,
+     "cd_note": 115
+    },
+    "log_interaction::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 216,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "log_interaction::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 218,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "log_interaction::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 216,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "log_interaction::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 211,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "log_interaction::type_change": {
+     "diff_json": 69,
+     "diff_prose": 30,
+     "v2_declaration": 219,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 105
+    },
+    "monitor_keyword::default_change": {
+     "diff_json": 33,
+     "diff_prose": 16,
+     "v2_declaration": 216,
+     "c_decl_suffix": 18,
+     "dprime_suffix": 6,
+     "cd_note": 69
+    },
+    "monitor_keyword::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 216,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 70
+    },
+    "monitor_keyword::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 217,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "monitor_keyword::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 212,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "monitor_keyword::type_change": {
+     "diff_json": 72,
+     "diff_prose": 33,
+     "v2_declaration": 219,
+     "c_decl_suffix": 35,
+     "dprime_suffix": 10,
+     "cd_note": 108
+    },
+    "place_order::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 198,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "place_order::enum_tighten": {
+     "diff_json": 35,
+     "diff_prose": 21,
+     "v2_declaration": 199,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 71
+    },
+    "place_order::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 198,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "place_order::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 194,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "place_order::type_change": {
+     "diff_json": 67,
+     "diff_prose": 28,
+     "v2_declaration": 200,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 9,
+     "cd_note": 103
+    },
+    "post_job_opening::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 232,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 72
+    },
+    "post_job_opening::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 233,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 74
+    },
+    "post_job_opening::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 233,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 74
+    },
+    "post_job_opening::required": {
+     "diff_json": 47,
+     "diff_prose": 26,
+     "v2_declaration": 229,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 13,
+     "cd_note": 87
+    },
+    "post_job_opening::type_change": {
+     "diff_json": 79,
+     "diff_prose": 40,
+     "v2_declaration": 236,
+     "c_decl_suffix": 42,
+     "dprime_suffix": 13,
+     "cd_note": 119
+    },
+    "refund_payment::default_change": {
+     "diff_json": 31,
+     "diff_prose": 14,
+     "v2_declaration": 205,
+     "c_decl_suffix": 16,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "refund_payment::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 203,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 15,
+     "cd_note": 72
+    },
+    "refund_payment::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 206,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "refund_payment::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 200,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "refund_payment::type_change": {
+     "diff_json": 75,
+     "diff_prose": 36,
+     "v2_declaration": 209,
+     "c_decl_suffix": 38,
+     "dprime_suffix": 11,
+     "cd_note": 111
+    },
+    "request_time_off::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 210,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "request_time_off::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 211,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 72
+    },
+    "request_time_off::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 211,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 72
+    },
+    "request_time_off::required": {
+     "diff_json": 45,
+     "diff_prose": 24,
+     "v2_declaration": 205,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 83
+    },
+    "request_time_off::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 213,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 10,
+     "cd_note": 109
+    },
+    "reserve_hotel::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 227,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "reserve_hotel::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 227,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 74
+    },
+    "reserve_hotel::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 226,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 74
+    },
+    "reserve_hotel::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 223,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "reserve_hotel::type_change": {
+     "diff_json": 68,
+     "diff_prose": 29,
+     "v2_declaration": 229,
+     "c_decl_suffix": 31,
+     "dprime_suffix": 9,
+     "cd_note": 106
+    },
+    "run_report::default_change": {
+     "diff_json": 36,
+     "diff_prose": 20,
+     "v2_declaration": 205,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 7,
+     "cd_note": 72
+    },
+    "run_report::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 202,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "run_report::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 203,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "run_report::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 197,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "run_report::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 205,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 11,
+     "cd_note": 109
+    },
+    "save_bookmark::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 225,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "save_bookmark::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 225,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 71
+    },
+    "save_bookmark::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 225,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "save_bookmark::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 219,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 13,
+     "cd_note": 82
+    },
+    "save_bookmark::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 227,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 12,
+     "cd_note": 111
+    },
+    "schedule_message::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 241,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "schedule_message::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 241,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 70
+    },
+    "schedule_message::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 242,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "schedule_message::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 236,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "schedule_message::type_change": {
+     "diff_json": 66,
+     "diff_prose": 27,
+     "v2_declaration": 243,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 8,
+     "cd_note": 102
+    },
+    "send_message::default_change": {
+     "diff_json": 34,
+     "diff_prose": 17,
+     "v2_declaration": 222,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 6,
+     "cd_note": 70
+    },
+    "send_message::enum_tighten": {
+     "diff_json": 33,
+     "diff_prose": 19,
+     "v2_declaration": 222,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 12,
+     "cd_note": 69
+    },
+    "send_message::rename": {
+     "diff_json": 37,
+     "diff_prose": 27,
+     "v2_declaration": 223,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 8,
+     "cd_note": 73
+    },
+    "send_message::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 217,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "send_message::type_change": {
+     "diff_json": 81,
+     "diff_prose": 41,
+     "v2_declaration": 227,
+     "c_decl_suffix": 43,
+     "dprime_suffix": 14,
+     "cd_note": 117
+    },
+    "send_payment::default_change": {
+     "diff_json": 33,
+     "diff_prose": 17,
+     "v2_declaration": 196,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "send_payment::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 197,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "send_payment::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 196,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 69
+    },
+    "send_payment::required": {
+     "diff_json": 46,
+     "diff_prose": 25,
+     "v2_declaration": 192,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 13,
+     "cd_note": 82
+    },
+    "send_payment::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 200,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 9,
+     "cd_note": 107
+    },
+    "set_permissions::default_change": {
+     "diff_json": 31,
+     "diff_prose": 14,
+     "v2_declaration": 218,
+     "c_decl_suffix": 16,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "set_permissions::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 219,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 70
+    },
+    "set_permissions::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 218,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "set_permissions::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 213,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "set_permissions::type_change": {
+     "diff_json": 81,
+     "diff_prose": 41,
+     "v2_declaration": 223,
+     "c_decl_suffix": 43,
+     "dprime_suffix": 14,
+     "cd_note": 117
+    },
+    "submit_expense::default_change": {
+     "diff_json": 33,
+     "diff_prose": 17,
+     "v2_declaration": 228,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "submit_expense::enum_tighten": {
+     "diff_json": 34,
+     "diff_prose": 20,
+     "v2_declaration": 226,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 13,
+     "cd_note": 72
+    },
+    "submit_expense::rename": {
+     "diff_json": 33,
+     "diff_prose": 21,
+     "v2_declaration": 228,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 7,
+     "cd_note": 71
+    },
+    "submit_expense::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 224,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "submit_expense::type_change": {
+     "diff_json": 71,
+     "diff_prose": 32,
+     "v2_declaration": 232,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 9,
+     "cd_note": 109
+    },
+    "track_shipment::default_change": {
+     "diff_json": 34,
+     "diff_prose": 18,
+     "v2_declaration": 209,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "track_shipment::enum_tighten": {
+     "diff_json": 36,
+     "diff_prose": 22,
+     "v2_declaration": 210,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 74
+    },
+    "track_shipment::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 211,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 72
+    },
+    "track_shipment::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 204,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 13,
+     "cd_note": 82
+    },
+    "track_shipment::type_change": {
+     "diff_json": 74,
+     "diff_prose": 35,
+     "v2_declaration": 213,
+     "c_decl_suffix": 37,
+     "dprime_suffix": 11,
+     "cd_note": 112
+    },
+    "update_deal::default_change": {
+     "diff_json": 33,
+     "diff_prose": 17,
+     "v2_declaration": 210,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 5,
+     "cd_note": 71
+    },
+    "update_deal::enum_tighten": {
+     "diff_json": 38,
+     "diff_prose": 24,
+     "v2_declaration": 209,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 17,
+     "cd_note": 76
+    },
+    "update_deal::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 208,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 74
+    },
+    "update_deal::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 203,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 81
+    },
+    "update_deal::type_change": {
+     "diff_json": 73,
+     "diff_prose": 34,
+     "v2_declaration": 212,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 111
+    },
+    "update_listing::default_change": {
+     "diff_json": 31,
+     "diff_prose": 14,
+     "v2_declaration": 196,
+     "c_decl_suffix": 16,
+     "dprime_suffix": 6,
+     "cd_note": 67
+    },
+    "update_listing::enum_tighten": {
+     "diff_json": 37,
+     "diff_prose": 23,
+     "v2_declaration": 196,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 16,
+     "cd_note": 73
+    },
+    "update_listing::rename": {
+     "diff_json": 34,
+     "diff_prose": 23,
+     "v2_declaration": 197,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 7,
+     "cd_note": 70
+    },
+    "update_listing::required": {
+     "diff_json": 44,
+     "diff_prose": 23,
+     "v2_declaration": 192,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 80
+    },
+    "update_listing::type_change": {
+     "diff_json": 72,
+     "diff_prose": 33,
+     "v2_declaration": 199,
+     "c_decl_suffix": 35,
+     "dprime_suffix": 10,
+     "cd_note": 108
+    },
+    "web_search::default_change": {
+     "diff_json": 32,
+     "diff_prose": 15,
+     "v2_declaration": 205,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 6,
+     "cd_note": 68
+    },
+    "web_search::enum_tighten": {
+     "diff_json": 35,
+     "diff_prose": 21,
+     "v2_declaration": 203,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 71
+    },
+    "web_search::rename": {
+     "diff_json": 36,
+     "diff_prose": 25,
+     "v2_declaration": 204,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 8,
+     "cd_note": 72
+    },
+    "web_search::required": {
+     "diff_json": 43,
+     "diff_prose": 22,
+     "v2_declaration": 200,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 79
+    },
+    "web_search::type_change": {
+     "diff_json": 70,
+     "diff_prose": 31,
+     "v2_declaration": 207,
+     "c_decl_suffix": 33,
+     "dprime_suffix": 10,
+     "cd_note": 106
+    }
+   }
+  },
+  "gemini": {
+   "note": "countTokens on gemini-3.6-flash (free; no generation)",
+   "summary": {
+    "means": {
+     "diff_json": 54.98,
+     "diff_prose": 25.34,
+     "v2_declaration": 220.81333333333333,
+     "c_decl_suffix": 27.34,
+     "dprime_suffix": 10.453333333333333,
+     "cd_note": 95.64666666666666
+    },
+    "ratio_diff_json_to_v2_declaration": 0.24898858764567355
+   },
+   "per_drift": {
+    "book_flight::default_change": {
+     "diff_json": 40,
+     "diff_prose": 15,
+     "v2_declaration": 249,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 7,
+     "cd_note": 80
+    },
+    "book_flight::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 247,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 84
+    },
+    "book_flight::rename": {
+     "diff_json": 47,
+     "diff_prose": 30,
+     "v2_declaration": 249,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 87
+    },
+    "book_flight::required": {
+     "diff_json": 59,
+     "diff_prose": 28,
+     "v2_declaration": 245,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 14,
+     "cd_note": 99
+    },
+    "book_flight::type_change": {
+     "diff_json": 103,
+     "diff_prose": 50,
+     "v2_declaration": 253,
+     "c_decl_suffix": 52,
+     "dprime_suffix": 16,
+     "cd_note": 143
+    },
+    "book_meeting_room::default_change": {
+     "diff_json": 40,
+     "diff_prose": 15,
+     "v2_declaration": 225,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 7,
+     "cd_note": 84
+    },
+    "book_meeting_room::enum_tighten": {
+     "diff_json": 43,
+     "diff_prose": 21,
+     "v2_declaration": 223,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 87
+    },
+    "book_meeting_room::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 227,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 87
+    },
+    "book_meeting_room::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 220,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 98
+    },
+    "book_meeting_room::type_change": {
+     "diff_json": 87,
+     "diff_prose": 34,
+     "v2_declaration": 228,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 131
+    },
+    "compress_folder::default_change": {
+     "diff_json": 40,
+     "diff_prose": 15,
+     "v2_declaration": 234,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 7,
+     "cd_note": 80
+    },
+    "compress_folder::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 238,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 84
+    },
+    "compress_folder::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 236,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "compress_folder::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 230,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 96
+    },
+    "compress_folder::type_change": {
+     "diff_json": 104,
+     "diff_prose": 51,
+     "v2_declaration": 234,
+     "c_decl_suffix": 53,
+     "dprime_suffix": 20,
+     "cd_note": 144
+    },
+    "copy_file::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 219,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "copy_file::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 219,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "copy_file::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 221,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "copy_file::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 214,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "copy_file::type_change": {
+     "diff_json": 84,
+     "diff_prose": 31,
+     "v2_declaration": 218,
+     "c_decl_suffix": 33,
+     "dprime_suffix": 11,
+     "cd_note": 124
+    },
+    "create_channel::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 198,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "create_channel::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 198,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "create_channel::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 200,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "create_channel::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 193,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "create_channel::type_change": {
+     "diff_json": 95,
+     "diff_prose": 42,
+     "v2_declaration": 201,
+     "c_decl_suffix": 44,
+     "dprime_suffix": 14,
+     "cd_note": 135
+    },
+    "create_contact::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 224,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "create_contact::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 228,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 84
+    },
+    "create_contact::rename": {
+     "diff_json": 41,
+     "diff_prose": 22,
+     "v2_declaration": 224,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 7,
+     "cd_note": 81
+    },
+    "create_contact::required": {
+     "diff_json": 58,
+     "diff_prose": 27,
+     "v2_declaration": 219,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 14,
+     "cd_note": 98
+    },
+    "create_contact::type_change": {
+     "diff_json": 92,
+     "diff_prose": 39,
+     "v2_declaration": 226,
+     "c_decl_suffix": 41,
+     "dprime_suffix": 14,
+     "cd_note": 132
+    },
+    "create_dashboard_widget::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 233,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 86
+    },
+    "create_dashboard_widget::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 233,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 86
+    },
+    "create_dashboard_widget::rename": {
+     "diff_json": 41,
+     "diff_prose": 22,
+     "v2_declaration": 232,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 7,
+     "cd_note": 85
+    },
+    "create_dashboard_widget::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 228,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 98
+    },
+    "create_dashboard_widget::type_change": {
+     "diff_json": 96,
+     "diff_prose": 43,
+     "v2_declaration": 237,
+     "c_decl_suffix": 45,
+     "dprime_suffix": 14,
+     "cd_note": 140
+    },
+    "create_event::default_change": {
+     "diff_json": 43,
+     "diff_prose": 18,
+     "v2_declaration": 219,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "create_event::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 219,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "create_event::rename": {
+     "diff_json": 41,
+     "diff_prose": 22,
+     "v2_declaration": 219,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 7,
+     "cd_note": 81
+    },
+    "create_event::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 216,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 96
+    },
+    "create_event::type_change": {
+     "diff_json": 85,
+     "diff_prose": 32,
+     "v2_declaration": 222,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 9,
+     "cd_note": 125
+    },
+    "create_invoice::default_change": {
+     "diff_json": 42,
+     "diff_prose": 18,
+     "v2_declaration": 204,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 8,
+     "cd_note": 82
+    },
+    "create_invoice::enum_tighten": {
+     "diff_json": 47,
+     "diff_prose": 25,
+     "v2_declaration": 206,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 17,
+     "cd_note": 87
+    },
+    "create_invoice::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 206,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "create_invoice::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 201,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 96
+    },
+    "create_invoice::type_change": {
+     "diff_json": 88,
+     "diff_prose": 35,
+     "v2_declaration": 208,
+     "c_decl_suffix": 37,
+     "dprime_suffix": 10,
+     "cd_note": 128
+    },
+    "create_reminder::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 231,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "create_reminder::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 235,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 84
+    },
+    "create_reminder::rename": {
+     "diff_json": 41,
+     "diff_prose": 22,
+     "v2_declaration": 231,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 7,
+     "cd_note": 81
+    },
+    "create_reminder::required": {
+     "diff_json": 57,
+     "diff_prose": 26,
+     "v2_declaration": 227,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 13,
+     "cd_note": 97
+    },
+    "create_reminder::type_change": {
+     "diff_json": 87,
+     "diff_prose": 34,
+     "v2_declaration": 234,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 127
+    },
+    "export_dataset::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 231,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "export_dataset::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 231,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "export_dataset::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 233,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "export_dataset::required": {
+     "diff_json": 58,
+     "diff_prose": 27,
+     "v2_declaration": 222,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 16,
+     "cd_note": 98
+    },
+    "export_dataset::type_change": {
+     "diff_json": 100,
+     "diff_prose": 47,
+     "v2_declaration": 235,
+     "c_decl_suffix": 49,
+     "dprime_suffix": 16,
+     "cd_note": 140
+    },
+    "hail_ride::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 234,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 84
+    },
+    "hail_ride::enum_tighten": {
+     "diff_json": 46,
+     "diff_prose": 24,
+     "v2_declaration": 236,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 14,
+     "cd_note": 88
+    },
+    "hail_ride::rename": {
+     "diff_json": 51,
+     "diff_prose": 34,
+     "v2_declaration": 232,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 11,
+     "cd_note": 93
+    },
+    "hail_ride::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 231,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 98
+    },
+    "hail_ride::type_change": {
+     "diff_json": 92,
+     "diff_prose": 39,
+     "v2_declaration": 238,
+     "c_decl_suffix": 41,
+     "dprime_suffix": 12,
+     "cd_note": 134
+    },
+    "log_interaction::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 224,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "log_interaction::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 228,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 84
+    },
+    "log_interaction::rename": {
+     "diff_json": 41,
+     "diff_prose": 22,
+     "v2_declaration": 224,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 7,
+     "cd_note": 81
+    },
+    "log_interaction::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 219,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "log_interaction::type_change": {
+     "diff_json": 85,
+     "diff_prose": 32,
+     "v2_declaration": 227,
+     "c_decl_suffix": 34,
+     "dprime_suffix": 9,
+     "cd_note": 125
+    },
+    "monitor_keyword::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 220,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "monitor_keyword::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 220,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 84
+    },
+    "monitor_keyword::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 222,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "monitor_keyword::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 217,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 96
+    },
+    "monitor_keyword::type_change": {
+     "diff_json": 89,
+     "diff_prose": 36,
+     "v2_declaration": 223,
+     "c_decl_suffix": 38,
+     "dprime_suffix": 10,
+     "cd_note": 129
+    },
+    "place_order::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 203,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "place_order::enum_tighten": {
+     "diff_json": 45,
+     "diff_prose": 23,
+     "v2_declaration": 204,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 13,
+     "cd_note": 85
+    },
+    "place_order::rename": {
+     "diff_json": 47,
+     "diff_prose": 30,
+     "v2_declaration": 203,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 87
+    },
+    "place_order::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 200,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 96
+    },
+    "place_order::type_change": {
+     "diff_json": 82,
+     "diff_prose": 29,
+     "v2_declaration": 205,
+     "c_decl_suffix": 31,
+     "dprime_suffix": 9,
+     "cd_note": 122
+    },
+    "post_job_opening::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 235,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 86
+    },
+    "post_job_opening::enum_tighten": {
+     "diff_json": 43,
+     "diff_prose": 21,
+     "v2_declaration": 236,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 87
+    },
+    "post_job_opening::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 237,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 87
+    },
+    "post_job_opening::required": {
+     "diff_json": 59,
+     "diff_prose": 28,
+     "v2_declaration": 231,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 14,
+     "cd_note": 103
+    },
+    "post_job_opening::type_change": {
+     "diff_json": 94,
+     "diff_prose": 41,
+     "v2_declaration": 239,
+     "c_decl_suffix": 43,
+     "dprime_suffix": 13,
+     "cd_note": 138
+    },
+    "refund_payment::default_change": {
+     "diff_json": 40,
+     "diff_prose": 15,
+     "v2_declaration": 209,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 7,
+     "cd_note": 80
+    },
+    "refund_payment::enum_tighten": {
+     "diff_json": 48,
+     "diff_prose": 26,
+     "v2_declaration": 205,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 18,
+     "cd_note": 88
+    },
+    "refund_payment::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 211,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "refund_payment::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 204,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "refund_payment::type_change": {
+     "diff_json": 88,
+     "diff_prose": 35,
+     "v2_declaration": 213,
+     "c_decl_suffix": 37,
+     "dprime_suffix": 10,
+     "cd_note": 128
+    },
+    "request_time_off::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 216,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 86
+    },
+    "request_time_off::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 218,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 88
+    },
+    "request_time_off::rename": {
+     "diff_json": 42,
+     "diff_prose": 24,
+     "v2_declaration": 217,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 7,
+     "cd_note": 86
+    },
+    "request_time_off::required": {
+     "diff_json": 57,
+     "diff_prose": 26,
+     "v2_declaration": 210,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 14,
+     "cd_note": 101
+    },
+    "request_time_off::type_change": {
+     "diff_json": 87,
+     "diff_prose": 34,
+     "v2_declaration": 219,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 131
+    },
+    "reserve_hotel::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 231,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "reserve_hotel::enum_tighten": {
+     "diff_json": 45,
+     "diff_prose": 23,
+     "v2_declaration": 230,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 13,
+     "cd_note": 85
+    },
+    "reserve_hotel::rename": {
+     "diff_json": 47,
+     "diff_prose": 30,
+     "v2_declaration": 231,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 87
+    },
+    "reserve_hotel::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 228,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 96
+    },
+    "reserve_hotel::type_change": {
+     "diff_json": 82,
+     "diff_prose": 29,
+     "v2_declaration": 233,
+     "c_decl_suffix": 31,
+     "dprime_suffix": 9,
+     "cd_note": 122
+    },
+    "run_report::default_change": {
+     "diff_json": 46,
+     "diff_prose": 22,
+     "v2_declaration": 209,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 8,
+     "cd_note": 86
+    },
+    "run_report::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 205,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "run_report::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 207,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "run_report::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 200,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "run_report::type_change": {
+     "diff_json": 89,
+     "diff_prose": 36,
+     "v2_declaration": 208,
+     "c_decl_suffix": 38,
+     "dprime_suffix": 11,
+     "cd_note": 129
+    },
+    "save_bookmark::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 227,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "save_bookmark::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 227,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "save_bookmark::rename": {
+     "diff_json": 41,
+     "diff_prose": 22,
+     "v2_declaration": 227,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 7,
+     "cd_note": 81
+    },
+    "save_bookmark::required": {
+     "diff_json": 55,
+     "diff_prose": 24,
+     "v2_declaration": 221,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 13,
+     "cd_note": 95
+    },
+    "save_bookmark::type_change": {
+     "diff_json": 88,
+     "diff_prose": 35,
+     "v2_declaration": 229,
+     "c_decl_suffix": 37,
+     "dprime_suffix": 12,
+     "cd_note": 128
+    },
+    "schedule_message::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 247,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "schedule_message::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 247,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 84
+    },
+    "schedule_message::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 249,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "schedule_message::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 242,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "schedule_message::type_change": {
+     "diff_json": 84,
+     "diff_prose": 31,
+     "v2_declaration": 249,
+     "c_decl_suffix": 33,
+     "dprime_suffix": 9,
+     "cd_note": 124
+    },
+    "send_message::default_change": {
+     "diff_json": 44,
+     "diff_prose": 19,
+     "v2_declaration": 227,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 7,
+     "cd_note": 84
+    },
+    "send_message::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 227,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "send_message::rename": {
+     "diff_json": 49,
+     "diff_prose": 34,
+     "v2_declaration": 229,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 9,
+     "cd_note": 89
+    },
+    "send_message::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 222,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "send_message::type_change": {
+     "diff_json": 98,
+     "diff_prose": 45,
+     "v2_declaration": 231,
+     "c_decl_suffix": 47,
+     "dprime_suffix": 15,
+     "cd_note": 138
+    },
+    "send_payment::default_change": {
+     "diff_json": 42,
+     "diff_prose": 18,
+     "v2_declaration": 198,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 8,
+     "cd_note": 82
+    },
+    "send_payment::enum_tighten": {
+     "diff_json": 43,
+     "diff_prose": 21,
+     "v2_declaration": 199,
+     "c_decl_suffix": 23,
+     "dprime_suffix": 13,
+     "cd_note": 83
+    },
+    "send_payment::rename": {
+     "diff_json": 41,
+     "diff_prose": 22,
+     "v2_declaration": 198,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 7,
+     "cd_note": 81
+    },
+    "send_payment::required": {
+     "diff_json": 58,
+     "diff_prose": 27,
+     "v2_declaration": 193,
+     "c_decl_suffix": 29,
+     "dprime_suffix": 14,
+     "cd_note": 98
+    },
+    "send_payment::type_change": {
+     "diff_json": 86,
+     "diff_prose": 33,
+     "v2_declaration": 202,
+     "c_decl_suffix": 35,
+     "dprime_suffix": 9,
+     "cd_note": 126
+    },
+    "set_permissions::default_change": {
+     "diff_json": 40,
+     "diff_prose": 15,
+     "v2_declaration": 219,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 7,
+     "cd_note": 80
+    },
+    "set_permissions::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 221,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 14,
+     "cd_note": 84
+    },
+    "set_permissions::rename": {
+     "diff_json": 45,
+     "diff_prose": 28,
+     "v2_declaration": 220,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 8,
+     "cd_note": 85
+    },
+    "set_permissions::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 214,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "set_permissions::type_change": {
+     "diff_json": 96,
+     "diff_prose": 43,
+     "v2_declaration": 223,
+     "c_decl_suffix": 45,
+     "dprime_suffix": 14,
+     "cd_note": 136
+    },
+    "submit_expense::default_change": {
+     "diff_json": 42,
+     "diff_prose": 18,
+     "v2_declaration": 231,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 8,
+     "cd_note": 82
+    },
+    "submit_expense::enum_tighten": {
+     "diff_json": 42,
+     "diff_prose": 20,
+     "v2_declaration": 231,
+     "c_decl_suffix": 22,
+     "dprime_suffix": 12,
+     "cd_note": 82
+    },
+    "submit_expense::rename": {
+     "diff_json": 41,
+     "diff_prose": 22,
+     "v2_declaration": 231,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 7,
+     "cd_note": 81
+    },
+    "submit_expense::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 228,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 12,
+     "cd_note": 96
+    },
+    "submit_expense::type_change": {
+     "diff_json": 86,
+     "diff_prose": 33,
+     "v2_declaration": 235,
+     "c_decl_suffix": 35,
+     "dprime_suffix": 9,
+     "cd_note": 126
+    },
+    "track_shipment::default_change": {
+     "diff_json": 42,
+     "diff_prose": 18,
+     "v2_declaration": 216,
+     "c_decl_suffix": 20,
+     "dprime_suffix": 8,
+     "cd_note": 84
+    },
+    "track_shipment::enum_tighten": {
+     "diff_json": 48,
+     "diff_prose": 26,
+     "v2_declaration": 216,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 16,
+     "cd_note": 90
+    },
+    "track_shipment::rename": {
+     "diff_json": 44,
+     "diff_prose": 28,
+     "v2_declaration": 219,
+     "c_decl_suffix": 30,
+     "dprime_suffix": 7,
+     "cd_note": 86
+    },
+    "track_shipment::required": {
+     "diff_json": 56,
+     "diff_prose": 25,
+     "v2_declaration": 209,
+     "c_decl_suffix": 27,
+     "dprime_suffix": 14,
+     "cd_note": 98
+    },
+    "track_shipment::type_change": {
+     "diff_json": 89,
+     "diff_prose": 38,
+     "v2_declaration": 219,
+     "c_decl_suffix": 40,
+     "dprime_suffix": 11,
+     "cd_note": 131
+    },
+    "update_deal::default_change": {
+     "diff_json": 43,
+     "diff_prose": 19,
+     "v2_declaration": 213,
+     "c_decl_suffix": 21,
+     "dprime_suffix": 6,
+     "cd_note": 83
+    },
+    "update_deal::enum_tighten": {
+     "diff_json": 46,
+     "diff_prose": 24,
+     "v2_declaration": 213,
+     "c_decl_suffix": 26,
+     "dprime_suffix": 16,
+     "cd_note": 86
+    },
+    "update_deal::rename": {
+     "diff_json": 47,
+     "diff_prose": 30,
+     "v2_declaration": 211,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 87
+    },
+    "update_deal::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 206,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "update_deal::type_change": {
+     "diff_json": 88,
+     "diff_prose": 35,
+     "v2_declaration": 215,
+     "c_decl_suffix": 37,
+     "dprime_suffix": 10,
+     "cd_note": 128
+    },
+    "update_listing::default_change": {
+     "diff_json": 40,
+     "diff_prose": 15,
+     "v2_declaration": 197,
+     "c_decl_suffix": 17,
+     "dprime_suffix": 7,
+     "cd_note": 80
+    },
+    "update_listing::enum_tighten": {
+     "diff_json": 45,
+     "diff_prose": 23,
+     "v2_declaration": 196,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 15,
+     "cd_note": 85
+    },
+    "update_listing::rename": {
+     "diff_json": 43,
+     "diff_prose": 26,
+     "v2_declaration": 199,
+     "c_decl_suffix": 28,
+     "dprime_suffix": 7,
+     "cd_note": 83
+    },
+    "update_listing::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 192,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "update_listing::type_change": {
+     "diff_json": 87,
+     "diff_prose": 34,
+     "v2_declaration": 200,
+     "c_decl_suffix": 36,
+     "dprime_suffix": 10,
+     "cd_note": 127
+    },
+    "web_search::default_change": {
+     "diff_json": 42,
+     "diff_prose": 17,
+     "v2_declaration": 207,
+     "c_decl_suffix": 19,
+     "dprime_suffix": 7,
+     "cd_note": 82
+    },
+    "web_search::enum_tighten": {
+     "diff_json": 44,
+     "diff_prose": 22,
+     "v2_declaration": 207,
+     "c_decl_suffix": 24,
+     "dprime_suffix": 12,
+     "cd_note": 84
+    },
+    "web_search::rename": {
+     "diff_json": 47,
+     "diff_prose": 30,
+     "v2_declaration": 207,
+     "c_decl_suffix": 32,
+     "dprime_suffix": 9,
+     "cd_note": 87
+    },
+    "web_search::required": {
+     "diff_json": 54,
+     "diff_prose": 23,
+     "v2_declaration": 202,
+     "c_decl_suffix": 25,
+     "dprime_suffix": 12,
+     "cd_note": 94
+    },
+    "web_search::type_change": {
+     "diff_json": 86,
+     "diff_prose": 33,
+     "v2_declaration": 209,
+     "c_decl_suffix": 35,
+     "dprime_suffix": 10,
+     "cd_note": 126
+    }
+   }
+  }
+ }
+}

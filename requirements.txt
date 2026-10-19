@@ -3,3 +3,6 @@ matplotlib
 pillow
 modal
 pytest
+tiktoken
+tokenizers
+pytest-cov
