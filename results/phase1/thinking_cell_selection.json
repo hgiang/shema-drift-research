@@ -1,0 +1,32 @@
+{
+ "selected": "C:user:prose:none",
+ "recoveries": {
+  "C:sys:json:apply": 0.0,
+  "C:sys:prose:none": 0.0,
+  "C:sys:prose:apply": 0.0,
+  "C:user:json:none": 0.0,
+  "C:user:json:apply": 0.0,
+  "C:user:prose:none": 0.0,
+  "C:user:prose:apply": 0.0,
+  "C:tool:json:none": 0.0,
+  "C:tool:json:apply": 0.0,
+  "C:tool:prose:none": 0.0,
+  "C:tool:prose:apply": 0.0,
+  "C_decl": 0.0
+ },
+ "success_all": {
+  "C:sys:json:apply": 0.3416666666666667,
+  "C:sys:prose:none": 0.35,
+  "C:sys:prose:apply": 0.31666666666666665,
+  "C:user:json:none": 0.3333333333333333,
+  "C:user:json:apply": 0.35,
+  "C:user:prose:none": 0.36666666666666664,
+  "C:user:prose:apply": 0.35,
+  "C:tool:json:none": 0.3416666666666667,
+  "C:tool:json:apply": 0.35,
+  "C:tool:prose:none": 0.35833333333333334,
+  "C:tool:prose:apply": 0.35833333333333334,
+  "C_decl": 0.36666666666666664
+ },
+ "rule": "A6"
+}
