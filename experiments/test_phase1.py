@@ -196,3 +196,121 @@ def test_phase1_logs_are_invisible_to_the_original_analysis():
 def test_pilot_runs_go_to_a_separate_file():
     assert p1.out_path("m/x", pilot=True).name == "runs_m_x.pilot.jsonl"
     assert p1.out_path("m/x").name == "runs_m_x.jsonl"
+
+
+# ---------------- runner logging and resume (Task 3) ----------------
+
+def test_or_body_strict_and_provider():
+    import run_openrouter as ro
+    decls = [{"name": "t1", "parameters": {}}, {"name": "t2", "parameters": {}}]
+    msgs = [{"role": "user", "content": "hi"}]
+    body = ro.or_body("m/x", msgs, decls, 700, strict=False, provider="openai")
+    assert all(t["function"]["strict"] is False for t in body["tools"])
+    assert body["provider"] == {"order": ["openai"], "allow_fallbacks": False}
+    assert "strict" not in decls[0]  # declarations are not mutated
+    plain = ro.or_body("m/x", msgs, decls, 700)
+    assert all("strict" not in t["function"] for t in plain["tools"])
+    assert "provider" not in plain and "reasoning" not in plain
+    assert ro.or_body("m/x", msgs, decls, 4000, reasoning="high")["reasoning"] == {"effort": "high"}
+
+
+def test_parse_or_response_logs_reasoning_and_provider():
+    import run_openrouter as ro
+    resp = {"provider": "OpenAI", "model": "openai/gpt-5.6-luna",
+            "usage": {"prompt_tokens": 100, "completion_tokens": 50,
+                      "completion_tokens_details": {"reasoning_tokens": 30}},
+            "choices": [{"finish_reason": "tool_calls", "message": {"tool_calls": [
+                {"function": {"name": "f", "arguments": '{"a": 1}'}}]}}]}
+    out = ro.parse_or_response(resp)
+    assert out["name"] == "f" and out["args"] == {"a": 1}
+    assert out["usage"] == {"in": 100, "out": 50, "reasoning": 30}
+    assert out["meta"] == {"provider": "OpenAI", "model": "openai/gpt-5.6-luna", "finish_reason": "tool_calls"}
+    resp["choices"][0]["message"]["tool_calls"][0]["function"]["arguments"] = "{not json"
+    assert ro.parse_or_response(resp)["args"] == {}
+    final = ro.parse_or_response({"usage": {}, "choices": [{"finish_reason": "stop", "message": {"content": "done"}}]})
+    assert final["final"] == "done" and final["usage"] == {"in": 0, "out": 0, "reasoning": 0}
+
+
+def test_parse_gemini_response_counts_thoughts():
+    import run_gemini as rg
+    resp = {"modelVersion": "v1", "usageMetadata": {"promptTokenCount": 10, "candidatesTokenCount": 5,
+                                                   "thoughtsTokenCount": 7},
+            "candidates": [{"finishReason": "STOP", "content": {"parts": [{"functionCall": {"name": "f", "args": {"a": 1}}}]}}]}
+    out = rg.parse_gemini_response(resp, "MINIMAL")
+    assert out["usage"] == {"in": 10, "out": 12, "reasoning": 7}
+    assert out["name"] == "f" and out["args"] == {"a": 1}
+    assert out["meta"] == {"model": "v1", "thinking": "MINIMAL", "finish_reason": "STOP"}
+    assert rg.parse_gemini_response({"usageMetadata": {}}, "LOW")["final"] == "(empty)"
+
+
+def test_runners_import_without_env(tmp_path):
+    import subprocess
+    guard = ("import pathlib, sys\n"
+             "real = pathlib.Path.read_text\n"
+             "def guard(self, *a, **k):\n"
+             "    if self.name == '.env':\n"
+             "        raise AssertionError('.env read at import')\n"
+             "    return real(self, *a, **k)\n"
+             "pathlib.Path.read_text = guard\n"
+             f"sys.path.insert(0, {str(HERE)!r})\n"
+             "import run_openrouter, run_gemini\n")
+    res = subprocess.run([sys.executable, "-c", guard], capture_output=True, text=True)
+    assert res.returncode == 0, res.stderr
+    import run_gemini as rg
+    import run_openrouter as ro
+    with pytest.raises(SystemExit, match="OPENROUTER_API_KEY"):
+        ro._key(tmp_path / ".env")
+    env = tmp_path / ".env"
+    env.write_text("GEMINI_API_KEY=\nOPENROUTER_API_KEY= abc \n")
+    assert ro._key(env) == "abc"
+    with pytest.raises(SystemExit, match="GEMINI_API_KEY"):
+        rg._key(env)  # present but empty
+
+
+def test_episode_usage_sums_reasoning():
+    t, cls = PAIRS[0]
+
+    def two_calls(system, user, decls, transcript):
+        u = {"in": 10, "out": 2, "reasoning": 1}
+        if not transcript:
+            return {"name": "no_such_tool", "args": {}, "usage": u}
+        return {"final": "done", "usage": u}
+
+    rec = harness.run_episode(t, "B_strict", cls, two_calls)
+    assert rec["usage"] == {"in": 20, "out": 4, "reasoning": 2}
+
+
+def test_repair_tail_drops_partial_line(tmp_path):
+    f = tmp_path / "runs.jsonl"
+    assert p1.repair_tail(f) == 0  # missing file
+    good = json.dumps({"task": "T", "cond": "A", "class": "rename", "phrasing": 0}) + "\n"
+    f.write_text(good + '{"b":')
+    assert p1.repair_tail(f) == 5
+    assert f.read_text() == good
+    assert p1.repair_tail(f) == 0 and f.read_text() == good  # clean file unchanged
+    assert len(p1.load_done(f)) == 1
+    f.write_text('{"b":')
+    assert p1.repair_tail(f) == 5 and f.read_text() == ""
+
+
+def test_route_jobs_and_paths():
+    js = p1.jobs("route")
+    assert len(js) == 360
+    assert {c for _, c, _, _, _ in js} == {"A", "B_strict", "C:sys:json:none"}
+    assert p1.out_path("openai/gpt-5.6-luna", route="nostrict").name == "runs_openai_gpt-5.6-luna.nostrict.jsonl"
+    assert p1.out_path("m/x", pilot=True, route="az").name == "runs_m_x.az.pilot.jsonl"
+    with pytest.raises(SystemExit):
+        p1.out_path("m/x", route="../evil")
+    t, c, cls, ph, rep = js[0]
+    rec = p1.run_episode(js[0], lambda *a: {"final": "x"}, "m/x", "route", "default", 700, route="az")
+    assert rec["route"] == "az"
+
+
+def test_load_pins_reads_the_request_settings_a_file_was_written_with(tmp_path):
+    f = tmp_path / "runs.jsonl"
+    assert p1.load_pins(f) == set()
+    rows = [{"task": "T", "pin": {"provider": "openai", "strict": "unset"}},
+            {"task": "U", "pin": {"strict": "unset", "provider": "openai"}},
+            {"task": "V"}]
+    f.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    assert p1.load_pins(f) == {p1.pin_id({"provider": "openai", "strict": "unset"})}

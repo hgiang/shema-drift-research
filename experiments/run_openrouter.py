@@ -8,15 +8,18 @@ Usage:
   python3 run_openrouter.py --model openai/gpt-5.6-mini
 
 Phase 1 (writes results/phase1/runs_<model>.jsonl; see phase1_grid.py):
-  python3 run_openrouter.py --arm ablation --cap 6 --limit 5          # pilot
-  python3 run_openrouter.py --arm ablation --cap 6
-  python3 run_openrouter.py --arm noise --cap 6
-  python3 run_openrouter.py --arm infoform --cap 6
-  python3 run_openrouter.py --arm thinking --reasoning high --cells C:sys:json:none,<best> --cap 6
-  add --provider <name> to pin the OpenRouter provider (no fallbacks)
+  python3 run_openrouter.py --arm ablation --provider openai --cap 6 --limit 5   # pilot
+  python3 run_openrouter.py --arm ablation --provider openai --cap 6
+  python3 run_openrouter.py --arm noise --provider openai --cap 6
+  python3 run_openrouter.py --arm infoform --provider openai --cap 6
+  python3 run_openrouter.py --arm thinking --provider openai --reasoning high --cells C:sys:json:none,<best> --cap 6
+  python3 run_openrouter.py --arm route --route <label> --provider <name> [--strict false] --cap 6
+  Phase 1 needs --provider <name>: one OpenRouter provider, no fallbacks
+  (MILESTONES.md "Phase 1 addendum"); --strict false sends "strict": false per tool.
 """
 
 import argparse
+import functools
 import json
 import pathlib
 import random
@@ -35,20 +38,28 @@ RESULTS = HERE.parent / "results"
 ARM_CAP_USD = 0.78  # default per-run cap (original arm); Phase 1 passes --cap
 
 
-def api_key():
-    for line in (HERE.parent / ".env").read_text().splitlines():
+ENV_PATH = HERE.parent / ".env"
+STRICT = {"unset": None, "false": False}
+
+
+@functools.lru_cache(maxsize=None)
+def _key(env_path=ENV_PATH):
+    """Read lazily so importing this module (tests, run_probe) needs no .env."""
+    lines = env_path.read_text().splitlines() if env_path.exists() else []
+    for line in lines:
         if line.startswith("OPENROUTER_API_KEY="):
-            return line.split("=", 1)[1].strip()
-    raise SystemExit("OPENROUTER_API_KEY not in .env")
+            value = line.split("=", 1)[1].strip()
+            if value:
+                return value
+    raise SystemExit(f"OPENROUTER_API_KEY missing or empty in {env_path}")
 
 
-KEY = api_key()
 _arm_spend = [0.0]
 
 
 def remaining_credits():
     req = urllib.request.Request("https://openrouter.ai/api/v1/credits",
-                                 headers={"Authorization": f"Bearer {KEY}"})
+                                 headers={"Authorization": f"Bearer {_key()}"})
     with urllib.request.urlopen(req, timeout=30) as r:
         d = json.loads(r.read())["data"]
     return d["total_credits"] - d["total_usage"]
@@ -60,7 +71,7 @@ def or_call(model, body, tries=6):
         try:
             req = urllib.request.Request(
                 "https://openrouter.ai/api/v1/chat/completions", data=data,
-                headers={"Authorization": f"Bearer {KEY}", "Content-Type": "application/json"})
+                headers={"Authorization": f"Bearer {_key()}", "Content-Type": "application/json"})
             with urllib.request.urlopen(req, timeout=120) as r:
                 return json.loads(r.read())
         except urllib.error.HTTPError as e:
@@ -79,63 +90,94 @@ def or_call(model, body, tries=6):
     raise RuntimeError("unreachable")
 
 
+def or_messages(system, user, transcript):
+    messages = [{"role": "system", "content": system},
+                {"role": "user", "content": user}]
+    pending_id = 0
+    for turn in transcript:
+        if turn["role"] == "assistant_tool_call":
+            pending_id += 1
+            messages.append({"role": "assistant", "content": None, "tool_calls": [
+                {"id": f"c{pending_id}", "type": "function",
+                 "function": {"name": turn["name"], "arguments": json.dumps(turn["args"])}}]})
+        else:
+            messages.append({"role": "tool", "tool_call_id": f"c{pending_id}",
+                             "content": turn["content"]})
+    return messages
+
+
+def or_body(model, messages, declarations, max_tokens, reasoning="default", provider=None, strict=None):
+    """Request body; strict=None leaves the per-tool flag out (the September request shape)."""
+    functions = [d if strict is None else {**d, "strict": strict} for d in declarations]
+    body = {"model": model, "messages": messages, "temperature": 0, "max_tokens": max_tokens,
+            "tools": [{"type": "function", "function": f} for f in functions]}
+    if reasoning != "default":
+        body["reasoning"] = {"effort": reasoning}
+    if provider:
+        body["provider"] = {"order": [provider], "allow_fallbacks": False}
+    return body
+
+
+def parse_or_response(resp):
+    """{"name","args"} or {"final"}, plus usage (with reasoning tokens) and serving meta."""
+    usage = resp.get("usage") or {}
+    details = usage.get("completion_tokens_details") or {}
+    choice = (resp.get("choices") or [{}])[0]
+    msg = choice.get("message") or {}
+    extra = {"usage": {"in": usage.get("prompt_tokens", 0), "out": usage.get("completion_tokens", 0),
+                       "reasoning": details.get("reasoning_tokens") or 0},
+             "meta": {"provider": resp.get("provider"), "model": resp.get("model"),
+                      "finish_reason": choice.get("finish_reason")}}
+    tcs = msg.get("tool_calls") or []
+    if not tcs:
+        return {"final": (msg.get("content") or ""), **extra}
+    fn = tcs[0].get("function") or {}
+    try:
+        parsed = json.loads(fn.get("arguments") or "{}")
+    except json.JSONDecodeError:
+        parsed = {}
+    return {"name": fn.get("name", ""), "args": parsed, **extra}
+
+
 def make_call_model(model, tag_holder, reasoning="default", max_tokens=700,
-                    provider=None, phase="experiments"):
+                    provider=None, phase="experiments", strict=None):
     def call_model(system, user, declarations, transcript):
-        messages = [{"role": "system", "content": system},
-                    {"role": "user", "content": user}]
-        pending_id = 0
-        for turn in transcript:
-            if turn["role"] == "assistant_tool_call":
-                pending_id += 1
-                messages.append({"role": "assistant", "content": None, "tool_calls": [
-                    {"id": f"c{pending_id}", "type": "function",
-                     "function": {"name": turn["name"], "arguments": json.dumps(turn["args"])}}]})
-            else:
-                messages.append({"role": "tool", "tool_call_id": f"c{pending_id}",
-                                 "content": turn["content"]})
-        body = {"model": model, "messages": messages, "temperature": 0, "max_tokens": max_tokens,
-                "tools": [{"type": "function", "function": d} for d in declarations]}
-        if reasoning != "default":
-            body["reasoning"] = {"effort": reasoning}
-        if provider:
-            body["provider"] = {"order": [provider], "allow_fallbacks": False}
+        body = or_body(model, or_messages(system, user, transcript), declarations, max_tokens,
+                       reasoning, provider, strict)
         resp = or_call(model, body)
-        usage = resp.get("usage", {})
-        _arm_spend[0] += log_cost(model, tag_holder[0], usage, phase=phase)
+        _arm_spend[0] += log_cost(model, tag_holder[0], resp.get("usage", {}), phase=phase)
         check_budget()
         if _arm_spend[0] > ARM_CAP_USD:
             raise SystemExit(f"OpenRouter ARM CAP hit: ${_arm_spend[0]:.3f} > ${ARM_CAP_USD}")
-        choice = (resp.get("choices") or [{}])[0]
-        msg = choice.get("message") or {}
-        tcs = msg.get("tool_calls") or []
-        extra = {"usage": {"in": usage.get("prompt_tokens", 0), "out": usage.get("completion_tokens", 0)},
-                 "meta": {"provider": resp.get("provider"), "model": resp.get("model"),
-                          "finish_reason": choice.get("finish_reason")}}
-        if tcs:
-            fn = tcs[0].get("function") or {}
-            try:
-                parsed = json.loads(fn.get("arguments") or "{}")
-            except json.JSONDecodeError:
-                parsed = {}
-            return {"name": fn.get("name", ""), "args": parsed, **extra}
-        return {"final": (msg.get("content") or ""), **extra}
+        return parse_or_response(resp)
     return call_model
 
 
 def run_phase1(args):
     """Phase 1 arms: results/phase1/runs_<model>.jsonl, resume-safe, own cap."""
     global ARM_CAP_USD
+    if not args.provider:
+        raise SystemExit("Phase 1 pins one provider: pass --provider (default route is openai)")
+    if args.arm == "route" and not args.route:
+        raise SystemExit("--arm route needs --route <label> (names the output file)")
     ARM_CAP_USD = args.cap
+    strict = STRICT[args.strict]
     max_tokens = args.max_tokens or (4000 if args.reasoning in ("medium", "high") else 700)
-    out_path = p1.out_path(args.model, pilot=bool(args.limit))
+    out_path = p1.out_path(args.model, pilot=bool(args.limit), route=args.route)
+    trimmed = p1.repair_tail(out_path)
+    if trimmed:
+        print(f"repaired {out_path.name}: dropped a {trimmed}-byte partial last line")
+    pin = {"provider": args.provider, "strict": args.strict}
+    if p1.load_pins(out_path) - {p1.pin_id(pin)}:
+        raise SystemExit(f"{out_path.name} was written with other request settings than {pin}; "
+                         "use another --route label")
     done = p1.load_done(out_path)
     jobs = p1.jobs(args.arm, args.cells.split(",") if args.cells else None)
     if args.limit:
         jobs = jobs[:args.limit]
     tag_holder = [""]
     call_model = make_call_model(args.model, tag_holder, args.reasoning, max_tokens,
-                                 args.provider, phase="phase1")
+                                 args.provider, phase="phase1", strict=strict)
     n_done = n_skip = 0
     providers = {}
     with out_path.open("a") as f:
@@ -145,7 +187,8 @@ def run_phase1(args):
                 n_skip += 1
                 continue
             tag_holder[0] = p1.tag(job, args.reasoning)
-            rec = p1.run_episode(job, call_model, args.model, args.arm, args.reasoning, max_tokens)
+            rec = {**p1.run_episode(job, call_model, args.model, args.arm, args.reasoning, max_tokens,
+                                    route=args.route), "pin": pin}
             prov = (rec.get("meta") or {}).get("provider")
             providers[prov] = providers.get(prov, 0) + 1
             f.write(json.dumps(rec) + "\n")
@@ -168,6 +211,9 @@ def main():
     ap.add_argument("--reasoning", default="default", choices=["default", "minimal", "low", "medium", "high"])
     ap.add_argument("--cells", default="", help="comma list of Phase-1 conditions (arm thinking)")
     ap.add_argument("--provider", default=None, help="pin one OpenRouter provider, no fallbacks")
+    ap.add_argument("--strict", default="unset", choices=sorted(STRICT),
+                    help="per-tool strict flag: unset (September shape) or false")
+    ap.add_argument("--route", default=None, help="route label for --arm route (output file suffix)")
     ap.add_argument("--cap", type=float, default=ARM_CAP_USD, help="per-run spend cap in USD")
     ap.add_argument("--max-tokens", dest="max_tokens", type=int, default=0)
     args = ap.parse_args()
@@ -178,7 +224,7 @@ def main():
         raise SystemExit("Under $0.10 remaining — stopping before the arm starts.")
     if args.arm:
         return run_phase1(args)
-    from run_gemini import jobs_for_grid  # original grid only (imports the Gemini key)
+    from run_gemini import jobs_for_grid  # original grid only
 
     out_path = RESULTS / f"runs_{args.model.replace('/', '_')}_core.jsonl"
     done = set()

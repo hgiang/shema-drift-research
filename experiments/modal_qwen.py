@@ -224,6 +224,9 @@ def phase1(arm: str = "ablation", limit: int = 0, cells: str = ""):
 
     check_budget()
     path = p1.out_path(QWEN_ID, pilot=bool(limit))
+    trimmed = p1.repair_tail(path)
+    if trimmed:
+        print(f"repaired {path.name}: dropped a {trimmed}-byte partial last line")
     done = [list(k) for k in p1.load_done(path)]
     t0, added = time.time(), 0
     try:

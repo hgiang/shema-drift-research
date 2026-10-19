@@ -16,6 +16,7 @@ Phase 1 (writes results/phase1/runs_<model>.jsonl; see phase1_grid.py):
 """
 
 import argparse
+import functools
 import json
 import pathlib
 import random
@@ -37,24 +38,28 @@ CONDS = ["A", "B_strict", "B_lenient", "C", "D", "E"]
 THINKING = {"gemini-3.6-flash": "MINIMAL", "gemini-3.1-pro-preview": "LOW"}
 
 
-def api_key():
-    for line in (HERE.parent / ".env").read_text().splitlines():
+ENV_PATH = HERE.parent / ".env"
+
+
+@functools.lru_cache(maxsize=None)
+def _key(env_path=ENV_PATH):
+    """Read lazily so importing this module (tests, run_openrouter) needs no .env."""
+    lines = env_path.read_text().splitlines() if env_path.exists() else []
+    for line in lines:
         if line.startswith("GEMINI_API_KEY="):
-            return line.split("=", 1)[1].strip()
-    raise SystemExit("GEMINI_API_KEY not in .env")
-
-
-KEY = api_key()
+            value = line.split("=", 1)[1].strip()
+            if value:
+                return value
+    raise SystemExit(f"GEMINI_API_KEY missing or empty in {env_path}")
 
 
 def gemini_call(model, body, tries=6):
-    url = (f"https://generativelanguage.googleapis.com/v1beta/models/"
-           f"{model}:generateContent?key={KEY}")
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     data = json.dumps(body).encode()
     for attempt in range(tries):
         try:
-            req = urllib.request.Request(url, data=data,
-                                         headers={"Content-Type": "application/json"})
+            req = urllib.request.Request(url, data=data, headers={
+                "Content-Type": "application/json", "x-goog-api-key": _key()})
             with urllib.request.urlopen(req, timeout=120) as r:
                 return json.loads(r.read())
         except urllib.error.HTTPError as e:
@@ -95,23 +100,29 @@ def make_call_model(model, tag_holder, phase="experiments"):
                                  "thinkingConfig": {"thinkingLevel": THINKING[model]}},
         }
         resp = gemini_call(model, body)
-        usage = resp.get("usageMetadata", {})
-        log_cost(model, tag_holder[0], usage, phase=phase)
+        log_cost(model, tag_holder[0], resp.get("usageMetadata", {}), phase=phase)
         check_budget()
-        extra = {"usage": {"in": usage.get("promptTokenCount", 0),
-                           "out": usage.get("candidatesTokenCount", 0) + usage.get("thoughtsTokenCount", 0)},
-                 "meta": {"model": resp.get("modelVersion"), "thinking": THINKING[model]}}
-        try:
-            parts = resp["candidates"][0]["content"]["parts"]
-        except (KeyError, IndexError):
-            return {"final": "(empty)", **extra}
-        for part in parts:
-            if "functionCall" in part:
-                fc = part["functionCall"]
-                return {"name": fc["name"], "args": fc.get("args", {}), "raw": part, **extra}
-        text = " ".join(p.get("text", "") for p in parts)
-        return {"final": text, **extra}
+        return parse_gemini_response(resp, THINKING[model])
     return call_model
+
+
+def parse_gemini_response(resp, thinking):
+    """{"name","args","raw"} or {"final"}, plus usage (out includes thoughts) and meta."""
+    usage = resp.get("usageMetadata") or {}
+    candidate = (resp.get("candidates") or [{}])[0]
+    thoughts = usage.get("thoughtsTokenCount", 0)
+    extra = {"usage": {"in": usage.get("promptTokenCount", 0),
+                       "out": usage.get("candidatesTokenCount", 0) + thoughts, "reasoning": thoughts},
+             "meta": {"model": resp.get("modelVersion"), "thinking": thinking,
+                      "finish_reason": candidate.get("finishReason")}}
+    parts = (candidate.get("content") or {}).get("parts")
+    if not parts:
+        return {"final": "(empty)", **extra}
+    for part in parts:
+        if "functionCall" in part:
+            fc = part["functionCall"]
+            return {"name": fc["name"], "args": fc.get("args", {}), "raw": part, **extra}
+    return {"final": " ".join(p.get("text", "") for p in parts), **extra}
 
 
 def jobs_for_grid(grid, subset):
@@ -141,6 +152,9 @@ def jobs_for_grid(grid, subset):
 def run_phase1(args):
     """Phase 1 arms for Gemini (pre-registered: infoform). Resume-safe."""
     out_path = p1.out_path(args.model, pilot=bool(args.limit))
+    trimmed = p1.repair_tail(out_path)
+    if trimmed:
+        print(f"repaired {out_path.name}: dropped a {trimmed}-byte partial last line")
     done = p1.load_done(out_path)
     jobs = p1.jobs(args.arm)
     if args.limit:

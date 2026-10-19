@@ -323,12 +323,12 @@ def run_episode(task, cond, drift_class, call_model, phrasing_idx=0):
     user_text = task["phrasings"][phrasing_idx] + setup.get("user_suffix", "")
     transcript.extend(setup.get("preamble", []))  # Phase 1 place=tool: changelog already fetched
     pseudo = setup.get("pseudo", {})
-    final_text, usage, meta = None, {"in": 0, "out": 0}, None
+    final_text, usage, meta = None, {"in": 0, "out": 0, "reasoning": 0}, None
     while calls_made < MAX_CALLS:
         out = call_model(setup["system"], user_text, setup["declarations"], transcript)
         if out:
-            for k_in, k_out in (("in", "in"), ("out", "out")):
-                usage[k_out] += int((out.get("usage") or {}).get(k_in, 0) or 0)
+            got = out.get("usage") or {}
+            usage = {k: v + int(got.get(k, 0) or 0) for k, v in usage.items()}
             meta = out.get("meta", meta)
         if out is None or "final" in out:
             final_text = None if out is None else out.get("final")
