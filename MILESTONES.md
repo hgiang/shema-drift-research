@@ -103,6 +103,88 @@ reproducible), keyed by (task, cond, class, phrasing, rep, reasoning). Implement
 experiments/harness.py (build_phase1), experiments/phase1_grid.py and the three
 runners; tests in experiments/test_phase1.py.
 
+## Phase 1 addendum — 2026-10-19, before any Phase-1 model call
+Adds rules the lock leaves open. P1–P7, the scope and the unlock rule above are not
+changed. Execution plan: `phase1/PLAN.md`.
+
+**Disclosure 2 (post-lock look at the September logs, no new data).**
+
+| September logs, all conditions | luna | Flash | Pro | Qwen |
+|---|---|---|---|---|
+| Accepted arguments outside the declared schema (undeclared name + off-enum + off-type) | 0 of 4,050 | 157 | 74 | 87 |
+| Optional parameters filled in baseline A | 704/704 | 646/1408 | 322/704 | 988/1393 |
+
+Under E (error names the problem, one retry) luna resent the old parameter name 24/24 on
+rename and the integer 24/24 on type change; on enum it resent the old value 14/24 and
+chose a different v1 value 10/24, never the new value. September records do not say which
+OpenRouter endpoint served luna (7 endpoints list it on 2026-10-19).
+
+**Hypothesis H-dec.** luna's serving route constrains tool-call arguments to the declared
+schema. If it holds, every ablation cell and C_decl (all keep the v1 declaration) is null on
+the contrast set by construction, and luna's 100% optional fill is a decoding artifact.
+
+**Route pin.** Every luna Phase-1 call pins one OpenRouter provider with
+`allow_fallbacks: false` (default `openai`, confirmed by the probe). Pre-registered luna
+arms run on that route with `strict` unset (the September request shape).
+
+**Probe (instrument check, not in BH).** Tool `probe_tool`, rendered with
+`harness.declaration`: `mode` string enum ["alpha","beta"], required; `count` integer,
+required; `label` string, optional, default "none". System prompt `harness.SYSTEM`,
+temperature 0, 3 reps per prompt:
+- `off_enum`: `Call probe_tool with mode "gamma" and count 3. The service now accepts "gamma"; send exactly that value.`
+- `off_type`: `Call probe_tool with mode "alpha" and count set to the string "3 items" (a string, not a number).`
+- `undeclared`: `Call probe_tool with mode "alpha", count 3, and an extra argument named note with the value "hi".`
+- `optional_fill`: `Call probe_tool with mode "alpha" and count 3.`
+
+Routes: luna × provider {openai, azure, amazon-bedrock} × `strict` {unset, false};
+controls Flash and Pro at their study settings. Qwen is not probed (87 off-declaration
+arguments in September).
+
+**Probe decision rule.** Compliance on a route = off_enum + off_type + undeclared calls
+that carry the requested argument (out of 9). H-dec holds on a route when luna complies
+0/9 and each Gemini control complies ≥ 7/9. A route lifts the constraint when luna
+complies ≥ 7/9. Anything between is reported and treated as not lifted.
+
+**Conditional route arm.** Runs only if H-dec holds on the pinned route and some route
+lifts it: luna on that route, conditions A, B_strict, C:sys:json:none, primary 120 pairs
+(360 episodes).
+- P8. On the lifting route, luna's C unlocks recovery (rule above) on the contrast set.
+- P9. On the lifting route, luna's optional-fill rate in A is < 0.90, and its B_strict
+  success on required + default_change is ≥ 0.20 lower than September's.
+- Two tests join the BH family (194 → 196): route C − route B_strict on the contrast
+  set; route B_strict − September B_strict on required + default_change.
+- If H-dec holds and no route lifts it, luna's diff question is reported as not testable
+  on this route, and the OpenAI direct API moves to Phase 2. If H-dec fails, the luna
+  ablation is read as behaviour.
+
+**Analysis pins.**
+- A1. Pair sets: luna tests on the 72-pair contrast set; Qwen on all 120; information vs
+  form on the 48 required + default_change pairs; P5 on the 24 required pairs.
+- A2. Interactions with the 3-level place factor: per pair i and place p, e_ip = the other
+  factor's effect at p, averaged over the third factor; T = variance over p of mean_i
+  e_ip; the null permutes the three place labels within each pair; 20,000 permutations.
+  Format × instruction: per-pair 2×2 contrast averaged over place, sign-flip test.
+- A3. Main effects: per-pair contrast averaged over the other two factors' cells (4 cells
+  for place contrasts, 6 for format and instruction), sign-flip test.
+- A4. P2 holds when max(user − sys, tool − sys) exceeds both prose − json and
+  apply − none (signed point estimates) and is not within noise.
+- A5. Noise floors: luna = Phase-1 noise-arm flip rate; Qwen 0.0 and Flash 0.133
+  (September); Pro uses Flash's as a stated proxy. |mean difference| below the floor is
+  "within noise" whatever its p.
+- A6. Thinking cell = highest luna recovery point on the contrast set among the 12
+  non-replicate cells (11 ablation + C_decl); ties → higher success on all 120 pairs →
+  earlier in `harness.PHASE1_CONDS`. Written to
+  `results/phase1/thinking_cell_selection.json` and committed before the thinking run.
+- A7. P3 metric: Qwen type_change, per pair the share of prose cells labelled V2_CORRECT
+  minus the share of JSON cells; holds when the mean > 0 and its bootstrap CI excludes 0
+  (descriptive, not in BH); V2_PARTIAL reported beside it. P7 fails in a family when the
+  CI of C+D − C or of C+D − D lies wholly below 0.
+- A8. Drift over time: C re-run vs September C, paired difference with bootstrap CI plus
+  call-identity rate per class; not tested.
+- A9. If any C:tool:* cell unlocks recovery, a control C:toolctrl (the changelog turn
+  returns "No changes recorded." and the diff sits in the system prompt) runs for that
+  model before a placement claim is made; reported descriptively.
+
 ## Phase 1 run log
 - 2026-10-19 pre-flight (no model calls): Gemini `gemini-3.6-flash` (version
   `3.6-flash-07-2026`) and `gemini-3.1-pro-preview` (version `3.1-pro-preview-01-2026`)
