@@ -109,7 +109,9 @@ def test_noise_rep0_satisfied_by_ablation_record():
 
 def test_completeness_flags_missing_fields_and_bad_tool_preamble():
     t, cls = p1.primary_pairs()[0]
-    good = p1.run_episode((t, "C:tool:json:none", cls, 0, 0), oracle("v2")(t, cls), "m/x", "ablation", "default", 700)
+    good = {**p1.run_episode((t, "C:tool:json:none", cls, 0, 0), oracle("v2")(t, cls), "m/x", "ablation",
+                             "default", 700),
+            "meta": {"provider": "OpenAI", "model": "m/x-2026", "finish_reason": "stop"}}
     assert chk.completeness([good]) == []
     broken = {**good, "transcript": good["transcript"][2:]}
     no_usage = {**good, "usage": {"in": 0, "out": 0, "reasoning": 0}}
@@ -159,3 +161,28 @@ def test_cli_exit_code(tmp_path):
     assert run("--arm", "infoform", "--pilot").returncode == 0
     res = run("--arm", "infoform")
     assert res.returncode == 1 and "FAIL" in res.stdout
+
+
+def test_pilot_with_no_matching_record_fails(tmp_path):
+    f = write(tmp_path / "r.jsonl", fake_run(p1.jobs("infoform")[:3]))
+    ok, report = chk.gate(f, "infoform", "LOW", pilot=True)  # runner wrote reasoning "default"
+    assert not ok and any("no record matches" in x for x in report["failures"])
+    assert report["excluded_other_arms"] == 3
+
+
+def test_missing_provider_model_or_finish_reason_fails():
+    t, cls = p1.primary_pairs()[0]
+    rec = fake_run([(t, "CD", cls, 0, 0)])[0]
+    assert chk.completeness([rec]) == []
+    no_provider = {**rec, "meta": {"model": "m/x-2026", "finish_reason": "stop"}}
+    assert any("meta.provider" in x for x in chk.completeness([no_provider]))
+    gemini = {**rec, "model": "gemini-3.6-flash", "meta": {"model": "g", "finish_reason": "STOP"}}
+    assert chk.completeness([gemini]) == []  # Gemini has no provider field
+    assert any("meta.finish_reason" in x for x in chk.completeness([{**gemini, "meta": {"model": "g"}}]))
+
+
+def test_records_without_a_key_are_reported(tmp_path):
+    recs = fake_run(p1.jobs("infoform")[:2])
+    broken = {k: v for k, v in recs[0].items() if k != "class"}
+    ok, report = chk.gate(write(tmp_path / "r.jsonl", recs + [broken]), "infoform", "default", pilot=True)
+    assert not ok and any("without a full key" in x for x in report["failures"])

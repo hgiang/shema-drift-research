@@ -50,8 +50,10 @@ def read_records(path):
 
 def safe_key(rec):
     try:
-        return p1.rec_key(rec)
-    except KeyError:
+        k = p1.rec_key(rec)
+        hash(k)
+        return k
+    except (KeyError, TypeError):
         return None
 
 
@@ -79,6 +81,9 @@ def _record_problems(rec):
     if missing:
         return [f"{_who(rec)}: missing {', '.join(missing)}"]
     problems = []
+    for field in ("model", "finish_reason") + (("provider",) if "/" in str(rec.get("model")) else ()):
+        if rec["meta"].get(field) is None:  # OpenRouter ids are vendor/model and must name a provider
+            problems.append(f"{_who(rec)}: meta.{field} missing")
     if not (rec["usage"].get("in") or 0):
         problems.append(f"{_who(rec)}: usage.in is 0")
     if str(rec.get("cond", "")).startswith("C:tool:"):
@@ -130,8 +135,9 @@ def spend_report(model, n_records, cost_log=COST_LOG):
             "episodes_per_minute": round(episodes / minutes, 3) if minutes else None}
 
 
-def _failures(bad, problems, dups, cells, versions, cov, pilot):
+def _failures(bad, keyless, problems, dups, cells, versions, cov, pilot):
     out = [f"unparsable lines: {bad}"] if bad else []
+    out += [f"record without a full key: {w}" for w in keyless]
     out += problems
     out += [f"duplicate key: {k}" for k in dups]
     for cond, c in cells.items():
@@ -143,6 +149,8 @@ def _failures(bad, problems, dups, cells, versions, cov, pilot):
         out.append(f"model versions in file: {versions}")
     if not pilot and cov["missing"]:
         out.append(f"coverage: {len(cov['missing'])} of {cov['expected']} jobs missing")
+    if cov["present"] == 0:
+        out.append("no record matches this arm/reasoning/cells (wrong --reasoning or --arm?)")
     return out
 
 
@@ -155,10 +163,12 @@ def gate(path, arm, reasoning, cells=None, pilot=False):
     cell_rows = cell_report(arm_records)
     versions = dict(Counter(_meta(r, "model") for r in records))
     dups = duplicates(records)
-    failures = _failures(bad, completeness(arm_records), dups, cell_rows, versions, cov, pilot)
+    keyless = [_who(r) for r in records if safe_key(r) is None]
+    failures = _failures(bad, keyless, completeness(arm_records), dups, cell_rows, versions, cov, pilot)
     model = Counter(r.get("model") for r in records).most_common(1)[0][0] if records else None
     report = {"file": str(path), "arm": arm, "reasoning": reasoning, "pilot": pilot,
               "records": len(records), "unparsable_lines": bad, "coverage": cov, "duplicates": dups,
+              "excluded_other_arms": len(records) - len(arm_records) - len(keyless),
               "cells": cell_rows, "versions": versions, "spend": spend_report(model, len(records)),
               "failures": failures}
     return not failures, report
