@@ -62,6 +62,8 @@ def declaration(name, tool_v1, params):
 
 def build_condition(task, cond, drift_class):
     """Return dict with system, user, declarations, active_schemas, profile, retry."""
+    if is_phase1(cond):
+        return build_phase1(task, cond, drift_class)
     tools_v1 = frozen()["tools_v1"]
     dt = task["drift_tool"]
     key = f"{dt}::{drift_class}"
@@ -95,6 +97,156 @@ def build_condition(task, cond, drift_class):
         raise ValueError(cond)
     return {"system": system, "declarations": decls, "active": active,
             "profile": profile, "retry": retry}
+
+
+# ---------------- Phase 1 conditions (pre-registered in MILESTONES.md) ----------------
+#
+# All Phase-1 conditions run against the v2 schema with the STRICT executor.
+#   C:<place>:<fmt>:<instr>  diff-following ablation (v1 declarations shown)
+#       place  sys | user | tool   where the change log appears
+#       fmt    json | prose        how it is written
+#       instr  none | apply        whether an explicit "apply it step by step" line is added
+#     C:sys:json:none is a byte-identical re-run of condition C.
+#   C_decl   v1 declarations; the change is written into the drifted parameter's
+#            description inside the declaration (no system-prompt note)
+#   CD       v2 declarations + the JSON change log, note worded for a current schema
+#   Dprime   v2 declarations; the drifted parameter's description states the OLD contract
+
+PLACES, FORMATS, INSTRS = ("sys", "user", "tool"), ("json", "prose"), ("none", "apply")
+ABLATION_CELLS = [f"C:{p}:{f}:{i}" for p in PLACES for f in FORMATS for i in INSTRS]
+PHASE1_CONDS = ABLATION_CELLS + ["C_decl", "CD", "Dprime"]
+CHANGELOG_TOOL = "get_api_changelog"  # pseudo tool that "returns" the change log (place=tool)
+
+DIFF_NOTE_DETACHED = (  # same note as DIFF_NOTE, for places where no schema is "above"
+    "\n\nNOTE: the API behind tool '{tool}' was updated after the tool schema you were "
+    "given was cached. {kind} change log for '{tool}' (apply it when calling):\n{diff}"
+)
+APPLY_LINE = ("\nBefore calling '{tool}', apply this change log step by step: for each "
+              "change, rewrite the affected argument so the call matches the updated API.")
+CD_NOTE = (
+    "\n\nNOTE: the API behind tool '{tool}' was updated recently; the schema above is "
+    "the current version. Machine-readable change log from the previous version of "
+    "'{tool}':\n{diff}"
+)
+
+
+def is_phase1(cond):
+    return cond in PHASE1_CONDS
+
+
+def _q(v):
+    return json.dumps(v)
+
+
+def prose_change(ch):
+    """One plain-English sentence per diff record (deterministic templates)."""
+    c, p = ch["change"], ch["param"]
+    if c == "renamed":
+        return f"Parameter `{ch['old']}` has been renamed to `{ch['new']}`; send `{ch['new']}` instead of `{ch['old']}`."
+    if c == "enum_changed":
+        return f"Parameter `{p}` no longer accepts the value {_q(ch['old'])}; use {_q(ch['new'])} instead."
+    if c == "now_required":
+        return (f"Parameter `{p}` is now required and has no default. Previously, leaving it "
+                f"out meant {_q(ch['old']['default'])}.")
+    if c == "type_changed":
+        return (f"Parameter `{p}` changed type from {ch['old']['type']} to {ch['new']['type']}. "
+                f"Old meaning: {ch['old']['desc']}. New meaning: {ch['new']['desc']}.")
+    if c == "default_changed":
+        return f"The default of parameter `{p}` changed from {_q(ch['old'])} to {_q(ch['new'])}."
+    raise ValueError(c)
+
+
+def old_contract(ch):
+    """Parenthetical stating the v1 contract, appended to the v2 description (Dprime)."""
+    c = ch["change"]
+    if c == "renamed":
+        return f" (previously named `{ch['old']}`)"
+    if c == "enum_changed":
+        return f" (previously accepted {_q(ch['old'])}; now use {_q(ch['new'])})"
+    if c == "now_required":
+        return f" (previously optional; leaving it out meant {_q(ch['old']['default'])})"
+    if c == "type_changed":
+        return f" (previously {ch['old']['type']}: {ch['old']['desc']})"
+    if c == "default_changed":
+        return f" (previous default: {_q(ch['old'])})"
+    raise ValueError(c)
+
+
+def change_note(tool, changes, place, fmt, instr):
+    if fmt == "json":
+        body, kind = json.dumps(changes, indent=1), "Machine-readable"
+    else:
+        body, kind = "\n".join(f"- {prose_change(ch)}" for ch in changes), "Plain-language"
+    if place == "sys" and fmt == "json":
+        note = DIFF_NOTE.format(tool=tool, diff=body)  # exactly condition C
+    elif place == "sys":
+        note = DIFF_NOTE.replace("Machine-readable", kind).format(tool=tool, diff=body)
+    else:
+        note = DIFF_NOTE_DETACHED.format(tool=tool, kind=kind, diff=body)
+    if instr == "apply":
+        note += APPLY_LINE.format(tool=tool)
+    return note
+
+
+def _with_desc(params, pname, suffix):
+    out = {k: dict(v) for k, v in params.items()}
+    out[pname]["desc"] = out[pname]["desc"] + suffix
+    return out
+
+
+def changelog_declaration():
+    return {"name": CHANGELOG_TOOL,
+            "description": "Return the change log for a tool's API since its schema was cached.",
+            "parameters": {"type": "object", "properties": {
+                "tool": {"type": "string", "description": "Tool name"}}, "required": ["tool"]}}
+
+
+def build_phase1(task, cond, drift_class):
+    tools_v1 = frozen()["tools_v1"]
+    dt = task["drift_tool"]
+    key = f"{dt}::{drift_class}"
+    v2_params = frozen()["v2_schemas"][key]
+    changes = frozen()["diffs"][key]["changes"]
+    ch = changes[0]
+
+    system, user_suffix, preamble, pseudo = SYSTEM, "", [], {}
+    shown_drift = tools_v1[dt]["params"]
+    if cond.startswith("C:"):
+        _, place, fmt, instr = cond.split(":")
+        note = change_note(dt, changes, place, fmt, instr)
+        if place == "sys":
+            system = SYSTEM + note
+        elif place == "user":
+            user_suffix = note
+        else:  # tool: a completed changelog call already sits in the transcript
+            content = note.lstrip("\n")
+            preamble = [{"role": "assistant_tool_call", "name": CHANGELOG_TOOL,
+                         "args": {"tool": dt}, "synthetic": True},
+                        {"role": "tool_result", "name": CHANGELOG_TOOL,
+                         "content": content, "synthetic": True}]
+            pseudo = {CHANGELOG_TOOL: content}
+    elif cond == "C_decl":
+        shown_drift = _with_desc(tools_v1[dt]["params"], ch["param"],
+                                 " CHANGED: " + prose_change(ch))
+    elif cond == "CD":
+        shown_drift = v2_params
+        system = SYSTEM + CD_NOTE.format(tool=dt, diff=json.dumps(changes, indent=1))
+    elif cond == "Dprime":
+        pname = ch["new"] if ch["change"] == "renamed" else ch["param"]
+        shown_drift = _with_desc(v2_params, pname, old_contract(ch))
+    else:
+        raise ValueError(cond)
+
+    decls, active = [], {}
+    for name in sorted({s["tool"] for s in task["steps"]}):
+        t = tools_v1[name]
+        active[name] = v2_params if name == dt else t["params"]
+        decls.append(declaration(name, t, shown_drift if name == dt else t["params"]))
+    if pseudo:
+        decls.append(changelog_declaration())
+    return {"system": system, "declarations": decls, "active": active,
+            "profile": "strict", "retry": False,
+            "user_suffix": user_suffix, "preamble": preamble, "pseudo": pseudo}
 
 
 # ---------------- canonicalization ----------------
@@ -168,15 +320,26 @@ def run_episode(task, cond, drift_class, call_model, phrasing_idx=0):
     drift_outcome = None
     error_seen = None
 
-    user_text = task["phrasings"][phrasing_idx]
+    user_text = task["phrasings"][phrasing_idx] + setup.get("user_suffix", "")
+    transcript.extend(setup.get("preamble", []))  # Phase 1 place=tool: changelog already fetched
+    pseudo = setup.get("pseudo", {})
+    final_text, usage, meta = None, {"in": 0, "out": 0}, None
     while calls_made < MAX_CALLS:
         out = call_model(setup["system"], user_text, setup["declarations"], transcript)
+        if out:
+            for k_in, k_out in (("in", "in"), ("out", "out")):
+                usage[k_out] += int((out.get("usage") or {}).get(k_in, 0) or 0)
+            meta = out.get("meta", meta)
         if out is None or "final" in out:
+            final_text = None if out is None else out.get("final")
             break
         calls_made += 1
         name, args = out["name"], out.get("args", {})
         transcript.append({"role": "assistant_tool_call", "name": name, "args": args,
                            "raw": out.get("raw")})
+        if name in pseudo:  # the model asked for the changelog again: hand it over
+            transcript.append({"role": "tool_result", "name": name, "content": pseudo[name]})
+            continue
         active = setup["active"].get(name)
         if active is None:  # hallucinated tool
             transcript.append({"role": "tool_result", "name": name,
@@ -229,4 +392,7 @@ def run_episode(task, cond, drift_class, call_model, phrasing_idx=0):
         "drift_outcome": drift_outcome, "error_seen": error_seen,
         "calls_made": calls_made, "n_steps": n_steps,
         "executed": [{"tool": e[0], "args": e[1], "outcome": e[2]} for e in executed],
+        # full trace (Phase 1 logging): every call incl. rejected ones, every result
+        "transcript": [{k: v for k, v in turn.items() if k != "raw"} for turn in transcript],
+        "final_text": final_text, "usage": usage, "meta": meta,
     }

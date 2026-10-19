@@ -218,6 +218,7 @@ Do the phases in order. Phase 1 is the cheapest and matters the most.
 | Date | What | Notes |
 |---|---|---|
 | 2026-09-23 | Handed over | Reproduce first (Section 1), then Phase 1 |
+| 2026-10-19 | Phase 1 steps 1-3 | Step 1 diagnostic on old logs (`phase1/`); pre-registration locked in `MILESTONES.md`; Phase-1 conditions, logging and runners added (`experiments/phase1_grid.py`, `test_phase1.py`); logs go to `results/phase1/` |
 | | | |
 
 Good luck. The instrument is clean, the statistics are careful, and the diff result is the

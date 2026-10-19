@@ -16,6 +16,93 @@ every checkpoint. RULE: at each CP, STOP and report to the user; wait for approv
   rather than fail silently; if D1 reverses for that mechanical reason we report exactly
   that (reversal-reporting discipline per the voice paper).
 
+## Phase 1 pre-registration — LOCKED 2026-10-19
+Drafted and locked 2026-10-19, before any Phase-1 model call; the owner accepted the
+recommended choices for every former [DECIDE] item in chat on 2026-10-19. Pilot
+`--limit 5` runs are excluded and not analysed.
+- Locked: 2026-10-19 (commit this file before the first pilot call)
+
+**Disclosure.** Before writing this, step 1 re-read the EXISTING logs
+(`phase1/step1_diag_diff_following.py`, no new data). It showed that under C, GPT-5.6-luna
+sent the v1-form call on 71/72 rename/enum/type pairs, identical argument-for-argument to
+its B_strict call in 71/72 (114/120 overall); Qwen was identical in 196/240 and
+half-applied 7/48 type changes (string sent, old unit kept); D on newly-required fell to
+.17 (luna, Qwen) and .40/.42 (Flash/Pro) because v2 drops the old default. The
+predictions below are informed by that look; they are directional bets on NEW runs.
+
+**Scope (new data only; testbed unchanged, sha256 e8bbd71c...).**
+- Ablation: placement {system, user turn, tool result} x format {JSON, prose} x
+  instruction {none, "apply this change log step by step"} = 12 cells, on luna and
+  Qwen2.5-7B, primary 120 pairs each (2,880 episodes). Cell system/JSON/none re-runs C.
+- Extra cell C_decl (INCLUDED): v1 declaration, with the change written in plain
+  language into the drifted parameter's description; no system-prompt note (luna and
+  Qwen, 240 episodes). Step 1 suggests declarations are the channel luna follows.
+- Thinking (luna only; Qwen2.5 has none): reasoning effort {provider default, high} x
+  {C re-run, best ablation cell} (default level already run in the ablation, so 240 new
+  episodes at high, max_tokens 4000). "Best cell" = highest luna recovery on the
+  contrast set in the ablation; it is reported as selected. The default level is
+  "no reasoning parameter sent", exactly as in the original luna arm.
+- Information vs form: C+D (v2 schema + diff, note reworded so it is true when v2 is
+  shown) and D' (v2 schema; the drifted parameter's description states the old contract,
+  e.g. "previous default: X") on all four families, primary 120 pairs (960 episodes).
+- Noise floor: luna, C re-run, 30 stratified tasks x 5 identical calls (150 episodes).
+- Budget: about $8-12 + about 1.5 A10G GPU-h; stays under the $25 hard stop
+  ($7.64 spent). OpenRouter per-run cap: $6 (`--cap 6`).
+- Silent-drift and baseline references (A, B_strict) are the existing September logs
+  for the same model and pairs; the C re-run (C:sys:json:none) is compared with the
+  original C as a drift-over-time check and reported, not tested.
+
+**Primary contrasts (fixed now).**
+- luna: recovery on the contrast set = rename + enum_tighten + type_change (72 pairs).
+  Newly-required and default-change are excluded: luna passes every optional parameter,
+  so it already survives them without any diff (B_strict 1.00 and .92).
+- Qwen: recovery on all five classes (120 pairs).
+- Information vs form: C vs D', D' vs D, C+D vs C, C+D vs D, on newly-required +
+  default-change (48 pairs per family), per family.
+- Recovery = (success(X) - success(B_strict)) / (success(A) - success(B_strict)), paired
+  per task-drift pair, as in analyze.py.
+
+**Predictions.**
+- P1. No cell that keeps the diff in the system prompt (format or instruction changes
+  only) brings luna to recovery >= 0.5 on the contrast set.
+- P2. For luna, moving the diff out of the system prompt (user turn or tool result)
+  raises recovery more than changing format or adding the instruction (placement main
+  effect > format and instruction main effects).
+- P3. Qwen: prose format raises correct application on type_change (fewer
+  string-with-old-unit calls) relative to JSON.
+- P4. More thinking does not unlock luna (recovery stays < 0.5 at high effort).
+- P5. D' beats D on newly-required by >= 0.30 in every family.
+- P6. On Gemini Flash and Pro, D' is equivalent to C on newly-required + default-change:
+  95% CI of the paired difference inside [-0.10, +0.10]. If so, the diff's advantage over
+  the full schema is the information it carries (old contract), not its form.
+- P7. C+D >= max(C, D) in every family (no family is hurt by having both).
+
+**Decision rules.**
+- "Unlocks recovery" = recovery >= 0.5 AND paired 95% bootstrap CI of
+  success(X) - success(B_strict) excludes 0 AND the test survives BH.
+- A cell difference smaller than luna's measured flip rate (noise floor) is not read as
+  an effect, whatever its p-value.
+- Main effects (placement, format, instruction) are paired contrasts averaged over the
+  other two factors; interactions are tested directly, not inferred from differing
+  significance.
+- One BH family: the existing 112 tests + 82 Phase-1 tests = 194. The 82 are:
+  each of the 13 ablation cells vs B_strict (13 x 2 models = 26); each non-replicate
+  cell vs the C re-run (12 x 2 = 24); main effects user-vs-sys, tool-vs-sys,
+  prose-vs-json, apply-vs-none (4 x 2 = 8); two-way interactions place x format,
+  place x instruction, format x instruction (3 x 2 = 6); high vs default reasoning on
+  the two thinking cells (2); C vs D', D' vs D, C+D vs C, C+D vs D (4 x 4 families =
+  16). State the effective threshold in analysis.json.
+- Any reversal is reported plainly. In particular, if P6 fails because D' still loses to
+  C, we say the form of the diff matters beyond its information.
+
+**Logging required before the run** (otherwise no full run): variant ID, full
+transcript including rejected calls and their arguments, usage tokens, reasoning
+setting, model/version string, OpenRouter provider; Phase-1 records written to
+`results/phase1/runs_<model>.jsonl` (outside analyze.py's glob, so analysis.json stays
+reproducible), keyed by (task, cond, class, phrasing, rep, reasoning). Implemented in
+experiments/harness.py (build_phase1), experiments/phase1_grid.py and the three
+runners; tests in experiments/test_phase1.py.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)
