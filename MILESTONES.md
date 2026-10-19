@@ -238,6 +238,22 @@ lifting route with the highest k; ties go to the earlier route in
   not allow the value, i.e. the declaration-over-instruction preference shows without a
   decoding constraint. Gemini Pro calls took up to ~14 min each (timeouts and retries):
   re-measure before the Pro infoform arm.
+- 2026-10-19 pilots (`*.pilot.jsonl`, not analysed), all passing `check_phase1_logs.py
+  --pilot`: luna ablation 30 (13 cells), Flash infoform 8, Qwen ablation 30, Pro infoform
+  1 of 4 (then timed out; 2 more on retry at 17:59, 10 s each).
+- 2026-10-19 full runs, each passing the full gate (100% coverage, one provider per cell,
+  no truncation, one model version per file): luna (provider `openai` pinned, `strict`
+  unset) ablation 1,560, noise 150 (rep 0 shared with the ablation), infoform 240;
+  Qwen ablation 1,560 + infoform 240 (1.65 A10G GPU-h); Flash infoform 240.
+- 2026-10-19 thinking selection (pin A6, committed before the run): all 12 candidates have
+  luna recovery 0.000 on the contrast set (0/72 in every cell, as in September's B_strict
+  and C); ties went to success on all 120 pairs, then PHASE1_CONDS order:
+  `C:user:prose:none`. Thinking arm (reasoning `high`, max_tokens 4000): 240/240, gate
+  passes; mean reasoning tokens per episode 63 at default vs 83 at high (max 389), no
+  truncation.
+- 2026-10-19 Pro infoform stopped at 182/240: HTTP 429, quota
+  `GenerateRequestsPerDayPerProjectPerModel` = 250 for `gemini-3.1-pro-preview` on this
+  project; resumes after the daily reset. Logged spend $11.41 of the $25 hard stop.
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
