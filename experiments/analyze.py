@@ -6,9 +6,11 @@ permutation tests (20,000), paired d_z, direct drift-class x condition
 interaction permutation, Benjamini-Hochberg over the FULL reported family.
 """
 
+import argparse
 import json
 import pathlib
 import sys
+from types import SimpleNamespace
 
 import numpy as np
 
@@ -18,7 +20,10 @@ sys.path.insert(0, str(HERE))
 import harness  # noqa: E402
 
 RNG = np.random.default_rng(20260909)
+RNG_P1 = np.random.default_rng(20261019)  # Phase 1 draws never touch the September stream
 N_BOOT, N_PERM = 10_000, 20_000
+PHASE1 = RESULTS / "phase1"
+P1_PREFIX = "p1:"
 CLASSES = ["rename", "enum_tighten", "required", "type_change", "default_change"]
 CONDS = ["A", "B_strict", "B_lenient", "C", "D", "E"]
 LEVERS = ["C", "D", "E"]
@@ -36,31 +41,31 @@ def load_runs():
     return list(runs.values())
 
 
-def boot_ci(diffs):
+def boot_ci(diffs, rng=RNG):
     diffs = np.asarray(diffs, dtype=float)
-    idx = RNG.integers(0, len(diffs), size=(N_BOOT, len(diffs)))
+    idx = rng.integers(0, len(diffs), size=(N_BOOT, len(diffs)))
     means = diffs[idx].mean(axis=1)
     return [float(np.percentile(means, 2.5)), float(np.percentile(means, 97.5))]
 
 
-def signflip_p(diffs):
+def signflip_p(diffs, rng=RNG):
     diffs = np.asarray(diffs, dtype=float)
     obs = abs(diffs.mean())
     if np.all(diffs == 0):
         return 1.0
-    flips = RNG.choice([-1.0, 1.0], size=(N_PERM, len(diffs)))
+    flips = rng.choice([-1.0, 1.0], size=(N_PERM, len(diffs)))
     perm = (diffs * flips).mean(axis=1)
     return float((np.abs(perm) >= obs - 1e-12).mean())
 
 
-def paired_stats(diffs, label):
+def paired_stats(diffs, label, rng=RNG):
     diffs = np.asarray(diffs, dtype=float)
     if len(diffs) == 0:
         return None
-    p = signflip_p(diffs)
+    p = signflip_p(diffs, rng)
     ALL_P.append((label, p))
     sd = diffs.std(ddof=1) if len(diffs) > 1 else 0.0
-    return {"n": int(len(diffs)), "mean": float(diffs.mean()), "ci95": boot_ci(diffs),
+    return {"n": int(len(diffs)), "mean": float(diffs.mean()), "ci95": boot_ci(diffs, rng),
             "p_signflip": p, "dz": float(diffs.mean() / sd) if sd > 0 else None}
 
 
@@ -270,8 +275,8 @@ def token_costs():
     return res
 
 
-def bh(alpha=0.05):
-    ps = sorted(ALL_P, key=lambda x: x[1])
+def bh(alpha=0.05, tests=None):
+    ps = sorted(ALL_P if tests is None else tests, key=lambda x: x[1])
     m = len(ps)
     thresh, survivors = 0.0, []
     for i, (lab, p) in enumerate(ps, 1):
@@ -284,7 +289,19 @@ def bh(alpha=0.05):
             "survivors": survivors}
 
 
-def main():
+def phase1_ctx():
+    return SimpleNamespace(rng=RNG_P1, boot=lambda d: boot_ci(d, RNG_P1),
+                           paired=lambda d, label: paired_stats(d, label, RNG_P1),
+                           register=lambda label, p: ALL_P.append((label, p)))
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", type=pathlib.Path, default=RESULTS / "analysis.json")
+    ap.add_argument("--phase1-dir", type=pathlib.Path, default=PHASE1)
+    ap.add_argument("--allow-partial", action="store_true",
+                    help="write results/analysis.json even if the Phase-1 BH family is incomplete")
+    args = ap.parse_args(argv)
     runs = load_runs()
     models = sorted({r["model"] for r in runs})
     out = {"generated": "analyze.py", "n_records": len(runs), "models": {}}
@@ -298,8 +315,24 @@ def main():
         if ph:
             out["models"][m]["phrasing_battery"] = ph
     out["token_costs"] = token_costs()
+    import analyze_phase1 as ap1  # after the September blocks: they keep their RNG draws
+    p1runs = ap1.load_phase1_runs(args.phase1_dir) if args.phase1_dir.exists() else []
+    phase1 = ap1.analyze(runs, p1runs, phase1_ctx(), {m: out["models"][m].get("noise_floor") for m in models},
+                         args.phase1_dir)
+    if phase1:
+        out["phase1"] = phase1
     out["bh"] = bh()
-    (RESULTS / "analysis.json").write_text(json.dumps(out, indent=1))
+    if phase1:
+        out["bh_original_family"] = bh(tests=[t for t in ALL_P if not t[0].startswith(P1_PREFIX)])
+        phase1["predictions"] = ap1.predictions(phase1, set(out["bh"]["survivors"]))
+        phase1["family"] = {"n_tests": out["bh"]["n_tests"], "expected": ap1.EXPECTED_TESTS,
+                            "complete": out["bh"]["n_tests"] == ap1.EXPECTED_TESTS}
+        if (not phase1["family"]["complete"] and args.out.resolve() == (RESULTS / "analysis.json").resolve()
+                and not args.allow_partial):
+            raise SystemExit(f"Phase-1 family has {out['bh']['n_tests']} of {ap1.EXPECTED_TESTS} tests "
+                             f"(incomplete: {sorted(phase1['status'])}); not overwriting results/analysis.json. "
+                             "Use --out <file> for an interim look, or --allow-partial.")
+    args.out.write_text(json.dumps(out, indent=1))
     print(f"analysis.json written: {len(runs)} records, {len(models)} models, "
           f"{out['bh']['n_tests']} tests, {out['bh']['n_survive']} survive BH")
     for m in models:
