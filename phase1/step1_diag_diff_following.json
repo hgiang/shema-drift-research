@@ -1,0 +1,833 @@
+{
+ "openai/gpt-5.6-luna": {
+  "n_C": 120,
+  "C_drift_call_labels": {
+   "rename": {
+    "V1_FORM": 24
+   },
+   "enum_tighten": {
+    "V1_FORM": 23,
+    "V2_PARTIAL": 1
+   },
+   "required": {
+    "V1_SAFE": 23,
+    "NO_DRIFT_CALL": 1
+   },
+   "type_change": {
+    "V1_FORM": 24
+   },
+   "default_change": {
+    "V1_SAFE": 19,
+    "V2_CORRECT": 2,
+    "V2_PARTIAL": 2,
+    "OTHER_WRONG": 1
+   }
+  },
+  "identity": {
+   "C_vs_B_strict": {
+    "rename": {
+     "identical": 24,
+     "n": 24
+    },
+    "enum_tighten": {
+     "identical": 23,
+     "n": 24
+    },
+    "required": {
+     "identical": 23,
+     "n": 24
+    },
+    "type_change": {
+     "identical": 24,
+     "n": 24
+    },
+    "default_change": {
+     "identical": 20,
+     "n": 24
+    }
+   },
+   "C_vs_D": {
+    "rename": {
+     "identical": 0,
+     "n": 24
+    },
+    "enum_tighten": {
+     "identical": 1,
+     "n": 24
+    },
+    "required": {
+     "identical": 5,
+     "n": 24
+    },
+    "type_change": {
+     "identical": 0,
+     "n": 24
+    },
+    "default_change": {
+     "identical": 21,
+     "n": 24
+    }
+   }
+  },
+  "success_by_class": {
+   "B_strict": {
+    "rename": 0.0,
+    "enum_tighten": 0.0,
+    "required": 1.0,
+    "type_change": 0.0,
+    "default_change": 0.917
+   },
+   "C": {
+    "rename": 0.0,
+    "enum_tighten": 0.0,
+    "required": 0.958,
+    "type_change": 0.0,
+    "default_change": 0.792
+   },
+   "D": {
+    "rename": 0.917,
+    "enum_tighten": 0.833,
+    "required": 0.167,
+    "type_change": 0.75,
+    "default_change": 0.792
+   }
+  },
+  "examples": {
+   "type_change|V1_FORM": [
+    {
+     "task": "ride03",
+     "detail": "Invalid type for parameter 'tip_cents': expected string, got int."
+    },
+    {
+     "task": "zip03",
+     "detail": "Invalid type for parameter 'split_mb': expected string, got int."
+    }
+   ],
+   "required|V1_SAFE": [
+    {
+     "task": "kw03",
+     "detail": "default"
+    },
+    {
+     "task": "copy02",
+     "detail": "local"
+    }
+   ],
+   "enum_tighten|V1_FORM": [
+    {
+     "task": "ds02",
+     "detail": "Invalid value 'gzip' for parameter 'compression'. Allowed values: none, gz, zstd."
+    },
+    {
+     "task": "job02",
+     "detail": "Invalid value 'contract' for parameter 'employment'. Allowed values: full_time, part_time, contractor."
+    }
+   ],
+   "rename|V1_FORM": [
+    {
+     "task": "cal03",
+     "detail": "Received unknown parameter: 'location'."
+    },
+    {
+     "task": "pay02",
+     "detail": "Received unknown parameter: 'memo'."
+    }
+   ],
+   "default_change|V1_SAFE": [
+    {
+     "task": "room02",
+     "detail": false
+    },
+    {
+     "task": "log02",
+     "detail": false
+    }
+   ],
+   "default_change|V2_CORRECT": [
+    {
+     "task": "perm04",
+     "detail": false
+    },
+    {
+     "task": "chan04",
+     "detail": false
+    }
+   ],
+   "enum_tighten|V2_PARTIAL": [
+    {
+     "task": "cal04",
+     "detail": "confidential"
+    }
+   ],
+   "required|NO_DRIFT_CALL": [
+    {
+     "task": "exp01",
+     "detail": null
+    }
+   ],
+   "default_change|V2_PARTIAL": [
+    {
+     "task": "deal02",
+     "detail": "unspecified"
+    },
+    {
+     "task": "deal03",
+     "detail": "unspecified"
+    }
+   ],
+   "default_change|OTHER_WRONG": [
+    {
+     "task": "perm02",
+     "detail": {
+      "recursive": false
+     }
+    }
+   ]
+  }
+ },
+ "modal-qwen2.5-7b": {
+  "n_C": 240,
+  "C_drift_call_labels": {
+   "rename": {
+    "V1_FORM": 48
+   },
+   "enum_tighten": {
+    "V1_FORM": 40,
+    "V2_CORRECT": 8
+   },
+   "required": {
+    "V1_FORM": 28,
+    "V1_SAFE": 13,
+    "OTHER_WRONG": 3,
+    "V2_PARTIAL": 1,
+    "V2_CORRECT": 3
+   },
+   "type_change": {
+    "V1_FORM": 37,
+    "V2_CORRECT": 4,
+    "V2_PARTIAL": 7
+   },
+   "default_change": {
+    "V1_FORM": 5,
+    "V1_SAFE": 32,
+    "V2_CORRECT": 5,
+    "OTHER_WRONG": 5,
+    "OTHER_ERROR": 1
+   }
+  },
+  "identity": {
+   "C_vs_B_strict": {
+    "rename": {
+     "identical": 47,
+     "n": 48
+    },
+    "enum_tighten": {
+     "identical": 41,
+     "n": 48
+    },
+    "required": {
+     "identical": 36,
+     "n": 48
+    },
+    "type_change": {
+     "identical": 37,
+     "n": 48
+    },
+    "default_change": {
+     "identical": 35,
+     "n": 48
+    }
+   },
+   "C_vs_D": {
+    "rename": {
+     "identical": 0,
+     "n": 48
+    },
+    "enum_tighten": {
+     "identical": 9,
+     "n": 48
+    },
+    "required": {
+     "identical": 3,
+     "n": 48
+    },
+    "type_change": {
+     "identical": 7,
+     "n": 48
+    },
+    "default_change": {
+     "identical": 35,
+     "n": 48
+    }
+   }
+  },
+  "success_by_class": {
+   "B_strict": {
+    "rename": 0.0,
+    "enum_tighten": 0.062,
+    "required": 0.333,
+    "type_change": 0.0,
+    "default_change": 0.708
+   },
+   "C": {
+    "rename": 0.0,
+    "enum_tighten": 0.167,
+    "required": 0.333,
+    "type_change": 0.083,
+    "default_change": 0.729
+   },
+   "D": {
+    "rename": 0.875,
+    "enum_tighten": 0.812,
+    "required": 0.167,
+    "type_change": 0.646,
+    "default_change": 0.729
+   }
+  },
+  "examples": {
+   "default_change|V1_FORM": [
+    {
+     "task": "deal03",
+     "detail": null
+    },
+    {
+     "task": "perm04",
+     "detail": null
+    }
+   ],
+   "enum_tighten|V1_FORM": [
+    {
+     "task": "kw04",
+     "detail": "Invalid value 'email' for parameter 'alert_channel'. Allowed values: mail, push, webhook."
+    },
+    {
+     "task": "hotel02",
+     "detail": "Invalid value 'deluxe' for parameter 'room_type'. Allowed values: standard, suite, luxury."
+    }
+   ],
+   "required|V1_FORM": [
+    {
+     "task": "web01",
+     "detail": "Missing required parameter: 'region'."
+    },
+    {
+     "task": "web03",
+     "detail": "Missing required parameter: 'region'."
+    }
+   ],
+   "rename|V1_FORM": [
+    {
+     "task": "rep01",
+     "detail": "Received unknown parameter: 'filters'."
+    },
+    {
+     "task": "copy01",
+     "detail": "Received unknown parameter: 'comment'."
+    }
+   ],
+   "required|V1_SAFE": [
+    {
+     "task": "pay01",
+     "detail": "default_balance"
+    },
+    {
+     "task": "copy02",
+     "detail": "local"
+    }
+   ],
+   "type_change|V1_FORM": [
+    {
+     "task": "widg03",
+     "detail": "Invalid type for parameter 'refresh_min': expected string, got int."
+    },
+    {
+     "task": "job02",
+     "detail": "Invalid type for parameter 'salary_cents': expected string, got int."
+    }
+   ],
+   "default_change|V1_SAFE": [
+    {
+     "task": "room02",
+     "detail": false
+    },
+    {
+     "task": "kw02",
+     "detail": true
+    }
+   ],
+   "type_change|V2_CORRECT": [
+    {
+     "task": "cart02",
+     "detail": "3"
+    },
+    {
+     "task": "cart03",
+     "detail": "1"
+    }
+   ],
+   "type_change|V2_PARTIAL": [
+    {
+     "task": "perm02",
+     "detail": "480"
+    },
+    {
+     "task": "kw04",
+     "detail": "60"
+    }
+   ],
+   "enum_tighten|V2_CORRECT": [
+    {
+     "task": "refund04",
+     "detail": null
+    },
+    {
+     "task": "zip01",
+     "detail": null
+    }
+   ],
+   "required|OTHER_WRONG": [
+    {
+     "task": "sched04",
+     "detail": {
+      "timezone": "UTC"
+     }
+    },
+    {
+     "task": "pay02",
+     "detail": {
+      "funding_source": "default_balance"
+     }
+    }
+   ],
+   "default_change|V2_CORRECT": [
+    {
+     "task": "inv02",
+     "detail": "USD"
+    },
+    {
+     "task": "chan04",
+     "detail": false
+    }
+   ],
+   "default_change|OTHER_WRONG": [
+    {
+     "task": "refund02",
+     "detail": {
+      "notify": true
+     }
+    },
+    {
+     "task": "ride03",
+     "detail": {
+      "share_eta": true
+     }
+    }
+   ],
+   "required|V2_PARTIAL": [
+    {
+     "task": "zip02",
+     "detail": "Invalid type for parameter 'dest_dir': expected string, got NoneType."
+    }
+   ],
+   "default_change|OTHER_ERROR": [
+    {
+     "task": "zip04",
+     "detail": "Invalid type for parameter 'dest_dir': expected string, got NoneType."
+    }
+   ],
+   "required|V2_CORRECT": [
+    {
+     "task": "ds01",
+     "detail": "us-east-1"
+    },
+    {
+     "task": "deal01",
+     "detail": "USD"
+    }
+   ]
+  }
+ },
+ "gemini-3.6-flash": {
+  "n_C": 240,
+  "C_drift_call_labels": {
+   "rename": {
+    "V2_CORRECT": 47,
+    "V1_FORM": 1
+   },
+   "enum_tighten": {
+    "V2_CORRECT": 48
+   },
+   "required": {
+    "V2_CORRECT": 48
+   },
+   "type_change": {
+    "V2_CORRECT": 45,
+    "V1_FORM": 2,
+    "V2_PARTIAL": 1
+   },
+   "default_change": {
+    "V1_FORM": 2,
+    "V2_CORRECT": 16,
+    "V1_SAFE": 30
+   }
+  },
+  "identity": {
+   "C_vs_B_strict": {
+    "rename": {
+     "identical": 1,
+     "n": 48
+    },
+    "enum_tighten": {
+     "identical": 0,
+     "n": 48
+    },
+    "required": {
+     "identical": 0,
+     "n": 48
+    },
+    "type_change": {
+     "identical": 0,
+     "n": 48
+    },
+    "default_change": {
+     "identical": 31,
+     "n": 48
+    }
+   },
+   "C_vs_D": {
+    "rename": {
+     "identical": 37,
+     "n": 48
+    },
+    "enum_tighten": {
+     "identical": 30,
+     "n": 48
+    },
+    "required": {
+     "identical": 15,
+     "n": 48
+    },
+    "type_change": {
+     "identical": 30,
+     "n": 48
+    },
+    "default_change": {
+     "identical": 45,
+     "n": 48
+    }
+   }
+  },
+  "success_by_class": {
+   "B_strict": {
+    "rename": 0.0,
+    "enum_tighten": 0.146,
+    "required": 0.0,
+    "type_change": 0.0,
+    "default_change": 0.625
+   },
+   "C": {
+    "rename": 0.979,
+    "enum_tighten": 1.0,
+    "required": 1.0,
+    "type_change": 0.938,
+    "default_change": 0.958
+   },
+   "D": {
+    "rename": 1.0,
+    "enum_tighten": 0.958,
+    "required": 0.396,
+    "type_change": 0.896,
+    "default_change": 0.938
+   }
+  },
+  "examples": {
+   "default_change|V1_FORM": [
+    {
+     "task": "deal03",
+     "detail": null
+    },
+    {
+     "task": "deal02",
+     "detail": null
+    }
+   ],
+   "enum_tighten|V2_CORRECT": [
+    {
+     "task": "kw04",
+     "detail": "mail"
+    },
+    {
+     "task": "hotel02",
+     "detail": "luxury"
+    }
+   ],
+   "required|V2_CORRECT": [
+    {
+     "task": "web01",
+     "detail": "us"
+    },
+    {
+     "task": "pay01",
+     "detail": "default_balance"
+    }
+   ],
+   "rename|V2_CORRECT": [
+    {
+     "task": "rep01",
+     "detail": "plan=pro"
+    },
+    {
+     "task": "copy01",
+     "detail": "Quarterly publish"
+    }
+   ],
+   "type_change|V2_CORRECT": [
+    {
+     "task": "widg03",
+     "detail": "2"
+    },
+    {
+     "task": "cart02",
+     "detail": "3"
+    }
+   ],
+   "default_change|V2_CORRECT": [
+    {
+     "task": "room02",
+     "detail": false
+    },
+    {
+     "task": "pay03",
+     "detail": "USD"
+    }
+   ],
+   "default_change|V1_SAFE": [
+    {
+     "task": "kw02",
+     "detail": true
+    },
+    {
+     "task": "pto01",
+     "detail": true
+    }
+   ],
+   "type_change|V1_FORM": [
+    {
+     "task": "ds04",
+     "detail": null
+    },
+    {
+     "task": "ds02",
+     "detail": null
+    }
+   ],
+   "rename|V1_FORM": [
+    {
+     "task": "widg04",
+     "detail": "Received unknown parameter: 'subtitle'."
+    }
+   ],
+   "type_change|V2_PARTIAL": [
+    {
+     "task": "ds03",
+     "detail": "4.096"
+    }
+   ]
+  }
+ },
+ "gemini-3.1-pro-preview": {
+  "n_C": 120,
+  "C_drift_call_labels": {
+   "rename": {
+    "V2_CORRECT": 22,
+    "OTHER_WRONG": 1,
+    "NO_DRIFT_CALL": 1
+   },
+   "enum_tighten": {
+    "V2_CORRECT": 24
+   },
+   "required": {
+    "V2_CORRECT": 23,
+    "V2_PARTIAL": 1
+   },
+   "type_change": {
+    "V2_CORRECT": 23,
+    "OTHER_WRONG": 1
+   },
+   "default_change": {
+    "V1_SAFE": 12,
+    "V2_CORRECT": 10,
+    "V1_FORM": 2
+   }
+  },
+  "identity": {
+   "C_vs_B_strict": {
+    "rename": {
+     "identical": 0,
+     "n": 24
+    },
+    "enum_tighten": {
+     "identical": 0,
+     "n": 24
+    },
+    "required": {
+     "identical": 0,
+     "n": 24
+    },
+    "type_change": {
+     "identical": 0,
+     "n": 24
+    },
+    "default_change": {
+     "identical": 12,
+     "n": 24
+    }
+   },
+   "C_vs_D": {
+    "rename": {
+     "identical": 20,
+     "n": 24
+    },
+    "enum_tighten": {
+     "identical": 19,
+     "n": 24
+    },
+    "required": {
+     "identical": 9,
+     "n": 24
+    },
+    "type_change": {
+     "identical": 18,
+     "n": 24
+    },
+    "default_change": {
+     "identical": 19,
+     "n": 24
+    }
+   }
+  },
+  "success_by_class": {
+   "B_strict": {
+    "rename": 0.0,
+    "enum_tighten": 0.042,
+    "required": 0.0,
+    "type_change": 0.0,
+    "default_change": 0.5
+   },
+   "C": {
+    "rename": 0.917,
+    "enum_tighten": 1.0,
+    "required": 0.958,
+    "type_change": 0.958,
+    "default_change": 0.875
+   },
+   "D": {
+    "rename": 1.0,
+    "enum_tighten": 0.958,
+    "required": 0.417,
+    "type_change": 0.958,
+    "default_change": 0.792
+   }
+  },
+  "examples": {
+   "type_change|V2_CORRECT": [
+    {
+     "task": "ride03",
+     "detail": "10.00"
+    },
+    {
+     "task": "zip03",
+     "detail": "1"
+    }
+   ],
+   "required|V2_CORRECT": [
+    {
+     "task": "kw03",
+     "detail": "default"
+    },
+    {
+     "task": "copy02",
+     "detail": "local"
+    }
+   ],
+   "enum_tighten|V2_CORRECT": [
+    {
+     "task": "ds02",
+     "detail": "gz"
+    },
+    {
+     "task": "job02",
+     "detail": "contractor"
+    }
+   ],
+   "rename|V2_CORRECT": [
+    {
+     "task": "cal03",
+     "detail": "Main auditorium"
+    },
+    {
+     "task": "pay02",
+     "detail": "October rent"
+    }
+   ],
+   "default_change|V1_SAFE": [
+    {
+     "task": "room02",
+     "detail": false
+    },
+    {
+     "task": "log02",
+     "detail": false
+    }
+   ],
+   "type_change|OTHER_WRONG": [
+    {
+     "task": "job03",
+     "detail": {
+      "salary_cents": "140000.00"
+     }
+    }
+   ],
+   "default_change|V2_CORRECT": [
+    {
+     "task": "refund02",
+     "detail": true
+    },
+    {
+     "task": "pay03",
+     "detail": "USD"
+    }
+   ],
+   "rename|OTHER_WRONG": [
+    {
+     "task": "rem01",
+     "detail": {
+      "annotation": "Include taxi receipts"
+     }
+    }
+   ],
+   "required|V2_PARTIAL": [
+    {
+     "task": "ship03",
+     "detail": "USPS"
+    }
+   ],
+   "default_change|V1_FORM": [
+    {
+     "task": "deal02",
+     "detail": null
+    },
+    {
+     "task": "deal03",
+     "detail": null
+    }
+   ],
+   "rename|NO_DRIFT_CALL": [
+    {
+     "task": "widg04",
+     "detail": null
+    }
+   ]
+  }
+ }
+}

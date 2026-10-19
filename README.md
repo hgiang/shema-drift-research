@@ -85,6 +85,17 @@ find out what before going further.
 `results/analysis.json`. If you change data or analysis, regenerate that file, then rebuild
 the figures, then update any text. Never the reverse.
 
+## Explore the data interactively
+
+```bash
+python3 viz/build_explorer_data.py     # bundles testbed, episodes, analysis -> docs/explorer/data.js
+open docs/explorer/index.html          # no server needed
+```
+
+Browse every episode with its exact prompt and a field-by-field comparison with ground
+truth, pivot any two dimensions, and read every statistical test. See
+[`viz/README.md`](viz/README.md).
+
 ## Re-run the experiments from scratch (about $8 + 1.7 GPU hours)
 
 ```bash
@@ -95,7 +106,7 @@ python3 run_gemini.py --model gemini-3.6-flash --grid noise
 python3 run_gemini.py --model gemini-3.6-flash --grid phrasing
 python3 run_gemini.py --model gemini-3.1-pro-preview --grid core --set primary
 python3 run_openrouter.py --model openai/gpt-5.6-luna
-python3 -m modal run modal_qwen.py --grid core      # then --grid noise, --grid phrasing
+python3 -m modal run modal_qwen.py::main --grid core   # then --grid noise, --grid phrasing
 python3 analyze.py
 ```
 
@@ -132,7 +143,8 @@ python3 analyze.py
 | `results/` | `runs_*.jsonl` (one record per episode), `analysis.json`, `audit_accepted_wrong_sample.json` |
 | `figures/` | Figure scripts, shared style, teaser, GIF builder |
 | `lit_review/` | 55-paper verified literature review and novelty delineation |
-| `docs/` | Project website |
+| `docs/` | Project website; `docs/explorer/` is the interactive data explorer |
+| `viz/` | Explorer data builder and tests (`python3 viz/build_explorer_data.py`); see [`viz/README.md`](viz/README.md) |
 | `video/` | Film source (`build_film.py`, narration, music, timing) |
 | `site/plan.html` | The experiment plan as a readable page |
 
