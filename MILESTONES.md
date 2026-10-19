@@ -103,6 +103,15 @@ reproducible), keyed by (task, cond, class, phrasing, rep, reasoning). Implement
 experiments/harness.py (build_phase1), experiments/phase1_grid.py and the three
 runners; tests in experiments/test_phase1.py.
 
+## Phase 1 run log
+- 2026-10-19 pre-flight (no model calls): Gemini `gemini-3.6-flash` (version
+  `3.6-flash-07-2026`) and `gemini-3.1-pro-preview` (version `3.1-pro-preview-01-2026`)
+  listed; the September logs recorded no version string, so sameness cannot be shown.
+  Prices: luna `openai` endpoint $0.20/$1.20 and Pro $2.00/$12.00 per M match
+  `cost_tracker.PRICE`; Flash rose to $0.75/$3.75 (was $0.50/$3.00), PRICE updated.
+  Credits: OpenRouter $30.00 unused; Gemini billing on the paid tier. Logged spend
+  $7.64 of the $25 hard stop.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)

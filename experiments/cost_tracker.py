@@ -27,7 +27,9 @@ TOTAL_CAP_USD = 30.00
 
 # $/1M tokens, conservative (rounded UP from provider pages, checked 2026-09-09).
 PRICE = {
-    "gemini-3.6-flash": {"in": 0.50, "out": 3.00},
+    # 2026-10-19: was 0.50/3.00; Google now lists 0.75/3.75 through 2026-12-31 (1.50/7.50 from
+    # 2027-01-01). Past cost_log.jsonl lines keep the cost they were logged with.
+    "gemini-3.6-flash": {"in": 0.75, "out": 3.75},
     "gemini-3.1-pro-preview": {"in": 2.00, "out": 12.00},
     "openai/gpt-5.6-luna": {"in": 0.20, "out": 1.20},  # OpenRouter, pinned 2026-09-09
     "modal-qwen2.5-7b": {"in": 0.0, "out": 0.0},  # GPU time logged separately via log_gpu
