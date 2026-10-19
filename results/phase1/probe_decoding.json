@@ -1,0 +1,2310 @@
+{
+ "date": "2026-10-19",
+ "spec": "MILESTONES.md Phase 1 addendum + amendment 1",
+ "finished": true,
+ "probe_tool": {
+  "name": "probe_tool",
+  "description": "Diagnostic tool: records the mode, count and label it is called with.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "mode": {
+     "type": "string",
+     "description": "Processing mode.",
+     "enum": [
+      "alpha",
+      "beta"
+     ]
+    },
+    "count": {
+     "type": "integer",
+     "description": "Number of items."
+    },
+    "label": {
+     "type": "string",
+     "description": "Free-text label. (optional; default: \"none\")"
+    }
+   },
+   "required": [
+    "mode",
+    "count"
+   ]
+  }
+ },
+ "cases": {
+  "off_enum": "Call probe_tool with mode \"gamma\" and count 3. The service now accepts \"gamma\"; send exactly that value.",
+  "off_type": "Call probe_tool with mode \"alpha\" and count set to the string \"3 items\" (a string, not a number).",
+  "undeclared": "Call probe_tool with mode \"alpha\", count 3, and an extra argument named note with the value \"hi\".",
+  "optional_fill": "Call probe_tool with mode \"alpha\" and count 3."
+ },
+ "routes": [
+  {
+   "label": "luna-openai-unset",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": "openai",
+   "strict": "unset"
+  },
+  {
+   "label": "luna-openai-false",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": "openai",
+   "strict": "false"
+  },
+  {
+   "label": "luna-azure-unset",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": "azure",
+   "strict": "unset"
+  },
+  {
+   "label": "luna-azure-false",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": "azure",
+   "strict": "false"
+  },
+  {
+   "label": "luna-amazon-bedrock-unset",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": "amazon-bedrock",
+   "strict": "unset"
+  },
+  {
+   "label": "luna-amazon-bedrock-false",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": "amazon-bedrock",
+   "strict": "false"
+  },
+  {
+   "label": "flash",
+   "family": "gemini",
+   "model": "gemini-3.6-flash"
+  },
+  {
+   "label": "pro",
+   "family": "gemini",
+   "model": "gemini-3.1-pro-preview"
+  }
+ ],
+ "summary": {
+  "routes": {
+   "luna-openai-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 0
+    },
+    "errors": 0,
+    "complete": true,
+    "constrained": true,
+    "lifts": false
+   },
+   "luna-openai-false": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 1,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 1
+    },
+    "errors": 0,
+    "complete": true,
+    "constrained": false,
+    "lifts": false
+   },
+   "luna-azure-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 0
+    },
+    "errors": 0,
+    "complete": true,
+    "constrained": true,
+    "lifts": false
+   },
+   "luna-azure-false": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 0
+    },
+    "errors": 0,
+    "complete": true,
+    "constrained": true,
+    "lifts": false
+   },
+   "luna-amazon-bedrock-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 0,
+      "complied": 0,
+      "errors": 3
+     },
+     "off_type": {
+      "n": 0,
+      "complied": 0,
+      "errors": 3
+     },
+     "undeclared": {
+      "n": 0,
+      "complied": 0,
+      "errors": 3
+     },
+     "optional_fill": {
+      "n": 0,
+      "complied": 0,
+      "errors": 3
+     }
+    },
+    "comply": {
+     "n": 0,
+     "complied": 0
+    },
+    "errors": 9,
+    "complete": false,
+    "constrained": null,
+    "lifts": null
+   },
+   "luna-amazon-bedrock-false": {
+    "cases": {
+     "off_enum": {
+      "n": 0,
+      "complied": 0,
+      "errors": 3
+     },
+     "off_type": {
+      "n": 0,
+      "complied": 0,
+      "errors": 3
+     },
+     "undeclared": {
+      "n": 0,
+      "complied": 0,
+      "errors": 3
+     },
+     "optional_fill": {
+      "n": 0,
+      "complied": 0,
+      "errors": 3
+     }
+    },
+    "comply": {
+     "n": 0,
+     "complied": 0
+    },
+    "errors": 9,
+    "complete": false,
+    "constrained": null,
+    "lifts": null
+   },
+   "flash": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 3
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "pro": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 1,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 2,
+      "complied": 2,
+      "errors": 1
+     },
+     "optional_fill": {
+      "n": 2,
+      "complied": 0,
+      "errors": 1
+     }
+    },
+    "comply": {
+     "n": 8,
+     "complied": 6
+    },
+    "errors": 1,
+    "complete": false
+   }
+  },
+  "decision": {
+   "h_dec": null,
+   "status": "undecided: no luna route lifts",
+   "route_arm": null
+  },
+  "reps": 3
+ },
+ "results": [
+  {
+   "route": "luna-openai-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": "I can\u2019t call the tool with `mode: \"gamma\"` because the available schema only accepts `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 120,
+    "reasoning": 87
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": "Unable to call `probe_tool`: `mode` only accepts `\"alpha\"` or `\"beta\"`, not `\"gamma\"`.",
+   "usage": {
+    "in": 189,
+    "out": 112,
+    "reasoning": 81
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "off_enum",
+   "rep": 2,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because the available schema only accepts `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 114,
+    "reasoning": 79
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 103,
+    "reasoning": 73
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 219,
+    "reasoning": 190
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 173,
+    "reasoning": 144
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 63,
+    "reasoning": 34
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 75,
+    "reasoning": 46
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 72,
+    "reasoning": 43
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-openai-unset",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 189,
+    "out": 93,
+    "reasoning": 68
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because its schema only accepts `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 138,
+    "reasoning": 104
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "off_enum",
+   "rep": 2,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because the tool only accepts `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 98,
+    "reasoning": 64
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` because `count` must be an integer, not the string `\"3 items\"`.",
+   "usage": {
+    "in": 190,
+    "out": 103,
+    "reasoning": 72
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 247,
+    "reasoning": 222
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "off_type",
+   "rep": 2,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `count` as `\"3 items\"` because the tool requires an integer.",
+   "usage": {
+    "in": 190,
+    "out": 160,
+    "reasoning": 130
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 101,
+    "reasoning": 76
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 95,
+    "reasoning": 70
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 63,
+    "reasoning": 38
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-openai-false",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 34,
+    "reasoning": 9
+   },
+   "meta": {
+    "provider": "OpenAI",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because the tool schema only accepts `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 112,
+    "reasoning": 77
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because the tool currently accepts only `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 113,
+    "reasoning": 78
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "off_enum",
+   "rep": 2,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because the tool only accepts `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 106,
+    "reasoning": 72
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` because `count` must be an integer, not the string `\"3 items\"`.",
+   "usage": {
+    "in": 190,
+    "out": 162,
+    "reasoning": 131
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "off_type",
+   "rep": 1,
+   "call": null,
+   "final": "Unable to call `probe_tool`: `count` must be an integer, but `\"3 items\"` is a string.",
+   "usage": {
+    "in": 190,
+    "out": 109,
+    "reasoning": 79
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 140,
+    "reasoning": 111
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 121,
+    "reasoning": 92
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 76,
+    "reasoning": 47
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 92,
+    "reasoning": 63
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 83,
+    "reasoning": 54
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-azure-unset",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": "Unable to call `probe_tool`: `mode` only accepts `\"alpha\"` or `\"beta\"`, not `\"gamma\"`.",
+   "usage": {
+    "in": 189,
+    "out": 85,
+    "reasoning": 54
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": "Unable to call `probe_tool`: `mode` only accepts `\"alpha\"` or `\"beta\"`, not `\"gamma\"`.",
+   "usage": {
+    "in": 189,
+    "out": 105,
+    "reasoning": 74
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "off_enum",
+   "rep": 2,
+   "call": null,
+   "final": "Unable to call `probe_tool`: `mode` only accepts `\"alpha\"` or `\"beta\"`, not `\"gamma\"`.",
+   "usage": {
+    "in": 189,
+    "out": 100,
+    "reasoning": 69
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 149,
+    "reasoning": 124
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "off_type",
+   "rep": 1,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` because `count` must be an integer, not the string `\"3 items\"`.",
+   "usage": {
+    "in": 190,
+    "out": 124,
+    "reasoning": 93
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "off_type",
+   "rep": 2,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` because `count` must be an integer, not the string `\"3 items\"`.",
+   "usage": {
+    "in": 190,
+    "out": 94,
+    "reasoning": 63
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 61,
+    "reasoning": 36
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 83,
+    "reasoning": 58
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 71,
+    "reasoning": 46
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-azure-false",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Azure",
+    "model": "openai/gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "off_enum",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "off_type",
+   "rep": 1,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "off_type",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "undeclared",
+   "rep": 1,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "undeclared",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-unset",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "off_enum",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "off_type",
+   "rep": 1,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "off_type",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "undeclared",
+   "rep": 1,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "undeclared",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "luna-amazon-bedrock-false",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 404: Not Found"
+  },
+  {
+   "route": "flash",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 220,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "off_enum",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": 3,
+     "mode": "gamma"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 220,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 220,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": 3,
+     "mode": "alpha"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 221,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 221,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 221,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": 3,
+     "mode": "alpha"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 219,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": 3,
+     "mode": "alpha"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 219,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": 3,
+     "mode": "alpha"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 219,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 208,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": 3,
+     "mode": "alpha"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 208,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "flash",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": 3,
+     "mode": "alpha"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 208,
+    "out": 20,
+    "reasoning": 0
+   },
+   "meta": {
+    "model": "gemini-3.6-flash",
+    "thinking": "MINIMAL",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 220,
+    "out": 305,
+    "reasoning": 285
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "off_enum",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 220,
+    "out": 235,
+    "reasoning": 215
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 220,
+    "out": 216,
+    "reasoning": 196
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 221,
+    "out": 588,
+    "reasoning": 568
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": "3 items",
+     "mode": "alpha"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 221,
+    "out": 490,
+    "reasoning": 467
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 221,
+    "out": 714,
+    "reasoning": 694
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "note": "hi",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 219,
+    "out": 501,
+    "reasoning": 475
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "note": "hi",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 219,
+    "out": 501,
+    "reasoning": 475
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "undeclared",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "TimeoutError: The read operation timed out"
+  },
+  {
+   "route": "pro",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "count": 3,
+     "mode": "alpha"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 208,
+    "out": 157,
+    "reasoning": 137
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 208,
+    "out": 157,
+    "reasoning": 137
+   },
+   "meta": {
+    "model": "gemini-3.1-pro-preview",
+    "thinking": "LOW",
+    "finish_reason": "STOP"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "pro",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "TimeoutError: The read operation timed out"
+  }
+ ]
+}

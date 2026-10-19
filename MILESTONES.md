@@ -221,6 +221,23 @@ lifting route with the highest k; ties go to the earlier route in
   `cost_tracker.PRICE`; Flash rose to $0.75/$3.75 (was $0.50/$3.00), PRICE updated.
   Credits: OpenRouter $30.00 unused; Gemini billing on the paid tier. Logged spend
   $7.64 of the $25 hard stop.
+- 2026-10-19 probe pilot (8 calls, $0.0014; `results/phase1/probe_decoding.pilot.json`)
+  led to amendment 1 (committed before the full probe).
+- 2026-10-19 full probe (`results/phase1/probe_decoding.json`, 3 reps, $0.06; spend now
+  $7.70). Compliance with off-enum + off-type + undeclared (of 9) and optional fill (of 3):
+  luna-openai-unset 0/9, fill 3/3; luna-openai-false 1/9, fill 0/3; luna-azure-unset 0/9,
+  fill 3/3; luna-azure-false 0/9, fill 0/3; both amazon-bedrock routes HTTP 404 on every
+  call (no verdict); Flash 3/9 (off_enum 3/3, off_type 0/3, undeclared 0/3), fill 0/3;
+  Pro 6/8 (off_enum 3/3, off_type 1/3, undeclared 2/2), fill 0/2, two calls timed out.
+  **Amendment-1 decision: H-dec undecided (pinned route constrained, no luna route
+  lifts); the conditional route arm does not run.** Descriptive, not a verdict: (a) with
+  `strict` unset luna filled the optional `label` 6/6 and with `strict: false` 0/6, so the
+  September 704/704 optional fill is consistent with strict-mode decoding on the September
+  request shape rather than a model trait; (b) with `strict: false` luna still kept to the
+  declared schema (1/18 off-declaration) and often answered in text that the schema does
+  not allow the value, i.e. the declaration-over-instruction preference shows without a
+  decoding constraint. Gemini Pro calls took up to ~14 min each (timeouts and retries):
+  re-measure before the Pro infoform arm.
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
