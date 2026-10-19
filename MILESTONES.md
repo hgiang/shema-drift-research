@@ -185,6 +185,34 @@ lifts it: luna on that route, conditions A, B_strict, C:sys:json:none, primary 1
   returns "No changes recorded." and the diff sits in the system prompt) runs for that
   model before a placement claim is made; reported descriptively.
 
+## Phase 1 amendment 1 — 2026-10-19, after the 8-call probe pilot, before the full probe
+Replaces the "Probe decision rule" and the trigger of the "Conditional route arm" above.
+Written after seeing the pilot (`results/phase1/probe_decoding.pilot.json`, 1 rep,
+routes luna-openai-unset and flash) and before any full-probe call.
+
+**Why.** In the pilot, Flash sent the off-enum value but sent `count` as the integer 3
+and dropped `note`: the Gemini API itself appears to coerce types and strip undeclared
+arguments, so Gemini is not an unconstrained control for off_type and undeclared. Under
+the old rule (each control ≥ 7/9) the controls would likely fail and H-dec would be
+rejected whatever luna does. luna on the pinned route sent
+`{"mode":"alpha","count":3,"label":"none"}` on all four prompts.
+
+**New rule.** Per luna route, compliance k of 9 as before; incomplete routes get no verdict.
+- A route is *constrained* when k = 0 and *lifts* when k ≥ 7.
+- H-dec holds when the pinned route (luna-openai-unset) is constrained and at least one
+  other luna route lifts. The within-model contrast (same model, different route) is the
+  control.
+- H-dec is undecided when the pinned route is constrained and no luna route lifts; luna's
+  diff question is then reported as not testable on OpenRouter and the OpenAI direct API
+  moves to Phase 2.
+- H-dec does not hold when the pinned route has k ≥ 1; the luna ablation is read as
+  behaviour, and partial compliance is reported.
+- Gemini Flash and Pro are descriptive: per-case compliance, reported beside luna.
+
+**Route-arm trigger.** The conditional route arm runs if and only if H-dec holds, on the
+lifting route with the highest k; ties go to the earlier route in
+`probe_decoding.ROUTES`. P8, P9 and the two added BH tests are unchanged.
+
 ## Phase 1 run log
 - 2026-10-19 pre-flight (no model calls): Gemini `gemini-3.6-flash` (version
   `3.6-flash-07-2026`) and `gemini-3.1-pro-preview` (version `3.1-pro-preview-01-2026`)

@@ -52,30 +52,33 @@ def rows(route, n_comply, reps=3, errors=0):
     return out
 
 
-def test_summarize_verdicts():
-    luna = "luna-openai-unset"
-    s = pd.summarize(rows(luna, 0) + rows("flash", 9) + rows("pro", 9), reps=3)
-    assert s["controls_ok"] is True
-    assert s["routes"][luna]["comply"] == {"n": 9, "complied": 0}
-    assert s["routes"][luna]["h_dec"] is True and s["routes"][luna]["lifts"] is False
-    assert s["routes"][luna]["cases"]["optional_fill"] == {"n": 3, "complied": 3, "errors": 0}
+def decision(**k):
+    luna = {r["label"]: 0 for r in pd.ROUTES if r["family"] == "luna"}
+    rows_ = [row for lb, n in {**luna, **k}.items() for row in rows(lb, n)]
+    return pd.summarize(rows_ + rows("flash", 3) + rows("pro", 2), reps=3)
 
-    s = pd.summarize(rows(luna, 8) + rows("flash", 9) + rows("pro", 7), reps=3)
-    assert s["routes"][luna]["lifts"] is True and s["routes"][luna]["h_dec"] is False
 
-    s = pd.summarize(rows(luna, 0) + rows("flash", 9) + rows("pro", 5), reps=3)
-    assert s["controls_ok"] is False and s["routes"][luna]["h_dec"] is False
+def test_summarize_verdicts_amendment_1():
+    s = decision(**{"luna-azure-false": 8})
+    assert s["decision"] == {"h_dec": True, "status": "holds", "route_arm": "luna-azure-false"}
+    assert s["routes"][pd.PINNED]["constrained"] is True and s["routes"]["luna-azure-false"]["lifts"] is True
+    assert "constrained" not in s["routes"]["flash"]  # Gemini is descriptive only
+    assert s["routes"]["luna-azure-false"]["cases"]["optional_fill"] == {"n": 3, "complied": 3, "errors": 0}
 
-    s = pd.summarize(rows(luna, 4) + rows("flash", 9) + rows("pro", 9), reps=3)
-    assert s["routes"][luna]["h_dec"] is False and s["routes"][luna]["lifts"] is False  # in between
+    assert decision()["decision"]["h_dec"] is None
+    assert decision()["decision"]["status"].startswith("undecided")
+    assert decision(**{pd.PINNED: 2, "luna-azure-false": 9})["decision"]["h_dec"] is False
+    assert decision(**{"luna-azure-unset": 6})["decision"]["h_dec"] is None  # 6/9 does not lift
+    tie = decision(**{"luna-azure-unset": 9, "luna-openai-false": 9, "luna-amazon-bedrock-false": 8})
+    assert tie["decision"]["route_arm"] == "luna-openai-false"  # earlier in ROUTES
 
 
 def test_summarize_withholds_verdicts_on_incomplete_routes():
-    luna = "luna-azure-false"
-    s = pd.summarize(rows(luna, 0, errors=2) + rows("flash", 9) + rows("pro", 9), reps=3)
-    r = s["routes"][luna]
+    s = pd.summarize(rows(pd.PINNED, 0, errors=2) + rows("luna-azure-false", 9), reps=3)
+    r = s["routes"][pd.PINNED]
     assert r["comply"] == {"n": 7, "complied": 0} and r["errors"] == 2
-    assert r["h_dec"] is None and r["lifts"] is None
+    assert r["constrained"] is None and r["lifts"] is None
+    assert s["decision"]["h_dec"] is None and s["decision"]["status"] == "pinned route incomplete"
 
 
 def test_probe_tool_rendering():
