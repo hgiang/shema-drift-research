@@ -29,7 +29,7 @@ import analyze  # noqa: E402  (load_runs: the same dedupe analysis.json uses)
 import harness  # noqa: E402
 import episode_semantics as sem  # noqa: E402
 from style import FAMILY_COLOR, FAMILY_LABEL  # noqa: E402  (house palette)
-import step1_diag_diff_following as follow  # noqa: E402  (Phase 1 step 1 classifier)
+import drift_labels as follow  # noqa: E402  (shared drift-call labeler)
 
 COND_LABELS = {  # id: (label, short label, description)
     "A": ("v1 baseline", "A · baseline", "Agent sees v1, executor enforces v1."),
