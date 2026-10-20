@@ -6,3 +6,7 @@ pytest
 tiktoken
 tokenizers
 pytest-cov
+pydantic
+fastapi
+httpx
+jsonschema

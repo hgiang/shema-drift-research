@@ -37,6 +37,7 @@ PRICE = {
     # OpenRouter list prices, checked 2026-10-20 (Phase 2 families)
     "anthropic/claude-haiku-5.5": {"in": 0.10, "out": 0.50},
     "anthropic/claude-sonnet-5.5": {"in": 2.00, "out": 10.00},
+    "meta-llama/llama-3.3-70b-instruct": {"in": 0.14, "out": 0.40},  # novita/bf16 lists 0.135/0.40
 }
 DEFAULT_PRICE = {"in": 2.0, "out": 12.0}  # unknown model -> assume expensive
 

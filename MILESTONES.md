@@ -323,6 +323,20 @@ are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
   the user adds `OPENAI_API_KEY` to `.env`.
 - Phase-2 predictions are written and committed in this file before the first Phase-2 run.
 
+### Phase 2 run log
+
+- 2026-10-20 Pre-flight (`phase2/PLAN.md` Task 0). Decisions D1–D3 as recommended in the plan:
+  D1 the open-weight family is Llama 3.3 70B Instruct via OpenRouter, pinned to `novita`
+  with `quantizations: ["bf16"]` and no fallbacks (listed $0.135/$0.40 per M, priced
+  $0.14/$0.40 in `cost_tracker.py`); D2 compound drift moves to its own plan with a new
+  testbed; D3 the label audit for the new families is a blind Codex pass, and the user
+  reads only the disagreements. `OPENAI_API_KEY` is in `.env` (name checked, value not
+  read). luna on OpenAI direct is priced as OpenRouter's `openai` endpoint ($0.20/$1.20);
+  the OpenAI billing page is the check after the probe. Validator deps installed from
+  public PyPI with the user's approval (the company mirror has no pydantic-core v2 wheel
+  for Python 3.13 on arm64): pydantic 2.14.1, pydantic-core 2.50.1, fastapi 0.151.0,
+  starlette 1.9.0, httpx 0.28.1, jsonschema 4.26.0.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)

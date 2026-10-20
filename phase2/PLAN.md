@@ -37,7 +37,7 @@ pydantic v2, FastAPI + httpx (TestClient), jsonschema.
 - Measured per-call means (`cost_log.jsonl`): about 450 tokens in, 50–110 out (Gemini Pro: 320 out);
   1.1–1.3 calls per episode. Modal A10G cost $1.10 per GPU-hour.
 
-## Open decisions (the user answers before Task 1; the recommendation is listed first)
+## Decisions (resolved 2026-10-20: all as recommended; see MILESTONES.md "Phase 2 run log")
 
 - **D1. 70B open-weight route.** The handoff says Modal, but a 70B model needs an 80 GB GPU. A Modal run of
   1,470 episodes is several GPU-hours (≈ $15–30, to be verified), well over half of what is left.
