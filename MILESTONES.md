@@ -254,6 +254,11 @@ lifting route with the highest k; ties go to the earlier route in
 - 2026-10-19 Pro infoform stopped at 182/240: HTTP 429, quota
   `GenerateRequestsPerDayPerProjectPerModel` = 250 for `gemini-3.1-pro-preview` on this
   project; resumes after the daily reset. Logged spend $11.41 of the $25 hard stop.
+- 2026-10-20 Hand-audit sample drawn (Task 13, `audit_sample.py`, seed 20261019) from the
+  main records with Pro at 182/240: 23 model x label strata, floor 2 each, so 44 items
+  (the floor overrides the target of 24).
+- 2026-10-20 Pro infoform resumed after the quota reset (15:30 +08): 58 new, 240/240, gate
+  passes. Pro infoform cost $1.49. Logged spend $11.76 of the $25 hard stop.
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
