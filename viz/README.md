@@ -23,7 +23,7 @@ if the deduplicated episode count disagrees with `analysis.json → n_records`.
 | Pivot | Any field × any field, six metrics, chip filters, CSV export | raw episodes |
 | Episodes | Filter and page through every episode; detail shows the exact system prompt and tool declarations, the schema change, the executor error, and each accepted call compared field by field with ground truth | raw episodes + `harness.build_condition` |
 | Dataset | The 30 tools (v1 parameters, each drift variant, v2 parameters) and the 120 tasks (phrasings, ground truth before and after each drift) with per-item success | `testbed_frozen.json` + raw episodes |
-| Statistics | All 112 paired tests: mean, CI, p, d_z, BH survival; noise floor; calling style; token accounting | `analysis.json` |
+| Statistics | All 112 September paired tests: mean, CI, p, d_z, BH survival (BH over the family in `analysis.json`: 112 in the shipped bundle, 194 once rebuilt with Phase 1); noise floor; calling style; token accounting | `analysis.json` |
 | Audit | The 24 hand-audited accepted-wrong calls, linked to their episodes | `audit_accepted_wrong_sample.json` |
 
 Every cell and bar can be clicked to open its episodes. The model chips in the header

@@ -86,7 +86,8 @@ schema (D), raw-error retry (E). 24 accepted-wrong episodes hand-audited, 24/24 
 
 **Analysis.** One script produces every number. Within-pair paired differences, bootstrap
 CIs, sign-flip permutation, paired effect sizes, direct class × condition interaction tests,
-one Benjamini–Hochberg family of 112 tests (74 survive).
+one Benjamini–Hochberg family of 112 tests (74 survive). Phase 1 widened the family to 194
+tests (108 survive); the 112-test family alone is kept as `bh_original_family`.
 
 **Outreach.** The website (`docs/`), three GIFs, and the film (`video/`).
 
@@ -185,7 +186,7 @@ Do the phases in order. Phase 1 is the cheapest and matters the most.
 4. **Add new models to the price table in `cost_tracker.py`** or the spend cap will not see
    them. Use `--limit 5` first; a smoke test costs cents.
 5. **Extend `analyze.py`, do not fork it.** One script producing every number is what makes
-   the study checkable. New tests join the BH family; update the family size (currently 112)
+   the study checkable. New tests join the BH family; update the family size (currently 194)
    wherever it is stated.
 6. **Audit by hand.** For any new accepted-wrong cell or new coding, read 20+ episodes and
    save the sample, as `results/audit_accepted_wrong_sample.json` does.
@@ -219,6 +220,7 @@ Do the phases in order. Phase 1 is the cheapest and matters the most.
 |---|---|---|
 | 2026-09-23 | Handed over | Reproduce first (Section 1), then Phase 1 |
 | 2026-10-19 | Phase 1 steps 1-3 | Step 1 diagnostic on old logs (`phase1/`); pre-registration locked in `MILESTONES.md`; Phase-1 conditions, logging and runners added (`experiments/phase1_grid.py`, `test_phase1.py`); logs go to `results/phase1/` |
+| 2026-10-20 | Phase 1 results | All arms complete; `analysis.json` regenerated (BH family 194, 108 survive); P1, P3, P4, P5 hold, P2, P6 (Flash), P7 (luna) fail, P8/P9 not run, H-dec undecided; see "Phase 1 results" in `MILESTONES.md`. Spend $11.76 of $25. Explorer, figures, site and film still show September (Phase 4) |
 | | | |
 
 Good luck. The instrument is clean, the statistics are careful, and the diff result is the

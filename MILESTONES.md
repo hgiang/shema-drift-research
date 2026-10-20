@@ -271,6 +271,47 @@ lifting route with the highest k; ties go to the earlier route in
   entirely; the labeler counts a missing type-changed parameter as `V1_FORM` (Codex:
   `OTHER_WRONG`). Neither touches P3 (Qwen type_change `V2_CORRECT` share).
 
+## Phase 1 results — 2026-10-20
+
+Source: `results/analysis.json → phase1` (regenerated twice, identical hash). Every arm is
+complete; the BH family is the locked 194 tests (effective threshold p ≤ 0.0225, 108
+survive). The September blocks are unchanged; the 112-test family alone is kept as
+`bh_original_family` (74 survive). In the joint family, 72 of those 74 survive; two drop
+out: `gemini-3.1-pro-preview:E-B:enum_tighten` and `modal-qwen2.5-7b:drop:default_change`.
+
+**Verdicts (copied from `phase1.predictions`).**
+- P1 **holds.** No system-prompt cell unlocks luna: all 4 present, recovery 0.
+- P2 **fails.** Nothing moves luna: placement, format and instruction main effects are all
+  +0.000 on the 72 contrast pairs (noise floor 0.033), so placement cannot exceed the others.
+- P3 **holds.** Qwen type_change: prose − JSON share of `V2_CORRECT` +0.222, CI [0.111, 0.340].
+- P4 **holds.** luna recovery at high effort is 0.0 on both thinking cells
+  (`C:sys:json:none`, `C:user:prose:none`).
+- P5 **holds.** D' − D on newly-required: luna 0.625, Qwen 0.625, Flash 0.500, Pro 0.542.
+- P6 **fails (Flash).** Pro: D' − C is 0.000, CI [0, 0], equivalent. Flash: −0.062, CI
+  [−0.146, 0.000]; the CI leaves the ±0.10 band, so equivalence is not shown, though D' is
+  not significantly worse than C either.
+- P7 **fails (luna).** C+D − C for luna is −0.188, CI [−0.312, −0.062]: adding the v2
+  schema to the diff lowers luna's success. C+D ≥ max(C, D) holds in the other three
+  families.
+- P8, P9 not tested: the route arm did not run (amendment 1).
+- H-dec: undecided (no luna route lifted compliance to 7/9). Descriptive: with `strict`
+  unset luna filled the optional parameter 6/6, with `strict: false` 0/6, so the September
+  704/704 fill reflects the route's strict mode.
+
+**Beyond the predictions.**
+- Qwen's September C failure was about placement, not about ignoring the diff. Main effects
+  (120 pairs): user − sys +0.388, tool − sys +0.260, prose − JSON +0.189, apply − none
+  +0.028. Best cell `C:user:prose:apply`, recovery 0.896 (September C: 0.06).
+- luna: 0/72 recovered pairs in all 13 ablation cells and at high effort; mean reasoning
+  tokens 63 (default) vs 83 (high).
+- Tokenizer-measured diff / v2 declaration is 0.20–0.25 (o200k 0.204, Qwen 0.202, Gemini
+  0.249), not the September chars/4 figure of 0.137.
+
+**Deviations from the lock and addendum.** Hand-audit sample 44 items, not 24 (stratum
+floor); the audit was labelled by Codex, blind, not by hand (agreement 0.955). The explorer
+(`docs/explorer/data.js`), figures, site and film still show the September analysis; they
+are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)

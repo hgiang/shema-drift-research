@@ -24,6 +24,8 @@ import select_thinking_cell  # noqa: E402
 from test_phase1 import oracle  # noqa: E402
 
 COMMITTED = json.loads((HERE.parent / "results" / "analysis.json").read_text())
+SEPT_BH = COMMITTED.get("bh_original_family", COMMITTED["bh"])  # the 112-test family alone
+SEPT = {**{k: v for k, v in COMMITTED.items() if k not in ("phase1", "bh_original_family")}, "bh": SEPT_BH}
 
 
 def fake_records(model, arm, reasoning, cells=None):
@@ -65,12 +67,12 @@ def run_analysis(tmp_path, phase1_dir):
     return res, (json.loads(out.read_text()) if out.exists() else None)
 
 
-def test_no_phase1_data_is_byte_identical(tmp_path):
+def test_no_phase1_data_reproduces_september(tmp_path):
     empty = tmp_path / "empty"
     empty.mkdir()
-    res, _ = run_analysis(tmp_path, empty)
+    res, a = run_analysis(tmp_path, empty)
     assert res.returncode == 0, res.stderr
-    assert (tmp_path / "analysis.json").read_bytes() == (HERE.parent / "results" / "analysis.json").read_bytes()
+    assert a == SEPT  # September analysis exactly; Phase 1 adds blocks and widens bh only
 
 
 def test_phase1_leaves_september_blocks_unchanged(tmp_path, phase1_dir):
@@ -78,7 +80,7 @@ def test_phase1_leaves_september_blocks_unchanged(tmp_path, phase1_dir):
     assert res.returncode == 0, res.stderr
     assert a["models"] == COMMITTED["models"] and a["token_costs"] == COMMITTED["token_costs"]
     assert a["n_records"] == COMMITTED["n_records"]
-    assert a["bh_original_family"] == COMMITTED["bh"]
+    assert a["bh_original_family"] == SEPT_BH
     assert a["bh"]["n_tests"] == 112 + 82  # the locked Phase-1 family
     p = a["phase1"]
     assert p["status"] == {}
