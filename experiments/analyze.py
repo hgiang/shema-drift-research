@@ -261,6 +261,8 @@ def token_costs():
         per_cond = {}
         for line in log.read_text().splitlines():
             r = json.loads(line)
+            if r.get("phase", "experiments") != "experiments":
+                continue  # September only; later phases have their own accounting
             tag = r.get("tag", "")
             parts = tag.split("-")
             if len(parts) >= 3 and "tokens_in" in r:

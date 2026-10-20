@@ -13,6 +13,10 @@ Phase 1 (writes results/phase1/runs_<model>.jsonl; see phase1_grid.py):
   python3 run_gemini.py --model gemini-3.6-flash --arm infoform --limit 5    # pilot
   python3 run_gemini.py --model gemini-3.6-flash --arm infoform
   python3 run_gemini.py --model gemini-3.1-pro-preview --arm infoform
+
+Phase 2 (writes results/phase2/runs_<model>.jsonl; see phase2_grid.py):
+  python3 run_gemini.py --phase 2 --model gemini-3.6-flash --arm fill --limit 5    # pilot
+  python3 run_gemini.py --phase 2 --model gemini-3.6-flash --arm fill
 """
 
 import argparse
@@ -29,6 +33,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import harness  # noqa: E402
 import phase1_grid as p1  # noqa: E402
+import phase2_grid as p2  # noqa: E402
 from cost_tracker import log_cost, check_budget  # noqa: E402
 
 RESULTS = HERE.parent / "results"
@@ -149,18 +154,25 @@ def jobs_for_grid(grid, subset):
     return jobs
 
 
-def run_phase1(args):
-    """Phase 1 arms for Gemini (pre-registered: infoform). Resume-safe."""
-    out_path = p1.out_path(args.model, pilot=bool(args.limit))
+PHASE2_ARMS = ("fill",)  # MILESTONES.md "Phase 2 pre-registration": Flash runs the fill arm only
+
+
+def phase2_pin():
+    return {"provider": "google", "strict": "unset", "endpoint": "gemini", "quantization": None}
+
+
+def _run_arm(args, grid, out_path, jobs, phase, pin=None):
+    """Resume-safe loop shared by Phase 1 and Phase 2; records carry the model's fixed thinking level."""
     trimmed = p1.repair_tail(out_path)
     if trimmed:
         print(f"repaired {out_path.name}: dropped a {trimmed}-byte partial last line")
+    if pin is not None and p1.load_pins(out_path) - {p1.pin_id(pin)}:
+        raise SystemExit(f"{out_path.name} was written with other request settings than {pin}")
     done = p1.load_done(out_path)
-    jobs = p1.jobs(args.arm)
     if args.limit:
         jobs = jobs[:args.limit]
     tag_holder = [""]
-    call_model = make_call_model(args.model, tag_holder, phase="phase1")
+    call_model = make_call_model(args.model, tag_holder, phase=phase)
     reasoning = THINKING[args.model]  # Gemini thinking level is fixed per model, as in the original arms
     n_done = n_skip = 0
     with out_path.open("a") as f:
@@ -169,15 +181,29 @@ def run_phase1(args):
             if p1.key(t["id"], cond, cls, ph, rep, reasoning) in done:
                 n_skip += 1
                 continue
-            tag_holder[0] = p1.tag(job, reasoning)
-            rec = p1.run_episode(job, call_model, args.model, args.arm, reasoning, 1024)
+            tag_holder[0] = grid.tag(job, reasoning)
+            extra = (pin,) if pin is not None else ()
+            rec = grid.run_episode(job, call_model, args.model, args.arm, reasoning, 1024, *extra)
             f.write(json.dumps(rec) + "\n")
             f.flush()
             n_done += 1
             if n_done % 50 == 0:
                 print(f"...{n_done} done (skipped {n_skip}), spend ${check_budget():.2f}")
-    print(f"DONE {args.arm}: {n_done} new, {n_skip} skipped, total spend ${check_budget():.2f} "
-          f"-> {out_path.relative_to(HERE.parent)}")
+    shown = out_path.relative_to(HERE.parent) if out_path.is_relative_to(HERE.parent) else out_path
+    print(f"DONE {args.arm}: {n_done} new, {n_skip} skipped, total spend ${check_budget():.2f} -> {shown}")
+
+
+def run_phase1(args):
+    """Phase 1 arms for Gemini (pre-registered: infoform). Resume-safe."""
+    _run_arm(args, p1, p1.out_path(args.model, pilot=bool(args.limit)), p1.jobs(args.arm), "phase1")
+
+
+def run_phase2(args):
+    """Phase 2 arms for Gemini (pre-registered: fill, Flash). Resume-safe, pinned."""
+    if args.arm not in PHASE2_ARMS:
+        raise SystemExit(f"Gemini runs only the Phase-2 arms {PHASE2_ARMS}, not {args.arm!r}")
+    _run_arm(args, p2, p2.out_path(args.model, pilot=bool(args.limit)), p2.jobs(args.arm), "phase2",
+             pin=phase2_pin())
 
 
 def main():
@@ -186,10 +212,12 @@ def main():
     ap.add_argument("--grid", default="core")
     ap.add_argument("--set", dest="subset", default="doubled", choices=["primary", "doubled"])
     ap.add_argument("--limit", type=int, default=0)
-    ap.add_argument("--arm", choices=p1.ARMS, help="Phase 1 arm (omit for the original grids)")
+    ap.add_argument("--phase", type=int, choices=(1, 2), default=1)
+    ap.add_argument("--arm", choices=sorted(set(p1.ARMS) | set(p2.ARMS)),
+                    help="Phase 1 or 2 arm (omit for the original grids)")
     args = ap.parse_args()
     if args.arm:
-        return run_phase1(args)
+        return run_phase2(args) if args.phase == 2 else run_phase1(args)
 
     out_path = RESULTS / f"runs_{args.model.replace('/', '_')}_{args.grid}.jsonl"
     done = set()

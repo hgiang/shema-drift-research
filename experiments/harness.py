@@ -62,6 +62,8 @@ def declaration(name, tool_v1, params):
 
 def build_condition(task, cond, drift_class):
     """Return dict with system, user, declarations, active_schemas, profile, retry."""
+    if cond in FILL_BASE:  # Phase 2: the base condition with the fill instruction
+        return {**build_condition(task, FILL_BASE[cond], drift_class), "system": FILL_SYSTEM}
     if is_phase1(cond):
         return build_phase1(task, cond, drift_class)
     tools_v1 = frozen()["tools_v1"]
@@ -132,6 +134,20 @@ CD_NOTE = (
 
 def is_phase1(cond):
     return cond in PHASE1_CONDS
+
+
+# ---------------- Phase 2 conditions (pre-registered in MILESTONES.md) ----------------
+#
+#   A_fill, B_fill  A and B_strict with one sentence of SYSTEM replaced: the model is told to
+#                   pass every optional parameter explicitly (within-model calling-style test)
+
+_OMIT_DEFAULTS = "Use parameter defaults by omitting a parameter when the user does not specify it."
+_FILL_DEFAULTS = ("Pass every parameter explicitly, including optional ones; when the user does not "
+                  "specify a value, pass the documented default.")
+assert _OMIT_DEFAULTS in SYSTEM
+FILL_SYSTEM = SYSTEM.replace(_OMIT_DEFAULTS, _FILL_DEFAULTS)
+FILL_BASE = {"A_fill": "A", "B_fill": "B_strict"}
+PHASE2_CONDS = list(FILL_BASE)
 
 
 def _q(v):
@@ -310,7 +326,8 @@ def run_episode(task, cond, drift_class, call_model, phrasing_idx=0):
     """Run one task episode. Returns a record dict (JSONL-ready)."""
     setup = build_condition(task, cond, drift_class)
     dt, didx = task["drift_tool"], task["drift_step_index"]
-    gt_steps = task["gt_v1"] if cond == "A" else task["gt_v2"][drift_class]
+    no_drift = FILL_BASE.get(cond, cond) == "A"
+    gt_steps = task["gt_v1"] if no_drift else task["gt_v2"][drift_class]
 
     transcript = []          # provider-neutral: {"role","content"} + tool results
     executed = []            # accepted calls in order: (tool, effective_args, outcome)
@@ -336,7 +353,7 @@ def run_episode(task, cond, drift_class, call_model, phrasing_idx=0):
         calls_made += 1
         name, args = out["name"], out.get("args", {})
         transcript.append({"role": "assistant_tool_call", "name": name, "args": args,
-                           "raw": out.get("raw")})
+                           "raw": out.get("raw"), **({"text": out["text"]} if out.get("text") else {})})
         if name in pseudo:  # the model asked for the changelog again: hand it over
             transcript.append({"role": "tool_result", "name": name, "content": pseudo[name]})
             continue
@@ -359,7 +376,7 @@ def run_episode(task, cond, drift_class, call_model, phrasing_idx=0):
         result_payload = {k: v.replace("{tid}", task["id"]) if isinstance(v, str) else v
                           for k, v in frozen()["tools_v1"][name]["result"].items()}
         status, payload = ex.execute(active, args, setup["profile"], result_payload)
-        is_drift_step = (name == dt and step_ptr == didx and cond != "A")
+        is_drift_step = (name == dt and step_ptr == didx and not no_drift)
         if status == "error":
             error_seen = payload
             transcript.append({"role": "tool_result", "name": name, "content": f"Error: {payload}"})
