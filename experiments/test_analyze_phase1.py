@@ -96,6 +96,7 @@ def test_phase1_leaves_september_blocks_unchanged(tmp_path, phase1_dir):
     assert luna_cells["C:sys:json:none"]["n"] == 120  # base level, rep 0 only
     assert luna_cells["C:sys:json:none@high"]["n"] == 120 and luna_cells["C:sys:json:none@noise"]["n"] == 120
     assert p["mechanism"][ap1.LUNA]["C_decl"]
+    assert p["mechanism"]["audit_agreement"] is None  # no hand-audit file in the fixture
     assert p["accounting"]["prompt_tokens_per_call"]
 
 

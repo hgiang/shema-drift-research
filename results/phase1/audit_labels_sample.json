@@ -1,0 +1,2928 @@
+{
+ "seed": 20261019,
+ "n_target": 24,
+ "min_per_stratum": 2,
+ "population": {
+  "gemini-3.1-pro-preview|OTHER_WRONG": 2,
+  "gemini-3.1-pro-preview|V1_FORM": 3,
+  "gemini-3.1-pro-preview|V1_SAFE": 15,
+  "gemini-3.1-pro-preview|V2_CORRECT": 159,
+  "gemini-3.1-pro-preview|V2_PARTIAL": 3,
+  "gemini-3.6-flash|OTHER_WRONG": 1,
+  "gemini-3.6-flash|V1_FORM": 7,
+  "gemini-3.6-flash|V1_SAFE": 26,
+  "gemini-3.6-flash|V2_CORRECT": 203,
+  "gemini-3.6-flash|V2_PARTIAL": 3,
+  "modal-qwen2.5-7b|NO_DRIFT_CALL": 1,
+  "modal-qwen2.5-7b|OTHER_ERROR": 17,
+  "modal-qwen2.5-7b|OTHER_WRONG": 90,
+  "modal-qwen2.5-7b|V1_FORM": 462,
+  "modal-qwen2.5-7b|V1_SAFE": 333,
+  "modal-qwen2.5-7b|V2_CORRECT": 739,
+  "modal-qwen2.5-7b|V2_PARTIAL": 158,
+  "openai/gpt-5.6-luna|NO_DRIFT_CALL": 23,
+  "openai/gpt-5.6-luna|OTHER_WRONG": 29,
+  "openai/gpt-5.6-luna|V1_FORM": 910,
+  "openai/gpt-5.6-luna|V1_SAFE": 618,
+  "openai/gpt-5.6-luna|V2_CORRECT": 160,
+  "openai/gpt-5.6-luna|V2_PARTIAL": 60
+ },
+ "items": [
+  {
+   "id": 1,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "list03",
+    "cond": "Dprime",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Update lst_5540 to condition used, 1500 grams shipping weight, headline 'Vintage film camera'; keep it live on the storefront.",
+   "drift_tool": "update_listing",
+   "change": {
+    "change": "renamed",
+    "new": "listing_title",
+    "old": "headline",
+    "param": "headline"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "condition": "used",
+     "headline": "Vintage film camera",
+     "listing_id": "lst_5540",
+     "weight_grams": 1500
+    },
+    "v2": {
+     "condition": "used",
+     "listing_id": "lst_5540",
+     "listing_title": "Vintage film camera",
+     "weight_grams": 1500
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "update_listing",
+     "args": {
+      "listing_title": "Vintage film camera",
+      "visible": true,
+      "weight_grams": 1500,
+      "condition": "used",
+      "listing_id": "lst_5540"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "update_listing",
+     "content": "{\"listing_id\": \"list03\", \"state\": \"updated\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 2,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "deal02",
+    "cond": "Dprime",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Set deal dl_8813 to proposal stage at $12,000.00.",
+   "drift_tool": "update_deal",
+   "change": {
+    "change": "default_changed",
+    "new": "unspecified",
+    "old": "",
+    "param": "loss_reason"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "deal_id": "dl_8813",
+     "stage": "proposal",
+     "value_cents": 1200000
+    },
+    "v2": {
+     "deal_id": "dl_8813",
+     "loss_reason": "",
+     "stage": "proposal",
+     "value_cents": 1200000
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "update_deal",
+     "args": {
+      "deal_id": "dl_8813",
+      "value_cents": 1200000,
+      "stage": "proposal"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "update_deal",
+     "content": "{\"deal_id\": \"deal02\", \"state\": \"updated\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 3,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "deal02",
+    "cond": "Dprime",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Set deal dl_8813 to proposal stage at $12,000.00.",
+   "drift_tool": "update_deal",
+   "change": {
+    "change": "default_changed",
+    "new": "unspecified",
+    "old": "",
+    "param": "loss_reason"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "deal_id": "dl_8813",
+     "stage": "proposal",
+     "value_cents": 1200000
+    },
+    "v2": {
+     "deal_id": "dl_8813",
+     "loss_reason": "",
+     "stage": "proposal",
+     "value_cents": 1200000
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "update_deal",
+     "args": {
+      "stage": "proposal",
+      "value_cents": 1200000,
+      "deal_id": "dl_8813"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "update_deal",
+     "content": "{\"deal_id\": \"deal02\", \"state\": \"updated\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 4,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "rem01",
+    "cond": "CD",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Set a reminder that says 'Submit expense report' for Oct 10 2026 at 17:00 UTC, ping me on my phone half an hour ahead, and attach the note 'Include taxi receipts'. Just the once, not every day.",
+   "drift_tool": "create_reminder",
+   "change": {
+    "change": "renamed",
+    "new": "annotation",
+    "old": "note",
+    "param": "note"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "channel": "push",
+     "lead_min": 30,
+     "note": "Include taxi receipts",
+     "remind_at": "2026-10-10T17:00:00+00:00",
+     "text": "Submit expense report"
+    },
+    "v2": {
+     "annotation": "Include taxi receipts",
+     "channel": "push",
+     "lead_min": 30,
+     "remind_at": "2026-10-10T17:00:00+00:00",
+     "text": "Submit expense report"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_reminder",
+     "args": {
+      "text": "Submit expense report",
+      "lead_min": 30,
+      "remind_at": "2026-10-10T17:00:00Z",
+      "annotation": "Include taxi receipts",
+      "repeat_daily": false
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_reminder",
+     "content": "{\"reminder_id\": \"rem_rem01\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 5,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "job03",
+    "cond": "Dprime",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Post a full-time Product Designer opening in the Design department at the NYC office, band up to $140,000.00, visible on the public board as usual.",
+   "drift_tool": "post_job_opening",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Top of annual salary band as decimal string in major units",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Top of annual salary band in cents",
+     "type": "integer"
+    },
+    "param": "salary_cents"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "department": "Design",
+     "employment": "full_time",
+     "location": "NYC office",
+     "salary_cents": 14000000,
+     "title": "Product Designer"
+    },
+    "v2": {
+     "department": "Design",
+     "employment": "full_time",
+     "location": "NYC office",
+     "salary_cents": "140000.00",
+     "title": "Product Designer"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "post_job_opening",
+     "args": {
+      "department": "Design",
+      "location": "NYC",
+      "salary_cents": "140000.00",
+      "employment": "full_time",
+      "title": "Product Designer"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "post_job_opening",
+     "content": "{\"job_id\": \"job_job03\", \"state\": \"published\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 6,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "bmk01",
+    "cond": "CD",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Bookmark https://arxiv.org/abs/2609.01234 as 'Drift survey', shared with the team, five stars, tagged 'research' — and make sure it syncs to all my devices.",
+   "drift_tool": "save_bookmark",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "sync_devices"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "privacy": "shared",
+     "rating": 5,
+     "tags": "research",
+     "title": "Drift survey",
+     "url": "https://arxiv.org/abs/2609.01234"
+    },
+    "v2": {
+     "privacy": "shared",
+     "rating": 5,
+     "sync_devices": true,
+     "tags": "research",
+     "title": "Drift survey",
+     "url": "https://arxiv.org/abs/2609.01234"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "save_bookmark",
+     "args": {
+      "tags": "research",
+      "sync_devices": true,
+      "privacy": "shared",
+      "title": "Drift survey",
+      "rating": 5,
+      "url": "https://arxiv.org/abs/2609.01234"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "save_bookmark",
+     "content": "{\"bookmark_id\": \"bm_bmk01\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 7,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "pto03",
+    "cond": "Dprime",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Request vacation starting Dec 21 2026 at 09:00 UTC for 2400 minutes, reason 'Year-end trip'; the team should see it on the calendar as usual.",
+   "drift_tool": "request_time_off",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Leave length in hours, decimal string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Leave length in minutes",
+     "type": "integer"
+    },
+    "param": "duration_min"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "duration_min": 2400,
+     "kind": "vacation",
+     "reason": "Year-end trip",
+     "start": "2026-12-21T09:00:00+00:00"
+    },
+    "v2": {
+     "duration_min": "40",
+     "kind": "vacation",
+     "reason": "Year-end trip",
+     "start": "2026-12-21T09:00:00+00:00"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "request_time_off",
+     "args": {
+      "approver": "direct_manager",
+      "duration_min": "2400",
+      "kind": "vacation",
+      "notify_team": true,
+      "reason": "Year-end trip",
+      "start": "2026-12-21T09:00:00Z"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "request_time_off",
+     "content": "{\"pto_id\": \"pto_pto03\", \"state\": \"pending_approval\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 8,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "bmk01",
+    "cond": "C:sys:prose:none",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Bookmark https://arxiv.org/abs/2609.01234 as 'Drift survey', shared with the team, five stars, tagged 'research' — and make sure it syncs to all my devices.",
+   "drift_tool": "save_bookmark",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "sync_devices"
+   },
+   "shown": "old (v1) declaration; change log in the system prompt, written as prose",
+   "expected": {
+    "v1": {
+     "privacy": "shared",
+     "rating": 5,
+     "tags": "research",
+     "title": "Drift survey",
+     "url": "https://arxiv.org/abs/2609.01234"
+    },
+    "v2": {
+     "privacy": "shared",
+     "rating": 5,
+     "sync_devices": true,
+     "tags": "research",
+     "title": "Drift survey",
+     "url": "https://arxiv.org/abs/2609.01234"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "save_bookmark",
+     "args": {
+      "folder": "",
+      "privacy": "shared",
+      "rating": 5,
+      "sync_devices": true,
+      "tags": "research",
+      "title": "Drift survey",
+      "url": "https://arxiv.org/abs/2609.01234"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "save_bookmark",
+     "content": "{\"bookmark_id\": \"bm_bmk01\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 9,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "deal03",
+    "cond": "Dprime",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Mark dl_4407 closed-won at $99,000.00, closed Oct 1 2026.",
+   "drift_tool": "update_deal",
+   "change": {
+    "change": "default_changed",
+    "new": "unspecified",
+    "old": "",
+    "param": "loss_reason"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "close_date": "2026-10-01",
+     "deal_id": "dl_4407",
+     "stage": "closed_won",
+     "value_cents": 9900000
+    },
+    "v2": {
+     "close_date": "2026-10-01",
+     "deal_id": "dl_4407",
+     "loss_reason": "",
+     "stage": "closed_won",
+     "value_cents": 9900000
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "update_deal",
+     "args": {
+      "stage": "closed_won",
+      "deal_id": "dl_4407",
+      "value_cents": 9900000,
+      "close_date": "2026-10-01"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "update_deal",
+     "content": "{\"deal_id\": \"deal03\", \"state\": \"updated\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 10,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "fly02",
+    "cond": "Dprime",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Book a premium economy flight to LIS for Oct 22 2026 with at most a 90-minute layover; a non-refundable ticket is fine.",
+   "drift_tool": "book_flight",
+   "change": {
+    "change": "enum_changed",
+    "new": "premium",
+    "old": "premium_economy",
+    "param": "cabin"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "cabin": "premium_economy",
+     "depart": "2026-10-22",
+     "destination": "LIS",
+     "max_layover_min": 90
+    },
+    "v2": {
+     "cabin": "premium",
+     "depart": "2026-10-22",
+     "destination": "LIS",
+     "max_layover_min": 90
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "book_flight",
+     "args": {
+      "depart": "2026-10-22",
+      "max_layover_min": 90,
+      "cabin": "premium",
+      "destination": "LIS"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "book_flight",
+     "content": "{\"booking_ref\": \"fl_fly02\", \"state\": \"ticketed\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 11,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "cal01",
+    "cond": "C:tool:json:none",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Put a design review on my calendar: Oct 6 2026, 14:00 UTC, an hour and a half, in Room 4A. Keep it private, and make sure the attendees get their invites.",
+   "drift_tool": "create_event",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Duration in hours, decimal string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Duration in minutes",
+     "type": "integer"
+    },
+    "param": "duration_min"
+   },
+   "shown": "old (v1) declaration; change log in a get_api_changelog result already in the transcript, written as json",
+   "expected": {
+    "v1": {
+     "duration_min": 90,
+     "location": "Room 4A",
+     "start": "2026-10-06T14:00:00+00:00",
+     "title": "Design review",
+     "visibility": "private"
+    },
+    "v2": {
+     "duration_min": "1.5",
+     "location": "Room 4A",
+     "start": "2026-10-06T14:00:00+00:00",
+     "title": "Design review",
+     "visibility": "private"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "get_api_changelog",
+     "args": {
+      "tool": "create_event"
+     },
+     "synthetic": true
+    },
+    {
+     "role": "tool_result",
+     "name": "get_api_changelog",
+     "content": "NOTE: the API behind tool 'create_event' was updated after the tool schema you were given was cached. Machine-readable change log for 'create_event' (apply it when calling):\n[\n {\n  \"change\": \"type_changed\",\n  \"new\": {\n   \"desc\": \"Duration in hours, decimal string\",\n   \"type\": \"string\"\n  },\n  \"old\": {\n   \"desc\": \"Duration in minutes\",\n   \"type\": \"integer\"\n  },\n  \"param\": \"duration_min\"\n }\n]",
+     "synthetic": true
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "create_event",
+     "args": {
+      "calendar_id": "primary",
+      "duration_min": 90,
+      "location": "Room 4A",
+      "notify_attendees": true,
+      "start": "2026-10-06T14:00:00Z",
+      "title": "Design review",
+      "visibility": "private"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_event",
+     "content": "Error: Invalid type for parameter 'duration_min': expected string, got int."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid type for parameter 'duration_min': expected string, got int.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 12,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "log02",
+    "cond": "C:sys:json:none",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Log that I emailed ct_1188 the pricing deck (summary 'Sent pricing deck'). Don't create a follow-up.",
+   "drift_tool": "log_interaction",
+   "change": {
+    "change": "default_changed",
+    "new": true,
+    "old": false,
+    "param": "follow_up"
+   },
+   "shown": "old (v1) declaration; change log in the system prompt, written as json",
+   "expected": {
+    "v1": {
+     "contact_id": "ct_1188",
+     "kind": "email",
+     "summary": "Sent pricing deck"
+    },
+    "v2": {
+     "contact_id": "ct_1188",
+     "follow_up": false,
+     "kind": "email",
+     "summary": "Sent pricing deck"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "log_interaction",
+     "args": {
+      "contact_id": "ct_1188",
+      "details": "Emailed the pricing deck.",
+      "duration_min": 0,
+      "follow_up": false,
+      "kind": "email",
+      "pipeline": "sales",
+      "summary": "Sent pricing deck"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "log_interaction",
+     "content": "{\"interaction_id\": \"ix_log02\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 13,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "exp01",
+    "cond": "CD",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Expense $18.50 at Blue Bottle from Sep 4 2026 as a meal, memo 'Client coffee'.",
+   "drift_tool": "submit_expense",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "general"
+    },
+    "param": "cost_center"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "amount_cents": 1850,
+     "category": "meals",
+     "incurred_on": "2026-09-04",
+     "memo": "Client coffee",
+     "merchant": "Blue Bottle"
+    },
+    "v2": {
+     "amount_cents": 1850,
+     "category": "meals",
+     "cost_center": "general",
+     "incurred_on": "2026-09-04",
+     "memo": "Client coffee",
+     "merchant": "Blue Bottle"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [],
+   "final_text": "What cost center should I charge this expense to?",
+   "drift_outcome": null,
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 14,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "ship03",
+    "cond": "Dprime",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Track 9400111899560001234567 and only alert me on exceptions; poll every 720 minutes, call it 'Camera lens', distance remaining in miles.",
+   "drift_tool": "track_shipment",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "auto_detect"
+    },
+    "param": "carrier"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "alert_on": "exception",
+     "nickname": "Camera lens",
+     "poll_interval_min": 720,
+     "tracking_number": "9400111899560001234567"
+    },
+    "v2": {
+     "alert_on": "exception",
+     "carrier": "auto_detect",
+     "nickname": "Camera lens",
+     "poll_interval_min": 720,
+     "tracking_number": "9400111899560001234567"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "track_shipment",
+     "args": {
+      "nickname": "Camera lens",
+      "poll_interval_min": 720,
+      "alert_on": "exception",
+      "carrier": "USPS",
+      "tracking_number": "9400111899560001234567",
+      "units": "miles"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "track_shipment",
+     "content": "{\"status\": \"in_transit\", \"tracker_id\": \"trk_ship03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 15,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "ct04",
+    "cond": "Dprime",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Add Diego Fuentes (diego@meridian.test) as a prospect scored 80 — newsletter on — then log a call on his new record with summary 'Intro call booked'.",
+   "drift_tool": "create_contact",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Lead score 0-100 as string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Lead score 0-100",
+     "type": "integer"
+    },
+    "param": "score"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "email": "diego@meridian.test",
+     "full_name": "Diego Fuentes",
+     "score": 80,
+     "stage": "prospect"
+    },
+    "v2": {
+     "email": "diego@meridian.test",
+     "full_name": "Diego Fuentes",
+     "score": "80",
+     "stage": "prospect"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_contact",
+     "args": {
+      "email": "diego@meridian.test",
+      "stage": "prospect",
+      "score": "80",
+      "full_name": "Diego Fuentes",
+      "subscribe_newsletter": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_contact",
+     "content": "{\"contact_id\": \"ct_ct04\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "log_interaction",
+     "args": {
+      "contact_id": "ct_ct04",
+      "summary": "Intro call booked",
+      "kind": "call"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "log_interaction",
+     "content": "{\"interaction_id\": \"ix_ct04\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 16,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "deal03",
+    "cond": "Dprime",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Mark dl_4407 closed-won at $99,000.00, closed Oct 1 2026.",
+   "drift_tool": "update_deal",
+   "change": {
+    "change": "default_changed",
+    "new": "unspecified",
+    "old": "",
+    "param": "loss_reason"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "close_date": "2026-10-01",
+     "deal_id": "dl_4407",
+     "stage": "closed_won",
+     "value_cents": 9900000
+    },
+    "v2": {
+     "close_date": "2026-10-01",
+     "deal_id": "dl_4407",
+     "loss_reason": "",
+     "stage": "closed_won",
+     "value_cents": 9900000
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "update_deal",
+     "args": {
+      "close_date": "2026-10-01",
+      "currency": "USD",
+      "deal_id": "dl_4407",
+      "loss_reason": "unspecified",
+      "stage": "closed_won",
+      "value_cents": 9900000
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "update_deal",
+     "content": "{\"deal_id\": \"deal03\", \"state\": \"updated\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 17,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "ct02",
+    "cond": "C:user:prose:apply",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Add Tom Okafor, tom.o@vantage.test, straight in as a customer. Newsletter as usual.",
+   "drift_tool": "create_contact",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "auto_assign"
+    },
+    "param": "owner_id"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "email": "tom.o@vantage.test",
+     "full_name": "Tom Okafor",
+     "stage": "customer"
+    },
+    "v2": {
+     "email": "tom.o@vantage.test",
+     "full_name": "Tom Okafor",
+     "owner_id": "auto_assign",
+     "stage": "customer"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_contact",
+     "args": {
+      "email": "tom.o@vantage.test",
+      "full_name": "Tom Okafor",
+      "stage": "customer",
+      "subscribe_newsletter": true,
+      "owner_id": "user_provided_id"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_contact",
+     "content": "{\"contact_id\": \"ct_ct02\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 18,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "rem03",
+    "cond": "C_decl",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Remind me to call the dentist on Oct 12 2026 at 10:00 UTC with two hours' notice; add the note 'Ask about invoice'. Single reminder, no repeat.",
+   "drift_tool": "create_reminder",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Advance notice in hours, decimal string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Advance notice in minutes",
+     "type": "integer"
+    },
+    "param": "lead_min"
+   },
+   "shown": "old (v1) declaration, with the change written into the parameter's description",
+   "expected": {
+    "v1": {
+     "lead_min": 120,
+     "note": "Ask about invoice",
+     "remind_at": "2026-10-12T10:00:00+00:00",
+     "text": "Call the dentist"
+    },
+    "v2": {
+     "lead_min": "2",
+     "note": "Ask about invoice",
+     "remind_at": "2026-10-12T10:00:00+00:00",
+     "text": "Call the dentist"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_reminder",
+     "args": {
+      "channel": "push",
+      "lead_min": 120,
+      "list_id": "inbox",
+      "note": "Ask about invoice",
+      "remind_at": "2026-10-12T10:00:00Z",
+      "repeat_daily": false,
+      "text": "Call the dentist"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_reminder",
+     "content": "Error: Invalid type for parameter 'lead_min': expected string, got int."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid type for parameter 'lead_min': expected string, got int.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 19,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "rep03",
+    "cond": "CD",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Run churn_summary as a PDF over the last 4320 minutes filtered to region=emea, with UTC timestamps.",
+   "drift_tool": "run_report",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "default"
+    },
+    "param": "workspace"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "filters": "region=emea",
+     "format": "pdf",
+     "report_name": "churn_summary",
+     "window_min": 4320
+    },
+    "v2": {
+     "filters": "region=emea",
+     "format": "pdf",
+     "report_name": "churn_summary",
+     "window_min": 4320,
+     "workspace": "default"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [],
+   "final_text": "Please provide the analytics workspace to run the report.",
+   "drift_outcome": null,
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 20,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "pay02",
+    "cond": "C:user:json:apply",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Pay my landlord's account DE89370400440532013000 $450.00 for October rent (memo 'October rent'), standard speed is fine.",
+   "drift_tool": "send_payment",
+   "change": {
+    "change": "renamed",
+    "new": "reference",
+    "old": "memo",
+    "param": "memo"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as json; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "amount_cents": 45000,
+     "memo": "October rent",
+     "recipient": "DE89370400440532013000"
+    },
+    "v2": {
+     "amount_cents": 45000,
+     "recipient": "DE89370400440532013000",
+     "reference": "October rent"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "send_payment",
+     "args": {
+      "amount_cents": 45000,
+      "currency": "EUR",
+      "funding_source": "default_balance",
+      "recipient": "DE89370400440532013000",
+      "speed": "standard",
+      "reference": "October rent"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_payment",
+     "content": "{\"payment_id\": \"pay_pay02\", \"state\": \"processed\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 21,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "sched03",
+    "cond": "Dprime",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Schedule a birthday DM to @marco: 'Happy birthday!' for Oct 30 2026 at 9am UTC, confirm delivery like normal.",
+   "drift_tool": "schedule_message",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "confirm_receipt"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "channel_type": "dm",
+     "send_at": "2026-10-30T09:00:00+00:00",
+     "target": "@marco",
+     "text": "Happy birthday!"
+    },
+    "v2": {
+     "channel_type": "dm",
+     "confirm_receipt": true,
+     "send_at": "2026-10-30T09:00:00+00:00",
+     "target": "@marco",
+     "text": "Happy birthday!"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "schedule_message",
+     "args": {
+      "campaign": "",
+      "channel_type": "dm",
+      "confirm_receipt": true,
+      "retry_count": 1,
+      "send_at": "2026-10-30T09:00:00Z",
+      "target": "@marco",
+      "text": "Happy birthday!",
+      "timezone": "UTC"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "schedule_message",
+     "content": "{\"scheduled_id\": \"sch_sched03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 22,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "hotel03",
+    "cond": "CD",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Reserve a standard room in Kyoto, check-in Dec 1 2026, 5 nights, and tell the front desk 'Late check-in after 22:00'; email me the confirmation.",
+   "drift_tool": "reserve_hotel",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "email_confirmation"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "check_in": "2026-12-01",
+     "city": "Kyoto",
+     "nights": 5,
+     "room_type": "standard",
+     "special_requests": "Late check-in after 22:00"
+    },
+    "v2": {
+     "check_in": "2026-12-01",
+     "city": "Kyoto",
+     "email_confirmation": true,
+     "nights": 5,
+     "room_type": "standard",
+     "special_requests": "Late check-in after 22:00"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "reserve_hotel",
+     "args": {
+      "city": "Kyoto",
+      "nights": 5,
+      "check_in": "2026-12-01",
+      "special_requests": "Late check-in after 22:00",
+      "room_type": "standard",
+      "email_confirmation": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "reserve_hotel",
+     "content": "{\"hotel_address\": \"addr_hotel03\", \"reservation_id\": \"htl_hotel03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 23,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "pto04",
+    "cond": "C:user:prose:apply",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Request personal leave for Nov 23 2026 starting 09:00 UTC, 480 minutes, reason 'Long weekend' — team calendar updated as usual — then book me a flight to MIA departing 2026-11-23.",
+   "drift_tool": "request_time_off",
+   "change": {
+    "change": "enum_changed",
+    "new": "personal_day",
+    "old": "personal",
+    "param": "kind"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "duration_min": 480,
+     "kind": "personal",
+     "reason": "Long weekend",
+     "start": "2026-11-23T09:00:00+00:00"
+    },
+    "v2": {
+     "duration_min": 480,
+     "kind": "personal_day",
+     "reason": "Long weekend",
+     "start": "2026-11-23T09:00:00+00:00"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "request_time_off",
+     "args": {
+      "duration_min": 480,
+      "start": "2026-11-23T09:00:00Z",
+      "kind": "personal_day",
+      "notify_team": true,
+      "reason": "Long weekend"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "request_time_off",
+     "content": "{\"pto_id\": \"pto_pto04\", \"state\": \"pending_approval\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "book_flight",
+     "args": {
+      "depart": "2026-11-23",
+      "destination": "MIA",
+      "cabin": "economy"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "book_flight",
+     "content": "{\"booking_ref\": \"fl_pto04\", \"state\": \"ticketed\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 24,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "msg04",
+    "cond": "C:user:prose:apply",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Spin up an invite-only channel proj-falcon and post 'Welcome aboard — kickoff Monday.' there at normal priority, link previews as usual.",
+   "drift_tool": "send_message",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "main"
+    },
+    "param": "workspace"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "priority": "normal",
+     "target": "proj-falcon",
+     "text": "Welcome aboard — kickoff Monday."
+    },
+    "v2": {
+     "priority": "normal",
+     "target": "proj-falcon",
+     "text": "Welcome aboard — kickoff Monday.",
+     "workspace": "main"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "priority": "normal",
+      "target": "proj-falcon",
+      "text": "Welcome aboard — kickoff Monday.",
+      "workspace": "main"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "{\"message_id\": \"msg_msg04\", \"state\": \"delivered\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "create_channel",
+     "args": {
+      "access": "invite_only",
+      "name": "proj-falcon",
+      "topic": "",
+      "workspace": "main"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_channel",
+     "content": "{\"channel_id\": \"ch_msg04\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": null,
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 25,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "copy02",
+    "cond": "C:tool:json:none",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Copy /data/export.csv to /backup/export.csv with 3 retries if it flakes; keep the metadata as-is.",
+   "drift_tool": "copy_file",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "local"
+    },
+    "param": "volume"
+   },
+   "shown": "old (v1) declaration; change log in a get_api_changelog result already in the transcript, written as json",
+   "expected": {
+    "v1": {
+     "dst": "/backup/export.csv",
+     "retries": 3,
+     "src": "/data/export.csv"
+    },
+    "v2": {
+     "dst": "/backup/export.csv",
+     "retries": 3,
+     "src": "/data/export.csv",
+     "volume": "local"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "get_api_changelog",
+     "args": {
+      "tool": "copy_file"
+     },
+     "synthetic": true
+    },
+    {
+     "role": "tool_result",
+     "name": "get_api_changelog",
+     "content": "NOTE: the API behind tool 'copy_file' was updated after the tool schema you were given was cached. Machine-readable change log for 'copy_file' (apply it when calling):\n[\n {\n  \"change\": \"now_required\",\n  \"new\": \"required, no default\",\n  \"old\": {\n   \"default\": \"local\"\n  },\n  \"param\": \"volume\"\n }\n]",
+     "synthetic": true
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "copy_file",
+     "args": {
+      "comment": "Copy requested export file",
+      "conflict": "skip",
+      "dst": "/backup/export.csv",
+      "preserve_meta": true,
+      "retries": 3,
+      "src": "/data/export.csv",
+      "volume": "local"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "copy_file",
+     "content": "{\"copied_to\": \"copy02\", \"state\": \"ok\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 26,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "ship03",
+    "cond": "CD",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Track 9400111899560001234567 and only alert me on exceptions; poll every 720 minutes, call it 'Camera lens', distance remaining in miles.",
+   "drift_tool": "track_shipment",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "auto_detect"
+    },
+    "param": "carrier"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "alert_on": "exception",
+     "nickname": "Camera lens",
+     "poll_interval_min": 720,
+     "tracking_number": "9400111899560001234567"
+    },
+    "v2": {
+     "alert_on": "exception",
+     "carrier": "auto_detect",
+     "nickname": "Camera lens",
+     "poll_interval_min": 720,
+     "tracking_number": "9400111899560001234567"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "track_shipment",
+     "args": {
+      "poll_interval_min": 720,
+      "units": "miles",
+      "nickname": "Camera lens",
+      "carrier": "USPS",
+      "alert_on": "exception",
+      "tracking_number": "9400111899560001234567"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "track_shipment",
+     "content": "{\"status\": \"in_transit\", \"tracker_id\": \"trk_ship03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 27,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "chan03",
+    "cond": "CD",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Make an open book-club channel, topic 'Monthly reads', and leave auto-archive off.",
+   "drift_tool": "create_channel",
+   "change": {
+    "change": "renamed",
+    "new": "channel_purpose",
+    "old": "topic",
+    "param": "topic"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "access": "open",
+     "name": "book-club",
+     "topic": "Monthly reads"
+    },
+    "v2": {
+     "access": "open",
+     "channel_purpose": "Monthly reads",
+     "name": "book-club"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_channel",
+     "args": {
+      "access": "open",
+      "auto_archive": false,
+      "channel_purpose": "Monthly reads",
+      "history_days": 0,
+      "name": "book-club",
+      "workspace": "main"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_channel",
+     "content": "{\"channel_id\": \"ch_chan03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 28,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "perm01",
+    "cond": "C:sys:prose:none",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Give team-accounting write access to /shared/finance just for that folder (not its children), justification 'Month-end close'.",
+   "drift_tool": "set_permissions",
+   "change": {
+    "change": "renamed",
+    "new": "audit_reason",
+    "old": "justification",
+    "param": "justification"
+   },
+   "shown": "old (v1) declaration; change log in the system prompt, written as prose",
+   "expected": {
+    "v1": {
+     "access": "write",
+     "justification": "Month-end close",
+     "path": "/shared/finance",
+     "principal": "team-accounting"
+    },
+    "v2": {
+     "access": "write",
+     "audit_reason": "Month-end close",
+     "path": "/shared/finance",
+     "principal": "team-accounting"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "set_permissions",
+     "args": {
+      "path": "/shared/finance",
+      "principal": "team-accounting",
+      "access": "write",
+      "realm": "corp",
+      "recursive": false,
+      "justification": "Month-end close"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "set_permissions",
+     "content": "Error: Received unknown parameter: 'justification'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Received unknown parameter: 'justification'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 29,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "rem02",
+    "cond": "Dprime",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Set a one-time push reminder to water the plants, Oct 5 2026 at 8am UTC. Definitely not a daily repeat.",
+   "drift_tool": "create_reminder",
+   "change": {
+    "change": "default_changed",
+    "new": true,
+    "old": false,
+    "param": "repeat_daily"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "channel": "push",
+     "remind_at": "2026-10-05T08:00:00+00:00",
+     "text": "Water the plants"
+    },
+    "v2": {
+     "channel": "push",
+     "remind_at": "2026-10-05T08:00:00+00:00",
+     "repeat_daily": false,
+     "text": "Water the plants"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_reminder",
+     "args": {
+      "remind_at": "2026-10-05T08:00:00Z",
+      "channel": "push",
+      "text": "Water the plants",
+      "repeat_daily": false
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_reminder",
+     "content": "{\"reminder_id\": \"rem_rem02\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 30,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "pto03",
+    "cond": "C:user:json:apply",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_ERROR",
+   "request": "Request vacation starting Dec 21 2026 at 09:00 UTC for 2400 minutes, reason 'Year-end trip'; the team should see it on the calendar as usual.",
+   "drift_tool": "request_time_off",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Leave length in hours, decimal string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Leave length in minutes",
+     "type": "integer"
+    },
+    "param": "duration_min"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as json; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "duration_min": 2400,
+     "kind": "vacation",
+     "reason": "Year-end trip",
+     "start": "2026-12-21T09:00:00+00:00"
+    },
+    "v2": {
+     "duration_min": "40",
+     "kind": "vacation",
+     "reason": "Year-end trip",
+     "start": "2026-12-21T09:00:00+00:00"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "request_time_off",
+     "args": {
+      "approver": "direct_manager",
+      "duration": "40",
+      "kind": "vacation",
+      "notify_team": true,
+      "reason": "Year-end trip",
+      "start": "2026-12-21T09:00:00Z"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "request_time_off",
+     "content": "Error: Received unknown parameter: 'duration'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Received unknown parameter: 'duration'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 31,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "msg04",
+    "cond": "Dprime",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Spin up an invite-only channel proj-falcon and post 'Welcome aboard — kickoff Monday.' there at normal priority, link previews as usual.",
+   "drift_tool": "send_message",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "main"
+    },
+    "param": "workspace"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "priority": "normal",
+     "target": "proj-falcon",
+     "text": "Welcome aboard — kickoff Monday."
+    },
+    "v2": {
+     "priority": "normal",
+     "target": "proj-falcon",
+     "text": "Welcome aboard — kickoff Monday.",
+     "workspace": "main"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_channel",
+     "args": {
+      "access": "invite_only",
+      "name": "proj-falcon"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_channel",
+     "content": "{\"channel_id\": \"ch_msg04\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "workspace": "main",
+      "target": "#proj-falcon",
+      "priority": "normal",
+      "unfurl_links": true,
+      "text": "Welcome aboard — kickoff Monday."
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "{\"message_id\": \"msg_msg04\", \"state\": \"delivered\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 32,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "refund03",
+    "cond": "C:sys:prose:none",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Refund the full $250.00 on pay_55710 as fraud; internal note 'Chargeback pre-empt'. Customer should still get the standard refund email.",
+   "drift_tool": "refund_payment",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "main"
+    },
+    "param": "ledger"
+   },
+   "shown": "old (v1) declaration; change log in the system prompt, written as prose",
+   "expected": {
+    "v1": {
+     "amount_cents": 25000,
+     "note": "Chargeback pre-empt",
+     "payment_id": "pay_55710",
+     "reason": "fraud"
+    },
+    "v2": {
+     "amount_cents": 25000,
+     "ledger": "main",
+     "note": "Chargeback pre-empt",
+     "payment_id": "pay_55710",
+     "reason": "fraud"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "refund_payment",
+     "args": {
+      "amount_cents": 25000,
+      "ledger": "main",
+      "note": "Chargeback pre-empt",
+      "notify": true,
+      "payment_id": "pay_55710",
+      "reason": "fraud"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "refund_payment",
+     "content": "{\"refund_id\": \"ref_refund03\", \"state\": \"refunded\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 33,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "msg03",
+    "cond": "Dprime",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Urgent post to #incidents: 'DB failover complete, all green.' Keep the link previews.",
+   "drift_tool": "send_message",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "unfurl_links"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "priority": "urgent",
+     "target": "#incidents",
+     "text": "DB failover complete, all green."
+    },
+    "v2": {
+     "priority": "urgent",
+     "target": "#incidents",
+     "text": "DB failover complete, all green.",
+     "unfurl_links": true
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "priority": "urgent",
+      "unfurl_links": true,
+      "target": "#incidents",
+      "text": "DB failover complete, all green."
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "{\"message_id\": \"msg_msg03\", \"state\": \"delivered\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 34,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "zip02",
+    "cond": "CD",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Tar up /video/raw as raw-footage.tar, split into 2048 MB parts, unencrypted.",
+   "drift_tool": "compress_folder",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "/archives"
+    },
+    "param": "dest_dir"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "archive_name": "raw-footage.tar",
+     "folder": "/video/raw",
+     "format": "tar",
+     "split_mb": 2048
+    },
+    "v2": {
+     "archive_name": "raw-footage.tar",
+     "dest_dir": "/archives",
+     "folder": "/video/raw",
+     "format": "tar",
+     "split_mb": 2048
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "compress_folder",
+     "args": {
+      "dest_dir": "/video",
+      "split_mb": 2048,
+      "archive_name": "raw-footage.tar",
+      "format": "tar",
+      "folder": "/video/raw"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "compress_folder",
+     "content": "{\"archive_path\": \"/archives/zip02\", \"state\": \"ok\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 35,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "zip02",
+    "cond": "C:tool:json:apply",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Tar up /video/raw as raw-footage.tar, split into 2048 MB parts, unencrypted.",
+   "drift_tool": "compress_folder",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "/archives"
+    },
+    "param": "dest_dir"
+   },
+   "shown": "old (v1) declaration; change log in a get_api_changelog result already in the transcript, written as json; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "archive_name": "raw-footage.tar",
+     "folder": "/video/raw",
+     "format": "tar",
+     "split_mb": 2048
+    },
+    "v2": {
+     "archive_name": "raw-footage.tar",
+     "dest_dir": "/archives",
+     "folder": "/video/raw",
+     "format": "tar",
+     "split_mb": 2048
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "get_api_changelog",
+     "args": {
+      "tool": "compress_folder"
+     },
+     "synthetic": true
+    },
+    {
+     "role": "tool_result",
+     "name": "get_api_changelog",
+     "content": "NOTE: the API behind tool 'compress_folder' was updated after the tool schema you were given was cached. Machine-readable change log for 'compress_folder' (apply it when calling):\n[\n {\n  \"change\": \"now_required\",\n  \"new\": \"required, no default\",\n  \"old\": {\n   \"default\": \"/archives\"\n  },\n  \"param\": \"dest_dir\"\n }\n]\nBefore calling 'compress_folder', apply this change log step by step: for each change, rewrite the affected argument so the call matches the updated API.",
+     "synthetic": true
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "compress_folder",
+     "args": {
+      "archive_name": "raw-footage.tar",
+      "dest_dir": null,
+      "encrypt": false,
+      "folder": "/video/raw",
+      "format": "tar",
+      "label": "",
+      "split_mb": 2048
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "compress_folder",
+     "content": "Error: Invalid type for parameter 'dest_dir': expected string, got NoneType."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid type for parameter 'dest_dir': expected string, got NoneType.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 36,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "pto02",
+    "cond": "C_decl",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Put in for personal leave on Nov 6 2026 from 13:00 UTC for 240 minutes, and let the team know via the calendar as usual.",
+   "drift_tool": "request_time_off",
+   "change": {
+    "change": "enum_changed",
+    "new": "personal_day",
+    "old": "personal",
+    "param": "kind"
+   },
+   "shown": "old (v1) declaration, with the change written into the parameter's description",
+   "expected": {
+    "v1": {
+     "duration_min": 240,
+     "kind": "personal",
+     "start": "2026-11-06T13:00:00+00:00"
+    },
+    "v2": {
+     "duration_min": 240,
+     "kind": "personal_day",
+     "start": "2026-11-06T13:00:00+00:00"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "request_time_off",
+     "args": {
+      "duration_min": 240,
+      "kind": "personal_day",
+      "notify_team": true,
+      "start": "2026-11-06T13:00:00Z",
+      "approver": "direct_manager"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "request_time_off",
+     "content": "{\"pto_id\": \"pto_pto02\", \"state\": \"pending_approval\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 37,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "web01",
+    "cond": "C:tool:json:none",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Search for solid state battery breakthroughs, top 5 results, moderate safe-search, only from nature.com — text results only, no images.",
+   "drift_tool": "web_search",
+   "change": {
+    "change": "default_changed",
+    "new": true,
+    "old": false,
+    "param": "include_images"
+   },
+   "shown": "old (v1) declaration; change log in a get_api_changelog result already in the transcript, written as json",
+   "expected": {
+    "v1": {
+     "max_results": 5,
+     "query": "solid state battery breakthroughs",
+     "safe_search": "moderate",
+     "site_filter": "nature.com"
+    },
+    "v2": {
+     "include_images": false,
+     "max_results": 5,
+     "query": "solid state battery breakthroughs",
+     "safe_search": "moderate",
+     "site_filter": "nature.com"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "get_api_changelog",
+     "args": {
+      "tool": "web_search"
+     },
+     "synthetic": true
+    },
+    {
+     "role": "tool_result",
+     "name": "get_api_changelog",
+     "content": "NOTE: the API behind tool 'web_search' was updated after the tool schema you were given was cached. Machine-readable change log for 'web_search' (apply it when calling):\n[\n {\n  \"change\": \"default_changed\",\n  \"new\": true,\n  \"old\": false,\n  \"param\": \"include_images\"\n }\n]",
+     "synthetic": true
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "web_search",
+     "args": {
+      "include_images": false,
+      "max_results": 5,
+      "query": "solid state battery breakthroughs",
+      "region": "us",
+      "safe_search": "moderate",
+      "site_filter": "nature.com"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "web_search",
+     "content": "{\"search_id\": \"srch_web01\", \"top_url\": \"https://results.test/web01\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 38,
+   "key": {
+    "model": "gemini-3.1-pro-preview",
+    "task": "job03",
+    "cond": "CD",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "LOW"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Post a full-time Product Designer opening in the Design department at the NYC office, band up to $140,000.00, visible on the public board as usual.",
+   "drift_tool": "post_job_opening",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Top of annual salary band as decimal string in major units",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Top of annual salary band in cents",
+     "type": "integer"
+    },
+    "param": "salary_cents"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "department": "Design",
+     "employment": "full_time",
+     "location": "NYC office",
+     "salary_cents": 14000000,
+     "title": "Product Designer"
+    },
+    "v2": {
+     "department": "Design",
+     "employment": "full_time",
+     "location": "NYC office",
+     "salary_cents": "140000.00",
+     "title": "Product Designer"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "post_job_opening",
+     "args": {
+      "employment": "full_time",
+      "salary_cents": "140000.00",
+      "title": "Product Designer",
+      "department": "Design",
+      "location": "NYC"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "post_job_opening",
+     "content": "{\"job_id\": \"job_job03\", \"state\": \"published\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 39,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "fly02",
+    "cond": "C:user:json:apply",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Book a premium economy flight to LIS for Oct 22 2026 with at most a 90-minute layover; a non-refundable ticket is fine.",
+   "drift_tool": "book_flight",
+   "change": {
+    "change": "enum_changed",
+    "new": "premium",
+    "old": "premium_economy",
+    "param": "cabin"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as json; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "cabin": "premium_economy",
+     "depart": "2026-10-22",
+     "destination": "LIS",
+     "max_layover_min": 90
+    },
+    "v2": {
+     "cabin": "premium",
+     "depart": "2026-10-22",
+     "destination": "LIS",
+     "max_layover_min": 90
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "book_flight",
+     "args": {
+      "cabin": "premium_economy",
+      "depart": "2026-10-22",
+      "destination": "LIS",
+      "max_layover_min": 90,
+      "refundable": false,
+      "seat_pref": "",
+      "traveler_id": "primary_profile"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "book_flight",
+     "content": "Error: Invalid value 'premium_economy' for parameter 'cabin'. Allowed values: economy, premium, business."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid value 'premium_economy' for parameter 'cabin'. Allowed values: economy, premium, business.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 40,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "deal04",
+    "cond": "C:tool:prose:none",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_ERROR",
+   "request": "Move dl_6120 to negotiation at $27,500.00 and post in #sales: 'dl_6120 moved to negotiation at $27.5k.'",
+   "drift_tool": "update_deal",
+   "change": {
+    "change": "enum_changed",
+    "new": "in_negotiation",
+    "old": "negotiation",
+    "param": "stage"
+   },
+   "shown": "old (v1) declaration; change log in a get_api_changelog result already in the transcript, written as prose",
+   "expected": {
+    "v1": {
+     "deal_id": "dl_6120",
+     "stage": "negotiation",
+     "value_cents": 2750000
+    },
+    "v2": {
+     "deal_id": "dl_6120",
+     "stage": "in_negotiation",
+     "value_cents": 2750000
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "get_api_changelog",
+     "args": {
+      "tool": "update_deal"
+     },
+     "synthetic": true
+    },
+    {
+     "role": "tool_result",
+     "name": "get_api_changelog",
+     "content": "NOTE: the API behind tool 'update_deal' was updated after the tool schema you were given was cached. Plain-language change log for 'update_deal' (apply it when calling):\n- Parameter `stage` no longer accepts the value \"negotiation\"; use \"in_negotiation\" instead.",
+     "synthetic": true
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "update_deal",
+     "args": {
+      "deal_id": "dl_6120",
+      "stage": "in_negotiation",
+      "value_cents": 2750000,
+      "target": "#sales",
+      "text": "dl_6120 moved to negotiation at $27.5k."
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "update_deal",
+     "content": "Error: Received unknown parameter: 'target'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Received unknown parameter: 'target'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 41,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "ds03",
+    "cond": "Dprime",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Export billing_ledger to s3://viz-archive/billing with zstd compression, 4096 MB chunks, tag 'finance', header row included.",
+   "drift_tool": "export_dataset",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Chunk size in gigabytes, decimal string (\"0\" = single file)",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Chunk size in megabytes (0 = single file)",
+     "type": "integer"
+    },
+    "param": "chunk_mb"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "chunk_mb": 4096,
+     "compression": "zstd",
+     "dataset": "billing_ledger",
+     "destination": "s3://viz-archive/billing",
+     "tag": "finance"
+    },
+    "v2": {
+     "chunk_mb": "4",
+     "compression": "zstd",
+     "dataset": "billing_ledger",
+     "destination": "s3://viz-archive/billing",
+     "tag": "finance"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "export_dataset",
+     "args": {
+      "dataset": "billing_ledger",
+      "include_headers": true,
+      "compression": "zstd",
+      "chunk_mb": "4.096",
+      "destination": "s3://viz-archive/billing",
+      "tag": "finance"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "export_dataset",
+     "content": "{\"export_id\": \"dx_ds03\", \"state\": \"queued\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 42,
+   "key": {
+    "model": "modal-qwen2.5-7b",
+    "task": "sched03",
+    "cond": "C:user:json:none",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Schedule a birthday DM to @marco: 'Happy birthday!' for Oct 30 2026 at 9am UTC, confirm delivery like normal.",
+   "drift_tool": "schedule_message",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "confirm_receipt"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as json",
+   "expected": {
+    "v1": {
+     "channel_type": "dm",
+     "send_at": "2026-10-30T09:00:00+00:00",
+     "target": "@marco",
+     "text": "Happy birthday!"
+    },
+    "v2": {
+     "channel_type": "dm",
+     "confirm_receipt": true,
+     "send_at": "2026-10-30T09:00:00+00:00",
+     "target": "@marco",
+     "text": "Happy birthday!"
+    }
+   },
+   "b_strict_success": true,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "schedule_message",
+     "args": {
+      "campaign": "",
+      "channel_type": "dm",
+      "confirm_receipt": true,
+      "retry_count": 1,
+      "send_at": "2026-10-30T09:00:00Z",
+      "target": "@marco",
+      "text": "Happy birthday!",
+      "timezone": "UTC"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "schedule_message",
+     "content": "{\"scheduled_id\": \"sch_sched03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 43,
+   "key": {
+    "model": "openai/gpt-5.6-luna",
+    "task": "hotel02",
+    "cond": "Dprime",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Book a deluxe room in Denver for 2 nights from Nov 5 2026, and send the confirmation to my email.",
+   "drift_tool": "reserve_hotel",
+   "change": {
+    "change": "enum_changed",
+    "new": "luxury",
+    "old": "deluxe",
+    "param": "room_type"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "check_in": "2026-11-05",
+     "city": "Denver",
+     "nights": 2,
+     "room_type": "deluxe"
+    },
+    "v2": {
+     "check_in": "2026-11-05",
+     "city": "Denver",
+     "nights": 2,
+     "room_type": "luxury"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "reserve_hotel",
+     "args": {
+      "check_in": "2026-11-05",
+      "city": "Denver",
+      "email_confirmation": true,
+      "guest_profile": "primary",
+      "nights": 2,
+      "room_type": "luxury",
+      "special_requests": ""
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "reserve_hotel",
+     "content": "{\"hotel_address\": \"addr_hotel02\", \"reservation_id\": \"htl_hotel02\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 44,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "ds03",
+    "cond": "CD",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Export billing_ledger to s3://viz-archive/billing with zstd compression, 4096 MB chunks, tag 'finance', header row included.",
+   "drift_tool": "export_dataset",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Chunk size in gigabytes, decimal string (\"0\" = single file)",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Chunk size in megabytes (0 = single file)",
+     "type": "integer"
+    },
+    "param": "chunk_mb"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "chunk_mb": 4096,
+     "compression": "zstd",
+     "dataset": "billing_ledger",
+     "destination": "s3://viz-archive/billing",
+     "tag": "finance"
+    },
+    "v2": {
+     "chunk_mb": "4",
+     "compression": "zstd",
+     "dataset": "billing_ledger",
+     "destination": "s3://viz-archive/billing",
+     "tag": "finance"
+    }
+   },
+   "b_strict_success": false,
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "export_dataset",
+     "args": {
+      "include_headers": true,
+      "destination": "s3://viz-archive/billing",
+      "tag": "finance",
+      "compression": "zstd",
+      "dataset": "billing_ledger"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "export_dataset",
+     "content": "{\"export_id\": \"dx_ds03\", \"state\": \"queued\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  }
+ ]
+}

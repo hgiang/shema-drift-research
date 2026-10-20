@@ -29,6 +29,8 @@ REASONING = {**THINKING}  # Gemini thinking level is the record's reasoning; oth
 ABLATION_COND = harness.ABLATION_CELLS + ["C_decl"]
 INFOFORM = {"Dprime-C": ("Dprime", "C"), "Dprime-D": ("Dprime", "D"), "CD-C": ("CD", "C"), "CD-D": ("CD", "D")}
 SELECTION_FILE = "thinking_cell_selection.json"
+AUDIT_FILE = "audit_labels_sample.json"  # Task 13 hand audit (audit_sample.py)
+AUDIT_PASS = 0.9  # below this, fix drift_labels.classify before the final analysis
 SEPT_FLOOR_PROXY = {"gemini-3.1-pro-preview": "gemini-3.6-flash"}  # pin A5
 EXPECTED_TESTS = 112 + 82  # locked family; the route arm (+2) does not run (amendment 1)
 
@@ -223,14 +225,47 @@ def _main_records(p1runs, model=None):
             and r.get("rep", 0) == 0 and r.get("reasoning") == base_reasoning(r["model"])]
 
 
+def auto_label(r, sept):
+    """drift_labels.classify with the September B_strict record of the same pair as b_rec."""
+    return drift_labels.classify(r, sept.get((r["model"], r["task"], r["class"], "B_strict")))[0]
+
+
 def mechanism(p1runs, sept):
-    """classify label counts per model x cell x class (September B_strict record as b_rec)."""
+    """classify label counts per model x cell x class."""
     out = defaultdict(lambda: defaultdict(lambda: defaultdict(Counter)))
     for r in _main_records(p1runs):
-        b_rec = sept.get((r["model"], r["task"], r["class"], "B_strict"))
-        label, _ = drift_labels.classify(r, b_rec)
-        out[r["model"]][r["cond"]][r["class"]][label] += 1
+        out[r["model"]][r["cond"]][r["class"]][auto_label(r, sept)] += 1
     return {m: {c: {k: dict(v) for k, v in cls.items()} for c, cls in conds.items()} for m, conds in out.items()}
+
+
+def audit_key(r):
+    return {"model": r["model"], "task": r["task"], "cond": r["cond"], "class": r["class"],
+            "phrasing": r["phrasing"], "rep": r.get("rep", 0), "reasoning": r.get("reasoning", "default")}
+
+
+def audit_agreement(p1runs, sept, sample):
+    """Human vs automatic label on the hand-audit items. The automatic label is recomputed with the
+    current labeler, so a fix to drift_labels.classify shows up here without redrawing."""
+    index = {json.dumps(audit_key(r), sort_keys=True): r for r in _main_records(p1runs)}
+    rows = []
+    for it in sample["items"]:
+        r = index.get(json.dumps(it["key"], sort_keys=True))
+        if r is None:
+            raise SystemExit(f"audit item {it['id']}: record {it['key']} is not in the Phase-1 runs")
+        rows.append((it["id"], auto_label(r, sept), it["human_label"]))
+    labelled = [row for row in rows if row[2] is not None]
+    agree = sum(auto == human for _, auto, human in labelled)
+    rate = agree / len(labelled) if labelled else None
+    complete = len(labelled) == len(rows)
+    return {"n_items": len(rows), "n_labelled": len(labelled), "n_agree": agree, "rate": rate,
+            "complete": complete, "threshold": AUDIT_PASS, "passes": rate >= AUDIT_PASS if complete else None,
+            "disagreements": [{"id": i, "auto": auto, "human": human} for i, auto, human in labelled
+                              if auto != human]}
+
+
+def audit(p1runs, sept, phase1_dir):
+    f = pathlib.Path(phase1_dir) / AUDIT_FILE
+    return audit_agreement(p1runs, sept, json.loads(f.read_text())) if f.exists() else None
 
 
 def qwen_p3(ctx, p1runs):
@@ -331,7 +366,7 @@ def analyze(runs, p1runs, ctx, sept_noise, phase1_dir):
     _thinking_blocks(ctx, out, p1runs, tabs, phase1_dir)
     if QWEN in out["ablation"]:
         out["qwen_p3"] = qwen_p3(ctx, p1runs)
-    out["mechanism"] = mechanism(p1runs, sept)
+    out["mechanism"] = {**mechanism(p1runs, sept), "audit_agreement": audit(p1runs, sept, phase1_dir)}
     out["instrument"] = instrument(p1runs)
     out["accounting"] = accounting(p1runs, phase1_dir)
     return out
