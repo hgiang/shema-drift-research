@@ -86,8 +86,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "sent new name `listing_title`; accepted as correct."
   },
   {
    "id": 2,
@@ -144,8 +144,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "omitted `loss_reason` despite its changed default."
   },
   {
    "id": 3,
@@ -202,8 +202,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "omitted `loss_reason` despite its changed default."
   },
   {
    "id": 4,
@@ -265,8 +265,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "sent new name `annotation`; accepted as correct."
   },
   {
    "id": 5,
@@ -334,8 +334,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "salary string is correct; sent location `NYC` instead of `NYC office`."
   },
   {
    "id": 6,
@@ -399,8 +399,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "explicit `sync_devices: true` accepted; default_change pair also succeeded without a change log."
   },
   {
    "id": 7,
@@ -467,8 +467,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "sent string `duration_min: \"2400\"` in old minutes instead of hours `\"40\"`."
   },
   {
    "id": 8,
@@ -533,8 +533,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "`sync_devices: true` matches v2; accepted wrong with extra `folder: \"\"`."
   },
   {
    "id": 9,
@@ -594,8 +594,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "omitted `loss_reason` despite its changed default."
   },
   {
    "id": 10,
@@ -654,8 +654,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "sent new cabin value `premium`; accepted as correct."
   },
   {
    "id": 11,
@@ -739,8 +739,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid type for parameter 'duration_min': expected string, got int.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "sent old integer `duration_min: 90` instead of hours string `\"1.5\"`."
   },
   {
    "id": 12,
@@ -801,8 +801,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "`follow_up: false` matches v2; executor still marked the call accepted wrong."
   },
   {
    "id": 13,
@@ -850,8 +850,8 @@
    "drift_outcome": null,
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "NO_DRIFT_CALL",
+   "note": "asked for a cost center without calling `submit_expense`."
   },
   {
    "id": 14,
@@ -915,8 +915,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "filled newly required `carrier` with `USPS` instead of `auto_detect`."
   },
   {
    "id": 15,
@@ -996,8 +996,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "sent new string form `score: \"80\"`; accepted as correct."
   },
   {
    "id": 16,
@@ -1059,8 +1059,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "explicitly sent `loss_reason: \"unspecified\"` instead of preserving the old empty value."
   },
   {
    "id": 17,
@@ -1121,8 +1121,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "filled newly required `owner_id` with `user_provided_id` instead of `auto_assign`."
   },
   {
    "id": 18,
@@ -1190,8 +1190,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid type for parameter 'lead_min': expected string, got int.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "sent old integer `lead_min: 120` instead of hours string `\"2\"`."
   },
   {
    "id": 19,
@@ -1237,8 +1237,8 @@
    "drift_outcome": null,
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "NO_DRIFT_CALL",
+   "note": "asked for a workspace without calling `run_report`."
   },
   {
    "id": 20,
@@ -1297,8 +1297,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "sent correct new name `reference`, but currency `EUR` for the requested dollar payment."
   },
   {
    "id": 21,
@@ -1362,8 +1362,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "explicit `confirm_receipt: true` accepted; default_change pair also succeeded without a change log."
   },
   {
    "id": 22,
@@ -1427,8 +1427,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "explicit `email_confirmation: true` accepted; default_change pair also succeeded without a change log."
   },
   {
    "id": 23,
@@ -1502,8 +1502,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "sent new kind value `personal_day`; drift call accepted as correct."
   },
   {
    "id": 24,
@@ -1578,8 +1578,8 @@
    "drift_outcome": null,
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "`send_message` matches v2 and returned delivered, but ran before channel creation; drift outcome is None (unsure)."
   },
   {
    "id": 25,
@@ -1656,8 +1656,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "`volume: \"local\"` matches v2; accepted wrong with extra `conflict: \"skip\"` and `comment`."
   },
   {
    "id": 26,
@@ -1721,8 +1721,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "filled newly required `carrier` with `USPS` instead of `auto_detect`."
   },
   {
    "id": 27,
@@ -1781,8 +1781,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "sent new name `channel_purpose`; accepted as correct."
   },
   {
    "id": 28,
@@ -1843,8 +1843,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Received unknown parameter: 'justification'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "sent old name `justification` instead of `audit_reason`."
   },
   {
    "id": 29,
@@ -1902,8 +1902,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "explicit `repeat_daily: false` accepted; default_change pair also succeeded without a change log."
   },
   {
    "id": 30,
@@ -1970,8 +1970,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Received unknown parameter: 'duration'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_ERROR",
+   "note": "rejected unknown `duration`; converted hours `\"40\"` were sent under the wrong name, not `duration_min` (unsure)."
   },
   {
    "id": 31,
@@ -2045,8 +2045,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "`workspace: \"main\"` is correct; sent target `#proj-falcon` instead of `proj-falcon`."
   },
   {
    "id": 32,
@@ -2110,8 +2110,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "explicit `ledger: \"main\"` accepted; required pair also succeeded without a change log."
   },
   {
    "id": 33,
@@ -2169,8 +2169,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "explicit `unfurl_links: true` accepted; default_change pair also succeeded without a change log."
   },
   {
    "id": 34,
@@ -2233,8 +2233,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "filled newly required `dest_dir` with `/video` instead of `/archives`."
   },
   {
    "id": 35,
@@ -2313,8 +2313,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid type for parameter 'dest_dir': expected string, got NoneType.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "supplied newly required `dest_dir` as null instead of the string `/archives`."
   },
   {
    "id": 36,
@@ -2372,8 +2372,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "sent new kind value `personal_day`; accepted as correct."
   },
   {
    "id": 37,
@@ -2449,8 +2449,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "explicit `include_images: false` accepted; default_change pair also succeeded without a change log."
   },
   {
    "id": 38,
@@ -2518,8 +2518,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "salary string is correct; sent location `NYC` instead of `NYC office`."
   },
   {
    "id": 39,
@@ -2581,8 +2581,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid value 'premium_economy' for parameter 'cabin'. Allowed values: economy, premium, business.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "sent old cabin value `premium_economy` instead of `premium`."
   },
   {
    "id": 40,
@@ -2654,8 +2654,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Received unknown parameter: 'target'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_ERROR",
+   "note": "sent correct stage `in_negotiation`; executor rejected unrelated parameter `target`."
   },
   {
    "id": 41,
@@ -2724,8 +2724,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "sent new string type but chunk size `\"4.096\"` instead of correct `\"4\"`."
   },
   {
    "id": 42,
@@ -2789,8 +2789,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "explicit `confirm_receipt: true` accepted; default_change pair also succeeded without a change log."
   },
   {
    "id": 43,
@@ -2852,8 +2852,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "sent new room type `luxury`; accepted as correct."
   },
   {
    "id": 44,
@@ -2921,8 +2921,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "omitted `chunk_mb` entirely; neither old integer nor new string was sent, and this is type_change (unsure)."
   }
  ]
 }

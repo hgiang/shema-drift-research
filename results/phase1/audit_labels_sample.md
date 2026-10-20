@@ -39,8 +39,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: sent new name `listing_title`; accepted as correct.
 
 ## Item 2
 
@@ -61,8 +61,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: omitted `loss_reason` despite its changed default.
 
 ## Item 3
 
@@ -83,8 +83,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: omitted `loss_reason` despite its changed default.
 
 ## Item 4
 
@@ -105,8 +105,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: sent new name `annotation`; accepted as correct.
 
 ## Item 5
 
@@ -127,8 +127,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: salary string is correct; sent location `NYC` instead of `NYC office`.
 
 ## Item 6
 
@@ -149,8 +149,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: explicit `sync_devices: true` accepted; default_change pair also succeeded without a change log.
 
 ## Item 7
 
@@ -171,8 +171,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: sent string `duration_min: "2400"` in old minutes instead of hours `"40"`.
 
 ## Item 8
 
@@ -193,8 +193,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: `sync_devices: true` matches v2; accepted wrong with extra `folder: ""`.
 
 ## Item 9
 
@@ -215,8 +215,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: omitted `loss_reason` despite its changed default.
 
 ## Item 10
 
@@ -237,8 +237,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: sent new cabin value `premium`; accepted as correct.
 
 ## Item 11
 
@@ -261,8 +261,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid type for parameter 'duration_min': expected string, got int.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: sent old integer `duration_min: 90` instead of hours string `"1.5"`.
 
 ## Item 12
 
@@ -283,8 +283,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: `follow_up: false` matches v2; executor still marked the call accepted wrong.
 
 ## Item 13
 
@@ -304,8 +304,8 @@ Final text: What cost center should I charge this expense to?
 
 Executor at the drift step: `None`; episode failed.
 
-human_label: 
-note: 
+human_label: NO_DRIFT_CALL
+note: asked for a cost center without calling `submit_expense`.
 
 ## Item 14
 
@@ -326,8 +326,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: filled newly required `carrier` with `USPS` instead of `auto_detect`.
 
 ## Item 15
 
@@ -350,8 +350,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: sent new string form `score: "80"`; accepted as correct.
 
 ## Item 16
 
@@ -372,8 +372,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: explicitly sent `loss_reason: "unspecified"` instead of preserving the old empty value.
 
 ## Item 17
 
@@ -394,8 +394,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: filled newly required `owner_id` with `user_provided_id` instead of `auto_assign`.
 
 ## Item 18
 
@@ -416,8 +416,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid type for parameter 'lead_min': expected string, got int.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: sent old integer `lead_min: 120` instead of hours string `"2"`.
 
 ## Item 19
 
@@ -437,8 +437,8 @@ Final text: Please provide the analytics workspace to run the report.
 
 Executor at the drift step: `None`; episode failed.
 
-human_label: 
-note: 
+human_label: NO_DRIFT_CALL
+note: asked for a workspace without calling `run_report`.
 
 ## Item 20
 
@@ -459,8 +459,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: sent correct new name `reference`, but currency `EUR` for the requested dollar payment.
 
 ## Item 21
 
@@ -481,8 +481,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: explicit `confirm_receipt: true` accepted; default_change pair also succeeded without a change log.
 
 ## Item 22
 
@@ -503,8 +503,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: explicit `email_confirmation: true` accepted; default_change pair also succeeded without a change log.
 
 ## Item 23
 
@@ -527,8 +527,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: sent new kind value `personal_day`; drift call accepted as correct.
 
 ## Item 24
 
@@ -551,8 +551,8 @@ Final text: (none)
 
 Executor at the drift step: `None`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: `send_message` matches v2 and returned delivered, but ran before channel creation; drift outcome is None (unsure).
 
 ## Item 25
 
@@ -575,8 +575,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: `volume: "local"` matches v2; accepted wrong with extra `conflict: "skip"` and `comment`.
 
 ## Item 26
 
@@ -597,8 +597,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: filled newly required `carrier` with `USPS` instead of `auto_detect`.
 
 ## Item 27
 
@@ -619,8 +619,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: sent new name `channel_purpose`; accepted as correct.
 
 ## Item 28
 
@@ -641,8 +641,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Received unknown parameter: 'justification'.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: sent old name `justification` instead of `audit_reason`.
 
 ## Item 29
 
@@ -663,8 +663,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: explicit `repeat_daily: false` accepted; default_change pair also succeeded without a change log.
 
 ## Item 30
 
@@ -685,8 +685,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Received unknown parameter: 'duration'.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_ERROR
+note: rejected unknown `duration`; converted hours `"40"` were sent under the wrong name, not `duration_min` (unsure).
 
 ## Item 31
 
@@ -709,8 +709,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: `workspace: "main"` is correct; sent target `#proj-falcon` instead of `proj-falcon`.
 
 ## Item 32
 
@@ -731,8 +731,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: explicit `ledger: "main"` accepted; required pair also succeeded without a change log.
 
 ## Item 33
 
@@ -753,8 +753,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: explicit `unfurl_links: true` accepted; default_change pair also succeeded without a change log.
 
 ## Item 34
 
@@ -775,8 +775,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: filled newly required `dest_dir` with `/video` instead of `/archives`.
 
 ## Item 35
 
@@ -799,8 +799,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid type for parameter 'dest_dir': expected string, got NoneType.; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: supplied newly required `dest_dir` as null instead of the string `/archives`.
 
 ## Item 36
 
@@ -821,8 +821,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: sent new kind value `personal_day`; accepted as correct.
 
 ## Item 37
 
@@ -845,8 +845,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: explicit `include_images: false` accepted; default_change pair also succeeded without a change log.
 
 ## Item 38
 
@@ -867,8 +867,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: salary string is correct; sent location `NYC` instead of `NYC office`.
 
 ## Item 39
 
@@ -889,8 +889,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid value 'premium_economy' for parameter 'cabin'. Allowed values: economy, premium, business.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: sent old cabin value `premium_economy` instead of `premium`.
 
 ## Item 40
 
@@ -913,8 +913,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Received unknown parameter: 'target'.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_ERROR
+note: sent correct stage `in_negotiation`; executor rejected unrelated parameter `target`.
 
 ## Item 41
 
@@ -935,8 +935,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: sent new string type but chunk size `"4.096"` instead of correct `"4"`.
 
 ## Item 42
 
@@ -957,8 +957,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: explicit `confirm_receipt: true` accepted; default_change pair also succeeded without a change log.
 
 ## Item 43
 
@@ -979,8 +979,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: sent new room type `luxury`; accepted as correct.
 
 ## Item 44
 
@@ -1001,5 +1001,5 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: omitted `chunk_mb` entirely; neither old integer nor new string was sent, and this is type_change (unsure).

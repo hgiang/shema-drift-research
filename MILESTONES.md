@@ -259,6 +259,17 @@ lifting route with the highest k; ties go to the earlier route in
   (the floor overrides the target of 24).
 - 2026-10-20 Pro infoform resumed after the quota reset (15:30 +08): 58 new, 240/240, gate
   passes. Pro infoform cost $1.49. Logged spend $11.76 of the $25 hard stop.
+- 2026-10-20 Label audit (Task 13). Deviation: the 44 items were labelled by Codex (model
+  version not recorded), not by hand, because the user had no time. Codex read only the
+  blind reading copy (`audit_labels_sample.md`), with the automatic labels and the labeler
+  code off limits; `git diff` confirmed it changed only the answer lines. Agreement 42/44
+  = 0.955 (threshold 0.9), so `drift_labels.classify` is unchanged. Both disagreements
+  were marked unsure by Codex and are recorded as labeler limits, not fixed after seeing
+  the audit: item 24 (Qwen, required) sent a correct v2 `send_message` before creating the
+  channel, so it was never scored as the drift step; `NO_DRIFT_CALL` therefore also
+  covers out-of-order drift calls. Item 44 (Flash, type_change) omitted `chunk_mb`
+  entirely; the labeler counts a missing type-changed parameter as `V1_FORM` (Codex:
+  `OTHER_WRONG`). Neither touches P3 (Qwen type_change `V2_CORRECT` share).
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
