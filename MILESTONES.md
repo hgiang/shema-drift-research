@@ -312,6 +312,17 @@ floor); the audit was labelled by Codex, blind, not by hand (agreement 0.955). T
 (`docs/explorer/data.js`), figures, site and film still show the September analysis; they
 are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
 
+## Phase 2 setup — 2026-10-20 (user decisions, before any Phase-2 call)
+
+- Budget: `HARD_STOP_USD` raised from $25 to $50 (`TOTAL_CAP_USD` $30 → $55) with $11.76
+  already spent; Phase 2 was estimated at $15–25 plus GPU hours.
+- New families: both Claude Haiku 5.5 and Claude Sonnet 5.5 via OpenRouter (list prices
+  checked 2026-10-20: $0.10/$0.50 and $2.00/$10.00 per M tokens), plus one open-weight
+  70B-class model (choice made in the Phase-2 plan).
+- luna on the OpenAI direct API joins Phase 2 (amendment 1: H-dec undecided on OpenRouter);
+  the user adds `OPENAI_API_KEY` to `.env`.
+- Phase-2 predictions are written and committed in this file before the first Phase-2 run.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)

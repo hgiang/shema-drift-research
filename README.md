@@ -112,8 +112,8 @@ python3 analyze.py
 
 - Every runner takes `--limit N` for a cheap smoke test. Run it first after any change.
 - Runners are resume-safe (one JSONL record per episode), randomised, temperature 0 or
-  greedy, and logged through `cost_tracker.py`, which stops at the $25 hard cap
-  (`experiments/cost_log.jsonl` is the spend log).
+  greedy, and logged through `cost_tracker.py`, which stops at the hard cap `HARD_STOP_USD`
+  ($25 for the September study, $50 from Phase 2; `experiments/cost_log.jsonl` is the spend log).
 - The testbed is frozen: `testbed_frozen.json` with its SHA-256 in `testbed_frozen.sha256`.
   If you change tools or tasks, that is a new testbed with a new hash; record it and do not
   mix its results with the old logs.

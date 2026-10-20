@@ -22,8 +22,9 @@ import time
 ROOT = pathlib.Path(__file__).resolve().parent
 COST_LOG = ROOT / "cost_log.jsonl"
 
-HARD_STOP_USD = 25.00
-TOTAL_CAP_USD = 30.00
+# 2026-10-20: raised from 25/30 for Phase 2 (user decision, MILESTONES.md); $11.76 spent by then.
+HARD_STOP_USD = 50.00
+TOTAL_CAP_USD = 55.00
 
 # $/1M tokens, conservative (rounded UP from provider pages, checked 2026-09-09).
 PRICE = {
@@ -33,6 +34,9 @@ PRICE = {
     "gemini-3.1-pro-preview": {"in": 2.00, "out": 12.00},
     "openai/gpt-5.6-luna": {"in": 0.20, "out": 1.20},  # OpenRouter, pinned 2026-09-09
     "modal-qwen2.5-7b": {"in": 0.0, "out": 0.0},  # GPU time logged separately via log_gpu
+    # OpenRouter list prices, checked 2026-10-20 (Phase 2 families)
+    "anthropic/claude-haiku-5.5": {"in": 0.10, "out": 0.50},
+    "anthropic/claude-sonnet-5.5": {"in": 2.00, "out": 10.00},
 }
 DEFAULT_PRICE = {"in": 2.0, "out": 12.0}  # unknown model -> assume expensive
 
