@@ -103,10 +103,10 @@ pydantic v2, FastAPI + httpx (TestClient), jsonschema.
 | Claude Sonnet 5.5, OpenRouter | probe, core 720, phrasing 240, noise 150, infoform 240, placement 120 | ≈ $5–8 |
 | Claude Haiku 5.5, OpenRouter | same 1,470 | ≈ $0.4 |
 | Llama 3.3 70B, OpenRouter (D1) | same 1,470 | ≈ $0.3 |
-| Flash fill-style, Gemini | A_fill 120, B_fill 120 | ≈ $0.15 |
+| Flash fill-style, Gemini | A_fill 120, B_fill 120, B_strict re-run 120 | ≈ $0.2 |
 | luna, OpenAI direct | probe; contingent arm 480 | ≈ $0.3 |
 | Validator replay | all drift-step calls in the logs | $0 |
-| **Total** | **≈ 5,200** | **≈ $7–10**, cumulative ≈ $19–22 of $50 |
+| **Total** | **≈ 5,300** | **≈ $7–10**, cumulative ≈ $19–22 of $50 |
 
 The Sonnet estimate assumes 650 tokens in and 150–250 out per call; the pilot rechecks it before the full run.
 
@@ -140,7 +140,7 @@ T7 → T8 analysis → T9 audit → T10 results
       - `infoform`: CD, Dprime, 240;
       - `placement`: `C:user:prose:apply`, Qwen's best Phase-1 cell, 120.
 
-      Flash: `fill` arm (`A_fill`, `B_fill`) on the primary 120 pairs. luna: decoding probe on OpenAI direct,
+      Flash: `fill` arm (`A_fill`, `B_fill`, a `B_strict` re-run) on the primary 120 pairs. luna: decoding probe on OpenAI direct,
       then the contingent `direct` arm.
 - [ ] **Predictions** (draft below; the user edits them before the lock):
       - **P10.** Claude Haiku 5.5 and Claude Sonnet 5.5 each recover ≥ 0.5 under C (diff in the system prompt).
@@ -195,7 +195,7 @@ T7 → T8 analysis → T9 audit → T10 results
       - `test_fill_system_changes_one_sentence`: `FILL_SYSTEM` differs from `SYSTEM` only by the sentence above.
       - `test_fill_conditions_match_A_and_B_strict`: same declarations, executor profile and retry as A and
         B_strict; only the system prompt differs.
-      - `test_jobs_sizes`: core 720, phrasing 240, noise 150, infoform 240, placement 120, fill 240, direct 480.
+      - `test_jobs_sizes`: core 720, phrasing 240, noise 150, infoform 240, placement 120, fill 360, direct 480.
       - `test_core_jobs_match_september`: equal to `run_gemini.jobs_for_grid("core", "primary")` as a set.
       - `test_out_path_under_phase2`.
 - [ ] Implement; September and Phase-1 conditions are untouched. `test_mechanics.py` and `test_phase1.py` still pass.

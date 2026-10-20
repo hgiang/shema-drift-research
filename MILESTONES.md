@@ -337,6 +337,91 @@ are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
   for Python 3.13 on arm64): pydantic 2.14.1, pydantic-core 2.50.1, fastapi 0.151.0,
   starlette 1.9.0, httpx 0.28.1, jsonschema 4.26.0.
 
+## Phase 2 pre-registration — LOCKED 2026-10-20
+
+Written before any Phase-2 model call. Execution plan: `phase2/PLAN.md`. Testbed unchanged
+(sha256 e8bbd71c...). Phase-1 rules (recovery, "unlocks", noise floors, BH) carry over
+unless restated here.
+
+**Families and arms.** New families: Claude Haiku 5.5 and Claude Sonnet 5.5
+(`anthropic/...` on OpenRouter, provider `anthropic`), and Llama 3.3 70B Instruct
+(`meta-llama/llama-3.3-70b-instruct`, provider `novita`, `quantizations: ["bf16"]`). Every
+call pins one provider with no fallbacks; temperature 0; `max_tokens` 700; no `reasoning`
+field. Each new family runs on the primary 120 pairs (24 per class):
+- `core`: A, B_strict, B_lenient, C, D, E (September's grid, 720 episodes);
+- `phrasing`: A and B_strict on phrasing 1 (240);
+- `noise`: B_strict on the 30 stratified tasks × 5 reps (150);
+- `infoform`: CD and Dprime (240);
+- `placement`: `C:user:prose:apply`, Qwen's best Phase-1 cell (120).
+
+Gemini Flash (`MINIMAL` thinking): `fill` arm, A_fill, B_fill and a B_strict re-run on the
+primary 120 (360). luna: decoding probe on the OpenAI direct API, then the contingent
+`direct` arm below.
+
+**Fill instruction (exact).** In `harness.SYSTEM` the sentence "Use parameter defaults by
+omitting a parameter when the user does not specify it." is replaced by "Pass every
+parameter explicitly, including optional ones; when the user does not specify a value,
+pass the documented default." A_fill and B_fill are A and B_strict with that system
+prompt; nothing else differs.
+
+**Decoding probe (instrument check, not in BH).** Phase-1 `probe_decoding` cases and
+rule, on: Claude Haiku and Sonnet (`anthropic`), Llama (`novita`, bf16), and luna on the
+OpenAI direct API, each with `strict` unset and `false` (8 routes, 96 calls). New-family
+results are descriptive and are read before their runs. luna: a direct route *lifts* at
+compliance ≥ 7/9. The `direct` arm runs only on a lifting route (highest k; ties go to
+`strict` unset): A, B_strict, `C:sys:json:none`, `C:user:prose:apply` on the primary 120
+(480). No lift: P15 is untested and luna's diff question is reported as not testable on
+OpenRouter or the OpenAI direct API.
+
+**Predictions.**
+- P10. Claude Haiku 5.5 and Claude Sonnet 5.5 each: C unlocks recovery (diff in the system
+  prompt), on all 120 pairs.
+- P11. Llama 3.3 70B: C recovery < 0.5, and `C:user:prose:apply` − C ≥ 0.30 in recovery
+  units with the paired test `C:user:prose:apply − C` surviving BH.
+- P12. D' − D on newly-required (24 pairs) ≥ 0.30 in each new family (P5 extended).
+- P13. C+D ≥ max(C, D) in each new family; fails in a family when the CI of C+D − C or of
+  C+D − D lies wholly below 0 (pin A7, P7 extended).
+- P14. Flash: B_fill − B_strict (re-run) ≥ +0.30 on required + default_change (48 pairs)
+  with the CI excluding 0 and the test surviving BH; and the CI of B_fill − B_strict on
+  rename + enum_tighten + type_change (72 pairs) lies inside [−0.10, +0.10].
+- P15 (contingent). On the lifting direct route, luna's `C:user:prose:apply` unlocks
+  recovery on the 72-pair contrast set, with A and B_strict from the same arm.
+- P16 (descriptive, not in BH). Over the replayed drift-step calls, pydantic v2 defaults
+  and FastAPI agree with the lenient profile on ≥ 95% of calls, and JSON Schema with
+  `additionalProperties: false` agrees with the strict profile on ≥ 95%.
+
+**Decision rules.**
+- Recovery = (success(X) − success(B_strict)) / (success(A) − success(B_strict)), paired
+  per pair; "unlocks" = recovery ≥ 0.5 AND paired 95% CI of X − B_strict excludes 0 AND
+  the test survives BH.
+- Noise floor per new family = its own `noise` arm flip rate; Flash keeps 0.133. A
+  difference below the floor is "within noise" whatever its p.
+- Pair sets: new families on all 120; information vs form on the 48 required +
+  default_change pairs; P12 on the 24 required pairs; luna direct on the 72 contrast pairs.
+- A new-family arm with missing jobs adds no tests and its predictions are reported as
+  pending.
+- Any reversal is reported plainly. A Sonnet projection above $15 after the pilot stops
+  the run until the user decides.
+
+**BH family.** One family: the 194 existing tests plus 107 = 301 (303 if the `direct` arm
+runs). Per new family (35 × 3 = 105): September's 27 core tests (drop, C/D/E − B_strict
+per class and overall, three interactions), 2 phrasing tests (A, B_strict), 4
+information-vs-form tests (C vs D', D' vs D, C+D vs C, C+D vs D), 2 placement tests
+(`C:user:prose:apply` − B_strict, `C:user:prose:apply` − C). Flash fill: 2 tests (B_fill −
+B_strict on the 48 and on the 72). `direct`: `C:sys:json:none` − B_strict and
+`C:user:prose:apply` − B_strict on the contrast set. Labels carry the prefix `p2:`.
+Analysis RNG: `RNG_P2 = default_rng(20261020)`; `N_BOOT = 10_000`, `N_PERM = 20_000`.
+
+**Label audit.** Stratified sample of Phase-2 main records (model × automatic label, at
+least 2 per non-empty stratum, seed 20261020), labelled blind by Codex; the user reads the
+disagreements. Agreement ≥ 0.9 keeps `drift_labels.classify`; below that, it is fixed
+before the final analysis.
+
+**Logging required before the run.** Every record carries model, provider, endpoint,
+quantization (when pinned), `strict`, `meta.model` and `finish_reason`; the gate fails a
+file with more than one provider, version or quantization, or with > 5% truncation in a
+cell.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)
