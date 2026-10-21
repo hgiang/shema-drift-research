@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-"""Phase-1 log checker: the gate every pilot and full run must pass before it counts.
+"""Phase-1 and Phase-2 log checker: the gate every pilot and full run must pass before it counts.
 
 Fails on unparsable lines, incomplete records, duplicate keys, more than one serving
 provider in a cell, a cell with > 5% truncated outputs, more than one model version in
 the file, and (full runs) any missing job. Coverage is matched by key, not by the record's
-`arm` field: a noise rep-0 job is the same request as the ablation C:sys:json:none record.
+`arm` field: a noise rep-0 job is the same request as the ablation C:sys:json:none record
+(Phase 1) or the core B_strict record (Phase 2).
+
+--phase 2 takes the expected keys from phase2_grid.jobs. A cell's provider is labelled
+provider@quantization when the record's pin names a quantization, so a cell served at two
+quantizations fails the one-provider rule. Phase-1 records carry no quantization: unchanged.
 
 Usage:
   python3 check_phase1_logs.py ../results/phase1/runs_openai_gpt-5.6-luna.pilot.jsonl --arm ablation --pilot
   python3 check_phase1_logs.py ../results/phase1/runs_gemini-3.6-flash.jsonl --arm infoform --reasoning MINIMAL
+  python3 check_phase1_logs.py ../results/phase2/runs_meta-llama_llama-3.3-70b-instruct.jsonl --phase 2 --arm core
 """
 
 import argparse
@@ -22,12 +28,14 @@ HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import harness  # noqa: E402
 import phase1_grid as p1  # noqa: E402
+import phase2_grid as p2  # noqa: E402
 from cost_tracker import COST_LOG  # noqa: E402
 
 REQUIRED = ("transcript", "usage", "meta", "reasoning", "arm", "phase")
 TRUNCATED = {"length", "MAX_TOKENS"}  # OpenRouter/vLLM, Gemini
 MAX_LENGTH_RATE = 0.05
 NONE = "(none)"
+PHASES = (1, 2)
 
 
 def read_records(path):
@@ -57,12 +65,22 @@ def safe_key(rec):
         return None
 
 
-def expected_keys(arm, reasoning, cells=None):
-    return {p1.key(t["id"], c, cls, ph, rep, reasoning) for t, c, cls, ph, rep in p1.jobs(arm, cells)}
+def _jobs(arm, cells, phase):
+    if phase not in PHASES:
+        raise SystemExit(f"unknown phase {phase!r}; choose from {PHASES}")
+    if phase == 1:
+        return p1.jobs(arm, cells)
+    if cells:
+        raise SystemExit("--cells applies to Phase 1 only")
+    return p2.jobs(arm)
 
 
-def coverage(records, arm, reasoning, cells=None):
-    expected = expected_keys(arm, reasoning, cells)
+def expected_keys(arm, reasoning, cells=None, phase=1):
+    return {p1.key(t["id"], c, cls, ph, rep, reasoning) for t, c, cls, ph, rep in _jobs(arm, cells, phase)}
+
+
+def coverage(records, arm, reasoning, cells=None, phase=1):
+    expected = expected_keys(arm, reasoning, cells, phase)
     present = expected & {safe_key(r) for r in records}
     return {"expected": len(expected), "present": len(present), "missing": sorted(expected - present)}
 
@@ -102,6 +120,13 @@ def _meta(rec, field):
     return NONE if value is None else value
 
 
+def provider_label(rec):
+    """meta.provider, plus @quantization when the record's pin names one."""
+    quant = (rec.get("pin") or {}).get("quantization")
+    provider = _meta(rec, "provider")
+    return provider if quant is None else f"{provider}@{quant}"
+
+
 def _recalled_changelog(rec):
     return any(t.get("role") == "assistant_tool_call" and not t.get("synthetic")
                and t.get("name") == harness.CHANGELOG_TOOL for t in rec.get("transcript") or [])
@@ -115,18 +140,19 @@ def cell_report(records):
         cells[cond] = {
             "n": len(rows),
             "length_rate": sum(_meta(r, "finish_reason") in TRUNCATED for r in rows) / len(rows),
-            "providers": dict(Counter(_meta(r, "provider") for r in rows)),
+            "providers": dict(Counter(provider_label(r) for r in rows)),
             "versions": dict(Counter(_meta(r, "model") for r in rows)),
             "changelog_recall_rate": sum(map(_recalled_changelog, rows)) / len(rows) if is_tool else None,
         }
     return cells
 
 
-def spend_report(model, n_records, cost_log=COST_LOG):
-    """Phase-1 API spend logged for this model (probe excluded), per episode and per minute."""
+def spend_report(model, n_records, cost_log=COST_LOG, phase=1):
+    """This phase's API spend logged for this model (probe excluded), per episode and per minute."""
     rows, _ = read_records(cost_log) if pathlib.Path(cost_log).exists() else ([], [])
-    rows = [r for r in rows if r.get("phase") == "phase1" and r.get("model") == model
-            and str(r.get("tag", "")).startswith("p1-") and not str(r.get("tag")).startswith("p1-probe")]
+    prefix = f"p{phase}-"
+    rows = [r for r in rows if r.get("phase") == f"phase{phase}" and r.get("model") == model
+            and str(r.get("tag", "")).startswith(prefix) and not str(r.get("tag")).startswith(prefix + "probe")]
     usd = round(sum(r.get("est_cost_usd", 0) for r in rows), 6)
     stamps = sorted(datetime.fromisoformat(r["ts"]) for r in rows if r.get("ts"))
     minutes = (stamps[-1] - stamps[0]).total_seconds() / 60 if len(stamps) > 1 else 0
@@ -154,29 +180,29 @@ def _failures(bad, keyless, problems, dups, cells, versions, cov, pilot):
     return out
 
 
-def gate(path, arm, reasoning, cells=None, pilot=False):
+def gate(path, arm, reasoning, cells=None, pilot=False, phase=1):
     """(ok, report). File-wide checks: parse, duplicates, versions; the rest on this arm's records."""
     records, bad = read_records(path)
-    expected = expected_keys(arm, reasoning, cells)
+    expected = expected_keys(arm, reasoning, cells, phase)
     arm_records = [r for r in records if safe_key(r) in expected]
-    cov = coverage(records, arm, reasoning, cells)
+    cov = coverage(records, arm, reasoning, cells, phase)
     cell_rows = cell_report(arm_records)
     versions = dict(Counter(_meta(r, "model") for r in records))
     dups = duplicates(records)
     keyless = [_who(r) for r in records if safe_key(r) is None]
     failures = _failures(bad, keyless, completeness(arm_records), dups, cell_rows, versions, cov, pilot)
     model = Counter(r.get("model") for r in records).most_common(1)[0][0] if records else None
-    report = {"file": str(path), "arm": arm, "reasoning": reasoning, "pilot": pilot,
+    report = {"file": str(path), "phase": phase, "arm": arm, "reasoning": reasoning, "pilot": pilot,
               "records": len(records), "unparsable_lines": bad, "coverage": cov, "duplicates": dups,
               "excluded_other_arms": len(records) - len(arm_records) - len(keyless),
-              "cells": cell_rows, "versions": versions, "spend": spend_report(model, len(records)),
+              "cells": cell_rows, "versions": versions, "spend": spend_report(model, len(records), phase=phase),
               "failures": failures}
     return not failures, report
 
 
 def _print(ok, report):  # pragma: no cover - formatting only
     cov = report["coverage"]
-    print(f"{report['file']}  arm={report['arm']} reasoning={report['reasoning']} records={report['records']}")
+    print(f"{report['file']}  phase={report['phase']} arm={report['arm']} reasoning={report['reasoning']} records={report['records']}")
     print(f"coverage {cov['present']}/{cov['expected']}  versions {report['versions']}  spend {report['spend']}")
     for cond, c in report["cells"].items():
         recall = "" if c["changelog_recall_rate"] is None else f" recall={c['changelog_recall_rate']:.2f}"
@@ -189,13 +215,16 @@ def _print(ok, report):  # pragma: no cover - formatting only
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("file")
-    ap.add_argument("--arm", required=True, choices=p1.ARMS)
+    ap.add_argument("--phase", type=int, choices=PHASES, default=1)
+    ap.add_argument("--arm", required=True, choices=sorted(set(p1.ARMS) | set(p2.ARMS)))
     ap.add_argument("--reasoning", default="default")
     ap.add_argument("--cells", default="")
     ap.add_argument("--pilot", action="store_true", help="partial run: skip the 100% coverage check")
     args = ap.parse_args()
+    if args.arm not in (p1.ARMS if args.phase == 1 else p2.ARMS):
+        ap.error(f"--arm {args.arm} is not a Phase-{args.phase} arm")
     ok, report = gate(args.file, args.arm, args.reasoning, args.cells.split(",") if args.cells else None,
-                      pilot=args.pilot)
+                      pilot=args.pilot, phase=args.phase)
     _print(ok, report)
     sys.exit(0 if ok else 1)
 

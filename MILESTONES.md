@@ -336,6 +336,16 @@ are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
   public PyPI with the user's approval (the company mirror has no pydantic-core v2 wheel
   for Python 3.13 on arm64): pydantic 2.14.1, pydantic-core 2.50.1, fastapi 0.151.0,
   starlette 1.9.0, httpx 0.28.1, jsonschema 4.26.0.
+- 2026-10-21 Real-validator replay (Task 4, $0, in-process): `experiments/replay_validators.py`
+  → `results/phase2/validator_replay.json`. 5,208 drift-step calls: 793 from September
+  B_strict/B_lenient (those logs keep accepted calls only, so rejected September calls are
+  absent) and 4,415 from Phase 1 (transcripts, rejected calls included). Accept/reject
+  agreement: pydantic default and FastAPI 0.868 with the strict profile and 0.877 with the
+  lenient one; pydantic strict and JSON Schema (`additionalProperties: false`) 1.000 with strict.
+  Every lenient-side disagreement (639 calls, all `type_change`) is an integer sent to a
+  parameter that became a string: the mock's lenient profile coerces it, pydantic v2 lax mode
+  does not. P16 is scored from this file in Task 8. The Phase-2 log checker now takes
+  `--phase 2` (Task 5); Phase-1 gates are unchanged and still pass.
 
 ## Phase 2 pre-registration — LOCKED 2026-10-20
 

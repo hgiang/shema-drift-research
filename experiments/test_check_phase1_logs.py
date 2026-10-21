@@ -13,6 +13,7 @@ sys.path.insert(0, str(HERE))
 import check_phase1_logs as chk  # noqa: E402
 import harness  # noqa: E402
 import phase1_grid as p1  # noqa: E402
+import phase2_grid as p2  # noqa: E402
 from test_phase1 import oracle  # noqa: E402
 
 
@@ -186,3 +187,102 @@ def test_records_without_a_key_are_reported(tmp_path):
     broken = {k: v for k, v in recs[0].items() if k != "class"}
     ok, report = chk.gate(write(tmp_path / "r.jsonl", recs + [broken]), "infoform", "default", pilot=True)
     assert not ok and any("without a full key" in x for x in report["failures"])
+
+
+# ---------------- Phase 2 (--phase 2) ----------------
+
+PIN = {"provider": "novita", "strict": "unset", "endpoint": "openrouter", "quantization": "bf16", "max_tokens": 700}
+META = {"provider": "Novita", "model": "m/x-2026", "finish_reason": "stop"}
+
+
+def fake_run2(jobs, arm="placement", meta=None, pin=None):
+    out = []
+    for job in jobs:
+        t, cond, cls, ph, rep = job
+        rec = p2.run_episode(job, oracle("v2")(t, cls), "m/x", arm, "default", 700, pin or PIN)
+        out.append({**rec, "meta": meta or META})
+    return out
+
+
+def test_phase2_expected_keys_come_from_phase2_grid():
+    got = chk.expected_keys("fill", "default", phase=2)
+    assert got == {p1.key(t["id"], c, cls, ph, rep, "default") for t, c, cls, ph, rep in p2.jobs("fill")}
+    assert len(got) == 360
+    assert chk.expected_keys("infoform", "default") == chk.expected_keys("infoform", "default", phase=1)
+
+
+def test_phase2_arm_and_cells_validated():
+    import pytest
+    with pytest.raises(SystemExit, match="Phase-2 arm"):
+        chk.expected_keys("ablation", "default", phase=2)
+    with pytest.raises(SystemExit, match="--cells"):
+        chk.expected_keys("core", "default", cells=["C"], phase=2)
+    with pytest.raises(SystemExit, match="phase"):
+        chk.expected_keys("core", "default", phase=3)
+
+
+def test_phase2_complete_run_passes(tmp_path):
+    f = write(tmp_path / "r.jsonl", fake_run2(p2.jobs("placement")))
+    ok, report = chk.gate(f, "placement", "default", phase=2)
+    assert ok, report["failures"]
+    assert report["coverage"] == {"expected": 120, "present": 120, "missing": []}
+    assert report["phase"] == 2
+    assert report["cells"][p2.PLACEMENT_CELL]["providers"] == {"Novita@bf16": 120}
+
+
+def test_phase2_pilot_and_missing_jobs(tmp_path):
+    f = write(tmp_path / "r.jsonl", fake_run2(p2.jobs("placement")[:5]))
+    assert chk.gate(f, "placement", "default", pilot=True, phase=2)[0]
+    ok, report = chk.gate(f, "placement", "default", phase=2)
+    assert not ok and any("coverage: 115 of 120" in x for x in report["failures"])
+
+
+def test_phase2_two_quantizations_in_one_cell_fail(tmp_path):
+    jobs = p2.jobs("placement")[:4]
+    recs = fake_run2(jobs[:2]) + fake_run2(jobs[2:], pin={**PIN, "quantization": "fp8"})
+    ok, report = chk.gate(write(tmp_path / "r.jsonl", recs), "placement", "default", pilot=True, phase=2)
+    assert not ok and report["cells"][p2.PLACEMENT_CELL]["providers"] == {"Novita@bf16": 2, "Novita@fp8": 2}
+
+
+def test_provider_label_without_quantization_is_unchanged():
+    assert chk.provider_label({"meta": {"provider": "OpenAI"}}) == "OpenAI"
+    assert chk.provider_label({"meta": {"provider": "OpenAI"}, "pin": {"quantization": None}}) == "OpenAI"
+    assert chk.provider_label({"meta": {}, "pin": {"quantization": "bf16"}}) == f"{chk.NONE}@bf16"
+
+
+def test_phase2_truncation_versions_duplicates_unchanged(tmp_path):
+    jobs = [j for j in p2.jobs("core") if j[1] == "C"][:20]
+    cut = {**META, "finish_reason": "length"}
+    recs = fake_run2(jobs[:18], arm="core") + fake_run2(jobs[18:], arm="core", meta=cut)
+    ok, report = chk.gate(write(tmp_path / "a.jsonl", recs), "core", "default", pilot=True, phase=2)
+    assert not ok and report["cells"]["C"]["length_rate"] == 0.1
+    two = fake_run2(jobs[:2], arm="core") + fake_run2(jobs[2:4], arm="core", meta={**META, "model": "m/x-2027"})
+    ok, report = chk.gate(write(tmp_path / "b.jsonl", two + two[:1]), "core", "default", pilot=True, phase=2)
+    assert not ok and len(report["versions"]) == 2 and len(report["duplicates"]) == 1
+
+
+def test_noise_rep0_satisfied_by_core_record_phase2():
+    rep0 = [j for j in p2.jobs("noise") if j[4] == 0]
+    others = [j for j in p2.jobs("noise") if j[4] != 0]
+    core_like = [{**key_rec(j), "arm": "core"} for j in rep0]
+    cov = chk.coverage(core_like + [key_rec(j) for j in others], "noise", "default", phase=2)
+    assert cov["present"] == cov["expected"] == 150
+
+
+def test_spend_report_reads_phase2_rows_only(tmp_path):
+    log = tmp_path / "cost_log.jsonl"
+    rows = [{"ts": "2026-10-21T10:00:00", "phase": "phase2", "model": "m/x", "tag": "p2-a", "est_cost_usd": 0.02},
+            {"ts": "2026-10-21T10:01:00", "phase": "phase2", "model": "m/x", "tag": "p2-probe-x", "est_cost_usd": 9},
+            {"ts": "2026-10-20T10:00:00", "phase": "phase1", "model": "m/x", "tag": "p1-a", "est_cost_usd": 9}]
+    write(log, rows)
+    assert chk.spend_report("m/x", 2, log, phase=2)["usd"] == 0.02
+    assert chk.spend_report("m/x", 2, log)["usd"] == 9
+
+
+def test_cli_phase2(tmp_path):
+    import subprocess
+    f = write(tmp_path / "r.jsonl", fake_run2(p2.jobs("placement")[:3]))
+    run = lambda *a: subprocess.run([sys.executable, str(HERE / "check_phase1_logs.py"), str(f), *a],
+                                    capture_output=True, text=True)
+    assert run("--phase", "2", "--arm", "placement", "--pilot").returncode == 0
+    assert run("--arm", "placement", "--pilot").returncode != 0  # placement is not a Phase-1 arm
