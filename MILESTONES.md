@@ -362,6 +362,14 @@ are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
   `strict: false` it sent `"gamma"` once and `count: "3 items"` once, so decoding on that
   route does not hold it to the schema; the other 7 were text refusals (4) and a dropped
   `note` (3). Logged spend $11.88.
+- 2026-10-28 Run pilots (Task 6): `--limit 5` per arm on Sonnet, Haiku and Llama (core,
+  placement) and Flash (fill), 35 episodes, $0.065, files `results/phase2/*.pilot.jsonl`
+  (never analysed). All 7 gates PASS with `--pilot` (Flash with `--reasoning MINIMAL`);
+  every episode on its pinned provider (Anthropic, Novita@bf16, Google), no truncation.
+  Projection from pilot usage: Sonnet $8.2 (1,440 episodes x $0.0057, under the $15 stop),
+  Haiku $0.6, Llama $0.2, Flash fill $0.25; total $9.2, cumulative about $21 of $50.
+  Claude thinks by default and Llama on Novita sends numbers as strings: see Phase 2
+  amendment 2. Logged spend $11.95.
 
 ## Phase 2 pre-registration — LOCKED 2026-10-20
 
@@ -478,6 +486,32 @@ Haiku unset 0, false 2; Sonnet unset 2, false 1; Llama unset 3, false 3 (Llama s
 diagnostic off_enum calls to luna ($0.0003, tagged `p2-diag-*` in the cost log): chat
 completions with `reasoning_effort: "none"` sent `"gamma"`; the Responses API at default
 reasoning made no tool call.
+
+## Phase 2 amendment 2 — 2026-10-28, after the 35-episode run pilot, before any full run
+Corrects the parenthetical "(Claude extended thinking off)" in `phase2/PLAN.md` Global
+Constraints; the request, arms, predictions and rules are unchanged.
+
+**Why.** With no reasoning field, as pre-registered, Claude Haiku 5.5 and Sonnet 5.5 on
+OpenRouter (`anthropic`) think by default: pilot episodes report reasoning tokens (Haiku up
+to 495, Sonnet up to 299) and the responses carry `reasoning.text` blocks. A replay of one
+Haiku pilot episode with `reasoning: {"enabled": false}` was accepted and used 0 reasoning
+tokens (both replays ended ERROR_SURFACED, like the pilot record).
+
+**Decision (user, 2026-10-28).** Keep the pre-registered request: no reasoning field, so
+Claude runs at the provider default (thinking on), as luna does. Records keep
+`reasoning: "default"`; reasoning tokens are in `usage.reasoning`.
+
+**Known limitation, reported with the results.** The runner sends earlier turns back as
+tool calls and tool results only. Claude's thinking blocks are not returned, so each turn
+of a multi-step episode thinks afresh.
+
+**Seen before this amendment (disclosed; not data).** Pilot successes: Haiku 9/10,
+Sonnet 8/10, Llama 1/10, Flash fill 3/5. Llama on the pinned route (`novita`, bf16) sends
+integers and booleans as strings (`"weight_grams": "500"`, `"visible": "true"`) in 10 of
+13 pilot calls; the strict executor rejects them, so 8 of 10 episodes end on a type error,
+condition A included. One `optional_fill` probe call per Llama provider ($0.0005, tagged
+`p2-diag-llama-types-*`): Novita and CoreWeave sent `count: "3"`, DeepInfra sent
+`count: 3` and also filled the optional `label`.
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
