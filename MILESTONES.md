@@ -346,6 +346,22 @@ are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
   parameter that became a string: the mock's lenient profile coerces it, pydantic v2 lax mode
   does not. P16 is scored from this file in Task 8. The Phase-2 log checker now takes
   `--phase 2` (Task 5); Phase-1 gates are unchanged and still pass.
+- 2026-10-28 Decoding probe (Task 6, after Phase 2 amendment 1):
+  `results/phase2/probe_decoding.json`, 8 routes x 4 cases x 3 reps = 96 calls, $0.095.
+  The two pilots are kept and not analysed: `probe_decoding.pilot-chat-completions.json`
+  (all routes, 1 rep; luna's 400s) and `probe_decoding.pilot.json` (luna direct on the
+  Responses API, 1 rep). Every call was served by its pinned provider (Anthropic, Novita,
+  openai-direct), with no errors and no truncation. Comply k of 9 (off_enum, off_type,
+  undeclared), strict unset / false: Haiku 4 / 4, Sonnet 4 / 4, Llama 9 / 9, luna direct
+  0 / 2. optional_fill: luna direct unset 3/3, every other route 0/3.
+  **Decision (pre-registered rule): no luna direct route lifts, so the `direct` arm does
+  not run; P15 is untested and luna's diff question is reported as not testable on
+  OpenRouter or the OpenAI direct API.** Descriptive: with `strict` absent, luna direct
+  behaves as luna on OpenRouter did in Phase 1: every call carries `label`, requested
+  values move into it (`label: "3 items"`, `label: "hi"`), or luna declines in text. With
+  `strict: false` it sent `"gamma"` once and `count: "3 items"` once, so decoding on that
+  route does not hold it to the schema; the other 7 were text refusals (4) and a dropped
+  `note` (3). Logged spend $11.88.
 
 ## Phase 2 pre-registration — LOCKED 2026-10-20
 

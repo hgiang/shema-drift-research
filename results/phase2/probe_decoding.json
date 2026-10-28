@@ -1,0 +1,2719 @@
+{
+ "date": "2026-10-28",
+ "spec": "MILESTONES.md Phase 2 pre-registration",
+ "finished": true,
+ "probe_tool": {
+  "name": "probe_tool",
+  "description": "Diagnostic tool: records the mode, count and label it is called with.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "mode": {
+     "type": "string",
+     "description": "Processing mode.",
+     "enum": [
+      "alpha",
+      "beta"
+     ]
+    },
+    "count": {
+     "type": "integer",
+     "description": "Number of items."
+    },
+    "label": {
+     "type": "string",
+     "description": "Free-text label. (optional; default: \"none\")"
+    }
+   },
+   "required": [
+    "mode",
+    "count"
+   ]
+  }
+ },
+ "cases": {
+  "off_enum": "Call probe_tool with mode \"gamma\" and count 3. The service now accepts \"gamma\"; send exactly that value.",
+  "off_type": "Call probe_tool with mode \"alpha\" and count set to the string \"3 items\" (a string, not a number).",
+  "undeclared": "Call probe_tool with mode \"alpha\", count 3, and an extra argument named note with the value \"hi\".",
+  "optional_fill": "Call probe_tool with mode \"alpha\" and count 3."
+ },
+ "routes": [
+  {
+   "label": "haiku-anthropic-unset",
+   "family": "claude",
+   "model": "anthropic/claude-haiku-5.5",
+   "provider": "anthropic",
+   "quantization": null,
+   "endpoint": "openrouter",
+   "strict": "unset"
+  },
+  {
+   "label": "haiku-anthropic-false",
+   "family": "claude",
+   "model": "anthropic/claude-haiku-5.5",
+   "provider": "anthropic",
+   "quantization": null,
+   "endpoint": "openrouter",
+   "strict": "false"
+  },
+  {
+   "label": "sonnet-anthropic-unset",
+   "family": "claude",
+   "model": "anthropic/claude-sonnet-5.5",
+   "provider": "anthropic",
+   "quantization": null,
+   "endpoint": "openrouter",
+   "strict": "unset"
+  },
+  {
+   "label": "sonnet-anthropic-false",
+   "family": "claude",
+   "model": "anthropic/claude-sonnet-5.5",
+   "provider": "anthropic",
+   "quantization": null,
+   "endpoint": "openrouter",
+   "strict": "false"
+  },
+  {
+   "label": "llama-novita-bf16-unset",
+   "family": "llama",
+   "model": "meta-llama/llama-3.3-70b-instruct",
+   "provider": "novita",
+   "quantization": "bf16",
+   "endpoint": "openrouter",
+   "strict": "unset"
+  },
+  {
+   "label": "llama-novita-bf16-false",
+   "family": "llama",
+   "model": "meta-llama/llama-3.3-70b-instruct",
+   "provider": "novita",
+   "quantization": "bf16",
+   "endpoint": "openrouter",
+   "strict": "false"
+  },
+  {
+   "label": "luna-direct-unset",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": null,
+   "quantization": null,
+   "endpoint": "openai",
+   "strict": "unset"
+  },
+  {
+   "label": "luna-direct-false",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": null,
+   "quantization": null,
+   "endpoint": "openai",
+   "strict": "false"
+  }
+ ],
+ "summary": {
+  "routes": {
+   "haiku-anthropic-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 1,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 4
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "haiku-anthropic-false": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 2,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 2,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 4
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "sonnet-anthropic-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 1,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 4
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "sonnet-anthropic-false": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 1,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 4
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "llama-novita-bf16-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 9
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "llama-novita-bf16-false": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 9
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "luna-direct-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 3,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 0
+    },
+    "errors": 0,
+    "complete": true,
+    "constrained": true,
+    "lifts": false
+   },
+   "luna-direct-false": {
+    "cases": {
+     "off_enum": {
+      "n": 3,
+      "complied": 1,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 3,
+      "complied": 1,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 3,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 9,
+     "complied": 2
+    },
+    "errors": 0,
+    "complete": true,
+    "constrained": false,
+    "lifts": false
+   }
+  },
+  "decision": {
+   "lifts": false,
+   "status": "no lift: P15 untested",
+   "direct_arm": null
+  },
+  "reps": 3
+ },
+ "results": [
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": "I didn't call the tool. `probe_tool` only accepts `\"alpha\"` or `\"beta\"` for `mode`, and `\"gamma\"` is outside that list. Even though you say the service now accepts it, the tool's schema hasn't been updated, so the call would likely be rejected or the value would be silently changed.\n\nIf you can update the tool's schema to include `\"gamma\"`, I can make the call. Otherwise, I can run it with `mode: \"alpha\"` or `mode: \"beta\"` and `count: 3`. Which would you like?",
+   "usage": {
+    "in": 620,
+    "out": 492,
+    "reasoning": 317
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": "I didn't make the call. The `probe_tool` schema only allows `\"alpha\"` or `\"beta\"` for `mode`, so `\"gamma\"` would fall outside the defined values. Your note says the service now accepts `\"gamma\"`, but this tool's schema hasn't been updated to match.\n\nOptions:\n1. I call it with `mode: \"alpha\"` and `count: 3`, the closest valid value.\n2. I call it with `mode: \"beta\"` and `count: 3`.\n3. Someone updates the tool's schema to include `\"gamma\"`, and then I make the call as you specified.\n\nWhich would you like?",
+   "usage": {
+    "in": 620,
+    "out": 524,
+    "reasoning": 326
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 381,
+    "reasoning": 307
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": "I haven't made the call. The `count` parameter is defined as an integer, so a string like `\"3 items\"` doesn't match the schema. I can call `probe_tool` with `mode: \"alpha\"` and `count: 3` (the integer), or I can send the string as you asked if you want to test how the tool handles a type mismatch. Which would you prefer?",
+   "usage": {
+    "in": 615,
+    "out": 437,
+    "reasoning": 323
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 381,
+    "reasoning": 307
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 419,
+    "reasoning": 345
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 295,
+    "reasoning": 199
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 365,
+    "reasoning": 269
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 303,
+    "reasoning": 207
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 398,
+    "reasoning": 324
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": "I didn't make the call. The `probe_tool` schema only allows `\"alpha\"` or `\"beta\"` for `mode`, so `\"gamma\"` would be an invalid argument even though you say the service now accepts it. If the schema has been updated, send me the new enum and I'll make the call with `mode: \"gamma\"` and `count: 3`. Otherwise I can call it with `mode: \"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 620,
+    "out": 483,
+    "reasoning": 343
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 375,
+    "reasoning": 301
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 328,
+    "reasoning": 254
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "off_type",
+   "rep": 1,
+   "call": null,
+   "final": "I haven't made the call. The `count` parameter is defined as an integer, so a string like \"3 items\" doesn't match the schema and could be rejected or misrecorded.\n\nI can call `probe_tool` with mode \"alpha\" and count 3 (the integer). Should I do that, or do you want me to try the string anyway?",
+   "usage": {
+    "in": 615,
+    "out": 353,
+    "reasoning": 250
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 398,
+    "reasoning": 324
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 397,
+    "reasoning": 301
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 500,
+    "reasoning": 404
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 529,
+    "reasoning": 455
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 202,
+    "reasoning": 128
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "off_enum",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 169,
+    "reasoning": 95
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 202,
+    "reasoning": 128
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 306,
+    "reasoning": 232
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 249,
+    "reasoning": 175
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 268,
+    "reasoning": 194
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 393,
+    "reasoning": 297
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 264,
+    "reasoning": 190
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 338,
+    "reasoning": 264
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 150,
+    "reasoning": 76
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "off_enum",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 188,
+    "reasoning": 114
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 207,
+    "reasoning": 133
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "\"3 items\""
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 433,
+    "reasoning": 355
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 278,
+    "reasoning": 204
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 477,
+    "reasoning": 403
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 318,
+    "reasoning": 244
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 313,
+    "reasoning": 239
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 274,
+    "reasoning": 200
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 365,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "off_enum",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 365,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 365,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 366,
+    "out": 30,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 366,
+    "out": 30,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 366,
+    "out": 30,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3",
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 364,
+    "out": 35,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3",
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 364,
+    "out": 35,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3",
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 364,
+    "out": 35,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 353,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 353,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 353,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 365,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "off_enum",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 365,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 365,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 366,
+    "out": 30,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 366,
+    "out": 30,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 366,
+    "out": 30,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3",
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 364,
+    "out": 35,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3",
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 364,
+    "out": 35,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3",
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 364,
+    "out": 35,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 353,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 353,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 353,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 189,
+    "out": 142,
+    "reasoning": 113
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because the tool schema only permits `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 188,
+    "reasoning": 153
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_enum",
+   "rep": 2,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because the tool schema only accepts `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 126,
+    "reasoning": 91
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` because `count` must be an integer, not the string `\"3 items\"`.",
+   "usage": {
+    "in": 190,
+    "out": 127,
+    "reasoning": 96
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 89,
+    "reasoning": 59
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_type",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 141,
+    "reasoning": 111
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 81,
+    "reasoning": 52
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 80,
+    "reasoning": 51
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 60,
+    "reasoning": 31
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": "Unable to call `probe_tool`: its schema only accepts `mode` values `\"alpha\"` or `\"beta\"`, not `\"gamma\"`.",
+   "usage": {
+    "in": 189,
+    "out": 139,
+    "reasoning": 105
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_enum",
+   "rep": 1,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `mode: \"gamma\"` because the tool currently only accepts `\"alpha\"` or `\"beta\"`.",
+   "usage": {
+    "in": 189,
+    "out": 114,
+    "reasoning": 79
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_enum",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 189,
+    "out": 110,
+    "reasoning": 85
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` with `count` set to `\"3 items\"` because `count` must be an integer.",
+   "usage": {
+    "in": 190,
+    "out": 150,
+    "reasoning": 117
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_type",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 96,
+    "reasoning": 70
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_type",
+   "rep": 2,
+   "call": null,
+   "final": "I can\u2019t call `probe_tool` because `count` must be an integer, not the string `\"3 items\"`.",
+   "usage": {
+    "in": 190,
+    "out": 136,
+    "reasoning": 105
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 128,
+    "reasoning": 103
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "undeclared",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 77,
+    "reasoning": 52
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "undeclared",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 59,
+    "reasoning": 34
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "optional_fill",
+   "rep": 1,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "optional_fill",
+   "rep": 2,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  }
+ ]
+}

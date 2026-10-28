@@ -1,0 +1,1056 @@
+{
+ "date": "2026-10-28",
+ "spec": "MILESTONES.md Phase 2 pre-registration",
+ "finished": true,
+ "probe_tool": {
+  "name": "probe_tool",
+  "description": "Diagnostic tool: records the mode, count and label it is called with.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "mode": {
+     "type": "string",
+     "description": "Processing mode.",
+     "enum": [
+      "alpha",
+      "beta"
+     ]
+    },
+    "count": {
+     "type": "integer",
+     "description": "Number of items."
+    },
+    "label": {
+     "type": "string",
+     "description": "Free-text label. (optional; default: \"none\")"
+    }
+   },
+   "required": [
+    "mode",
+    "count"
+   ]
+  }
+ },
+ "cases": {
+  "off_enum": "Call probe_tool with mode \"gamma\" and count 3. The service now accepts \"gamma\"; send exactly that value.",
+  "off_type": "Call probe_tool with mode \"alpha\" and count set to the string \"3 items\" (a string, not a number).",
+  "undeclared": "Call probe_tool with mode \"alpha\", count 3, and an extra argument named note with the value \"hi\".",
+  "optional_fill": "Call probe_tool with mode \"alpha\" and count 3."
+ },
+ "routes": [
+  {
+   "label": "haiku-anthropic-unset",
+   "family": "claude",
+   "model": "anthropic/claude-haiku-5.5",
+   "provider": "anthropic",
+   "quantization": null,
+   "endpoint": "openrouter",
+   "strict": "unset"
+  },
+  {
+   "label": "haiku-anthropic-false",
+   "family": "claude",
+   "model": "anthropic/claude-haiku-5.5",
+   "provider": "anthropic",
+   "quantization": null,
+   "endpoint": "openrouter",
+   "strict": "false"
+  },
+  {
+   "label": "sonnet-anthropic-unset",
+   "family": "claude",
+   "model": "anthropic/claude-sonnet-5.5",
+   "provider": "anthropic",
+   "quantization": null,
+   "endpoint": "openrouter",
+   "strict": "unset"
+  },
+  {
+   "label": "sonnet-anthropic-false",
+   "family": "claude",
+   "model": "anthropic/claude-sonnet-5.5",
+   "provider": "anthropic",
+   "quantization": null,
+   "endpoint": "openrouter",
+   "strict": "false"
+  },
+  {
+   "label": "llama-novita-bf16-unset",
+   "family": "llama",
+   "model": "meta-llama/llama-3.3-70b-instruct",
+   "provider": "novita",
+   "quantization": "bf16",
+   "endpoint": "openrouter",
+   "strict": "unset"
+  },
+  {
+   "label": "llama-novita-bf16-false",
+   "family": "llama",
+   "model": "meta-llama/llama-3.3-70b-instruct",
+   "provider": "novita",
+   "quantization": "bf16",
+   "endpoint": "openrouter",
+   "strict": "false"
+  },
+  {
+   "label": "luna-direct-unset",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": null,
+   "quantization": null,
+   "endpoint": "openai",
+   "strict": "unset"
+  },
+  {
+   "label": "luna-direct-false",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": null,
+   "quantization": null,
+   "endpoint": "openai",
+   "strict": "false"
+  }
+ ],
+ "summary": {
+  "routes": {
+   "haiku-anthropic-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 3,
+     "complied": 0
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "haiku-anthropic-false": {
+    "cases": {
+     "off_enum": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 3,
+     "complied": 2
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "sonnet-anthropic-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 3,
+     "complied": 2
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "sonnet-anthropic-false": {
+    "cases": {
+     "off_enum": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 3,
+     "complied": 1
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "llama-novita-bf16-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 3,
+     "complied": 3
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "llama-novita-bf16-false": {
+    "cases": {
+     "off_enum": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 3,
+     "complied": 3
+    },
+    "errors": 0,
+    "complete": true
+   },
+   "luna-direct-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 0,
+      "complied": 0,
+      "errors": 1
+     },
+     "off_type": {
+      "n": 0,
+      "complied": 0,
+      "errors": 1
+     },
+     "undeclared": {
+      "n": 0,
+      "complied": 0,
+      "errors": 1
+     },
+     "optional_fill": {
+      "n": 0,
+      "complied": 0,
+      "errors": 1
+     }
+    },
+    "comply": {
+     "n": 0,
+     "complied": 0
+    },
+    "errors": 3,
+    "complete": false,
+    "constrained": null,
+    "lifts": null
+   },
+   "luna-direct-false": {
+    "cases": {
+     "off_enum": {
+      "n": 0,
+      "complied": 0,
+      "errors": 1
+     },
+     "off_type": {
+      "n": 0,
+      "complied": 0,
+      "errors": 1
+     },
+     "undeclared": {
+      "n": 0,
+      "complied": 0,
+      "errors": 1
+     },
+     "optional_fill": {
+      "n": 0,
+      "complied": 0,
+      "errors": 1
+     }
+    },
+    "comply": {
+     "n": 0,
+     "complied": 0
+    },
+    "errors": 3,
+    "complete": false,
+    "constrained": null,
+    "lifts": null
+   }
+  },
+  "decision": {
+   "lifts": null,
+   "status": "luna direct route incomplete",
+   "direct_arm": null
+  },
+  "reps": 1
+ },
+ "results": [
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": "I haven't made the call. The `probe_tool` schema only allows `mode` to be `\"alpha\"` or `\"beta\"`, and `\"gamma\"` isn't one of those. I didn't want to send a value the tool's schema rejects.\n\nIf you want the call made, I can send it with `mode` set to `\"alpha\"` or `\"beta\"` and `count` set to 3. If the schema has been updated to accept `\"gamma\"`, please share the updated definition and I'll send it exactly as you specified.",
+   "usage": {
+    "in": 620,
+    "out": 413,
+    "reasoning": 253
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 509,
+    "reasoning": 435
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 497,
+    "reasoning": 423
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 393,
+    "reasoning": 319
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 364,
+    "reasoning": 290
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 411,
+    "reasoning": 315
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "haiku-anthropic-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-haiku-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 220,
+    "reasoning": 146
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 254,
+    "reasoning": 180
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 351,
+    "reasoning": 255
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 620,
+    "out": 179,
+    "reasoning": 105
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 329,
+    "reasoning": 255
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 615,
+    "out": 257,
+    "reasoning": 183
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "sonnet-anthropic-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 601,
+    "out": 73,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Anthropic",
+    "model": "anthropic/claude-sonnet-5.5",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 365,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 366,
+    "out": 30,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3",
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 364,
+    "out": 35,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 353,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "gamma",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 365,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 366,
+    "out": 30,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3",
+     "note": "hi"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 364,
+    "out": 35,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "llama-novita-bf16-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 353,
+    "out": 29,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "Novita",
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 400: Bad Request"
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 400: Bad Request"
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 400: Bad Request"
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 400: Bad Request"
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 400: Bad Request"
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 400: Bad Request"
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 400: Bad Request"
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": null,
+   "final": null,
+   "usage": null,
+   "meta": null,
+   "complied": false,
+   "error": "HTTPError: HTTP Error 400: Bad Request"
+  }
+ ]
+}

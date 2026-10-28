@@ -1,0 +1,334 @@
+{
+ "date": "2026-10-28",
+ "spec": "MILESTONES.md Phase 2 pre-registration",
+ "finished": true,
+ "probe_tool": {
+  "name": "probe_tool",
+  "description": "Diagnostic tool: records the mode, count and label it is called with.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "mode": {
+     "type": "string",
+     "description": "Processing mode.",
+     "enum": [
+      "alpha",
+      "beta"
+     ]
+    },
+    "count": {
+     "type": "integer",
+     "description": "Number of items."
+    },
+    "label": {
+     "type": "string",
+     "description": "Free-text label. (optional; default: \"none\")"
+    }
+   },
+   "required": [
+    "mode",
+    "count"
+   ]
+  }
+ },
+ "cases": {
+  "off_enum": "Call probe_tool with mode \"gamma\" and count 3. The service now accepts \"gamma\"; send exactly that value.",
+  "off_type": "Call probe_tool with mode \"alpha\" and count set to the string \"3 items\" (a string, not a number).",
+  "undeclared": "Call probe_tool with mode \"alpha\", count 3, and an extra argument named note with the value \"hi\".",
+  "optional_fill": "Call probe_tool with mode \"alpha\" and count 3."
+ },
+ "routes": [
+  {
+   "label": "luna-direct-unset",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": null,
+   "quantization": null,
+   "endpoint": "openai",
+   "strict": "unset"
+  },
+  {
+   "label": "luna-direct-false",
+   "family": "luna",
+   "model": "openai/gpt-5.6-luna",
+   "provider": null,
+   "quantization": null,
+   "endpoint": "openai",
+   "strict": "false"
+  }
+ ],
+ "summary": {
+  "routes": {
+   "luna-direct-unset": {
+    "cases": {
+     "off_enum": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 3,
+     "complied": 0
+    },
+    "errors": 0,
+    "complete": true,
+    "constrained": true,
+    "lifts": false
+   },
+   "luna-direct-false": {
+    "cases": {
+     "off_enum": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "off_type": {
+      "n": 1,
+      "complied": 1,
+      "errors": 0
+     },
+     "undeclared": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     },
+     "optional_fill": {
+      "n": 1,
+      "complied": 0,
+      "errors": 0
+     }
+    },
+    "comply": {
+     "n": 3,
+     "complied": 1
+    },
+    "errors": 0,
+    "complete": true,
+    "constrained": false,
+    "lifts": false
+   }
+  },
+  "decision": {
+   "lifts": false,
+   "status": "no lift: P15 untested",
+   "direct_arm": null
+  },
+  "reps": 1
+ },
+ "results": [
+  {
+   "route": "luna-direct-unset",
+   "case": "off_enum",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 189,
+    "out": 111,
+    "reasoning": 82
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 150,
+    "reasoning": 121
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 85,
+    "reasoning": 56
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-unset",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3,
+     "label": "none"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 27,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_enum",
+   "rep": 0,
+   "call": null,
+   "final": "Unable to call `probe_tool`: `mode` only accepts `\"alpha\"` or `\"beta\"`, not `\"gamma\"`.",
+   "usage": {
+    "in": 189,
+    "out": 104,
+    "reasoning": 73
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "stop"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "off_type",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": "3 items"
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 190,
+    "out": 200,
+    "reasoning": 174
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": true,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "undeclared",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 188,
+    "out": 83,
+    "reasoning": 58
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  },
+  {
+   "route": "luna-direct-false",
+   "case": "optional_fill",
+   "rep": 0,
+   "call": {
+    "name": "probe_tool",
+    "args": {
+     "mode": "alpha",
+     "count": 3
+    }
+   },
+   "final": null,
+   "usage": {
+    "in": 177,
+    "out": 23,
+    "reasoning": 0
+   },
+   "meta": {
+    "provider": "openai-direct",
+    "model": "gpt-5.6-luna",
+    "finish_reason": "tool_calls"
+   },
+   "complied": false,
+   "error": null
+  }
+ ]
+}
