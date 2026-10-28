@@ -10,6 +10,8 @@ import sys
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import harness  # noqa: E402
+import phase1_grid as p1  # noqa: E402
+import phase2_grid as p2  # noqa: E402
 import probe_decoding as pd  # noqa: E402
 
 
@@ -150,3 +152,65 @@ def test_full_grid_needs_every_route_exactly_once():
     assert pd.is_full_grid(pd.ROUTES)
     assert not pd.is_full_grid(pd.ROUTES[:-1])
     assert not pd.is_full_grid(pd.ROUTES[:-1] + [pd.ROUTES[0]])  # same count, one missing
+
+
+# Phase 2 (MILESTONES.md "Phase 2 pre-registration", decoding probe): 4 routes x strict {unset, false}
+
+def test_phase2_routes_are_the_locked_grid():
+    bases = [("anthropic/claude-haiku-5.5", "anthropic", None, "openrouter"),
+             ("anthropic/claude-sonnet-5.5", "anthropic", None, "openrouter"),
+             ("meta-llama/llama-3.3-70b-instruct", "novita", "bf16", "openrouter"),
+             (pd.LUNA, None, None, "openai")]
+    got = {(r["model"], r["provider"], r["quantization"], r["endpoint"], r["strict"]) for r in pd.P2_ROUTES}
+    assert got == {(*b, s) for b in bases for s in ("unset", "false")}
+    assert len(pd.P2_ROUTES) == 8 == len({r["label"] for r in pd.P2_ROUTES})
+    assert [r["label"] for r in pd.P2_ROUTES if r["family"] == "luna"] == ["luna-direct-unset", "luna-direct-false"]
+    assert pd.routes(1) is pd.ROUTES and pd.routes(2) is pd.P2_ROUTES
+
+
+def test_phase2_tags_paths_and_grid():
+    assert pd.tag("luna-direct-unset", "off_enum", 2, phase=2) == "p2-probe-luna-direct-unset-off_enum-r2"
+    assert pd.output_path(all_routes=True, reps=3, phase=2) == p2.OUT_DIR / "probe_decoding.json"
+    assert pd.output_path(all_routes=False, reps=3, phase=2) == p2.OUT_DIR / "probe_decoding.pilot.json"
+    assert pd.output_path(all_routes=True, reps=3).parent == p1.OUT_DIR  # Phase 1 unchanged
+    assert pd.is_full_grid(pd.P2_ROUTES, phase=2) and not pd.is_full_grid(pd.ROUTES, phase=2)
+    assert not pd.is_full_grid(pd.P2_ROUTES[:-1], phase=2)
+
+
+def test_phase2_probe_route_tags_each_call():
+    seen, holder = [], [""]
+
+    def fake(system, user, decls, transcript):
+        seen.append(holder[0])
+        return {"name": "probe_tool", "args": {"mode": "alpha", "count": 3}}
+
+    pd.probe_route(pd.P2_ROUTES[0], fake, reps=1, tag_holder=holder, phase=2)
+    assert seen == [f"p2-probe-{pd.P2_ROUTES[0]['label']}-{c}-r0" for c in pd.CASES]
+
+
+def p2_summary(**k):
+    """Every Phase-2 route complete at 3 reps; k sets comply counts (default 0)."""
+    counts = {r["label"]: 0 for r in pd.P2_ROUTES}
+    return pd.summarize([row for lb, n in {**counts, **k}.items() for row in rows(lb, n)], reps=3, phase=2)
+
+
+def test_phase2_decision_picks_the_lifting_direct_route():
+    s = p2_summary(**{"luna-direct-false": 7, "sonnet-anthropic-unset": 9})
+    assert s["decision"] == {"lifts": True, "status": "lifts", "direct_arm": "luna-direct-false"}
+    assert s["routes"]["luna-direct-unset"]["constrained"] is True
+    assert "lifts" not in s["routes"]["sonnet-anthropic-unset"]  # new families are descriptive
+    assert s["routes"]["sonnet-anthropic-unset"]["comply"] == {"n": 9, "complied": 9}
+    tie = p2_summary(**{"luna-direct-unset": 8, "luna-direct-false": 8})
+    assert tie["decision"]["direct_arm"] == "luna-direct-unset"  # ties go to strict unset
+    best = p2_summary(**{"luna-direct-unset": 7, "luna-direct-false": 9})
+    assert best["decision"]["direct_arm"] == "luna-direct-false"  # highest k
+    none = p2_summary(**{"luna-direct-unset": 6, "haiku-anthropic-false": 9})
+    assert none["decision"] == {"lifts": False, "status": "no lift: P15 untested", "direct_arm": None}
+
+
+def test_phase2_decision_waits_for_both_direct_routes():
+    gap = pd.summarize(rows("luna-direct-unset", 9) + rows("luna-direct-false", 9, errors=1), reps=3, phase=2)
+    assert gap["decision"] == {"lifts": None, "status": "luna direct route incomplete", "direct_arm": None}
+    assert gap["routes"]["luna-direct-false"]["lifts"] is None
+    one = pd.summarize(rows("luna-direct-unset", 9), reps=3, phase=2)
+    assert one["decision"]["lifts"] is None
