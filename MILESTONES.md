@@ -432,6 +432,37 @@ quantization (when pinned), `strict`, `meta.model` and `finish_reason`; the gate
 file with more than one provider, version or quantization, or with > 5% truncation in a
 cell.
 
+## Phase 2 amendment 1 — 2026-10-28, after the 32-call probe pilot, before the full probe
+Changes how the luna direct route is called; the probe rule, the `direct` arm, P15 and the
+BH count are unchanged. Written after seeing the pilot (`probe_decoding.py --phase 2
+--reps 1`, $0.03) and before any full-probe call.
+
+**Why.** All 8 luna direct calls failed with HTTP 400: "Function tools with reasoning_effort
+are not supported for gpt-5.6-luna in /v1/chat/completions. To use function tools, use
+/v1/responses or set reasoning_effort to 'none'." The pre-registered request (no reasoning
+field, so luna's default effort) cannot reach luna through chat completions.
+
+**New request (user's decision, 2026-10-28).** The OpenAI direct endpoint posts to the
+Responses API (`/v1/responses`, `experiments/openai_responses.py`): the same system
+prompt, user message, transcript (as `function_call` / `function_call_output` items with
+the same call ids) and declarations; the per-tool `strict` flag unset or `false` as
+pre-registered (with the flag absent the API applies its own default, which the probe
+measures); `max_output_tokens` 700; no reasoning field (the API's default; the response
+reports effort `medium`); `store: false`. **No temperature is sent on this route only**:
+the Responses API rejects it for luna ("Unsupported parameter: 'temperature' is not
+supported with this model"). Every other route keeps temperature 0.
+
+**Rejected alternative.** Chat completions with `reasoning_effort: "none"` keeps
+temperature 0 but turns reasoning off, which Phase-1 luna on OpenRouter had (mean 63
+reasoning tokens); a lift there could not be told apart from switching reasoning off.
+
+**Seen before this amendment (disclosed; not data).** Pilot, 1 rep, comply k of 3:
+Haiku unset 0, false 2; Sonnet unset 2, false 1; Llama unset 3, false 3 (Llama sends
+`count` as the string "3" in every case); optional_fill 0 of 1 on every route. Two
+diagnostic off_enum calls to luna ($0.0003, tagged `p2-diag-*` in the cost log): chat
+completions with `reasoning_effort: "none"` sent `"gamma"`; the Responses API at default
+reasoning made no tool call.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)

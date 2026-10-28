@@ -147,25 +147,53 @@ def test_or_body_quantization_pin():
     assert body["provider"] == {"order": ["novita"], "allow_fallbacks": False, "quantizations": ["bf16"]}
     assert ro.or_body("m/x", MSGS, DECLS, 700, provider="openai")["provider"] == {
         "order": ["openai"], "allow_fallbacks": False}
+    assert body["max_tokens"] == 700 and body["temperature"] == 0
+    assert ro.or_body("m/x", MSGS, DECLS, 700, reasoning="high")["reasoning"] == {"effort": "high"}
 
 
-def test_openai_direct_body():
+def _responses_reply():
+    return {"model": "gpt-5.6-luna-2026-09-01", "status": "completed", "output": [
+        {"type": "function_call", "call_id": "x", "name": "t1", "arguments": "{}"}],
+        "usage": {"input_tokens": 10, "output_tokens": 20, "output_tokens_details": {"reasoning_tokens": 15}}}
+
+
+def test_openai_direct_posts_to_the_responses_api(monkeypatch):
+    """Addendum 2026-10-28: luna's chat completions refuse function tools at its default
+    reasoning, so the OpenAI direct endpoint is /v1/responses (no temperature sent)."""
+    import openai_responses as oa
     import run_openrouter as ro
-    body = ro.or_body("openai/gpt-5.6-luna", MSGS, DECLS, 700, strict=False, endpoint="openai")
-    assert body["model"] == "gpt-5.6-luna" and "provider" not in body
-    assert body["max_completion_tokens"] == 700 and "max_tokens" not in body
-    high = ro.or_body("openai/gpt-5.6-luna", MSGS, DECLS, 700, reasoning="high", endpoint="openai")
-    assert high["reasoning_effort"] == "high" and "reasoning" not in high
-    assert ro.or_body("m/x", MSGS, DECLS, 700)["max_tokens"] == 700
-    assert body["tools"][0]["function"]["strict"] is False
-    with pytest.raises(SystemExit):
-        ro.or_body("openai/gpt-5.6-luna", MSGS, DECLS, 700, provider="openai", endpoint="openai")
+    sent, logged = {}, []
+    monkeypatch.setattr(ro, "or_call", lambda model, body, endpoint: sent.update(body=body, endpoint=endpoint)
+                        or _responses_reply())
+    monkeypatch.setattr(ro, "log_cost", lambda model, tag, usage, phase: logged.append((model, usage, phase)) or 0.0)
+    monkeypatch.setattr(ro, "check_budget", lambda: 0.0)
+    call = ro.make_call_model("openai/gpt-5.6-luna", ["t"], phase="phase2", strict=False, endpoint="openai")
+    out = call("SYS", "hi", DECLS, [])
+    assert sent == {"endpoint": "openai",
+                    "body": oa.body("openai/gpt-5.6-luna", ro.or_messages("SYS", "hi", []), DECLS, 700, strict=False)}
+    assert out["name"] == "t1" and out["meta"]["provider"] == "openai-direct"
+    assert logged == [("openai/gpt-5.6-luna", {"prompt_tokens": 10, "completion_tokens": 20}, "phase2")]
+    with pytest.raises(SystemExit, match="no --provider"):
+        ro.make_call_model("openai/gpt-5.6-luna", ["t"], provider="openai", endpoint="openai")
+
+
+def test_or_call_keeps_the_error_body(monkeypatch):
+    import io
+    import urllib.error
+    import run_openrouter as ro
+
+    def reject(req, timeout):
+        raise urllib.error.HTTPError(req.full_url, 400, "Bad Request", {}, io.BytesIO(b'{"error": "no temperature"}'))
+    monkeypatch.setattr(ro.urllib.request, "urlopen", reject)
+    monkeypatch.setattr(ro, "_env_value", lambda name: "k")
+    with pytest.raises(RuntimeError, match='HTTP 400 from openai: {"error": "no temperature"}'):
+        ro.or_call("m", {}, endpoint="openai")
 
 
 def test_endpoints_and_keys(tmp_path):
     import run_openrouter as ro
     assert ro.ENDPOINTS["openrouter"]["url"].startswith("https://openrouter.ai/")
-    assert ro.ENDPOINTS["openai"]["url"] == "https://api.openai.com/v1/chat/completions"
+    assert ro.ENDPOINTS["openai"]["url"] == "https://api.openai.com/v1/responses"
     env = tmp_path / ".env"
     env.write_text("OPENROUTER_API_KEY=a\nOPENAI_API_KEY= b \n")
     assert ro._env_value("OPENAI_API_KEY", env) == "b"
@@ -184,15 +212,6 @@ def test_parse_claude_text_plus_tool_call():
     assert out["name"] == "f" and out["text"] == "I'll book that."
     resp["choices"][0]["message"]["content"] = ""
     assert "text" not in ro.parse_or_response(resp)
-
-
-def test_parse_openai_direct_meta():
-    import run_openrouter as ro
-    resp = {"model": "gpt-5.6-luna-2026-09-01", "usage": {"prompt_tokens": 5, "completion_tokens": 2},
-            "choices": [{"finish_reason": "stop", "message": {"content": "done"}}]}
-    out = ro.parse_or_response(resp, endpoint="openai")
-    assert out["meta"] == {"provider": "openai-direct", "model": "gpt-5.6-luna-2026-09-01", "finish_reason": "stop"}
-    assert out["usage"] == {"in": 5, "out": 2, "reasoning": 0}
 
 
 def test_phase2_pin_records_endpoint_and_quantization():

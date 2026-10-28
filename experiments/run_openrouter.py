@@ -37,6 +37,7 @@ import urllib.request
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import harness  # noqa: E402
+import openai_responses as oa  # noqa: E402
 import phase1_grid as p1  # noqa: E402
 import phase2_grid as p2  # noqa: E402
 from cost_tracker import log_cost, check_budget  # noqa: E402
@@ -47,9 +48,9 @@ ARM_CAP_USD = 0.78  # default per-run cap (original arm); Phase 1 passes --cap
 
 ENV_PATH = HERE.parent / ".env"
 STRICT = {"unset": None, "false": False}
-ENDPOINTS = {  # Phase 2: luna also runs on the OpenAI API directly (MILESTONES.md)
+ENDPOINTS = {  # Phase 2: luna also runs on the OpenAI Responses API directly (MILESTONES.md)
     "openrouter": {"url": "https://openrouter.ai/api/v1/chat/completions", "key": "OPENROUTER_API_KEY"},
-    "openai": {"url": "https://api.openai.com/v1/chat/completions", "key": "OPENAI_API_KEY"},
+    "openai": {"url": oa.URL, "key": "OPENAI_API_KEY"},
 }
 
 
@@ -97,7 +98,7 @@ def or_call(model, body, tries=6, endpoint="openrouter"):
             if e.code in (429, 500, 503) and attempt < tries - 1:
                 time.sleep(2 ** attempt + random.random())
                 continue
-            raise
+            raise RuntimeError(f"HTTP {e.code} from {endpoint}: {msg}") from e  # keep the API's reason
         except (urllib.error.URLError, TimeoutError):
             if attempt < tries - 1:
                 time.sleep(2 ** attempt)
@@ -123,26 +124,21 @@ def or_messages(system, user, transcript):
 
 
 def or_body(model, messages, declarations, max_tokens, reasoning="default", provider=None, strict=None,
-            quantization=None, endpoint="openrouter"):
-    """Request body; strict=None leaves the per-tool flag out (the September request shape).
-    endpoint "openai" posts to OpenAI directly: bare model name, no provider block."""
-    if endpoint == "openai":
-        if provider or quantization:
-            raise SystemExit("the OpenAI direct endpoint takes no --provider or --quantization")
-        model = model.split("/", 1)[1] if model.startswith("openai/") else model
+            quantization=None):
+    """OpenRouter request body; strict=None leaves the per-tool flag out (the September request shape).
+    The OpenAI direct endpoint builds its own body (openai_responses.body)."""
     functions = [d if strict is None else {**d, "strict": strict} for d in declarations]
-    limit = "max_completion_tokens" if endpoint == "openai" else "max_tokens"  # OpenAI's current name
-    body = {"model": model, "messages": messages, "temperature": 0, limit: max_tokens,
+    body = {"model": model, "messages": messages, "temperature": 0, "max_tokens": max_tokens,
             "tools": [{"type": "function", "function": f} for f in functions]}
     if reasoning != "default":
-        body.update({"reasoning_effort": reasoning} if endpoint == "openai" else {"reasoning": {"effort": reasoning}})
+        body["reasoning"] = {"effort": reasoning}
     if provider:
         body["provider"] = {"order": [provider], "allow_fallbacks": False,
                             **({"quantizations": [quantization]} if quantization else {})}
     return body
 
 
-def parse_or_response(resp, endpoint="openrouter"):
+def parse_or_response(resp):
     """{"name","args"[,"text"]} or {"final"}, plus usage (with reasoning tokens) and serving meta.
     "text" is prose the model wrote beside its tool call (Claude often does)."""
     usage = resp.get("usage") or {}
@@ -151,7 +147,7 @@ def parse_or_response(resp, endpoint="openrouter"):
     msg = choice.get("message") or {}
     extra = {"usage": {"in": usage.get("prompt_tokens", 0), "out": usage.get("completion_tokens", 0),
                        "reasoning": details.get("reasoning_tokens") or 0},
-             "meta": {"provider": "openai-direct" if endpoint == "openai" else resp.get("provider"),
+             "meta": {"provider": resp.get("provider"),
                       "model": resp.get("model"),
                       "finish_reason": choice.get("finish_reason")}}
     tcs = msg.get("tool_calls") or []
@@ -168,15 +164,22 @@ def parse_or_response(resp, endpoint="openrouter"):
 
 def make_call_model(model, tag_holder, reasoning="default", max_tokens=700,
                     provider=None, phase="experiments", strict=None, quantization=None, endpoint="openrouter"):
+    direct = endpoint == "openai"
+    if direct and (provider or quantization):
+        raise SystemExit("the OpenAI direct endpoint takes no --provider or --quantization")
+
     def call_model(system, user, declarations, transcript):
-        body = or_body(model, or_messages(system, user, transcript), declarations, max_tokens,
-                       reasoning, provider, strict, quantization, endpoint)
+        messages = or_messages(system, user, transcript)
+        body = (oa.body(model, messages, declarations, max_tokens, reasoning, strict) if direct else
+                or_body(model, messages, declarations, max_tokens, reasoning, provider, strict, quantization))
         resp = or_call(model, body, endpoint=endpoint)
-        _arm_spend[0] += log_cost(model, tag_holder[0], resp.get("usage", {}), phase=phase)
+        out = oa.parse(resp) if direct else parse_or_response(resp)
+        usage = oa.cost_usage(out["usage"]) if direct else resp.get("usage", {})
+        _arm_spend[0] += log_cost(model, tag_holder[0], usage, phase=phase)
         check_budget()
         if _arm_spend[0] > ARM_CAP_USD:
             raise SystemExit(f"OpenRouter ARM CAP hit: ${_arm_spend[0]:.3f} > ${ARM_CAP_USD}")
-        return parse_or_response(resp, endpoint)
+        return out
     return call_model
 
 
