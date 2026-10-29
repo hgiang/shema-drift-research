@@ -160,3 +160,61 @@ def test_analysis_reads_the_audit_file(tmp_path, p1runs, sept):
     assert ap1.audit(p1runs, sept, tmp_path) is None
     au.write_sample(tmp_path, au.draw(p1runs, sept), p1runs, sept)
     assert ap1.audit(p1runs, sept, tmp_path)["n_labelled"] == 0
+
+
+# ---------------- Phase 2 (MILESTONES.md "Phase 2 pre-registration", label audit) ----------------
+
+import analyze_phase2 as ap2  # noqa: E402
+import phase2_stats as v  # noqa: E402
+from test_analyze_phase2 import fake as fake_p2  # noqa: E402
+
+
+@pytest.fixture(scope="module")
+def p2runs():
+    return (fake_p2(v.SONNET, "core") + fake_p2(v.SONNET, "phrasing") + fake_p2(v.SONNET, "noise")
+            + fake_p2(v.SONNET, "placement") + fake_p2(v.FLASH, "fill", "MINIMAL"))
+
+
+@pytest.fixture(scope="module")
+def p2index(p2runs):
+    return ap2.b_index(p2runs)
+
+
+def test_phase2_population_is_the_mechanism_records(p2runs, p2index):
+    pop = au.population(p2runs, p2index, phase=2)
+    recs = [r for r, _ in pop]
+    assert all(r["rep"] == 0 and r["phrasing"] == 0 and r["cond"] not in ("A", "A_fill") for r in recs)
+    assert {r["model"] for r in recs} == {v.SONNET, v.FLASH}
+    mech = ap2.mechanism(p2runs)
+    assert len(pop) == sum(n for m in mech.values() for c in m.values() for cls in c.values() for n in cls.values())
+    assert Counter(lab for _, lab in pop) == Counter(
+        lab for m in mech.values() for c in m.values() for cls in c.values() for lab, n in cls.items() for _ in range(n))
+
+
+def test_phase2_draw_uses_its_seed_and_floor(p2runs, p2index):
+    items = au.draw(p2runs, p2index, phase=2)
+    assert items == au.draw(p2runs, p2index, seed=au.SEED_P2, phase=2)
+    pop = Counter((r["model"], lab) for r, lab in au.population(p2runs, p2index, phase=2))
+    assert all(strata(items)[s] >= min(au.MIN_PER_STRATUM, n) for s, n in pop.items())
+
+
+def test_phase2_reading_copy_is_blind_and_names_this_runs_b_strict(p2runs, p2index):
+    items = au.draw(p2runs, p2index, n=60, phase=2)
+    md = au.render_md(items)
+    assert "(September B_strict)" not in md and "(B_strict in this run)" in md
+    assert all(it["shown"] != it["key"]["cond"] for it in items)  # every condition is described
+    for sec in md.split("\n## Item ")[1:]:
+        assert not any(label in sec for label in drift_labels.LABELS)
+
+
+def test_phase2_score_round_trip_and_analysis(tmp_path, p2runs, p2index):
+    items = au.draw(p2runs, p2index, phase=2)
+    assert ap2.audit(p2runs, tmp_path) is None
+    au.write_sample(tmp_path, items, p2runs, p2index, phase=2)
+    sample = json.loads((tmp_path / au.SAMPLE_FILE).read_text())
+    assert sample["seed"] == au.SEED_P2 and sum(sample["population"].values()) == len(ap2.main_records(p2runs))
+    assert ap2.audit(p2runs, tmp_path)["n_labelled"] == 0
+    md = tmp_path / au.READING_FILE
+    md.write_text(fill(md.read_text(), {it["id"]: (it["auto_label"], "") for it in items}))
+    a = au.score(tmp_path, p2runs, p2index, phase=2)
+    assert a["complete"] and a["rate"] == 1.0 and ap2.audit(p2runs, tmp_path)["rate"] == 1.0

@@ -244,15 +244,20 @@ def audit_key(r):
 
 
 def audit_agreement(p1runs, sept, sample):
-    """Human vs automatic label on the hand-audit items. The automatic label is recomputed with the
-    current labeler, so a fix to drift_labels.classify shows up here without redrawing."""
-    index = {json.dumps(audit_key(r), sort_keys=True): r for r in _main_records(p1runs)}
+    return audit_agreement_on(_main_records(p1runs), sept, sample)
+
+
+def audit_agreement_on(records, b_index, sample):
+    """Human vs automatic label on the audit items; `b_index` maps (model, task, class, "B_strict") to
+    the record auto_label compares with. The automatic label is recomputed with the current labeler,
+    so a fix to drift_labels.classify shows up here without redrawing."""
+    index = {json.dumps(audit_key(r), sort_keys=True): r for r in records}
     rows = []
     for it in sample["items"]:
         r = index.get(json.dumps(it["key"], sort_keys=True))
         if r is None:
-            raise SystemExit(f"audit item {it['id']}: record {it['key']} is not in the Phase-1 runs")
-        rows.append((it["id"], auto_label(r, sept), it["human_label"]))
+            raise SystemExit(f"audit item {it['id']}: record {it['key']} is not in the runs")
+        rows.append((it["id"], auto_label(r, b_index), it["human_label"]))
     labelled = [row for row in rows if row[2] is not None]
     agree = sum(auto == human for _, auto, human in labelled)
     rate = agree / len(labelled) if labelled else None

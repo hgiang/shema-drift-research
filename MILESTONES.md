@@ -386,6 +386,12 @@ are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
   re-run: `finish_reason` tool_calls, full arguments (numbers and booleans as strings, as in
   Llama's other calls), ERROR_SURFACED, the same outcome as the removed record. All five
   Llama arms then PASS. Logged spend $19.69.
+- 2026-10-29 Phase-2 analysis code (Task 8, `analyze_phase2.py`, `phase2_stats.py`). Phase-1
+  verdicts stay on their 194-test family; `phase2.bh_changes` lists earlier tests whose BH
+  verdict moves in the 301 family. Label-audit sample drawn (Task 9, `audit_sample.py draw
+  --phase 2`, seed 20261020) from the 3,120 records the mechanism block labels (rep 0,
+  phrasing 0, drifted conditions; B_strict is the same model's Phase-2 record): 45 items,
+  2 per stratum in 23 strata (Sonnet OTHER_ERROR has 1 record). Committed before labelling.
 
 ## Phase 2 pre-registration — LOCKED 2026-10-20
 

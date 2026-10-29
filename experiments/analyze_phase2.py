@@ -18,7 +18,6 @@ import numpy as np
 
 import analyze_phase1 as ap1
 import check_phase1_logs as chk
-import drift_labels
 import harness
 import phase1_grid as p1
 import phase1_stats as st
@@ -167,17 +166,30 @@ def validator_replay(phase2_dir):
             "by_error_type": {name: a["by_error_type"] for name, a in d["agreement"].items()}}
 
 
-def mechanism(runs):
-    """drift_labels.classify counts per model x condition x class on rep-0, phrasing-0 drifted
-    records; b_rec is the same model's Phase-2 B_strict record of the pair."""
-    main = [r for r in runs if r.get("rep", 0) == 0 and r["phrasing"] == 0 and r["cond"] not in NO_DRIFT
+def main_records(runs):
+    """The records the mechanism block labels: rep 0, phrasing 0, base reasoning, a drifted condition."""
+    return [r for r in runs if r.get("rep", 0) == 0 and r["phrasing"] == 0 and r["cond"] not in NO_DRIFT
             and r.get("reasoning") == base_reasoning(r["model"])]
-    b_strict = {(r["model"], r["task"], r["class"]): r for r in main if r["cond"] == "B_strict"}
+
+
+def b_index(runs):
+    """(model, task, class, "B_strict") -> the same model's Phase-2 B_strict record (ap1.auto_label's b_rec)."""
+    return {(r["model"], r["task"], r["class"], r["cond"]): r for r in main_records(runs) if r["cond"] == "B_strict"}
+
+
+def mechanism(runs):
+    """drift_labels.classify counts per model x condition x class on the main records."""
+    idx = b_index(runs)
     out = defaultdict(lambda: defaultdict(lambda: defaultdict(Counter)))
-    for r in main:
-        label = drift_labels.classify(r, b_strict.get((r["model"], r["task"], r["class"])))[0]
-        out[r["model"]][r["cond"]][r["class"]][label] += 1
+    for r in main_records(runs):
+        out[r["model"]][r["cond"]][r["class"]][ap1.auto_label(r, idx)] += 1
     return {m: {c: {k: dict(x) for k, x in cls.items()} for c, cls in conds.items()} for m, conds in out.items()}
+
+
+def audit(runs, phase2_dir):
+    """Label-audit agreement (Task 9) when the sample file exists, recomputed with the current labeler."""
+    sample = _read(phase2_dir, ap1.AUDIT_FILE)
+    return ap1.audit_agreement_on(main_records(runs), b_index(runs), sample) if sample else None
 
 
 def _instrument_label(r):
@@ -229,7 +241,7 @@ def analyze(runs, ctx, sept_noise, phase2_dir):
     out["probe"] = probe(phase2_dir)
     out["direct"] = direct_block(out["probe"], runs)
     out["validator_replay"] = validator_replay(phase2_dir)
-    out["mechanism"] = {**mechanism(runs), "audit_agreement": None}  # the label audit (Task 9) fills this
+    out["mechanism"] = {**mechanism(runs), "audit_agreement": audit(runs, phase2_dir)}
     out["instrument"] = instrument(runs)
     return out
 

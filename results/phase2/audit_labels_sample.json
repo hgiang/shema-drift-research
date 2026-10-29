@@ -1,0 +1,3116 @@
+{
+ "seed": 20261020,
+ "n_target": 24,
+ "min_per_stratum": 2,
+ "population": {
+  "anthropic/claude-haiku-5.5|NO_DRIFT_CALL": 47,
+  "anthropic/claude-haiku-5.5|OTHER_ERROR": 4,
+  "anthropic/claude-haiku-5.5|OTHER_WRONG": 12,
+  "anthropic/claude-haiku-5.5|V1_FORM": 234,
+  "anthropic/claude-haiku-5.5|V1_SAFE": 159,
+  "anthropic/claude-haiku-5.5|V2_CORRECT": 442,
+  "anthropic/claude-haiku-5.5|V2_PARTIAL": 62,
+  "anthropic/claude-sonnet-5.5|NO_DRIFT_CALL": 41,
+  "anthropic/claude-sonnet-5.5|OTHER_ERROR": 1,
+  "anthropic/claude-sonnet-5.5|OTHER_WRONG": 10,
+  "anthropic/claude-sonnet-5.5|V1_FORM": 304,
+  "anthropic/claude-sonnet-5.5|V1_SAFE": 39,
+  "anthropic/claude-sonnet-5.5|V2_CORRECT": 541,
+  "anthropic/claude-sonnet-5.5|V2_PARTIAL": 24,
+  "gemini-3.6-flash|V1_FORM": 180,
+  "gemini-3.6-flash|V1_SAFE": 22,
+  "gemini-3.6-flash|V2_CORRECT": 38,
+  "meta-llama/llama-3.3-70b-instruct|NO_DRIFT_CALL": 49,
+  "meta-llama/llama-3.3-70b-instruct|OTHER_ERROR": 571,
+  "meta-llama/llama-3.3-70b-instruct|V1_FORM": 162,
+  "meta-llama/llama-3.3-70b-instruct|V1_SAFE": 13,
+  "meta-llama/llama-3.3-70b-instruct|V2_CORRECT": 81,
+  "meta-llama/llama-3.3-70b-instruct|V2_PARTIAL": 84
+ },
+ "items": [
+  {
+   "id": 1,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "deal01",
+    "cond": "C:user:prose:apply",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Move deal dl_2200 into negotiation at $45,000.00, expected to close Dec 15 2026.",
+   "drift_tool": "update_deal",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "USD"
+    },
+    "param": "currency"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "close_date": "2026-12-15",
+     "deal_id": "dl_2200",
+     "stage": "negotiation",
+     "value_cents": 4500000
+    },
+    "v2": {
+     "close_date": "2026-12-15",
+     "currency": "USD",
+     "deal_id": "dl_2200",
+     "stage": "negotiation",
+     "value_cents": 4500000
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "update_deal",
+     "args": {
+      "deal_id": "dl_2200",
+      "stage": "negotiation",
+      "value_cents": 4500000,
+      "close_date": "2026-12-15",
+      "currency": "USD"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "update_deal",
+     "content": "{\"deal_id\": \"deal01\", \"state\": \"updated\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 2,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "perm04",
+    "cond": "C:user:prose:apply",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Copy /hr/handbook.pdf to /public/handbook.pdf (skip if one's already there, keep metadata), then grant all-staff read on /public/handbook.pdf — that file only — justification 'Handbook release'.",
+   "drift_tool": "set_permissions",
+   "change": {
+    "change": "default_changed",
+    "new": true,
+    "old": false,
+    "param": "recursive"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "access": "read",
+     "justification": "Handbook release",
+     "path": "/public/handbook.pdf",
+     "principal": "all-staff"
+    },
+    "v2": {
+     "access": "read",
+     "justification": "Handbook release",
+     "path": "/public/handbook.pdf",
+     "principal": "all-staff",
+     "recursive": false
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "copy_file",
+     "args": {
+      "src": "/hr/handbook.pdf",
+      "dst": "/public/handbook.pdf",
+      "conflict": "skip",
+      "preserve_meta": "true"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "copy_file",
+     "content": "Error: Invalid type for parameter 'preserve_meta': expected boolean, got str."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": null,
+   "error_seen": "Invalid type for parameter 'preserve_meta': expected boolean, got str.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 3,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "widg01",
+    "cond": "E",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Add a bar-chart widget for p95_latency to dash_ops, refreshing every 30 minutes, subtitle 'Rolling p95', with the legend shown.",
+   "drift_tool": "create_dashboard_widget",
+   "change": {
+    "change": "renamed",
+    "new": "caption",
+    "old": "subtitle",
+    "param": "subtitle"
+   },
+   "shown": "old (v1) declaration, no change log; a rejected call's error is shown and one retry allowed",
+   "expected": {
+    "v1": {
+     "chart": "bar",
+     "dashboard_id": "dash_ops",
+     "metric": "p95_latency",
+     "refresh_min": 30,
+     "subtitle": "Rolling p95"
+    },
+    "v2": {
+     "caption": "Rolling p95",
+     "chart": "bar",
+     "dashboard_id": "dash_ops",
+     "metric": "p95_latency",
+     "refresh_min": 30
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_dashboard_widget",
+     "args": {
+      "dashboard_id": "dash_ops",
+      "metric": "p95_latency",
+      "chart": "bar",
+      "refresh_min": 30,
+      "subtitle": "Rolling p95",
+      "show_legend": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_dashboard_widget",
+     "content": "Error: Received unknown parameter: 'subtitle'."
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "create_dashboard_widget",
+     "args": {
+      "dashboard_id": "dash_ops",
+      "metric": "p95_latency",
+      "chart": "bar",
+      "refresh_min": 30,
+      "show_legend": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_dashboard_widget",
+     "content": "{\"widget_id\": \"wid_widg01\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": "Received unknown parameter: 'subtitle'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 4,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "pay04",
+    "cond": "B_fill",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Invoice Acme (billing@acme.test) $1,200.00 with 'Consulting, September' printed on it, then send @courier_max $15.00, memo 'Delivery fee', normal speed.",
+   "drift_tool": "send_payment",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "default_balance"
+    },
+    "param": "funding_source"
+   },
+   "shown": "old (v1) declaration, no change log; the system prompt asks to pass every parameter explicitly",
+   "expected": {
+    "v1": {
+     "amount_cents": 1500,
+     "memo": "Delivery fee",
+     "recipient": "@courier_max"
+    },
+    "v2": {
+     "amount_cents": 1500,
+     "funding_source": "default_balance",
+     "memo": "Delivery fee",
+     "recipient": "@courier_max"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_invoice",
+     "args": {
+      "customer": "billing@acme.test",
+      "amount_cents": 120000,
+      "currency": "USD",
+      "notes": "Consulting, September",
+      "template_id": "standard",
+      "terms": "net30"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_invoice",
+     "content": "{\"invoice_id\": \"inv_pay04\", \"state\": \"sent\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "send_payment",
+     "args": {
+      "amount_cents": 1500,
+      "memo": "Delivery fee",
+      "speed": "standard",
+      "currency": "USD",
+      "recipient": "@courier_max",
+      "funding_source": "default_balance"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_payment",
+     "content": "{\"payment_id\": \"pay_pay04\", \"state\": \"processed\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 5,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "widg03",
+    "cond": "C:user:prose:apply",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_ERROR",
+   "request": "Add a line chart for signups to dash_growth, 120-minute refresh, subtitle 'Daily signups', keeping the legend shown.",
+   "drift_tool": "create_dashboard_widget",
+   "change": {
+    "change": "renamed",
+    "new": "caption",
+    "old": "subtitle",
+    "param": "subtitle"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "chart": "line",
+     "dashboard_id": "dash_growth",
+     "metric": "signups",
+     "refresh_min": 120,
+     "subtitle": "Daily signups"
+    },
+    "v2": {
+     "caption": "Daily signups",
+     "chart": "line",
+     "dashboard_id": "dash_growth",
+     "metric": "signups",
+     "refresh_min": 120
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_dashboard_widget",
+     "args": {
+      "dashboard_id": "dash_growth",
+      "metric": "signups",
+      "refresh_min": "120",
+      "caption": "Daily signups"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_dashboard_widget",
+     "content": "Error: Invalid type for parameter 'refresh_min': expected integer, got str."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid type for parameter 'refresh_min': expected integer, got str.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 6,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "refund03",
+    "cond": "D",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Refund the full $250.00 on pay_55710 as fraud; internal note 'Chargeback pre-empt'. Customer should still get the standard refund email.",
+   "drift_tool": "refund_payment",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "main"
+    },
+    "param": "ledger"
+   },
+   "shown": "new (v2) declaration, no change log",
+   "expected": {
+    "v1": {
+     "amount_cents": 25000,
+     "note": "Chargeback pre-empt",
+     "payment_id": "pay_55710",
+     "reason": "fraud"
+    },
+    "v2": {
+     "amount_cents": 25000,
+     "ledger": "main",
+     "note": "Chargeback pre-empt",
+     "payment_id": "pay_55710",
+     "reason": "fraud"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [],
+   "final_text": "I can't process this yet because the refund needs a ledger to book against, and you haven't specified one. Which ledger should I use?\n\nOnce you confirm, I'll issue a $250.00 (25000 cents) fraud refund on pay_55710 with the note \"Chargeback pre-empt\" and the standard refund email to the customer.",
+   "drift_outcome": null,
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 7,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "cal02",
+    "cond": "E",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Book my 1:1 with Maya, Oct 7 2026 at 09:30 UTC for half an hour, private. She should still get the invite notification.",
+   "drift_tool": "create_event",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "primary"
+    },
+    "param": "calendar_id"
+   },
+   "shown": "old (v1) declaration, no change log; a rejected call's error is shown and one retry allowed",
+   "expected": {
+    "v1": {
+     "duration_min": 30,
+     "start": "2026-10-07T09:30:00+00:00",
+     "title": "1:1 with Maya",
+     "visibility": "private"
+    },
+    "v2": {
+     "calendar_id": "primary",
+     "duration_min": 30,
+     "start": "2026-10-07T09:30:00+00:00",
+     "title": "1:1 with Maya",
+     "visibility": "private"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_event",
+     "args": {
+      "title": "1:1 with Maya",
+      "duration_min": "30",
+      "start": "2026-10-07T09:30:00Z",
+      "visibility": "private",
+      "notify_attendees": "true"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_event",
+     "content": "Error: Missing required parameter: 'calendar_id'."
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "create_event",
+     "args": {
+      "title": "1:1 with Maya",
+      "duration_min": 30,
+      "start": "2026-10-07T09:30:00Z",
+      "visibility": "private",
+      "notify_attendees": true,
+      "calendar_id": "primary"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_event",
+     "content": "{\"event_id\": \"evt_cal02\", \"status\": \"confirmed\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": "Missing required parameter: 'calendar_id'.",
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 8,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "ds03",
+    "cond": "D",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Export billing_ledger to s3://viz-archive/billing with zstd compression, 4096 MB chunks, tag 'finance', header row included.",
+   "drift_tool": "export_dataset",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Chunk size in gigabytes, decimal string (\"0\" = single file)",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Chunk size in megabytes (0 = single file)",
+     "type": "integer"
+    },
+    "param": "chunk_mb"
+   },
+   "shown": "new (v2) declaration, no change log",
+   "expected": {
+    "v1": {
+     "chunk_mb": 4096,
+     "compression": "zstd",
+     "dataset": "billing_ledger",
+     "destination": "s3://viz-archive/billing",
+     "tag": "finance"
+    },
+    "v2": {
+     "chunk_mb": "4",
+     "compression": "zstd",
+     "dataset": "billing_ledger",
+     "destination": "s3://viz-archive/billing",
+     "tag": "finance"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "export_dataset",
+     "args": {
+      "dataset": "billing_ledger",
+      "destination": "s3://viz-archive/billing",
+      "compression": "zstd",
+      "chunk_mb": "4.096",
+      "tag": "finance"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "export_dataset",
+     "content": "{\"export_id\": \"dx_ds03\", \"state\": \"queued\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 9,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "ship04",
+    "cond": "D",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Order one SKU-6605 (receipt emailed as usual), then track its shipment: alert on every scan, poll every 120 minutes, distance shown in miles.",
+   "drift_tool": "track_shipment",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "auto_detect"
+    },
+    "param": "carrier"
+   },
+   "shown": "new (v2) declaration, no change log",
+   "expected": {
+    "v1": {
+     "alert_on": "every_scan",
+     "poll_interval_min": 120,
+     "tracking_number": "$1.tracking_number"
+    },
+    "v2": {
+     "alert_on": "every_scan",
+     "carrier": "auto_detect",
+     "poll_interval_min": 120,
+     "tracking_number": "$1.tracking_number"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "place_order",
+     "args": {
+      "sku": "SKU-6605",
+      "quantity": 1
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "place_order",
+     "content": "{\"order_id\": \"ord_ship04\", \"tracking_number\": \"TRK_ship04\"}"
+    }
+   ],
+   "final_text": "I placed the order for one SKU-6605. The order ID is ord_ship04, and the tracking number is TRK_ship04. The receipt will be emailed as usual.\n\nTo start tracking, I need the carrier code (for example UPS, FedRQ, or USPS). The order confirmation didn't include one. Which carrier is shipping it? Once I have it, I'll set up tracking with these settings:\n- Alerts on every scan.\n- Polling every 120 minutes.\n- Distances in miles.",
+   "drift_outcome": null,
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 10,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "copy04",
+    "cond": "B_lenient",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_ERROR",
+   "request": "Zip up /projects/apollo as apollo.zip (default settings), then copy /archives/apollo.zip to /offsite/apollo.zip, overwriting anything there, metadata preserved.",
+   "drift_tool": "copy_file",
+   "change": {
+    "change": "enum_changed",
+    "new": "replace",
+    "old": "overwrite",
+    "param": "conflict"
+   },
+   "shown": "old (v1) declaration, no change log; the executor drops unknown parameters and coerces types",
+   "expected": {
+    "v1": {
+     "conflict": "overwrite",
+     "dst": "/offsite/apollo.zip",
+     "src": "/archives/apollo.zip"
+    },
+    "v2": {
+     "conflict": "replace",
+     "dst": "/offsite/apollo.zip",
+     "src": "/archives/apollo.zip"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "compress_folder",
+     "args": {
+      "archive_name": "apollo.zip",
+      "folder": "/projects/apollo"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "compress_folder",
+     "content": "{\"archive_path\": \"/archives/copy04\", \"state\": \"ok\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "copy_file",
+     "args": {}
+    },
+    {
+     "role": "tool_result",
+     "name": "copy_file",
+     "content": "Error: Missing required parameter: 'dst'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Missing required parameter: 'dst'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 11,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "hotel03",
+    "cond": "CD",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Reserve a standard room in Kyoto, check-in Dec 1 2026, 5 nights, and tell the front desk 'Late check-in after 22:00'; email me the confirmation.",
+   "drift_tool": "reserve_hotel",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "email_confirmation"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "check_in": "2026-12-01",
+     "city": "Kyoto",
+     "nights": 5,
+     "room_type": "standard",
+     "special_requests": "Late check-in after 22:00"
+    },
+    "v2": {
+     "check_in": "2026-12-01",
+     "city": "Kyoto",
+     "email_confirmation": true,
+     "nights": 5,
+     "room_type": "standard",
+     "special_requests": "Late check-in after 22:00"
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "reserve_hotel",
+     "args": {
+      "check_in": "2026-12-01",
+      "city": "Kyoto",
+      "nights": 5,
+      "room_type": "standard",
+      "special_requests": "Late check-in after 22:00",
+      "email_confirmation": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "reserve_hotel",
+     "content": "{\"hotel_address\": \"addr_hotel03\", \"reservation_id\": \"htl_hotel03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 12,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "pto01",
+    "cond": "Dprime",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Request personal time off starting Oct 19 2026 at 09:00 UTC for 480 minutes, reason 'Family visit', and post the absence so the team knows.",
+   "drift_tool": "request_time_off",
+   "change": {
+    "change": "enum_changed",
+    "new": "personal_day",
+    "old": "personal",
+    "param": "kind"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "duration_min": 480,
+     "kind": "personal",
+     "reason": "Family visit",
+     "start": "2026-10-19T09:00:00+00:00"
+    },
+    "v2": {
+     "duration_min": 480,
+     "kind": "personal_day",
+     "reason": "Family visit",
+     "start": "2026-10-19T09:00:00+00:00"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "request_time_off",
+     "args": {
+      "start": "2026-10-19T09:00:00Z",
+      "duration_min": 480,
+      "kind": "personal_day",
+      "reason": "Family visit"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "request_time_off",
+     "content": "{\"pto_id\": \"pto_pto01\", \"state\": \"pending_approval\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 13,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "bmk04",
+    "cond": "E",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Bookmark https://shop.lumen.test/desk-lamp as 'Lumen desk lamp' — shared, 2 stars, synced to all my devices — then set a keyword monitor on 'Lumen desk lamp discount'.",
+   "drift_tool": "save_bookmark",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Star rating 0-5 as string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Star rating 0-5",
+     "type": "integer"
+    },
+    "param": "rating"
+   },
+   "shown": "old (v1) declaration, no change log; a rejected call's error is shown and one retry allowed",
+   "expected": {
+    "v1": {
+     "privacy": "shared",
+     "rating": 2,
+     "title": "Lumen desk lamp",
+     "url": "https://shop.lumen.test/desk-lamp"
+    },
+    "v2": {
+     "privacy": "shared",
+     "rating": "2",
+     "title": "Lumen desk lamp",
+     "url": "https://shop.lumen.test/desk-lamp"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "save_bookmark",
+     "args": {
+      "title": "Lumen desk lamp",
+      "url": "https://shop.lumen.test/desk-lamp",
+      "privacy": "shared",
+      "rating": 2,
+      "sync_devices": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "save_bookmark",
+     "content": "Error: Invalid type for parameter 'rating': expected string, got int."
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "save_bookmark",
+     "args": {
+      "title": "Lumen desk lamp",
+      "url": "https://shop.lumen.test/desk-lamp",
+      "privacy": "shared",
+      "rating": "\"2\"",
+      "sync_devices": true
+     },
+     "text": "The save failed because the tool rejected `rating` as an integer. I'll retry with the rating sent as a string."
+    },
+    {
+     "role": "tool_result",
+     "name": "save_bookmark",
+     "content": "{\"bookmark_id\": \"bm_bmk04\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "monitor_keyword",
+     "args": {
+      "keyword": "Lumen desk lamp discount"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "monitor_keyword",
+     "content": "{\"monitor_id\": \"mon_bmk04\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": "Invalid type for parameter 'rating': expected string, got int.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 14,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "ct04",
+    "cond": "E",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Add Diego Fuentes (diego@meridian.test) as a prospect scored 80 — newsletter on — then log a call on his new record with summary 'Intro call booked'.",
+   "drift_tool": "create_contact",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Lead score 0-100 as string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Lead score 0-100",
+     "type": "integer"
+    },
+    "param": "score"
+   },
+   "shown": "old (v1) declaration, no change log; a rejected call's error is shown and one retry allowed",
+   "expected": {
+    "v1": {
+     "email": "diego@meridian.test",
+     "full_name": "Diego Fuentes",
+     "score": 80,
+     "stage": "prospect"
+    },
+    "v2": {
+     "email": "diego@meridian.test",
+     "full_name": "Diego Fuentes",
+     "score": "80",
+     "stage": "prospect"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_contact",
+     "args": {
+      "email": "diego@meridian.test",
+      "full_name": "Diego Fuentes",
+      "stage": "prospect",
+      "score": 80,
+      "subscribe_newsletter": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_contact",
+     "content": "Error: Invalid type for parameter 'score': expected string, got int."
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "create_contact",
+     "args": {
+      "email": "diego@meridian.test",
+      "full_name": "Diego Fuentes",
+      "stage": "prospect",
+      "score": "\"80\"",
+      "subscribe_newsletter": true
+     },
+     "text": "The create call rejected the score as an integer, so I'll retry with it passed as a string."
+    },
+    {
+     "role": "tool_result",
+     "name": "create_contact",
+     "content": "{\"contact_id\": \"ct_ct04\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "log_interaction",
+     "args": {
+      "contact_id": "ct_ct04",
+      "summary": "Intro call booked",
+      "kind": "call"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "log_interaction",
+     "content": "{\"interaction_id\": \"ix_ct04\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": "Invalid type for parameter 'score': expected string, got int.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 15,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "sched04",
+    "cond": "B_strict",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Schedule 'Office closed for maintenance Friday.' to #eu-office for Oct 15 2026 07:00 UTC under campaign 'facilities' (delivery confirmation on), then DM @facilities-lead: 'Scheduled the Friday closure notice.'",
+   "drift_tool": "schedule_message",
+   "change": {
+    "change": "renamed",
+    "new": "campaign_tag",
+    "old": "campaign",
+    "param": "campaign"
+   },
+   "shown": "old (v1) declaration, no change log",
+   "expected": {
+    "v1": {
+     "campaign": "facilities",
+     "send_at": "2026-10-15T07:00:00+00:00",
+     "target": "#eu-office",
+     "text": "Office closed for maintenance Friday."
+    },
+    "v2": {
+     "campaign_tag": "facilities",
+     "send_at": "2026-10-15T07:00:00+00:00",
+     "target": "#eu-office",
+     "text": "Office closed for maintenance Friday."
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "schedule_message",
+     "args": {
+      "confirm_receipt": true,
+      "target": "#eu-office",
+      "campaign": "facilities",
+      "send_at": "2026-10-15T07:00:00Z",
+      "text": "Office closed for maintenance Friday."
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "schedule_message",
+     "content": "Error: Received unknown parameter: 'campaign'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Received unknown parameter: 'campaign'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 16,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "room04",
+    "cond": "C",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Book Echo for board prep on Oct 21 2026, 13:30 UTC, 90 minutes, boardroom layout, panel text 'Board prep', no catering — then tell #leadership: 'Echo is booked for board prep, Oct 21 13:30 UTC.'",
+   "drift_tool": "book_meeting_room",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "HQ"
+    },
+    "param": "building"
+   },
+   "shown": "old (v1) declaration; JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "duration_min": 90,
+     "layout": "boardroom",
+     "purpose": "Board prep",
+     "room": "Echo",
+     "start": "2026-10-21T13:30:00+00:00"
+    },
+    "v2": {
+     "building": "HQ",
+     "duration_min": 90,
+     "layout": "boardroom",
+     "purpose": "Board prep",
+     "room": "Echo",
+     "start": "2026-10-21T13:30:00+00:00"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [],
+   "final_text": "Which building is Echo in? The booking tool now requires a building code, and I don't have one for this request. Once you tell me, I'll book the room and then post the message to #leadership.",
+   "drift_outcome": null,
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 17,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "kw02",
+    "cond": "Dprime",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_ERROR",
+   "request": "Monitor 'schema drift' every 30 minutes with email alerts, and tell me as soon as a mention appears.",
+   "drift_tool": "monitor_keyword",
+   "change": {
+    "change": "enum_changed",
+    "new": "mail",
+    "old": "email",
+    "param": "alert_channel"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "alert_channel": "email",
+     "check_interval_min": 30,
+     "keyword": "schema drift"
+    },
+    "v2": {
+     "alert_channel": "mail",
+     "check_interval_min": 30,
+     "keyword": "schema drift"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "monitor_keyword",
+     "args": {
+      "keyword": "schema drift",
+      "check_interval_min": "30",
+      "alert_channel": "mail",
+      "notify_immediately": "true"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "monitor_keyword",
+     "content": "Error: Invalid type for parameter 'check_interval_min': expected integer, got str."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid type for parameter 'check_interval_min': expected integer, got str.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 18,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "kw04",
+    "cond": "E",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Pull the top 3 web results for 'acme recall', then keep watching that phrase hourly (every 60 minutes) with email alerts, labeled 'recall watch' — alert me the instant a new mention appears.",
+   "drift_tool": "monitor_keyword",
+   "change": {
+    "change": "enum_changed",
+    "new": "mail",
+    "old": "email",
+    "param": "alert_channel"
+   },
+   "shown": "old (v1) declaration, no change log; a rejected call's error is shown and one retry allowed",
+   "expected": {
+    "v1": {
+     "alert_channel": "email",
+     "check_interval_min": 60,
+     "keyword": "acme recall",
+     "label": "recall watch"
+    },
+    "v2": {
+     "alert_channel": "mail",
+     "check_interval_min": 60,
+     "keyword": "acme recall",
+     "label": "recall watch"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "web_search",
+     "args": {
+      "query": "acme recall",
+      "max_results": "3"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "web_search",
+     "content": "Error: Invalid type for parameter 'max_results': expected integer, got str."
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "web_search",
+     "args": {
+      "query": "acme recall",
+      "max_results": "3"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "web_search",
+     "content": "Error: Invalid type for parameter 'max_results': expected integer, got str."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": null,
+   "error_seen": "Invalid type for parameter 'max_results': expected integer, got str.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 19,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "cart04",
+    "cond": "Dprime",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Order 4 of SKU-3321 with express shipping (receipt emailed to me as usual), then start tracking that order's shipment.",
+   "drift_tool": "place_order",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Number of units as string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Number of units",
+     "type": "integer"
+    },
+    "param": "quantity"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "quantity": 4,
+     "shipping_speed": "express",
+     "sku": "SKU-3321"
+    },
+    "v2": {
+     "quantity": "4",
+     "shipping_speed": "express",
+     "sku": "SKU-3321"
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "place_order",
+     "args": {
+      "quantity": "4",
+      "shipping_speed": "express",
+      "sku": "SKU-3321"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "place_order",
+     "content": "{\"order_id\": \"ord_cart04\", \"tracking_number\": \"TRK_cart04\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "track_shipment",
+     "args": {
+      "tracking_number": "TRK_cart04"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "track_shipment",
+     "content": "{\"status\": \"in_transit\", \"tracker_id\": \"trk_cart04\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 20,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "perm02",
+    "cond": "CD",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Give jsmith write access to /repos/atlas for the next 8 hours (480 minutes), only on that path itself.",
+   "drift_tool": "set_permissions",
+   "change": {
+    "change": "default_changed",
+    "new": true,
+    "old": false,
+    "param": "recursive"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "access": "write",
+     "expiry_min": 480,
+     "path": "/repos/atlas",
+     "principal": "jsmith"
+    },
+    "v2": {
+     "access": "write",
+     "expiry_min": 480,
+     "path": "/repos/atlas",
+     "principal": "jsmith",
+     "recursive": false
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "set_permissions",
+     "args": {
+      "path": "/repos/atlas",
+      "principal": "jsmith",
+      "access": "write",
+      "expiry_min": 480,
+      "recursive": false
+     },
+     "text": "Only on that path itself means recursive should be false."
+    },
+    {
+     "role": "tool_result",
+     "name": "set_permissions",
+     "content": "{\"grant_id\": \"gr_perm02\", \"state\": \"applied\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 21,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "copy04",
+    "cond": "C:user:prose:apply",
+    "class": "enum_tighten",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_ERROR",
+   "request": "Zip up /projects/apollo as apollo.zip (default settings), then copy /archives/apollo.zip to /offsite/apollo.zip, overwriting anything there, metadata preserved.",
+   "drift_tool": "copy_file",
+   "change": {
+    "change": "enum_changed",
+    "new": "replace",
+    "old": "overwrite",
+    "param": "conflict"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "conflict": "overwrite",
+     "dst": "/offsite/apollo.zip",
+     "src": "/archives/apollo.zip"
+    },
+    "v2": {
+     "conflict": "replace",
+     "dst": "/offsite/apollo.zip",
+     "src": "/archives/apollo.zip"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "compress_folder",
+     "args": {
+      "archive_name": "apollo.zip",
+      "folder": "/projects/apollo"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "compress_folder",
+     "content": "{\"archive_path\": \"/archives/copy04\", \"state\": \"ok\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "copy_file",
+     "args": {}
+    },
+    {
+     "role": "tool_result",
+     "name": "copy_file",
+     "content": "Error: Missing required parameter: 'dst'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Missing required parameter: 'dst'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 22,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "perm02",
+    "cond": "B_lenient",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Give jsmith write access to /repos/atlas for the next 8 hours (480 minutes), only on that path itself.",
+   "drift_tool": "set_permissions",
+   "change": {
+    "change": "default_changed",
+    "new": true,
+    "old": false,
+    "param": "recursive"
+   },
+   "shown": "old (v1) declaration, no change log; the executor drops unknown parameters and coerces types",
+   "expected": {
+    "v1": {
+     "access": "write",
+     "expiry_min": 480,
+     "path": "/repos/atlas",
+     "principal": "jsmith"
+    },
+    "v2": {
+     "access": "write",
+     "expiry_min": 480,
+     "path": "/repos/atlas",
+     "principal": "jsmith",
+     "recursive": false
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "set_permissions",
+     "args": {
+      "path": "/repos/atlas",
+      "principal": "jsmith",
+      "access": "write",
+      "expiry_min": 480,
+      "recursive": false
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "set_permissions",
+     "content": "{\"grant_id\": \"gr_perm02\", \"state\": \"applied\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 23,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "deal03",
+    "cond": "C:user:prose:apply",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_ERROR",
+   "request": "Mark dl_4407 closed-won at $99,000.00, closed Oct 1 2026.",
+   "drift_tool": "update_deal",
+   "change": {
+    "change": "default_changed",
+    "new": "unspecified",
+    "old": "",
+    "param": "loss_reason"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "close_date": "2026-10-01",
+     "deal_id": "dl_4407",
+     "stage": "closed_won",
+     "value_cents": 9900000
+    },
+    "v2": {
+     "close_date": "2026-10-01",
+     "deal_id": "dl_4407",
+     "loss_reason": "",
+     "stage": "closed_won",
+     "value_cents": 9900000
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "update_deal",
+     "args": {}
+    },
+    {
+     "role": "tool_result",
+     "name": "update_deal",
+     "content": "Error: Missing required parameter: 'deal_id'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Missing required parameter: 'deal_id'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 24,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "room02",
+    "cond": "B_lenient",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Get me the Baltic room for Oct 14 2026, 9:00 UTC, two hours, theater seating. We don't need food.",
+   "drift_tool": "book_meeting_room",
+   "change": {
+    "change": "default_changed",
+    "new": true,
+    "old": false,
+    "param": "catering"
+   },
+   "shown": "old (v1) declaration, no change log; the executor drops unknown parameters and coerces types",
+   "expected": {
+    "v1": {
+     "duration_min": 120,
+     "layout": "theater",
+     "room": "Baltic",
+     "start": "2026-10-14T09:00:00+00:00"
+    },
+    "v2": {
+     "catering": false,
+     "duration_min": 120,
+     "layout": "theater",
+     "room": "Baltic",
+     "start": "2026-10-14T09:00:00+00:00"
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "book_meeting_room",
+     "args": {
+      "duration_min": 120,
+      "room": "Baltic",
+      "start": "2026-10-14T09:00:00Z",
+      "layout": "theater",
+      "catering": false
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "book_meeting_room",
+     "content": "{\"booking_id\": \"bk_room02\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 25,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "msg01",
+    "cond": "B_strict",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Reply in thread th_4451 in #eng with 'Deploy window opens at 18:00 UTC.' — normal priority, link previews on.",
+   "drift_tool": "send_message",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "unfurl_links"
+   },
+   "shown": "old (v1) declaration, no change log",
+   "expected": {
+    "v1": {
+     "priority": "normal",
+     "target": "#eng",
+     "text": "Deploy window opens at 18:00 UTC.",
+     "thread_id": "th_4451"
+    },
+    "v2": {
+     "priority": "normal",
+     "target": "#eng",
+     "text": "Deploy window opens at 18:00 UTC.",
+     "thread_id": "th_4451",
+     "unfurl_links": true
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "thread_id": "th_4451",
+      "text": "Deploy window opens at 18:00 UTC.",
+      "priority": "normal",
+      "target": "#eng",
+      "unfurl_links": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "{\"message_id\": \"msg_msg01\", \"state\": \"delivered\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 26,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "widg03",
+    "cond": "B_strict",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Add a line chart for signups to dash_growth, 120-minute refresh, subtitle 'Daily signups', keeping the legend shown.",
+   "drift_tool": "create_dashboard_widget",
+   "change": {
+    "change": "renamed",
+    "new": "caption",
+    "old": "subtitle",
+    "param": "subtitle"
+   },
+   "shown": "old (v1) declaration, no change log",
+   "expected": {
+    "v1": {
+     "chart": "line",
+     "dashboard_id": "dash_growth",
+     "metric": "signups",
+     "refresh_min": 120,
+     "subtitle": "Daily signups"
+    },
+    "v2": {
+     "caption": "Daily signups",
+     "chart": "line",
+     "dashboard_id": "dash_growth",
+     "metric": "signups",
+     "refresh_min": 120
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_dashboard_widget",
+     "args": {
+      "dashboard_id": "dash_growth",
+      "metric": "signups",
+      "chart": "line",
+      "refresh_min": 120,
+      "subtitle": "Daily signups"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_dashboard_widget",
+     "content": "Error: Received unknown parameter: 'subtitle'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Received unknown parameter: 'subtitle'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 27,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "msg04",
+    "cond": "B_strict",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Spin up an invite-only channel proj-falcon and post 'Welcome aboard — kickoff Monday.' there at normal priority, link previews as usual.",
+   "drift_tool": "send_message",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "main"
+    },
+    "param": "workspace"
+   },
+   "shown": "old (v1) declaration, no change log",
+   "expected": {
+    "v1": {
+     "priority": "normal",
+     "target": "proj-falcon",
+     "text": "Welcome aboard — kickoff Monday."
+    },
+    "v2": {
+     "priority": "normal",
+     "target": "proj-falcon",
+     "text": "Welcome aboard — kickoff Monday.",
+     "workspace": "main"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_channel",
+     "args": {
+      "name": "proj-falcon",
+      "access": "invite_only"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_channel",
+     "content": "{\"channel_id\": \"ch_msg04\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "target": "proj-falcon",
+      "text": "Welcome aboard — kickoff Monday.",
+      "priority": "normal",
+      "unfurl_links": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "Error: Missing required parameter: 'workspace'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Missing required parameter: 'workspace'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 28,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "msg03",
+    "cond": "CD",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Urgent post to #incidents: 'DB failover complete, all green.' Keep the link previews.",
+   "drift_tool": "send_message",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "unfurl_links"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "priority": "urgent",
+     "target": "#incidents",
+     "text": "DB failover complete, all green."
+    },
+    "v2": {
+     "priority": "urgent",
+     "target": "#incidents",
+     "text": "DB failover complete, all green.",
+     "unfurl_links": true
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "text": "DB failover complete, all green.",
+      "target": "#incidents",
+      "priority": "urgent",
+      "unfurl_links": "true"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "Error: Invalid type for parameter 'unfurl_links': expected boolean, got str."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid type for parameter 'unfurl_links': expected boolean, got str.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 29,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "cal03",
+    "cond": "E",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Set up the quarterly town hall: Nov 2 2026, 16:00 UTC, one hour, in the Main auditorium. Everyone invited should be notified.",
+   "drift_tool": "create_event",
+   "change": {
+    "change": "renamed",
+    "new": "venue",
+    "old": "location",
+    "param": "location"
+   },
+   "shown": "old (v1) declaration, no change log; a rejected call's error is shown and one retry allowed",
+   "expected": {
+    "v1": {
+     "duration_min": 60,
+     "location": "Main auditorium",
+     "start": "2026-11-02T16:00:00+00:00",
+     "title": "Quarterly town hall"
+    },
+    "v2": {
+     "duration_min": 60,
+     "start": "2026-11-02T16:00:00+00:00",
+     "title": "Quarterly town hall",
+     "venue": "Main auditorium"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_event",
+     "args": {
+      "title": "Quarterly Town Hall",
+      "start": "2026-11-02T16:00:00+00:00",
+      "duration_min": 60,
+      "location": "Main auditorium",
+      "notify_attendees": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_event",
+     "content": "Error: Received unknown parameter: 'location'."
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "create_event",
+     "args": {
+      "title": "Quarterly Town Hall",
+      "start": "2026-11-02T16:00:00+00:00",
+      "duration_min": 60,
+      "notify_attendees": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_event",
+     "content": "{\"event_id\": \"evt_cal03\", \"status\": \"confirmed\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": "Received unknown parameter: 'location'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 30,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "fly03",
+    "cond": "B_strict",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Book an economy flight to AUS on Dec 3 2026, window seat, layovers no more than 180 minutes; don't pay extra for refundable.",
+   "drift_tool": "book_flight",
+   "change": {
+    "change": "renamed",
+    "new": "seat_preference",
+    "old": "seat_pref",
+    "param": "seat_pref"
+   },
+   "shown": "old (v1) declaration, no change log",
+   "expected": {
+    "v1": {
+     "cabin": "economy",
+     "depart": "2026-12-03",
+     "destination": "AUS",
+     "max_layover_min": 180,
+     "seat_pref": "window"
+    },
+    "v2": {
+     "cabin": "economy",
+     "depart": "2026-12-03",
+     "destination": "AUS",
+     "max_layover_min": 180,
+     "seat_preference": "window"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "book_flight",
+     "args": {
+      "cabin": "economy",
+      "depart": "2026-12-03",
+      "destination": "AUS",
+      "max_layover_min": "180",
+      "refundable": "false",
+      "seat_pref": "window"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "book_flight",
+     "content": "Error: Received unknown parameter: 'seat_pref'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Received unknown parameter: 'seat_pref'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 31,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "hotel03",
+    "cond": "E",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Reserve a standard room in Kyoto, check-in Dec 1 2026, 5 nights, and tell the front desk 'Late check-in after 22:00'; email me the confirmation.",
+   "drift_tool": "reserve_hotel",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "email_confirmation"
+   },
+   "shown": "old (v1) declaration, no change log; a rejected call's error is shown and one retry allowed",
+   "expected": {
+    "v1": {
+     "check_in": "2026-12-01",
+     "city": "Kyoto",
+     "nights": 5,
+     "room_type": "standard",
+     "special_requests": "Late check-in after 22:00"
+    },
+    "v2": {
+     "check_in": "2026-12-01",
+     "city": "Kyoto",
+     "email_confirmation": true,
+     "nights": 5,
+     "room_type": "standard",
+     "special_requests": "Late check-in after 22:00"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "reserve_hotel",
+     "args": {
+      "check_in": "2026-12-01",
+      "city": "Kyoto",
+      "nights": "5",
+      "special_requests": "Late check-in after 22:00",
+      "email_confirmation": "true"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "reserve_hotel",
+     "content": "Error: Invalid type for parameter 'nights': expected integer, got str."
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "reserve_hotel",
+     "args": {
+      "check_in": "2026-12-01",
+      "city": "Kyoto",
+      "nights": 5,
+      "special_requests": "Late check-in after 22:00"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "reserve_hotel",
+     "content": "{\"hotel_address\": \"addr_hotel03\", \"reservation_id\": \"htl_hotel03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": "Invalid type for parameter 'nights': expected integer, got str.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 32,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "sched04",
+    "cond": "Dprime",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Schedule 'Office closed for maintenance Friday.' to #eu-office for Oct 15 2026 07:00 UTC under campaign 'facilities' (delivery confirmation on), then DM @facilities-lead: 'Scheduled the Friday closure notice.'",
+   "drift_tool": "schedule_message",
+   "change": {
+    "change": "renamed",
+    "new": "campaign_tag",
+    "old": "campaign",
+    "param": "campaign"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "campaign": "facilities",
+     "send_at": "2026-10-15T07:00:00+00:00",
+     "target": "#eu-office",
+     "text": "Office closed for maintenance Friday."
+    },
+    "v2": {
+     "campaign_tag": "facilities",
+     "send_at": "2026-10-15T07:00:00+00:00",
+     "target": "#eu-office",
+     "text": "Office closed for maintenance Friday."
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "schedule_message",
+     "args": {
+      "send_at": "2026-10-15T07:00:00Z",
+      "target": "#eu-office",
+      "text": "Office closed for maintenance Friday.",
+      "campaign_tag": "facilities",
+      "channel_type": "group"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "schedule_message",
+     "content": "{\"scheduled_id\": \"sch_sched04\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "target": "@facilities-lead",
+      "text": "Scheduled the Friday closure notice."
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "{\"message_id\": \"msg_sched04\", \"state\": \"delivered\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 33,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "hotel03",
+    "cond": "B_strict",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Reserve a standard room in Kyoto, check-in Dec 1 2026, 5 nights, and tell the front desk 'Late check-in after 22:00'; email me the confirmation.",
+   "drift_tool": "reserve_hotel",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "email_confirmation"
+   },
+   "shown": "old (v1) declaration, no change log",
+   "expected": {
+    "v1": {
+     "check_in": "2026-12-01",
+     "city": "Kyoto",
+     "nights": 5,
+     "room_type": "standard",
+     "special_requests": "Late check-in after 22:00"
+    },
+    "v2": {
+     "check_in": "2026-12-01",
+     "city": "Kyoto",
+     "email_confirmation": true,
+     "nights": 5,
+     "room_type": "standard",
+     "special_requests": "Late check-in after 22:00"
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "reserve_hotel",
+     "args": {
+      "special_requests": "Late check-in after 22:00",
+      "check_in": "2026-12-01",
+      "nights": 5,
+      "city": "Kyoto",
+      "room_type": "standard",
+      "email_confirmation": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "reserve_hotel",
+     "content": "{\"hotel_address\": \"addr_hotel03\", \"reservation_id\": \"htl_hotel03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 34,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "job03",
+    "cond": "CD",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "OTHER_WRONG",
+   "request": "Post a full-time Product Designer opening in the Design department at the NYC office, band up to $140,000.00, visible on the public board as usual.",
+   "drift_tool": "post_job_opening",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Top of annual salary band as decimal string in major units",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Top of annual salary band in cents",
+     "type": "integer"
+    },
+    "param": "salary_cents"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "department": "Design",
+     "employment": "full_time",
+     "location": "NYC office",
+     "salary_cents": 14000000,
+     "title": "Product Designer"
+    },
+    "v2": {
+     "department": "Design",
+     "employment": "full_time",
+     "location": "NYC office",
+     "salary_cents": "140000.00",
+     "title": "Product Designer"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "post_job_opening",
+     "args": {
+      "department": "Design",
+      "title": "Product Designer",
+      "employment": "full_time",
+      "location": "NYC",
+      "salary_cents": "140000.00",
+      "internal_only": false
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "post_job_opening",
+     "content": "{\"job_id\": \"job_job03\", \"state\": \"published\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 35,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "fly04",
+    "cond": "D",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Book a premium economy flight to CDG on Nov 18 2026 (aisle seat, layovers under 240 minutes, non-refundable fare is fine), then reserve a hotel in Paris checking in 2026-11-18 for 3 nights.",
+   "drift_tool": "book_flight",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Max layover in hours, decimal string (\"0\" = no limit)",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Max layover in minutes (0 = no limit)",
+     "type": "integer"
+    },
+    "param": "max_layover_min"
+   },
+   "shown": "new (v2) declaration, no change log",
+   "expected": {
+    "v1": {
+     "cabin": "premium_economy",
+     "depart": "2026-11-18",
+     "destination": "CDG",
+     "max_layover_min": 240,
+     "seat_pref": "aisle"
+    },
+    "v2": {
+     "cabin": "premium_economy",
+     "depart": "2026-11-18",
+     "destination": "CDG",
+     "max_layover_min": "4",
+     "seat_pref": "aisle"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "book_flight",
+     "args": {
+      "depart": "2026-11-18",
+      "destination": "CDG",
+      "cabin": "premium_economy",
+      "seat_pref": "aisle",
+      "max_layover_min": "4",
+      "refundable": false
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "book_flight",
+     "content": "{\"booking_ref\": \"fl_fly04\", \"state\": \"ticketed\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "reserve_hotel",
+     "args": {
+      "check_in": "2026-11-18",
+      "city": "Paris",
+      "nights": 3
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "reserve_hotel",
+     "content": "{\"hotel_address\": \"addr_fly04\", \"reservation_id\": \"htl_fly04\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 36,
+   "key": {
+    "model": "meta-llama/llama-3.3-70b-instruct",
+    "task": "rem02",
+    "cond": "CD",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Set a one-time push reminder to water the plants, Oct 5 2026 at 8am UTC. Definitely not a daily repeat.",
+   "drift_tool": "create_reminder",
+   "change": {
+    "change": "default_changed",
+    "new": true,
+    "old": false,
+    "param": "repeat_daily"
+   },
+   "shown": "new (v2) declaration, plus the JSON change log in the system prompt",
+   "expected": {
+    "v1": {
+     "channel": "push",
+     "remind_at": "2026-10-05T08:00:00+00:00",
+     "text": "Water the plants"
+    },
+    "v2": {
+     "channel": "push",
+     "remind_at": "2026-10-05T08:00:00+00:00",
+     "repeat_daily": false,
+     "text": "Water the plants"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_reminder",
+     "args": {
+      "text": "water the plants",
+      "remind_at": "2026-10-05T08:00:00Z",
+      "repeat_daily": "false"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_reminder",
+     "content": "Error: Invalid type for parameter 'repeat_daily': expected boolean, got str."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid type for parameter 'repeat_daily': expected boolean, got str.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 37,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "msg04",
+    "cond": "Dprime",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Spin up an invite-only channel proj-falcon and post 'Welcome aboard — kickoff Monday.' there at normal priority, link previews as usual.",
+   "drift_tool": "send_message",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "main"
+    },
+    "param": "workspace"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "priority": "normal",
+     "target": "proj-falcon",
+     "text": "Welcome aboard — kickoff Monday."
+    },
+    "v2": {
+     "priority": "normal",
+     "target": "proj-falcon",
+     "text": "Welcome aboard — kickoff Monday.",
+     "workspace": "main"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_channel",
+     "args": {
+      "name": "proj-falcon",
+      "access": "invite_only"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_channel",
+     "content": "{\"channel_id\": \"ch_msg04\"}"
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "target": "proj-falcon",
+      "text": "Welcome aboard — kickoff Monday.",
+      "workspace": "main"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "{\"message_id\": \"msg_msg04\", \"state\": \"delivered\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 38,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "room03",
+    "cond": "D",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Book Delta on Nov 3 2026 at 10:00 UTC for half an hour; label it 'Standup overflow' on the panel. No food.",
+   "drift_tool": "book_meeting_room",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Booking length in hours, decimal string",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Booking length in minutes",
+     "type": "integer"
+    },
+    "param": "duration_min"
+   },
+   "shown": "new (v2) declaration, no change log",
+   "expected": {
+    "v1": {
+     "duration_min": 30,
+     "purpose": "Standup overflow",
+     "room": "Delta",
+     "start": "2026-11-03T10:00:00+00:00"
+    },
+    "v2": {
+     "duration_min": "0.5",
+     "purpose": "Standup overflow",
+     "room": "Delta",
+     "start": "2026-11-03T10:00:00+00:00"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "book_meeting_room",
+     "args": {
+      "duration_min": "0.5",
+      "room": "Delta",
+      "start": "2026-11-03T10:00:00Z",
+      "purpose": "Standup overflow",
+      "catering": false
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "book_meeting_room",
+     "content": "{\"booking_id\": \"bk_room03\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 39,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "msg03",
+    "cond": "C:user:prose:apply",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_SAFE",
+   "request": "Urgent post to #incidents: 'DB failover complete, all green.' Keep the link previews.",
+   "drift_tool": "send_message",
+   "change": {
+    "change": "default_changed",
+    "new": false,
+    "old": true,
+    "param": "unfurl_links"
+   },
+   "shown": "old (v1) declaration; change log in the user message, written as prose; with the 'apply it step by step' line",
+   "expected": {
+    "v1": {
+     "priority": "urgent",
+     "target": "#incidents",
+     "text": "DB failover complete, all green."
+    },
+    "v2": {
+     "priority": "urgent",
+     "target": "#incidents",
+     "text": "DB failover complete, all green.",
+     "unfurl_links": true
+    }
+   },
+   "b_strict_success": true,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "send_message",
+     "args": {
+      "target": "#incidents",
+      "text": "DB failover complete, all green.",
+      "priority": "urgent",
+      "unfurl_links": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "send_message",
+     "content": "{\"message_id\": \"msg_msg03\", \"state\": \"delivered\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 40,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "cart01",
+    "cond": "E",
+    "class": "rename",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Order 2 units of SKU-8842 with express shipping and the gift message 'Happy birthday, Lena!' — email me the receipt as usual.",
+   "drift_tool": "place_order",
+   "change": {
+    "change": "renamed",
+    "new": "gift_note",
+    "old": "gift_message",
+    "param": "gift_message"
+   },
+   "shown": "old (v1) declaration, no change log; a rejected call's error is shown and one retry allowed",
+   "expected": {
+    "v1": {
+     "gift_message": "Happy birthday, Lena!",
+     "quantity": 2,
+     "shipping_speed": "express",
+     "sku": "SKU-8842"
+    },
+    "v2": {
+     "gift_note": "Happy birthday, Lena!",
+     "quantity": 2,
+     "shipping_speed": "express",
+     "sku": "SKU-8842"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "place_order",
+     "args": {
+      "quantity": 2,
+      "sku": "SKU-8842",
+      "shipping_speed": "express",
+      "gift_message": "Happy birthday, Lena!",
+      "send_receipt": true
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "place_order",
+     "content": "Error: Received unknown parameter: 'gift_message'."
+    },
+    {
+     "role": "assistant_tool_call",
+     "name": "place_order",
+     "args": {
+      "quantity": 2,
+      "sku": "SKU-8842",
+      "shipping_speed": "express",
+      "gift_message": "Happy birthday, Lena!",
+      "send_receipt": true
+     },
+     "text": "The order call rejected the `gift_message` parameter, even though it's in the schema. I'll retry the same order once."
+    },
+    {
+     "role": "tool_result",
+     "name": "place_order",
+     "content": "Error: Received unknown parameter: 'gift_message'."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Received unknown parameter: 'gift_message'.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 41,
+   "key": {
+    "model": "anthropic/claude-haiku-5.5",
+    "task": "rem04",
+    "cond": "D",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "NO_DRIFT_CALL",
+   "request": "Add a 30-minute 'Flu shot' event on Oct 20 2026 at 11:00 UTC (attendees notified as normal), and set a one-off push reminder 'Leave for flu shot' at 10:30 that day with 15 minutes lead.",
+   "drift_tool": "create_reminder",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "inbox"
+    },
+    "param": "list_id"
+   },
+   "shown": "new (v2) declaration, no change log",
+   "expected": {
+    "v1": {
+     "channel": "push",
+     "lead_min": 15,
+     "remind_at": "2026-10-20T10:30:00+00:00",
+     "text": "Leave for flu shot"
+    },
+    "v2": {
+     "channel": "push",
+     "lead_min": 15,
+     "list_id": "inbox",
+     "remind_at": "2026-10-20T10:30:00+00:00",
+     "text": "Leave for flu shot"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_event",
+     "args": {
+      "title": "Flu shot",
+      "start": "2026-10-20T11:00:00Z",
+      "duration_min": 30
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_event",
+     "content": "{\"event_id\": \"evt_rem04\", \"status\": \"confirmed\"}"
+    }
+   ],
+   "final_text": "The flu shot event is on your calendar for Oct 20, 2026 at 11:00 UTC for 30 minutes, with attendees notified as normal.\n\nI haven't set the reminder yet because I need two details:\n\n1. **Which reminder list should it go in?** The reminder tool requires a list ID, and I don't have one for you.\n2. **How should the 15-minute lead work?** I can read it two ways:\n   - Set the reminder for 10:30 UTC with a 15-minute lead, so it fires at 10:15 UTC.\n   - Fire at 10:30 UTC with no lead time, and treat the 15 minutes as something else.",
+   "drift_outcome": null,
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 42,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "ds03",
+    "cond": "Dprime",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V2_PARTIAL",
+   "request": "Export billing_ledger to s3://viz-archive/billing with zstd compression, 4096 MB chunks, tag 'finance', header row included.",
+   "drift_tool": "export_dataset",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Chunk size in gigabytes, decimal string (\"0\" = single file)",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Chunk size in megabytes (0 = single file)",
+     "type": "integer"
+    },
+    "param": "chunk_mb"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "chunk_mb": 4096,
+     "compression": "zstd",
+     "dataset": "billing_ledger",
+     "destination": "s3://viz-archive/billing",
+     "tag": "finance"
+    },
+    "v2": {
+     "chunk_mb": "4",
+     "compression": "zstd",
+     "dataset": "billing_ledger",
+     "destination": "s3://viz-archive/billing",
+     "tag": "finance"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "export_dataset",
+     "args": {
+      "dataset": "billing_ledger",
+      "destination": "s3://viz-archive/billing",
+      "compression": "zstd",
+      "chunk_mb": "4.096",
+      "tag": "finance"
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "export_dataset",
+     "content": "{\"export_id\": \"dx_ds03\", \"state\": \"queued\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 43,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "zip02",
+    "cond": "B_fill",
+    "class": "required",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V2_CORRECT",
+   "request": "Tar up /video/raw as raw-footage.tar, split into 2048 MB parts, unencrypted.",
+   "drift_tool": "compress_folder",
+   "change": {
+    "change": "now_required",
+    "new": "required, no default",
+    "old": {
+     "default": "/archives"
+    },
+    "param": "dest_dir"
+   },
+   "shown": "old (v1) declaration, no change log; the system prompt asks to pass every parameter explicitly",
+   "expected": {
+    "v1": {
+     "archive_name": "raw-footage.tar",
+     "folder": "/video/raw",
+     "format": "tar",
+     "split_mb": 2048
+    },
+    "v2": {
+     "archive_name": "raw-footage.tar",
+     "dest_dir": "/archives",
+     "folder": "/video/raw",
+     "format": "tar",
+     "split_mb": 2048
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "compress_folder",
+     "args": {
+      "label": "",
+      "encrypt": false,
+      "dest_dir": "/archives",
+      "folder": "/video/raw",
+      "format": "tar",
+      "archive_name": "raw-footage.tar",
+      "split_mb": 2048
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "compress_folder",
+     "content": "{\"archive_path\": \"/archives/zip02\", \"state\": \"ok\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_CORRECT",
+   "error_seen": null,
+   "success": true,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 44,
+   "key": {
+    "model": "anthropic/claude-sonnet-5.5",
+    "task": "deal02",
+    "cond": "Dprime",
+    "class": "default_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "default"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Set deal dl_8813 to proposal stage at $12,000.00.",
+   "drift_tool": "update_deal",
+   "change": {
+    "change": "default_changed",
+    "new": "unspecified",
+    "old": "",
+    "param": "loss_reason"
+   },
+   "shown": "new (v2) declaration; the parameter's description also states the old contract",
+   "expected": {
+    "v1": {
+     "deal_id": "dl_8813",
+     "stage": "proposal",
+     "value_cents": 1200000
+    },
+    "v2": {
+     "deal_id": "dl_8813",
+     "loss_reason": "",
+     "stage": "proposal",
+     "value_cents": 1200000
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "update_deal",
+     "args": {
+      "deal_id": "dl_8813",
+      "stage": "proposal",
+      "value_cents": 1200000
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "update_deal",
+     "content": "{\"deal_id\": \"deal02\", \"state\": \"updated\"}"
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ACCEPTED_WRONG",
+   "error_seen": null,
+   "success": false,
+   "human_label": null,
+   "note": ""
+  },
+  {
+   "id": 45,
+   "key": {
+    "model": "gemini-3.6-flash",
+    "task": "inv01",
+    "cond": "B_fill",
+    "class": "type_change",
+    "phrasing": 0,
+    "rep": 0,
+    "reasoning": "MINIMAL"
+   },
+   "auto_label": "V1_FORM",
+   "request": "Bill Globex (ap@globex.test) $2,500.00 on net-30 terms; the invoice should carry the note 'Milestone 2'.",
+   "drift_tool": "create_invoice",
+   "change": {
+    "change": "type_changed",
+    "new": {
+     "desc": "Invoice total as decimal string in major units",
+     "type": "string"
+    },
+    "old": {
+     "desc": "Invoice total in cents",
+     "type": "integer"
+    },
+    "param": "amount_cents"
+   },
+   "shown": "old (v1) declaration, no change log; the system prompt asks to pass every parameter explicitly",
+   "expected": {
+    "v1": {
+     "amount_cents": 250000,
+     "customer": "ap@globex.test",
+     "notes": "Milestone 2",
+     "terms": "net30"
+    },
+    "v2": {
+     "amount_cents": "2500.00",
+     "customer": "ap@globex.test",
+     "notes": "Milestone 2",
+     "terms": "net30"
+    }
+   },
+   "b_strict_success": false,
+   "b_strict_source": "B_strict in this run",
+   "transcript": [
+    {
+     "role": "assistant_tool_call",
+     "name": "create_invoice",
+     "args": {
+      "notes": "Milestone 2",
+      "currency": "USD",
+      "template_id": "standard",
+      "terms": "net30",
+      "customer": "ap@globex.test",
+      "amount_cents": 250000
+     }
+    },
+    {
+     "role": "tool_result",
+     "name": "create_invoice",
+     "content": "Error: Invalid type for parameter 'amount_cents': expected string, got int."
+    }
+   ],
+   "final_text": null,
+   "drift_outcome": "ERROR_SURFACED",
+   "error_seen": "Invalid type for parameter 'amount_cents': expected string, got int.",
+   "success": false,
+   "human_label": null,
+   "note": ""
+  }
+ ]
+}
