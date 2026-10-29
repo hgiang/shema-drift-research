@@ -370,6 +370,22 @@ are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
   Haiku $0.6, Llama $0.2, Flash fill $0.25; total $9.2, cumulative about $21 of $50.
   Claude thinks by default and Llama on Novita sends numbers as strings: see Phase 2
   amendment 2. Logged spend $11.95.
+- 2026-10-28/29 Full runs (Task 7): four streams in parallel, arms one after another,
+  every arm gated (Flash with `--reasoning MINIMAL`). All arms PASS with 100% coverage and
+  one provider per file (Anthropic, Novita@bf16, Google); truncation at most 1.7% per cell
+  (Haiku), 0.8% (Sonnet, Llama). Episodes and spend: Sonnet 1,440, $7.01; Haiku 1,440,
+  $0.39; Llama 1,440, $0.17; Flash fill 360, $0.23. The luna `direct` arm did not run (no
+  lift in the probe). Interruptions, each resumed with the same command (resume-safe, no
+  partial records): Novita rate-limited Llama (HTTP 429) three times; Sonnet (685/720 core)
+  and Haiku (infoform 58/240) stopped within 20 s of each other on HTTP 502 "forbidden:
+  Request not allowed" from Anthropic via OpenRouter and ran on without further errors.
+  **Deviation from "records are never edited by hand" (user's decision, 2026-10-29).** One
+  Llama core record (zip03 / B_strict / type_change, rep 0) failed the gate: Novita returned
+  `finish_reason` null on a call whose arguments parsed to `{}` (the raw response is not
+  kept). The record was moved verbatim to `results/phase2/removed_records.jsonl` and the job
+  re-run: `finish_reason` tool_calls, full arguments (numbers and booleans as strings, as in
+  Llama's other calls), ERROR_SURFACED, the same outcome as the removed record. All five
+  Llama arms then PASS. Logged spend $19.69.
 
 ## Phase 2 pre-registration — LOCKED 2026-10-20
 
