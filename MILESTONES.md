@@ -392,6 +392,13 @@ are rebuilt in Phase 4. Phase-1 spend: logged total $11.76 of the $25 hard stop.
   --phase 2`, seed 20261020) from the 3,120 records the mechanism block labels (rep 0,
   phrasing 0, drifted conditions; B_strict is the same model's Phase-2 record): 45 items,
   2 per stratum in 23 strata (Sonnet OTHER_ERROR has 1 record). Committed before labelling.
+- 2026-10-29 Label audit (Task 9, D3): blind Codex pass with `codex exec` (codex-cli 0.165.0,
+  model gpt-6-sol, reasoning effort high, sandbox read-only, run in an empty directory with
+  the reading copy on stdin; no shell commands run, 73k tokens). Prompt and raw answers are
+  in `results/phase2/audit_codex_prompt.txt` and `audit_codex_output.txt`. The copy Codex
+  read carried no automatic labels (checked on the committed file). Agreement 45/45 = 1.0
+  (threshold 0.9): `drift_labels.classify` is kept, and there are no disagreements for the
+  user to read. No item was marked unsure.
 
 ## Phase 2 pre-registration — LOCKED 2026-10-20
 

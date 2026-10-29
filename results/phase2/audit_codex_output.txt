@@ -1,0 +1,45 @@
+Item 1: V1_SAFE | Included currency, but the same pair succeeded without the change log.
+Item 2: NO_DRIFT_CALL | Copy failed before set_permissions was called.
+Item 3: OTHER_WRONG | Retry omitted the subtitle under both names.
+Item 4: V2_CORRECT | Supplied the newly required funding_source.
+Item 5: OTHER_ERROR | refresh_min had the wrong type.
+Item 6: NO_DRIFT_CALL | No refund call was made.
+Item 7: V2_CORRECT | Retry supplied calendar_id as primary.
+Item 8: V2_PARTIAL | Used a string, but converted 4096 MB to the wrong value.
+Item 9: NO_DRIFT_CALL | No tracking call was made.
+Item 10: OTHER_ERROR | Copy call was rejected for missing dst.
+Item 11: V1_SAFE | Explicit confirmation also succeeded without the change log.
+Item 12: V2_CORRECT | Used personal_day.
+Item 13: V2_PARTIAL | Retry sent quotation marks inside the rating string.
+Item 14: V2_PARTIAL | Retry sent quotation marks inside the score string.
+Item 15: V1_FORM | Used the old campaign parameter.
+Item 16: NO_DRIFT_CALL | No booking call was made.
+Item 17: OTHER_ERROR | check_interval_min had the wrong type.
+Item 18: NO_DRIFT_CALL | Web search failed before monitoring was called.
+Item 19: V2_CORRECT | Sent quantity as the correct string.
+Item 20: V1_SAFE | Explicit recursive setting also succeeded without the change log.
+Item 21: OTHER_ERROR | Copy call was rejected for missing dst.
+Item 22: V1_SAFE | Explicit recursive setting also succeeded without the change log.
+Item 23: OTHER_ERROR | Update call was rejected for missing deal_id.
+Item 24: V1_SAFE | Explicit catering setting also succeeded without the change log.
+Item 25: V1_SAFE | Explicit link previews also succeeded without the change log.
+Item 26: V1_FORM | Used the old subtitle parameter.
+Item 27: V1_FORM | Omitted the newly required workspace.
+Item 28: V2_PARTIAL | Supplied unfurl_links as a string, not a boolean.
+Item 29: OTHER_WRONG | Retry omitted the venue under both names.
+Item 30: V1_FORM | Used the old seat_pref parameter.
+Item 31: V1_FORM | Accepted retry omitted email_confirmation.
+Item 32: OTHER_WRONG | Used campaign_tag, but another argument made the accepted call wrong.
+Item 33: V1_SAFE | Explicit confirmation also succeeded without the change log.
+Item 34: OTHER_WRONG | Salary conversion was correct, but location differed.
+Item 35: V2_CORRECT | Converted 240 minutes to the string "4".
+Item 36: V2_PARTIAL | Supplied repeat_daily as a string, not a boolean.
+Item 37: V2_CORRECT | Supplied workspace as main.
+Item 38: V2_CORRECT | Converted half an hour to the string "0.5".
+Item 39: V1_SAFE | Explicit link previews also succeeded without the change log.
+Item 40: V1_FORM | Repeated the old gift_message parameter.
+Item 41: NO_DRIFT_CALL | No reminder call was made.
+Item 42: V2_PARTIAL | Used a string, but converted 4096 MB to the wrong value.
+Item 43: V2_CORRECT | Supplied the newly required dest_dir.
+Item 44: V1_FORM | Omitted loss_reason despite its changed default.
+Item 45: V1_FORM | Sent amount_cents as the old integer type.

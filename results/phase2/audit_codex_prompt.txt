@@ -1,0 +1,11 @@
+You are labelling tool calls for a research audit. The text on stdin is a reading copy: a guide
+with a label table, followed by numbered items. For each item, give the label you would assign
+to the model's call at the drifted step, judging only from the guide and the item's text (the
+arguments the model actually sent, under "What the model did"). Do not run commands, open files
+or use the internet.
+
+Answer with exactly one line per item, in item order, in this format and nothing else:
+Item <id>: <LABEL> | <note of at most 15 words>
+
+<LABEL> is one of: V2_CORRECT, V2_PARTIAL, V1_FORM, V1_SAFE, OTHER_ERROR, OTHER_WRONG, NO_DRIFT_CALL.
+If you are unsure, still pick the closest label and start the note with "unsure:".

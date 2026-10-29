@@ -90,8 +90,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "Included currency, but the same pair succeeded without the change log."
   },
   {
    "id": 2,
@@ -152,8 +152,8 @@
    "drift_outcome": null,
    "error_seen": "Invalid type for parameter 'preserve_meta': expected boolean, got str.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "NO_DRIFT_CALL",
+   "note": "Copy failed before set_permissions was called."
   },
   {
    "id": 3,
@@ -233,8 +233,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": "Received unknown parameter: 'subtitle'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "Retry omitted the subtitle under both names."
   },
   {
    "id": 4,
@@ -314,8 +314,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "Supplied the newly required funding_source."
   },
   {
    "id": 5,
@@ -377,8 +377,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid type for parameter 'refresh_min': expected integer, got str.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_ERROR",
+   "note": "refresh_min had the wrong type."
   },
   {
    "id": 6,
@@ -425,8 +425,8 @@
    "drift_outcome": null,
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "NO_DRIFT_CALL",
+   "note": "No refund call was made."
   },
   {
    "id": 7,
@@ -507,8 +507,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": "Missing required parameter: 'calendar_id'.",
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "Retry supplied calendar_id as primary."
   },
   {
    "id": 8,
@@ -577,8 +577,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "Used a string, but converted 4096 MB to the wrong value."
   },
   {
    "id": 9,
@@ -637,8 +637,8 @@
    "drift_outcome": null,
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "NO_DRIFT_CALL",
+   "note": "No tracking call was made."
   },
   {
    "id": 10,
@@ -704,8 +704,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Missing required parameter: 'dst'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_ERROR",
+   "note": "Copy call was rejected for missing dst."
   },
   {
    "id": 11,
@@ -770,8 +770,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "Explicit confirmation also succeeded without the change log."
   },
   {
    "id": 12,
@@ -831,8 +831,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "Used personal_day."
   },
   {
    "id": 13,
@@ -928,8 +928,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": "Invalid type for parameter 'rating': expected string, got int.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "Retry sent quotation marks inside the rating string."
   },
   {
    "id": 14,
@@ -1027,8 +1027,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": "Invalid type for parameter 'score': expected string, got int.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "Retry sent quotation marks inside the score string."
   },
   {
    "id": 15,
@@ -1089,8 +1089,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Received unknown parameter: 'campaign'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "Used the old campaign parameter."
   },
   {
    "id": 16,
@@ -1139,8 +1139,8 @@
    "drift_outcome": null,
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "NO_DRIFT_CALL",
+   "note": "No booking call was made."
   },
   {
    "id": 17,
@@ -1198,8 +1198,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid type for parameter 'check_interval_min': expected integer, got str.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_ERROR",
+   "note": "check_interval_min had the wrong type."
   },
   {
    "id": 18,
@@ -1270,8 +1270,8 @@
    "drift_outcome": null,
    "error_seen": "Invalid type for parameter 'max_results': expected integer, got str.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "NO_DRIFT_CALL",
+   "note": "Web search failed before monitoring was called."
   },
   {
    "id": 19,
@@ -1346,8 +1346,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "Sent quantity as the correct string."
   },
   {
    "id": 20,
@@ -1410,8 +1410,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "Explicit recursive setting also succeeded without the change log."
   },
   {
    "id": 21,
@@ -1477,8 +1477,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Missing required parameter: 'dst'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_ERROR",
+   "note": "Copy call was rejected for missing dst."
   },
   {
    "id": 22,
@@ -1540,8 +1540,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "Explicit recursive setting also succeeded without the change log."
   },
   {
    "id": 23,
@@ -1597,8 +1597,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Missing required parameter: 'deal_id'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_ERROR",
+   "note": "Update call was rejected for missing deal_id."
   },
   {
    "id": 24,
@@ -1660,8 +1660,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "Explicit catering setting also succeeded without the change log."
   },
   {
    "id": 25,
@@ -1723,8 +1723,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "Explicit link previews also succeeded without the change log."
   },
   {
    "id": 26,
@@ -1787,8 +1787,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Received unknown parameter: 'subtitle'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "Used the old subtitle parameter."
   },
   {
    "id": 27,
@@ -1862,8 +1862,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Missing required parameter: 'workspace'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "Omitted the newly required workspace."
   },
   {
    "id": 28,
@@ -1922,8 +1922,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid type for parameter 'unfurl_links': expected boolean, got str.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "Supplied unfurl_links as a string, not a boolean."
   },
   {
    "id": 29,
@@ -1999,8 +1999,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": "Received unknown parameter: 'location'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "Retry omitted the venue under both names."
   },
   {
    "id": 30,
@@ -2064,8 +2064,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Received unknown parameter: 'seat_pref'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "Used the old seat_pref parameter."
   },
   {
    "id": 31,
@@ -2144,8 +2144,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": "Invalid type for parameter 'nights': expected integer, got str.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "Accepted retry omitted email_confirmation."
   },
   {
    "id": 32,
@@ -2219,8 +2219,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "Used campaign_tag, but another argument made the accepted call wrong."
   },
   {
    "id": 33,
@@ -2285,8 +2285,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "Explicit confirmation also succeeded without the change log."
   },
   {
    "id": 34,
@@ -2356,8 +2356,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "OTHER_WRONG",
+   "note": "Salary conversion was correct, but location differed."
   },
   {
    "id": 35,
@@ -2441,8 +2441,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "Converted 240 minutes to the string \"4\"."
   },
   {
    "id": 36,
@@ -2500,8 +2500,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid type for parameter 'repeat_daily': expected boolean, got str.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "Supplied repeat_daily as a string, not a boolean."
   },
   {
    "id": 37,
@@ -2574,8 +2574,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "Supplied workspace as main."
   },
   {
    "id": 38,
@@ -2642,8 +2642,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "Converted half an hour to the string \"0.5\"."
   },
   {
    "id": 39,
@@ -2702,8 +2702,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_SAFE",
+   "note": "Explicit link previews also succeeded without the change log."
   },
   {
    "id": 40,
@@ -2781,8 +2781,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Received unknown parameter: 'gift_message'.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "Repeated the old gift_message parameter."
   },
   {
    "id": 41,
@@ -2844,8 +2844,8 @@
    "drift_outcome": null,
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "NO_DRIFT_CALL",
+   "note": "No reminder call was made."
   },
   {
    "id": 42,
@@ -2914,8 +2914,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_PARTIAL",
+   "note": "Used a string, but converted 4096 MB to the wrong value."
   },
   {
    "id": 43,
@@ -2981,8 +2981,8 @@
    "drift_outcome": "ACCEPTED_CORRECT",
    "error_seen": null,
    "success": true,
-   "human_label": null,
-   "note": ""
+   "human_label": "V2_CORRECT",
+   "note": "Supplied the newly required dest_dir."
   },
   {
    "id": 44,
@@ -3040,8 +3040,8 @@
    "drift_outcome": "ACCEPTED_WRONG",
    "error_seen": null,
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "Omitted loss_reason despite its changed default."
   },
   {
    "id": 45,
@@ -3109,8 +3109,8 @@
    "drift_outcome": "ERROR_SURFACED",
    "error_seen": "Invalid type for parameter 'amount_cents': expected string, got int.",
    "success": false,
-   "human_label": null,
-   "note": ""
+   "human_label": "V1_FORM",
+   "note": "Sent amount_cents as the old integer type."
   }
  ]
 }

@@ -39,8 +39,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: Included currency, but the same pair succeeded without the change log.
 
 ## Item 2
 
@@ -61,8 +61,8 @@ Final text: (none)
 
 Executor at the drift step: `None`, error: Invalid type for parameter 'preserve_meta': expected boolean, got str.; episode failed.
 
-human_label: 
-note: 
+human_label: NO_DRIFT_CALL
+note: Copy failed before set_permissions was called.
 
 ## Item 3
 
@@ -85,8 +85,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`, error: Received unknown parameter: 'subtitle'.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: Retry omitted the subtitle under both names.
 
 ## Item 4
 
@@ -109,8 +109,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: Supplied the newly required funding_source.
 
 ## Item 5
 
@@ -131,8 +131,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid type for parameter 'refresh_min': expected integer, got str.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_ERROR
+note: refresh_min had the wrong type.
 
 ## Item 6
 
@@ -152,8 +152,8 @@ Final text: I can't process this yet because the refund needs a ledger to book a
 
 Executor at the drift step: `None`; episode failed.
 
-human_label: 
-note: 
+human_label: NO_DRIFT_CALL
+note: No refund call was made.
 
 ## Item 7
 
@@ -176,8 +176,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`, error: Missing required parameter: 'calendar_id'.; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: Retry supplied calendar_id as primary.
 
 ## Item 8
 
@@ -198,8 +198,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: Used a string, but converted 4096 MB to the wrong value.
 
 ## Item 9
 
@@ -220,8 +220,8 @@ Final text: I placed the order for one SKU-6605. The order ID is ord_ship04, and
 
 Executor at the drift step: `None`; episode failed.
 
-human_label: 
-note: 
+human_label: NO_DRIFT_CALL
+note: No tracking call was made.
 
 ## Item 10
 
@@ -244,8 +244,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Missing required parameter: 'dst'.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_ERROR
+note: Copy call was rejected for missing dst.
 
 ## Item 11
 
@@ -266,8 +266,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: Explicit confirmation also succeeded without the change log.
 
 ## Item 12
 
@@ -288,8 +288,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: Used personal_day.
 
 ## Item 13
 
@@ -314,8 +314,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`, error: Invalid type for parameter 'rating': expected string, got int.; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: Retry sent quotation marks inside the rating string.
 
 ## Item 14
 
@@ -340,8 +340,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`, error: Invalid type for parameter 'score': expected string, got int.; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: Retry sent quotation marks inside the score string.
 
 ## Item 15
 
@@ -362,8 +362,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Received unknown parameter: 'campaign'.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: Used the old campaign parameter.
 
 ## Item 16
 
@@ -383,8 +383,8 @@ Final text: Which building is Echo in? The booking tool now requires a building 
 
 Executor at the drift step: `None`; episode failed.
 
-human_label: 
-note: 
+human_label: NO_DRIFT_CALL
+note: No booking call was made.
 
 ## Item 17
 
@@ -405,8 +405,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid type for parameter 'check_interval_min': expected integer, got str.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_ERROR
+note: check_interval_min had the wrong type.
 
 ## Item 18
 
@@ -429,8 +429,8 @@ Final text: (none)
 
 Executor at the drift step: `None`, error: Invalid type for parameter 'max_results': expected integer, got str.; episode failed.
 
-human_label: 
-note: 
+human_label: NO_DRIFT_CALL
+note: Web search failed before monitoring was called.
 
 ## Item 19
 
@@ -453,8 +453,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: Sent quantity as the correct string.
 
 ## Item 20
 
@@ -475,8 +475,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: Explicit recursive setting also succeeded without the change log.
 
 ## Item 21
 
@@ -499,8 +499,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Missing required parameter: 'dst'.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_ERROR
+note: Copy call was rejected for missing dst.
 
 ## Item 22
 
@@ -521,8 +521,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: Explicit recursive setting also succeeded without the change log.
 
 ## Item 23
 
@@ -543,8 +543,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Missing required parameter: 'deal_id'.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_ERROR
+note: Update call was rejected for missing deal_id.
 
 ## Item 24
 
@@ -565,8 +565,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: Explicit catering setting also succeeded without the change log.
 
 ## Item 25
 
@@ -587,8 +587,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: Explicit link previews also succeeded without the change log.
 
 ## Item 26
 
@@ -609,8 +609,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Received unknown parameter: 'subtitle'.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: Used the old subtitle parameter.
 
 ## Item 27
 
@@ -633,8 +633,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Missing required parameter: 'workspace'.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: Omitted the newly required workspace.
 
 ## Item 28
 
@@ -655,8 +655,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid type for parameter 'unfurl_links': expected boolean, got str.; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: Supplied unfurl_links as a string, not a boolean.
 
 ## Item 29
 
@@ -679,8 +679,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`, error: Received unknown parameter: 'location'.; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: Retry omitted the venue under both names.
 
 ## Item 30
 
@@ -701,8 +701,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Received unknown parameter: 'seat_pref'.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: Used the old seat_pref parameter.
 
 ## Item 31
 
@@ -725,8 +725,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`, error: Invalid type for parameter 'nights': expected integer, got str.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: Accepted retry omitted email_confirmation.
 
 ## Item 32
 
@@ -749,8 +749,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: Used campaign_tag, but another argument made the accepted call wrong.
 
 ## Item 33
 
@@ -771,8 +771,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: Explicit confirmation also succeeded without the change log.
 
 ## Item 34
 
@@ -793,8 +793,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: OTHER_WRONG
+note: Salary conversion was correct, but location differed.
 
 ## Item 35
 
@@ -817,8 +817,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: Converted 240 minutes to the string "4".
 
 ## Item 36
 
@@ -839,8 +839,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid type for parameter 'repeat_daily': expected boolean, got str.; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: Supplied repeat_daily as a string, not a boolean.
 
 ## Item 37
 
@@ -863,8 +863,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: Supplied workspace as main.
 
 ## Item 38
 
@@ -885,8 +885,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: Converted half an hour to the string "0.5".
 
 ## Item 39
 
@@ -907,8 +907,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V1_SAFE
+note: Explicit link previews also succeeded without the change log.
 
 ## Item 40
 
@@ -931,8 +931,8 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Received unknown parameter: 'gift_message'.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: Repeated the old gift_message parameter.
 
 ## Item 41
 
@@ -953,8 +953,8 @@ Final text: The flu shot event is on your calendar for Oct 20, 2026 at 11:00 UTC
 
 Executor at the drift step: `None`; episode failed.
 
-human_label: 
-note: 
+human_label: NO_DRIFT_CALL
+note: No reminder call was made.
 
 ## Item 42
 
@@ -975,8 +975,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V2_PARTIAL
+note: Used a string, but converted 4096 MB to the wrong value.
 
 ## Item 43
 
@@ -997,8 +997,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_CORRECT`; episode succeeded.
 
-human_label: 
-note: 
+human_label: V2_CORRECT
+note: Supplied the newly required dest_dir.
 
 ## Item 44
 
@@ -1019,8 +1019,8 @@ Final text: (none)
 
 Executor at the drift step: `ACCEPTED_WRONG`; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: Omitted loss_reason despite its changed default.
 
 ## Item 45
 
@@ -1041,5 +1041,5 @@ Final text: (none)
 
 Executor at the drift step: `ERROR_SURFACED`, error: Invalid type for parameter 'amount_cents': expected string, got int.; episode failed.
 
-human_label: 
-note: 
+human_label: V1_FORM
+note: Sent amount_cents as the old integer type.
