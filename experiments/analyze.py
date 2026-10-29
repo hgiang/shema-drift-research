@@ -21,9 +21,11 @@ import harness  # noqa: E402
 
 RNG = np.random.default_rng(20260909)
 RNG_P1 = np.random.default_rng(20261019)  # Phase 1 draws never touch the September stream
+RNG_P2 = np.random.default_rng(20261020)  # Phase 2 likewise (MILESTONES.md "Phase 2 pre-registration")
 N_BOOT, N_PERM = 10_000, 20_000
 PHASE1 = RESULTS / "phase1"
-P1_PREFIX = "p1:"
+PHASE2 = RESULTS / "phase2"
+P1_PREFIX, P2_PREFIX = "p1:", "p2:"
 CLASSES = ["rename", "enum_tighten", "required", "type_change", "default_change"]
 CONDS = ["A", "B_strict", "B_lenient", "C", "D", "E"]
 LEVERS = ["C", "D", "E"]
@@ -69,7 +71,7 @@ def paired_stats(diffs, label, rng=RNG):
             "p_signflip": p, "dz": float(diffs.mean() / sd) if sd > 0 else None}
 
 
-def interaction_p(pairs_by_class, cond_diffs):
+def interaction_p(pairs_by_class, cond_diffs, rng=RNG):
     """Permutation test: does the lever effect differ across drift classes?
     Statistic: between-class variance of mean paired diffs, class labels
     permuted across pairs."""
@@ -86,13 +88,19 @@ def interaction_p(pairs_by_class, cond_diffs):
     obs = stat(labels)
     cnt = 0
     for _ in range(2000):  # 2k label permutations is plenty for var-statistic
-        perm = RNG.permutation(labels)
+        perm = rng.permutation(labels)
         if stat(perm) >= obs - 1e-12:
             cnt += 1
     return float(cnt / 2000)
 
 
-def analyze_model(runs, model):
+SEPT_CTX = SimpleNamespace(rng=RNG, prefix="", paired=lambda d, label: paired_stats(d, label, RNG),
+                           register=lambda label, p: ALL_P.append((label, p)))
+
+
+def analyze_model(runs, model, ctx=SEPT_CTX):
+    """September blocks for one model; `ctx` (rng, prefix, paired, register) defaults to the
+    September stream, and Phase 2 passes its own (RNG_P2, labels prefixed "p2:")."""
     mruns = [r for r in runs if r["model"] == model and r.get("rep", 0) == 0 and r["phrasing"] == 0]
     # success lookup: cond -> {(task, class): 0/1}; A is class-independent
     succ = {c: {} for c in CONDS}
@@ -122,12 +130,12 @@ def analyze_model(runs, model):
 
     # drop A -> B_strict, paired per pair (A per task)
     drop = [succ["A"].get(t, 0) - succ["B_strict"][(t, c)] for (t, c) in pairs if t in succ["A"]]
-    out["drop"]["overall"] = paired_stats(drop, f"{model}:drop:overall")
+    out["drop"]["overall"] = ctx.paired(drop, f"{ctx.prefix}{model}:drop:overall")
     for cls in CLASSES:
         d = [succ["A"].get(t, 0) - succ["B_strict"][(t, c)]
              for (t, c) in pairs if c == cls and t in succ["A"]]
         if d:
-            out["drop"][cls] = paired_stats(d, f"{model}:drop:{cls}")
+            out["drop"][cls] = ctx.paired(d, f"{ctx.prefix}{model}:drop:{cls}")
 
     # levers vs B_strict + recovery fractions
     for lever in LEVERS:
@@ -138,8 +146,8 @@ def analyze_model(runs, model):
             d = [succ[lever][p] - succ["B_strict"][p] for p in sel]
             if not d:
                 continue
-            key = f"{model}:{lever}-B:{cls}"
-            lv["vs_B"][cls] = paired_stats(d, key)
+            key = f"{ctx.prefix}{model}:{lever}-B:{cls}"
+            lv["vs_B"][cls] = ctx.paired(d, key)
             if cls != "overall":
                 cond_diffs[cls] = d
             # recovery fraction with bootstrap CI over pairs
@@ -148,7 +156,7 @@ def analyze_model(runs, model):
             x = np.array([succ[lever][p] for p in sel], dtype=float)
             denom = (a - b).mean()
             if denom > 0:
-                idx = RNG.integers(0, len(sel), size=(N_BOOT, len(sel)))
+                idx = ctx.rng.integers(0, len(sel), size=(N_BOOT, len(sel)))
                 num_bs = (x[idx] - b[idx]).mean(axis=1)
                 den_bs = (a[idx] - b[idx]).mean(axis=1)
                 ok = den_bs > 0
@@ -158,8 +166,8 @@ def analyze_model(runs, model):
                     "ci95": [float(np.percentile(rf, 2.5)), float(np.percentile(rf, 97.5))]}
         out["levers"][lever] = lv
         if cond_diffs:
-            p = interaction_p(pairs, cond_diffs)
-            ALL_P.append((f"{model}:interaction:{lever}", p))
+            p = interaction_p(pairs, cond_diffs, ctx.rng)
+            ctx.register(f"{ctx.prefix}{model}:interaction:{lever}", p)
             out["interaction"][lever] = p
 
     # outcome ledger per class x profile
@@ -227,7 +235,7 @@ def analyze_noise(runs, model):
             "outcome_flip_rate": float(np.mean([s["outcome_flips"] for s in stab]))}
 
 
-def analyze_phrasing(runs, model):
+def analyze_phrasing(runs, model, ctx=SEPT_CTX):
     by = {}
     for r in runs:
         if r["model"] == model and r.get("rep", 0) == 0 and r["cond"] in ("A", "B_strict"):
@@ -239,7 +247,7 @@ def analyze_phrasing(runs, model):
             if c == cond and ph == 1 and (cond, t, cls, 0) in by:
                 d.append(v - by[(cond, t, cls, 0)])
         if d:
-            res[cond] = paired_stats(d, f"{model}:phrasing:{cond}")
+            res[cond] = ctx.paired(d, f"{ctx.prefix}{model}:phrasing:{cond}")
     return res or None
 
 
@@ -297,12 +305,71 @@ def phase1_ctx():
                            register=lambda label, p: ALL_P.append((label, p)))
 
 
+def phase2_ctx():
+    ctx = SimpleNamespace(rng=RNG_P2, prefix=P2_PREFIX, boot=lambda d: boot_ci(d, RNG_P2),
+                          paired=lambda d, label: paired_stats(d, label, RNG_P2),
+                          register=lambda label, p: ALL_P.append((label, p)), arg_style=analyze_arg_style)
+    ctx.september = lambda recs, model: analyze_model(recs, model, ctx)
+    ctx.phrasing = lambda recs, model: analyze_phrasing(recs, model, ctx)
+    return ctx
+
+
+def _refuse_partial(args, name, family, status):
+    if (not family["complete"] and args.out.resolve() == (RESULTS / "analysis.json").resolve()
+            and not args.allow_partial):
+        raise SystemExit(f"{name} family has {family['n_tests']} of {family['expected']} tests "
+                         f"(incomplete: {sorted(status)}); not overwriting results/analysis.json. "
+                         "Use --out <file> for an interim look, or --allow-partial.")
+
+
+def _bh_changes(before, after):
+    """Earlier tests whose BH verdict moves when the Phase-2 tests join the family."""
+    old = set(before["survivors"])
+    new = {lab for lab in after["survivors"] if not lab.startswith(P2_PREFIX)}
+    return {"lost": sorted(old - new), "gained": sorted(new - old)}
+
+
+def _families(args, out, phase1, phase2):
+    """One BH family over everything; Phase 1 keeps the verdicts of its own 194-test family."""
+    import analyze_phase1 as ap1
+    import analyze_phase2 as ap2
+    out["bh"] = bh()
+    before = bh(tests=[t for t in ALL_P if not t[0].startswith(P2_PREFIX)])
+    if phase1:
+        out["bh_original_family"] = bh(tests=[t for t in ALL_P if not t[0].startswith((P1_PREFIX, P2_PREFIX))])
+        phase1["predictions"] = ap1.predictions(phase1, set(before["survivors"]))
+        phase1["family"] = {"n_tests": before["n_tests"], "expected": ap1.EXPECTED_TESTS,
+                            "complete": before["n_tests"] == ap1.EXPECTED_TESTS}
+        _refuse_partial(args, "Phase-1", phase1["family"], phase1["status"])
+    if phase2:
+        phase2["predictions"] = ap2.predictions(phase2, set(out["bh"]["survivors"]))
+        phase2["family"] = {"n_tests": out["bh"]["n_tests"], "expected": ap2.EXPECTED_TESTS,
+                            "complete": out["bh"]["n_tests"] == ap2.EXPECTED_TESTS}
+        phase2["bh_changes"] = _bh_changes(before, out["bh"])
+        _refuse_partial(args, "Phase-2", phase2["family"], phase2["status"])
+
+
+def _print_summary(out, models):
+    print(f"analysis.json written: {out['n_records']} records, {len(models)} models, "
+          f"{out['bh']['n_tests']} tests, {out['bh']['n_survive']} survive BH")
+    for m in models:
+        sm = out["models"][m]
+        print(f"\n== {m} ==  pairs={sm['n_pairs']}")
+        print("  success:", {k: (round(v, 3) if v is not None else None)
+                             for k, v in sm["success_rate"].items()})
+        for lever in LEVERS:
+            rf = sm["levers"][lever].get("recovery_fraction", {}).get("overall")
+            if rf:
+                print(f"  recovery {lever}: {rf['point']:.2f} CI {rf['ci95']}")
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", type=pathlib.Path, default=RESULTS / "analysis.json")
     ap.add_argument("--phase1-dir", type=pathlib.Path, default=PHASE1)
+    ap.add_argument("--phase2-dir", type=pathlib.Path, default=PHASE2)
     ap.add_argument("--allow-partial", action="store_true",
-                    help="write results/analysis.json even if the Phase-1 BH family is incomplete")
+                    help="write results/analysis.json even if a phase's BH family is incomplete")
     args = ap.parse_args(argv)
     runs = load_runs()
     models = sorted({r["model"] for r in runs})
@@ -318,34 +385,19 @@ def main(argv=None):
             out["models"][m]["phrasing_battery"] = ph
     out["token_costs"] = token_costs()
     import analyze_phase1 as ap1  # after the September blocks: they keep their RNG draws
+    import analyze_phase2 as ap2
+    sept_noise = {m: out["models"][m].get("noise_floor") for m in models}
     p1runs = ap1.load_phase1_runs(args.phase1_dir) if args.phase1_dir.exists() else []
-    phase1 = ap1.analyze(runs, p1runs, phase1_ctx(), {m: out["models"][m].get("noise_floor") for m in models},
-                         args.phase1_dir)
+    phase1 = ap1.analyze(runs, p1runs, phase1_ctx(), sept_noise, args.phase1_dir)
     if phase1:
         out["phase1"] = phase1
-    out["bh"] = bh()
-    if phase1:
-        out["bh_original_family"] = bh(tests=[t for t in ALL_P if not t[0].startswith(P1_PREFIX)])
-        phase1["predictions"] = ap1.predictions(phase1, set(out["bh"]["survivors"]))
-        phase1["family"] = {"n_tests": out["bh"]["n_tests"], "expected": ap1.EXPECTED_TESTS,
-                            "complete": out["bh"]["n_tests"] == ap1.EXPECTED_TESTS}
-        if (not phase1["family"]["complete"] and args.out.resolve() == (RESULTS / "analysis.json").resolve()
-                and not args.allow_partial):
-            raise SystemExit(f"Phase-1 family has {out['bh']['n_tests']} of {ap1.EXPECTED_TESTS} tests "
-                             f"(incomplete: {sorted(phase1['status'])}); not overwriting results/analysis.json. "
-                             "Use --out <file> for an interim look, or --allow-partial.")
+    p2runs = ap2.load_phase2_runs(args.phase2_dir) if args.phase2_dir.exists() else []
+    phase2 = ap2.analyze(p2runs, phase2_ctx(), sept_noise, args.phase2_dir)
+    if phase2:
+        out["phase2"] = phase2
+    _families(args, out, phase1, phase2)
     args.out.write_text(json.dumps(out, indent=1))
-    print(f"analysis.json written: {len(runs)} records, {len(models)} models, "
-          f"{out['bh']['n_tests']} tests, {out['bh']['n_survive']} survive BH")
-    for m in models:
-        sm = out["models"][m]
-        print(f"\n== {m} ==  pairs={sm['n_pairs']}")
-        print("  success:", {k: (round(v, 3) if v is not None else None)
-                             for k, v in sm["success_rate"].items()})
-        for lever in LEVERS:
-            rf = sm["levers"][lever].get("recovery_fraction", {}).get("overall")
-            if rf:
-                print(f"  recovery {lever}: {rf['point']:.2f} CI {rf['ci95']}")
+    _print_summary(out, models)
 
 
 if __name__ == "__main__":
