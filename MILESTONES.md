@@ -655,6 +655,24 @@ site and film still show the September analysis; they are rebuilt in Phase 4.
   be low; if a source does not reach 60 units the fetcher is re-run with a larger
   `--max-entries` and the new draw continues the same locked order. Spend unchanged at $19.69.
 
+- 2026-10-30 Coder pilot (Task 3, $0, `phase3/code_changes.py --cap 10`, output kept out of
+  `results/`). **The rule-based coder does not work on real changelog prose, and the pilot is
+  reported before any prevalence number is quoted.** It produced 57 units, **all 57 labelled
+  `other`**: not one span matched any of the five SchemaDrift classes. Precision is worse than
+  the labels suggest. The identifier rule treats every backticked token as a parameter, so the
+  units include Stripe error codes (`invalid_signator`), Slack CLI commands (`deploy`,
+  `install`), GitHub plan names (`Free`, `Teams`), a lockfile name (`package-lock.json`), a
+  severity value (`critical`) and string literals out of TypeScript diffs (`Guitar`, `fish-1`).
+  Of 20 units read by eye, at most 2 were request parameters of an existing endpoint. The
+  `qualifies` gate is far too weak — any backticked token next to any change word passes it —
+  and MCP whole-file patches yield mostly code noise.
+  Diagnosis: deciding *which* class a sentence of English describes is a judgement the locked
+  design handed to a regex table. The archive, the draw and the text extraction are sound and
+  stay; the labelling step is what the pilot condemns. The instrument is fixed by an amendment
+  **before** the corpus is built, as in Phase 1 amendment 1 and Phase 2 amendment 1.
+  Code committed with the pilot: `entry_text.py`, `drift_rules.py`, `code_changes.py`,
+  57 Phase-3 tests, 96% coverage. Spend unchanged at $19.69.
+
 ## Phase 3 pre-registration — LOCKED 2026-10-30
 
 Written before any page is fetched and before any Phase-3 model call. Execution plan: `phase3/PLAN.md`.
