@@ -39,6 +39,16 @@ Give each qualifying unit EXACTLY ONE label:
 - "compound"        two or more of the five above, on the same parameter, in one release
 - "other"           it qualifies under the rule above but is none of the five
 
+Four cases the labels above do not settle on their own:
+- A parameter that is REMOVED is "rename" when the entry names the parameter that replaces
+  it, and "other" when no replacement is named.
+- A parameter that became optional is the opposite of "required", so it is "other".
+- A newly added required parameter on an existing endpoint qualifies, because a new required
+  parameter is a constraint on a call that already exists, and its label is "required".
+- Conditional requiredness ("when you set X you must also set Y") is "required".
+- A value set that becomes an enum, replacing a free-form or boolean value, is both a smaller
+  value set and a type change on the same parameter in one release, so it is "compound".
+
 Also give each unit AGENT_VISIBLE, decided WITHOUT looking at the label you just chose:
 - true   the parameter is required either before or after the change, OR it appears in an
          example request shown in the entry

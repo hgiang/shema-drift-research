@@ -15,6 +15,70 @@
   "sha256": "86c23854331b3fc32fdd675126ae35edafaa48911c2843e562a182706fe41f44",
   "fetched_at": "2026-10-30T03:22:09Z"
  },
+ "https://docs.stripe.com/changelog/2023-10-16/auto-populates-statement-descriptor-accounts.md": {
+  "url": "https://docs.stripe.com/changelog/2023-10-16/auto-populates-statement-descriptor-accounts.md",
+  "path": "320-changelog-2023-10-16-auto-populates-statement-descriptor-accounts.md",
+  "status": 200,
+  "n_bytes": 7141,
+  "sha256": "ec8da336093664c4206c34822700bc0dbda2b9ed917ec54fabe0b0c25cc6da31",
+  "fetched_at": "2026-10-30T04:13:58Z"
+ },
+ "https://docs.stripe.com/changelog/2024-06-20/adds-enum-disabled-reasons-capabilities.md": {
+  "url": "https://docs.stripe.com/changelog/2024-06-20/adds-enum-disabled-reasons-capabilities.md",
+  "path": "073-changelog-2024-06-20-adds-enum-disabled-reasons-capabilities.md",
+  "status": 200,
+  "n_bytes": 6789,
+  "sha256": "937a5c3f4b2ecc2e33c5af7b37f26592fd9fd6d84c2f4105464240030e19cfe2",
+  "fetched_at": "2026-10-30T04:09:50Z"
+ },
+ "https://docs.stripe.com/changelog/2024-06-20/deprecates-bank-transfer-payments-capabilities.md": {
+  "url": "https://docs.stripe.com/changelog/2024-06-20/deprecates-bank-transfer-payments-capabilities.md",
+  "path": "309-changelog-2024-06-20-deprecates-bank-transfer-payments-capabilities.md",
+  "status": 200,
+  "n_bytes": 7239,
+  "sha256": "ff40db33d8ce32da93a58d568f3fb1d25df42e2203fa782c2795a07cc5495dbb",
+  "fetched_at": "2026-10-30T04:13:47Z"
+ },
+ "https://docs.stripe.com/changelog/2024-06-20/renames-purchase-details-transaction-object.md": {
+  "url": "https://docs.stripe.com/changelog/2024-06-20/renames-purchase-details-transaction-object.md",
+  "path": "088-changelog-2024-06-20-renames-purchase-details-transaction-object.md",
+  "status": 200,
+  "n_bytes": 9199,
+  "sha256": "a859e0184100d7c34a608cf71dc8089202ece8a5719d03806ac21e2842b5cc13",
+  "fetched_at": "2026-10-30T04:10:05Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/account-link-api-default-fields-v1.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/account-link-api-default-fields-v1.md",
+  "path": "066-changelog-acacia-2024-09-30-account-link-api-default-fields-v1.md",
+  "status": 200,
+  "n_bytes": 8027,
+  "sha256": "47164370f647d6c185f51fb86bfcf86cfc01db4d6e1ed651f77298dcef2d3a41",
+  "fetched_at": "2026-10-30T04:09:43Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/adds-girocard-paymentmethod-brand-network.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/adds-girocard-paymentmethod-brand-network.md",
+  "path": "135-changelog-acacia-2024-09-30-adds-girocard-paymentmethod-brand-network.md",
+  "status": 200,
+  "n_bytes": 14000,
+  "sha256": "8570334908cf4dc0456ceacff567b78f449467d8b30a52a5c0411c8a5dda2da2",
+  "fetched_at": "2026-10-30T04:10:52Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/adds-tax-id-type-hr_oib-croatian-personal-id-number.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/adds-tax-id-type-hr_oib-croatian-personal-id-number.md",
+  "path": "326-angelog-acacia-2024-09-30-adds-tax-id-type-hr_oib-croatian-personal-id-numbe.md",
+  "status": 200,
+  "n_bytes": 12823,
+  "sha256": "20c9fd5d83a0d26e48ebd89f36cedde646530ea01f030b4416d60c7387f530ec",
+  "fetched_at": "2026-10-30T04:14:04Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/affirm-transaction-id-dashboard.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/affirm-transaction-id-dashboard.md",
+  "path": "296-changelog-acacia-2024-09-30-affirm-transaction-id-dashboard.md",
+  "status": 200,
+  "n_bytes": 9704,
+  "sha256": "e1cf26541b41cb8fddab89ca70cb7a2a807961b51cdd3c2c8ffc7eb8e04e57db",
+  "fetched_at": "2026-10-30T04:13:34Z"
+ },
  "https://docs.stripe.com/changelog/acacia/2024-09-30/billing-alert-webhook-listener.md": {
   "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/billing-alert-webhook-listener.md",
   "path": "034-changelog-acacia-2024-09-30-billing-alert-webhook-listener.md",
@@ -22,6 +86,134 @@
   "n_bytes": 9942,
   "sha256": "dd771f9529af9ea296470c165f1f1e33589b0a4ba347436e752ca1b956806732",
   "fetched_at": "2026-10-30T03:22:35Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/billing-mutlibanco-support.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/billing-mutlibanco-support.md",
+  "path": "223-changelog-acacia-2024-09-30-billing-mutlibanco-support.md",
+  "status": 200,
+  "n_bytes": 12057,
+  "sha256": "1989f91154809f510c669e4ae73a0a116bd9abb24de3318edb10eef926afb645",
+  "fetched_at": "2026-10-30T04:12:20Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/buyer-id-blik.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/buyer-id-blik.md",
+  "path": "259-changelog-acacia-2024-09-30-buyer-id-blik.md",
+  "status": 200,
+  "n_bytes": 9617,
+  "sha256": "aa1c8747797c17f6ec96445a7183084c81224ee55a7406dd8283689179526d0d",
+  "fetched_at": "2026-10-30T04:12:57Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/charges-klarna-payer-details-country.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/charges-klarna-payer-details-country.md",
+  "path": "229-changelog-acacia-2024-09-30-charges-klarna-payer-details-country.md",
+  "status": 200,
+  "n_bytes": 9973,
+  "sha256": "9fb9700a47386e49369f43a3438ea0bc64fd8e4178d4646c52676756640d65fa",
+  "fetched_at": "2026-10-30T04:12:26Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/display-amazonpay-dispute-type.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/display-amazonpay-dispute-type.md",
+  "path": "098-changelog-acacia-2024-09-30-display-amazonpay-dispute-type.md",
+  "status": 200,
+  "n_bytes": 10574,
+  "sha256": "3e3c11cf79e05096f44f5fcc035209bafcedc0b225957d1065b566215d2efff1",
+  "fetched_at": "2026-10-30T04:10:15Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/displays-authorization-code-for-charges.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/displays-authorization-code-for-charges.md",
+  "path": "302-changelog-acacia-2024-09-30-displays-authorization-code-for-charges.md",
+  "status": 200,
+  "n_bytes": 9502,
+  "sha256": "3cde773c2d011332bfef0d903fea60dffc9709392deb6d89c7bb12c2ecf2b864",
+  "fetched_at": "2026-10-30T04:13:40Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/displays-chips-tracking-details-treasury-outbound-wires.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/displays-chips-tracking-details-treasury-outbound-wires.md",
+  "path": "339-log-acacia-2024-09-30-displays-chips-tracking-details-treasury-outbound-wire.md",
+  "status": 200,
+  "n_bytes": 12665,
+  "sha256": "72ab5ba1d662d96d27087a6c34383e60e5863ab60d1a76118777c0b6a68a8aea",
+  "fetched_at": "2026-10-30T04:14:17Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/disputes-case-type-card.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/disputes-case-type-card.md",
+  "path": "138-changelog-acacia-2024-09-30-disputes-case-type-card.md",
+  "status": 200,
+  "n_bytes": 8647,
+  "sha256": "89e68b52378588a11ec82030e42ecabe7acc5f12c206417a7c59bd1ee08b813b",
+  "fetched_at": "2026-10-30T04:10:55Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/error-code-invalid-mandate-reference-prefix.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/error-code-invalid-mandate-reference-prefix.md",
+  "path": "077-changelog-acacia-2024-09-30-error-code-invalid-mandate-reference-prefix.md",
+  "status": 200,
+  "n_bytes": 16377,
+  "sha256": "d1ac7dedb403f0a308ec54da5369e90e5de19b1344780557ed6187ad989a4682",
+  "fetched_at": "2026-10-30T04:09:54Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/error-code-transaction-limit.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/error-code-transaction-limit.md",
+  "path": "382-changelog-acacia-2024-09-30-error-code-transaction-limit.md",
+  "status": 200,
+  "n_bytes": 11033,
+  "sha256": "60af5f0cefa65b532a027ba7403e0cebdc036a1d38257e9125c35b3770800c54",
+  "fetched_at": "2026-10-30T04:15:01Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/financial-connections-additional-filters.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/financial-connections-additional-filters.md",
+  "path": "336-changelog-acacia-2024-09-30-financial-connections-additional-filters.md",
+  "status": 200,
+  "n_bytes": 10019,
+  "sha256": "2de71e6242e45ffe756960c5407f2fba32972d4ae314acc1cf896afce9c33592",
+  "fetched_at": "2026-10-30T04:14:14Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/invoice-rendering-template-resource.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/invoice-rendering-template-resource.md",
+  "path": "107-changelog-acacia-2024-09-30-invoice-rendering-template-resource.md",
+  "status": 200,
+  "n_bytes": 9423,
+  "sha256": "5c73c948fb7b85a07afafd5600bf014e5d73d92a388c6bbb3fc09dfc8d1f6ac7",
+  "fetched_at": "2026-10-30T04:10:24Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/invoice-rendering-template-version.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/invoice-rendering-template-version.md",
+  "path": "212-changelog-acacia-2024-09-30-invoice-rendering-template-version.md",
+  "status": 200,
+  "n_bytes": 9646,
+  "sha256": "2d6018fb98f73d77430311b28b3fd6d6052ed65547f3adaa53512be20ae0c400",
+  "fetched_at": "2026-10-30T04:12:09Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/issuing-address-validation.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/issuing-address-validation.md",
+  "path": "179-changelog-acacia-2024-09-30-issuing-address-validation.md",
+  "status": 200,
+  "n_bytes": 10465,
+  "sha256": "2c9c9ea7278551c3a5fb78629712dbf43c0d8639f4094ab47a048f82ea1ca33f",
+  "fetched_at": "2026-10-30T04:11:36Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/make-testclock-status-details-required.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/make-testclock-status-details-required.md",
+  "path": "205-changelog-acacia-2024-09-30-make-testclock-status-details-required.md",
+  "status": 200,
+  "n_bytes": 7905,
+  "sha256": "82772a345eb2621faaf8b47dc2ee534cd25e784f6a603125fb7d373ffc6f6ef8",
+  "fetched_at": "2026-10-30T04:12:02Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/payment-links-new-payment-methods.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/payment-links-new-payment-methods.md",
+  "path": "398-changelog-acacia-2024-09-30-payment-links-new-payment-methods.md",
+  "status": 200,
+  "n_bytes": 10313,
+  "sha256": "4959a933c28a9c62fe6031f1bdccdf73d440f692b5c925972670cfe792d617a4",
+  "fetched_at": "2026-10-30T04:15:17Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/requiring-customer-tax-id-checkout-session-paymentlink.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/requiring-customer-tax-id-checkout-session-paymentlink.md",
+  "path": "277-elog-acacia-2024-09-30-requiring-customer-tax-id-checkout-session-paymentlin.md",
+  "status": 200,
+  "n_bytes": 12120,
+  "sha256": "b4517f9de4c0e09004c2cadce018d3f1d6555b6ed9e9f30a560329fd69b629cc",
+  "fetched_at": "2026-10-30T04:13:15Z"
  },
  "https://docs.stripe.com/changelog/acacia/2024-09-30/retrieves-tax-calculation-api.md": {
   "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/retrieves-tax-calculation-api.md",
@@ -31,6 +223,14 @@
   "sha256": "89ae12f64b4f5c309679c0038289899aefa7e2224b81456dc1a33dc27521cb62",
   "fetched_at": "2026-10-30T03:22:46Z"
  },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/support-payment-method-options-confirmation.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/support-payment-method-options-confirmation.md",
+  "path": "201-changelog-acacia-2024-09-30-support-payment-method-options-confirmation.md",
+  "status": 200,
+  "n_bytes": 9626,
+  "sha256": "95f8cf8805b6a561d6d6f4ce359e8f82fa50b5aa3c3bae4a7a2a5dbaf8029704",
+  "fetched_at": "2026-10-30T04:11:58Z"
+ },
  "https://docs.stripe.com/changelog/acacia/2024-09-30/switzerland-tax-uid.md": {
   "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/switzerland-tax-uid.md",
   "path": "020-changelog-acacia-2024-09-30-switzerland-tax-uid.md",
@@ -38,6 +238,30 @@
   "n_bytes": 14689,
   "sha256": "8b507079518bad4777db5fb75c5fd65ec8655d801323085200a92cfefab65319",
   "fetched_at": "2026-10-30T03:22:21Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/terminal-offline-details-card-present-paymentmethods.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/terminal-offline-details-card-present-paymentmethods.md",
+  "path": "224-ngelog-acacia-2024-09-30-terminal-offline-details-card-present-paymentmethod.md",
+  "status": 200,
+  "n_bytes": 13689,
+  "sha256": "9006dd2f53eeddc261958bbc58dc160d2c9566a2fbc89a1e5279485547c8e003",
+  "fetched_at": "2026-10-30T04:12:21Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/terminal-reader-s700.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/terminal-reader-s700.md",
+  "path": "207-changelog-acacia-2024-09-30-terminal-reader-s700.md",
+  "status": 200,
+  "n_bytes": 9441,
+  "sha256": "24a596a489f86a9d59d811f173221d712cb55d34242a9cbfd45cf71d9697c9ee",
+  "fetched_at": "2026-10-30T04:12:04Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/terminal-reboot-window.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/terminal-reboot-window.md",
+  "path": "313-changelog-acacia-2024-09-30-terminal-reboot-window.md",
+  "status": 200,
+  "n_bytes": 10202,
+  "sha256": "5466eb3c44933c23b720d6d7fc4d1d2daf7308332946364086eea5620871ce48",
+  "fetched_at": "2026-10-30T04:13:51Z"
  },
  "https://docs.stripe.com/changelog/acacia/2024-09-30/terminal-remove-customer-consent-require-allow-redisplay.md": {
   "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/terminal-remove-customer-consent-require-allow-redisplay.md",
@@ -55,6 +279,118 @@
   "sha256": "8ac588e48c5983d66d1394b71dd1049e6919aa56f7a1e46836bf297404f691ab",
   "fetched_at": "2026-10-30T03:22:48Z"
  },
+ "https://docs.stripe.com/changelog/acacia/2024-09-30/usage-based-billing-v2-meter-events-api.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-09-30/usage-based-billing-v2-meter-events-api.md",
+  "path": "151-changelog-acacia-2024-09-30-usage-based-billing-v2-meter-events-api.md",
+  "status": 200,
+  "n_bytes": 15304,
+  "sha256": "290503087280d449cf1f4f6266d7936ebf3ed1cb56b1cdd65f83d1205737129c",
+  "fetched_at": "2026-10-30T04:11:08Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-10-28/billing-credits-credit-note.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-10-28/billing-credits-credit-note.md",
+  "path": "186-changelog-acacia-2024-10-28-billing-credits-credit-note.md",
+  "status": 200,
+  "n_bytes": 9484,
+  "sha256": "4e0a0191beafe822c5fc70ec7c58dd276cd89ffc109a9353077bee32975afc80",
+  "fetched_at": "2026-10-30T04:11:43Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-10-28/billing-credits-invoice.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-10-28/billing-credits-invoice.md",
+  "path": "263-changelog-acacia-2024-10-28-billing-credits-invoice.md",
+  "status": 200,
+  "n_bytes": 10237,
+  "sha256": "c7c1a62f9b349a6b962d5fb1fff6e2e2b37058ad2b58111f0591f77f3c529adf",
+  "fetched_at": "2026-10-30T04:13:01Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-10-28/customer-portal-schedule-downgrades.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-10-28/customer-portal-schedule-downgrades.md",
+  "path": "136-changelog-acacia-2024-10-28-customer-portal-schedule-downgrades.md",
+  "status": 200,
+  "n_bytes": 11676,
+  "sha256": "1afed026c0236cb667504d74d29182e7b28c572d79cce52ce08e599995cd17f8",
+  "fetched_at": "2026-10-30T04:10:53Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-10-28/south-korean-payment-methods.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-10-28/south-korean-payment-methods.md",
+  "path": "327-changelog-acacia-2024-10-28-south-korean-payment-methods.md",
+  "status": 200,
+  "n_bytes": 58851,
+  "sha256": "8501e78189eb37c81f18fa1b49e93fb2c8f40a96bb8ab4434eba3c7275ea7e13",
+  "fetched_at": "2026-10-30T04:14:05Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-10-28/tax-ids.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-10-28/tax-ids.md",
+  "path": "369-changelog-acacia-2024-10-28-tax-ids.md",
+  "status": 200,
+  "n_bytes": 15142,
+  "sha256": "2863e4a40ef374e361ed5414ea2d6baf18726c104053ed6f280e7848b6aa441e",
+  "fetched_at": "2026-10-30T04:14:47Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-10-28/visa-compelling-evidence-3-0.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-10-28/visa-compelling-evidence-3-0.md",
+  "path": "111-changelog-acacia-2024-10-28-visa-compelling-evidence-3-0.md",
+  "status": 200,
+  "n_bytes": 11437,
+  "sha256": "b4727d500928ca7340c636bda2d9eeefa8ffac156c80e31f7e42970a74db0150",
+  "fetched_at": "2026-10-30T04:10:28Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-11-20/account-disabled-reason.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/account-disabled-reason.md",
+  "path": "356-changelog-acacia-2024-11-20-account-disabled-reason.md",
+  "status": 200,
+  "n_bytes": 8757,
+  "sha256": "481c3dfa2e095f9ef4e5e5298d90020c94263c702ea51d55a40b5340dcaefe9e",
+  "fetched_at": "2026-10-30T04:14:34Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-11-20/adaptive-pricing-param.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/adaptive-pricing-param.md",
+  "path": "177-changelog-acacia-2024-11-20-adaptive-pricing-param.md",
+  "status": 200,
+  "n_bytes": 9893,
+  "sha256": "2f0304c39c287a71a5a319163b3820496ba88ccd50dfe3e22088daf8a3fcae2c",
+  "fetched_at": "2026-10-30T04:11:34Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-11-20/advanced-card-features.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/advanced-card-features.md",
+  "path": "143-changelog-acacia-2024-11-20-advanced-card-features.md",
+  "status": 200,
+  "n_bytes": 11746,
+  "sha256": "8f21a9dec2d6c33ed7876aa4a976c6b8f8866afe4752f277d5330135892ccb6d",
+  "fetched_at": "2026-10-30T04:11:00Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-11-20/authorizer-person-api.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/authorizer-person-api.md",
+  "path": "366-changelog-acacia-2024-11-20-authorizer-person-api.md",
+  "status": 200,
+  "n_bytes": 11480,
+  "sha256": "fda2c9a9fbfef4af3bec49c68513c9d7b73b73673b94d57318d885887436379d",
+  "fetched_at": "2026-10-30T04:14:44Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-11-20/checkout-sessions-sepa-debit-bacs-debit-mandate-options.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/checkout-sessions-sepa-debit-bacs-debit-mandate-options.md",
+  "path": "365-log-acacia-2024-11-20-checkout-sessions-sepa-debit-bacs-debit-mandate-option.md",
+  "status": 200,
+  "n_bytes": 13243,
+  "sha256": "204a383c6a60e00ed5de3c0607ea31a033b565fb0ed205932c93fa9027841972",
+  "fetched_at": "2026-10-30T04:14:43Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-11-20/inbound-transfers-optional-pm.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/inbound-transfers-optional-pm.md",
+  "path": "342-changelog-acacia-2024-11-20-inbound-transfers-optional-pm.md",
+  "status": 200,
+  "n_bytes": 8849,
+  "sha256": "001e00ef5eb4dff1e9a6b0aafe57f76fb8aef656c9d363281cc6da56e901cad4",
+  "fetched_at": "2026-10-30T04:14:20Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-11-20/issuing-fraud-challenges.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/issuing-fraud-challenges.md",
+  "path": "225-changelog-acacia-2024-11-20-issuing-fraud-challenges.md",
+  "status": 200,
+  "n_bytes": 9473,
+  "sha256": "d71a76f8820bc5b54c9e9caee4edc0f4758dbc7cfdf2fab301410e5d2bc3dc94",
+  "fetched_at": "2026-10-30T04:12:22Z"
+ },
  "https://docs.stripe.com/changelog/acacia/2024-11-20/service_tax.md": {
   "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/service_tax.md",
   "path": "017-changelog-acacia-2024-11-20-service_tax.md",
@@ -62,6 +398,86 @@
   "n_bytes": 14285,
   "sha256": "f7e9e4ee8522d5a7fc6ebeed5d311d26debf71320409a0af491b6ac030bf3ada",
   "fetched_at": "2026-10-30T03:22:18Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-11-20/south-korea-payment-methods.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-11-20/south-korea-payment-methods.md",
+  "path": "079-changelog-acacia-2024-11-20-south-korea-payment-methods.md",
+  "status": 200,
+  "n_bytes": 17353,
+  "sha256": "a8008101607c7a1d8342d4e50f493f011cbbe23a8eaaccbbfd5b3bd48ea7d945",
+  "fetched_at": "2026-10-30T04:09:56Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/add-disabled-reason.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/add-disabled-reason.md",
+  "path": "388-changelog-acacia-2024-12-18-add-disabled-reason.md",
+  "status": 200,
+  "n_bytes": 12093,
+  "sha256": "634706d498458e75e8d4ab195e5865b59ac9e8669329d130faa569f3e43993c6",
+  "fetched_at": "2026-10-30T04:15:07Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/billing-credits-invoice-voiding.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/billing-credits-invoice-voiding.md",
+  "path": "301-changelog-acacia-2024-12-18-billing-credits-invoice-voiding.md",
+  "status": 200,
+  "n_bytes": 11215,
+  "sha256": "be483b4b1dec8ea5f3e28a23aee7157c28e361d067ac4f467ab5d1452c6bb452",
+  "fetched_at": "2026-10-30T04:13:39Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/business-profile-revenue-worker-count.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/business-profile-revenue-worker-count.md",
+  "path": "319-changelog-acacia-2024-12-18-business-profile-revenue-worker-count.md",
+  "status": 200,
+  "n_bytes": 8727,
+  "sha256": "11c2ecc49c2255d402f7abd9127462032eae7ab6f5183e53f7786519885a4ac9",
+  "fetched_at": "2026-10-30T04:13:57Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/cards-sources-allow-redisplay.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/cards-sources-allow-redisplay.md",
+  "path": "097-changelog-acacia-2024-12-18-cards-sources-allow-redisplay.md",
+  "status": 200,
+  "n_bytes": 9088,
+  "sha256": "df65ef0350a70223db462eeb64818d519de5c4d9913c9462335bb0af2346a1dc",
+  "fetched_at": "2026-10-30T04:10:14Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/issuing-auths-when-stripe-unavailable.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/issuing-auths-when-stripe-unavailable.md",
+  "path": "208-changelog-acacia-2024-12-18-issuing-auths-when-stripe-unavailable.md",
+  "status": 200,
+  "n_bytes": 7787,
+  "sha256": "d788357336d483f8afc2c9fb16d89a8b2395a5949652c591cdd517c21e3ce36a",
+  "fetched_at": "2026-10-30T04:12:05Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/mandate-reference-prefix.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/mandate-reference-prefix.md",
+  "path": "218-changelog-acacia-2024-12-18-mandate-reference-prefix.md",
+  "status": 200,
+  "n_bytes": 31187,
+  "sha256": "b0018a0c7ef8f943dd117a127e23b24a1c8ba558bfe6c899550577793b92b992",
+  "fetched_at": "2026-10-30T04:12:15Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/network-advice-code-network-decline-code.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/network-advice-code-network-decline-code.md",
+  "path": "216-changelog-acacia-2024-12-18-network-advice-code-network-decline-code.md",
+  "status": 200,
+  "n_bytes": 12619,
+  "sha256": "92806f5add6d955d79149d933276aa577dada3eb1d201f1923cd6c92b9059415",
+  "fetched_at": "2026-10-30T04:12:13Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/new-bank-transfer-beneficiary-information.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/new-bank-transfer-beneficiary-information.md",
+  "path": "351-changelog-acacia-2024-12-18-new-bank-transfer-beneficiary-information.md",
+  "status": 200,
+  "n_bytes": 19400,
+  "sha256": "8a229e8d43b0260f281784e27882d5ea32df14d2d2caa2147fba45f26e172399",
+  "fetched_at": "2026-10-30T04:14:29Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/payout-minimum-balance.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/payout-minimum-balance.md",
+  "path": "188-changelog-acacia-2024-12-18-payout-minimum-balance.md",
+  "status": 200,
+  "n_bytes": 9420,
+  "sha256": "39a1f9ca5ec19bbe5141765e281c390f6a7ab1bc5ef9ce324ef266b34c9ef456",
+  "fetched_at": "2026-10-30T04:11:45Z"
  },
  "https://docs.stripe.com/changelog/acacia/2024-12-18/portal-config-schedule-at-period-end-required.md": {
   "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/portal-config-schedule-at-period-end-required.md",
@@ -71,6 +487,30 @@
   "sha256": "9a6e8ce6001c02488f4a5df9dfe236c0f77ef1b51a7f81f324e0def03ef057ff",
   "fetched_at": "2026-10-30T03:22:27Z"
  },
+ "https://docs.stripe.com/changelog/acacia/2024-12-18/trace-id-sdk.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2024-12-18/trace-id-sdk.md",
+  "path": "249-changelog-acacia-2024-12-18-trace-id-sdk.md",
+  "status": 200,
+  "n_bytes": 8221,
+  "sha256": "132b88c7612b974bb70e86e8c8b40e6e87f7c1cc0cca4bca2277465b4520ea6c",
+  "fetched_at": "2026-10-30T04:12:47Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2025-01-27/add-phone-number-collection-update-payment-links-api.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-01-27/add-phone-number-collection-update-payment-links-api.md",
+  "path": "278-ngelog-acacia-2025-01-27-add-phone-number-collection-update-payment-links-ap.md",
+  "status": 200,
+  "n_bytes": 8727,
+  "sha256": "b666cff001e4976b4818424dcb66af9ef0fd4b1e5c82fc613629da99ddc8b402",
+  "fetched_at": "2026-10-30T04:13:16Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2025-01-27/charge-outcome-advice-code.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-01-27/charge-outcome-advice-code.md",
+  "path": "242-changelog-acacia-2025-01-27-charge-outcome-advice-code.md",
+  "status": 200,
+  "n_bytes": 12159,
+  "sha256": "c3c132056449a89f0b2c945d1587fb05307504f09dbce530056832b605a91ecd",
+  "fetched_at": "2026-10-30T04:12:39Z"
+ },
  "https://docs.stripe.com/changelog/acacia/2025-01-27/pay-by-bank-lpm.md": {
   "url": "https://docs.stripe.com/changelog/acacia/2025-01-27/pay-by-bank-lpm.md",
   "path": "048-changelog-acacia-2025-01-27-pay-by-bank-lpm.md",
@@ -79,6 +519,62 @@
   "sha256": "5ccfb02e10c9c5855b1ed0c4998d647208ec5b58161cbb0e51675ca060f6d804",
   "fetched_at": "2026-10-30T03:22:49Z"
  },
+ "https://docs.stripe.com/changelog/acacia/2025-01-27/terminal-jp-supported-country.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-01-27/terminal-jp-supported-country.md",
+  "path": "196-changelog-acacia-2025-01-27-terminal-jp-supported-country.md",
+  "status": 200,
+  "n_bytes": 10412,
+  "sha256": "56fc642beee5fdcbb20bdef88566ee8a4dd23618ba5191b2ac0c0bee4a5fb98e",
+  "fetched_at": "2026-10-30T04:11:53Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2025-02-24/billing-credits-price-level-applicability.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-02-24/billing-credits-price-level-applicability.md",
+  "path": "374-changelog-acacia-2025-02-24-billing-credits-price-level-applicability.md",
+  "status": 200,
+  "n_bytes": 10039,
+  "sha256": "a7a21ae430175fc3f872548fbeb414d04819200387a6db473cbeb75aecafbe5f",
+  "fetched_at": "2026-10-30T04:14:52Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2025-02-24/billing-credits-priority.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-02-24/billing-credits-priority.md",
+  "path": "355-changelog-acacia-2025-02-24-billing-credits-priority.md",
+  "status": 200,
+  "n_bytes": 9172,
+  "sha256": "c1dd7f66711e1813562b3c6fc36c7e74975650bf2bfca80978811439e731c1c7",
+  "fetched_at": "2026-10-30T04:14:33Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2025-02-24/checkout-sessions-collected-info.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-02-24/checkout-sessions-collected-info.md",
+  "path": "158-changelog-acacia-2025-02-24-checkout-sessions-collected-info.md",
+  "status": 200,
+  "n_bytes": 9657,
+  "sha256": "120151fe60f144ae82cb80b36dcaaeea568fa000818d7f28b3de582ddaa2cec4",
+  "fetched_at": "2026-10-30T04:11:15Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2025-02-24/checkout_add_brands_blocked.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-02-24/checkout_add_brands_blocked.md",
+  "path": "338-changelog-acacia-2025-02-24-checkout_add_brands_blocked.md",
+  "status": 200,
+  "n_bytes": 10343,
+  "sha256": "10d187048014e05645b4141a78201c7cc0a357d27a76139242a8eeca5d1d5b07",
+  "fetched_at": "2026-10-30T04:14:16Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2025-02-24/products-default-price-data-metadata-field.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-02-24/products-default-price-data-metadata-field.md",
+  "path": "268-changelog-acacia-2025-02-24-products-default-price-data-metadata-field.md",
+  "status": 200,
+  "n_bytes": 8860,
+  "sha256": "9d58a196f70f00bbdc0787478c9c1d9bf4887acafcc9190f0cd442b24f63ee2e",
+  "fetched_at": "2026-10-30T04:13:06Z"
+ },
+ "https://docs.stripe.com/changelog/acacia/2025-02-24/stripe-js-versioning.md": {
+  "url": "https://docs.stripe.com/changelog/acacia/2025-02-24/stripe-js-versioning.md",
+  "path": "347-changelog-acacia-2025-02-24-stripe-js-versioning.md",
+  "status": 200,
+  "n_bytes": 582,
+  "sha256": "fc9197c84d79b13c3128c1d5b68056950f71c8d47a7217cacc1ee98424415e7c",
+  "fetched_at": "2026-10-30T04:14:25Z"
+ },
  "https://docs.stripe.com/changelog/basil/2025-03-31/add-billie.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-03-31/add-billie.md",
   "path": "002-changelog-basil-2025-03-31-add-billie.md",
@@ -86,6 +582,14 @@
   "n_bytes": 27443,
   "sha256": "86431c8fd71a817281a5eed9b9c9461c1d064118706d963483e1d9cbf6928a12",
   "fetched_at": "2026-10-30T03:22:03Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/add-init-checkout.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/add-init-checkout.md",
+  "path": "332-changelog-basil-2025-03-31-add-init-checkout.md",
+  "status": 200,
+  "n_bytes": 728,
+  "sha256": "fdaee1def255240631ee1cf37908337eceba1081e251274a46c826aee6bf1340",
+  "fetched_at": "2026-10-30T04:14:10Z"
  },
  "https://docs.stripe.com/changelog/basil/2025-03-31/add_presentment_details.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-03-31/add_presentment_details.md",
@@ -103,6 +607,46 @@
   "sha256": "5298eced3425044a57ddbe9a038370156737ac288258f9602bd3ed651def1283",
   "fetched_at": "2026-10-30T03:22:02Z"
  },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/availability_of_additional_kyc_data.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/availability_of_additional_kyc_data.md",
+  "path": "266-changelog-basil-2025-03-31-availability_of_additional_kyc_data.md",
+  "status": 200,
+  "n_bytes": 7732,
+  "sha256": "53da26845aeadcf4f800a1edc5f72344973e0c066ffb21a131e04d843137664c",
+  "fetched_at": "2026-10-30T04:13:04Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/billing-credit-webhooks.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/billing-credit-webhooks.md",
+  "path": "314-changelog-basil-2025-03-31-billing-credit-webhooks.md",
+  "status": 200,
+  "n_bytes": 8290,
+  "sha256": "13ac9ee7bbc0387ab17f69aced45b2861d6d5fb1f1544e9f75b7b86c0770ec4c",
+  "fetched_at": "2026-10-30T04:13:52Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/checkout-legacy-subscription-upgrade.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/checkout-legacy-subscription-upgrade.md",
+  "path": "329-changelog-basil-2025-03-31-checkout-legacy-subscription-upgrade.md",
+  "status": 200,
+  "n_bytes": 10095,
+  "sha256": "09f37bab668904f7cdbdcdb287592e19400c6e1d488bc8e860c646801a412fc8",
+  "fetched_at": "2026-10-30T04:14:07Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/default-value-payment-links-custom-fields.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/default-value-payment-links-custom-fields.md",
+  "path": "067-changelog-basil-2025-03-31-default-value-payment-links-custom-fields.md",
+  "status": 200,
+  "n_bytes": 10360,
+  "sha256": "57d16e5fffc6d941d82a77be67039a2b6fcb7dbdab7a1e382087c3a77fdaeb8b",
+  "fetched_at": "2026-10-30T04:09:44Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/deprecate-interac-present-manual-capture-method.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/deprecate-interac-present-manual-capture-method.md",
+  "path": "335-changelog-basil-2025-03-31-deprecate-interac-present-manual-capture-method.md",
+  "status": 200,
+  "n_bytes": 10709,
+  "sha256": "b53be303884777f325a2175147957300839484ef11d4ed2d1698b36c58a09dd9",
+  "fetched_at": "2026-10-30T04:14:13Z"
+ },
  "https://docs.stripe.com/changelog/basil/2025-03-31/deprecate-legacy-usage-based-billing.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-03-31/deprecate-legacy-usage-based-billing.md",
   "path": "014-changelog-basil-2025-03-31-deprecate-legacy-usage-based-billing.md",
@@ -110,6 +654,14 @@
   "n_bytes": 31167,
   "sha256": "ee36774a24ae0bc435760af1258ffaeb7d0d41f834d546348d7bb9adf30a1679",
   "fetched_at": "2026-10-30T03:22:15Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/deprecate-total-count-expansion.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/deprecate-total-count-expansion.md",
+  "path": "071-changelog-basil-2025-03-31-deprecate-total-count-expansion.md",
+  "status": 200,
+  "n_bytes": 7894,
+  "sha256": "4a8a5b7c9b76b193ef602adc7754d0b4146dc05fb498d441081b8bf291a58909",
+  "fetched_at": "2026-10-30T04:09:48Z"
  },
  "https://docs.stripe.com/changelog/basil/2025-03-31/hosted-payment-method-save.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-03-31/hosted-payment-method-save.md",
@@ -119,6 +671,174 @@
   "sha256": "8cf2357faccae5759b0a775a862159a116eed4b18e0caf3e440e103964fe0874",
   "fetched_at": "2026-10-30T03:22:43Z"
  },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/invoice-preview-api-deprecations.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/invoice-preview-api-deprecations.md",
+  "path": "174-changelog-basil-2025-03-31-invoice-preview-api-deprecations.md",
+  "status": 200,
+  "n_bytes": 9411,
+  "sha256": "48763b99e6ffb3af1eb242113ed16de805cc3d4c190f11ace3cf3a6e91996730",
+  "fetched_at": "2026-10-30T04:11:31Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/invoice-pricing-configurations.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/invoice-pricing-configurations.md",
+  "path": "163-changelog-basil-2025-03-31-invoice-pricing-configurations.md",
+  "status": 200,
+  "n_bytes": 19739,
+  "sha256": "864a0d168b37500bfa2be57a19568f5f517453068cf56124a6ec5d283353593e",
+  "fetched_at": "2026-10-30T04:11:20Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/issuing-authorizations-expired.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/issuing-authorizations-expired.md",
+  "path": "311-changelog-basil-2025-03-31-issuing-authorizations-expired.md",
+  "status": 200,
+  "n_bytes": 10070,
+  "sha256": "87764bedc168d515d88b54874fead4ac8554be1e2c1c90a00d9f5ffdb858c31c",
+  "fetched_at": "2026-10-30T04:13:49Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/issuing-json-webhook.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/issuing-json-webhook.md",
+  "path": "345-changelog-basil-2025-03-31-issuing-json-webhook.md",
+  "status": 200,
+  "n_bytes": 8233,
+  "sha256": "1d48e40f8d0fbf0d0bbbd072c404ae9bd072fd025af7b2eaa8197717e4da888a",
+  "fetched_at": "2026-10-30T04:14:23Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/klarna-send-invoice.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/klarna-send-invoice.md",
+  "path": "227-changelog-basil-2025-03-31-klarna-send-invoice.md",
+  "status": 200,
+  "n_bytes": 14105,
+  "sha256": "cf751e457fe73f8f59bb31a97b81095fa11084c9e1d835b26cca8de25bd6d52b",
+  "fetched_at": "2026-10-30T04:12:24Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/naver-pay-recurring.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/naver-pay-recurring.md",
+  "path": "114-changelog-basil-2025-03-31-naver-pay-recurring.md",
+  "status": 200,
+  "n_bytes": 14131,
+  "sha256": "551a669fbebb377a8945a0d99d5c95af92b9e5f9af5db194be02e2ddec5dc181",
+  "fetched_at": "2026-10-30T04:10:31Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/new-network-fallback-issuing-authorization-reason-code.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/new-network-fallback-issuing-authorization-reason-code.md",
+  "path": "354-gelog-basil-2025-03-31-new-network-fallback-issuing-authorization-reason-cod.md",
+  "status": 200,
+  "n_bytes": 9250,
+  "sha256": "a17b55bfa17e9db31a140f98eb431857e4df2d40649aace5544aaeb643768160",
+  "fetched_at": "2026-10-30T04:14:33Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/political-exposure-persons-api.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/political-exposure-persons-api.md",
+  "path": "194-changelog-basil-2025-03-31-political-exposure-persons-api.md",
+  "status": 200,
+  "n_bytes": 8302,
+  "sha256": "ee3e1a374c661db88fcf409c48161ec9536d500698b2001bd6489771297f6d4b",
+  "fetched_at": "2026-10-30T04:11:51Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/remove-refund-from-partial-capture-and-payment-cancellation-flow.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/remove-refund-from-partial-capture-and-payment-cancellation-flow.md",
+  "path": "146-l-2025-03-31-remove-refund-from-partial-capture-and-payment-cancellation-flo.md",
+  "status": 200,
+  "n_bytes": 12582,
+  "sha256": "9a4121332af165a34b09243b8a25c9b2febdbc1c5f6c2a7d6caf50ad152a8acf",
+  "fetched_at": "2026-10-30T04:11:03Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/terminal-wifi-configuration.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/terminal-wifi-configuration.md",
+  "path": "068-changelog-basil-2025-03-31-terminal-wifi-configuration.md",
+  "status": 200,
+  "n_bytes": 10115,
+  "sha256": "2455f2c8172ebcf3ca67832ee64e517827f2d59e02ac2c6231db1f33b987ca08",
+  "fetched_at": "2026-10-30T04:09:45Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-03-31/vault-forward-api-returns-402.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-03-31/vault-forward-api-returns-402.md",
+  "path": "300-changelog-basil-2025-03-31-vault-forward-api-returns-402.md",
+  "status": 200,
+  "n_bytes": 9080,
+  "sha256": "28a72252ac889283fdd20fb2a9f3f0812a534d417ae71d9eef110bff53585760",
+  "fetched_at": "2026-10-30T04:13:38Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/add-minority-owned-business-designation-to-business-profile.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/add-minority-owned-business-designation-to-business-profile.md",
+  "path": "396-basil-2025-04-30-add-minority-owned-business-designation-to-business-profile.md",
+  "status": 200,
+  "n_bytes": 11722,
+  "sha256": "0f5a988684eb10e5d455b8fdee2f76aa7d9f4e7e2427b07ef8210df0ae2934df",
+  "fetched_at": "2026-10-30T04:15:15Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/add-tax-id-to-billing-details.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/add-tax-id-to-billing-details.md",
+  "path": "124-changelog-basil-2025-04-30-add-tax-id-to-billing-details.md",
+  "status": 200,
+  "n_bytes": 21753,
+  "sha256": "a580469550befa02e4f3e90ae632f417e3835e2e4915636e121ca6b3087312cf",
+  "fetched_at": "2026-10-30T04:10:41Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/add-tax-ids.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/add-tax-ids.md",
+  "path": "269-changelog-basil-2025-04-30-add-tax-ids.md",
+  "status": 200,
+  "n_bytes": 13076,
+  "sha256": "c99687899ca483ee161b41b64f80dcabd894da2627769ff79a5fddb4a4882fd1",
+  "fetched_at": "2026-10-30T04:13:07Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/add_pix_to_payment_method_configuration.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/add_pix_to_payment_method_configuration.md",
+  "path": "289-changelog-basil-2025-04-30-add_pix_to_payment_method_configuration.md",
+  "status": 200,
+  "n_bytes": 10399,
+  "sha256": "d346a5983dce69d029fade9cc138075344d4b685aeca4d6023b83314a9976403",
+  "fetched_at": "2026-10-30T04:13:27Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/additional-tax-registration-countries.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/additional-tax-registration-countries.md",
+  "path": "250-changelog-basil-2025-04-30-additional-tax-registration-countries.md",
+  "status": 200,
+  "n_bytes": 10945,
+  "sha256": "f9426918bb4f4c177a5afa647c588febe1dd842fd1dbfeddecefde6a3f81c567",
+  "fetched_at": "2026-10-30T04:12:48Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/adds-support-for-global-payouts.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/adds-support-for-global-payouts.md",
+  "path": "239-changelog-basil-2025-04-30-adds-support-for-global-payouts.md",
+  "status": 200,
+  "n_bytes": 83629,
+  "sha256": "a1b9d63c59a55332d9b6e72bd493da1e4857f438694f76e6237939bec53ad1c7",
+  "fetched_at": "2026-10-30T04:12:36Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/affirm-send-invoice.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/affirm-send-invoice.md",
+  "path": "340-changelog-basil-2025-04-30-affirm-send-invoice.md",
+  "status": 200,
+  "n_bytes": 13124,
+  "sha256": "f8578dfda1a3f34bc07fb77e8112fdc3ca7d30163be88fe4b98d2ae8ef63be19",
+  "fetched_at": "2026-10-30T04:14:18Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/billie-capture-method-option.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/billie-capture-method-option.md",
+  "path": "371-changelog-basil-2025-04-30-billie-capture-method-option.md",
+  "status": 200,
+  "n_bytes": 11363,
+  "sha256": "1dae2bd545e2f649927f38bc945c424110b933db8d940a585aaf8e500bf47cd9",
+  "fetched_at": "2026-10-30T04:14:49Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/checkout-link-wallet-options.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/checkout-link-wallet-options.md",
+  "path": "175-changelog-basil-2025-04-30-checkout-link-wallet-options.md",
+  "status": 200,
+  "n_bytes": 7137,
+  "sha256": "ad038351a2b4187a030f4229cb8ee1eb9c1c5df563e5df5e2114d801a890d1fe",
+  "fetched_at": "2026-10-30T04:11:32Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/fx-quote-api.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/fx-quote-api.md",
+  "path": "380-changelog-basil-2025-04-30-fx-quote-api.md",
+  "status": 200,
+  "n_bytes": 16961,
+  "sha256": "d25733a0f9999b252bc10624d7f1ce45a9d1f6abdb960adeab5129205eed936f",
+  "fetched_at": "2026-10-30T04:14:59Z"
+ },
  "https://docs.stripe.com/changelog/basil/2025-04-30/payment-line-items.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-04-30/payment-line-items.md",
   "path": "021-changelog-basil-2025-04-30-payment-line-items.md",
@@ -126,6 +846,78 @@
   "n_bytes": 20188,
   "sha256": "060b59bf1734f316279f024967a1f610763d98a166e736639c736a9942f28933",
   "fetched_at": "2026-10-30T03:22:22Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/payouts-are-now-a-capability.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/payouts-are-now-a-capability.md",
+  "path": "290-changelog-basil-2025-04-30-payouts-are-now-a-capability.md",
+  "status": 200,
+  "n_bytes": 68085,
+  "sha256": "9243f8ba6a1c1408b43392be5ba8e3b97d6f6c84c48a9d2882714feaa79e9f28",
+  "fetched_at": "2026-10-30T04:13:28Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/pix_cross_border_in_public_preview.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/pix_cross_border_in_public_preview.md",
+  "path": "236-changelog-basil-2025-04-30-pix_cross_border_in_public_preview.md",
+  "status": 200,
+  "n_bytes": 10431,
+  "sha256": "3cfb3deec908ecb1a7b13e69d037768140c7267ef493bddc2f7bd09ffa96e10a",
+  "fetched_at": "2026-10-30T04:12:33Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/refund-pending-reason.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/refund-pending-reason.md",
+  "path": "176-changelog-basil-2025-04-30-refund-pending-reason.md",
+  "status": 200,
+  "n_bytes": 8373,
+  "sha256": "d3b527e15d72e4f5bd1e5a511dfff2dae1cdb9dcf280340d6a8906879173230d",
+  "fetched_at": "2026-10-30T04:11:33Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/script-coupons.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/script-coupons.md",
+  "path": "159-changelog-basil-2025-04-30-script-coupons.md",
+  "status": 200,
+  "n_bytes": 10168,
+  "sha256": "ec949471e4ecf5545018a74d59d9e6b2d598fab9400dcf67a986532430f4815b",
+  "fetched_at": "2026-10-30T04:11:16Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-04-30/updated-address-validations-for-tax.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-04-30/updated-address-validations-for-tax.md",
+  "path": "385-changelog-basil-2025-04-30-updated-address-validations-for-tax.md",
+  "status": 200,
+  "n_bytes": 7675,
+  "sha256": "535f859c51240972315da156b859bcc430733a561ea3272eb9728c6f23732048",
+  "fetched_at": "2026-10-30T04:15:04Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-05-28/checkout-payment-method-remove.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-05-28/checkout-payment-method-remove.md",
+  "path": "202-changelog-basil-2025-05-28-checkout-payment-method-remove.md",
+  "status": 200,
+  "n_bytes": 10454,
+  "sha256": "af97b71f72fe6c44ad3271fd7fd7ba3779d24cde7bbb419ad86d808df435bad2",
+  "fetched_at": "2026-10-30T04:11:59Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-05-28/disputes-embedded-components.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-05-28/disputes-embedded-components.md",
+  "path": "247-changelog-basil-2025-05-28-disputes-embedded-components.md",
+  "status": 200,
+  "n_bytes": 11542,
+  "sha256": "0d65d968142e1877c8301c4a6e4546332bea3e6bbec62f0f5d5f8f437b137bad",
+  "fetched_at": "2026-10-30T04:12:44Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-05-28/extract-sex-and-place-of-birth.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-05-28/extract-sex-and-place-of-birth.md",
+  "path": "350-changelog-basil-2025-05-28-extract-sex-and-place-of-birth.md",
+  "status": 200,
+  "n_bytes": 12454,
+  "sha256": "dc7603721538c9cb2309ea2d601763236e329e178f587e25303fedcb91df923c",
+  "fetched_at": "2026-10-30T04:14:28Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-05-28/flatten-tax-association.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-05-28/flatten-tax-association.md",
+  "path": "213-changelog-basil-2025-05-28-flatten-tax-association.md",
+  "status": 200,
+  "n_bytes": 10290,
+  "sha256": "0d4803dae3dd0da74f743767dfb1423cd76eddd3bd74641d2cfd7b6bb598df1d",
+  "fetched_at": "2026-10-30T04:12:10Z"
  },
  "https://docs.stripe.com/changelog/basil/2025-05-28/partial-payments.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-05-28/partial-payments.md",
@@ -135,6 +927,30 @@
   "sha256": "ea99fbd07b5c779111b635824d863a1c2f70f2f57f0a42747ac08ab1dd992d06",
   "fetched_at": "2026-10-30T03:22:59Z"
  },
+ "https://docs.stripe.com/changelog/basil/2025-05-28/redaction-jobs-validation-error-erroring-object.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-05-28/redaction-jobs-validation-error-erroring-object.md",
+  "path": "099-changelog-basil-2025-05-28-redaction-jobs-validation-error-erroring-object.md",
+  "status": 200,
+  "n_bytes": 9940,
+  "sha256": "13ae5e15363b954c78b7396f972ea68a8ff7da3c4e733ac8bb56d33acd3487eb",
+  "fetched_at": "2026-10-30T04:10:16Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-05-28/simulated-s700-device-type.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-05-28/simulated-s700-device-type.md",
+  "path": "228-changelog-basil-2025-05-28-simulated-s700-device-type.md",
+  "status": 200,
+  "n_bytes": 9087,
+  "sha256": "c1f51165d5f5904f15ce8cb2a766f1fef1a2a2e6c5ce583b50fcc2509610ccbb",
+  "fetched_at": "2026-10-30T04:12:25Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-05-28/terminal-wechat-pay-and-affirm.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-05-28/terminal-wechat-pay-and-affirm.md",
+  "path": "392-changelog-basil-2025-05-28-terminal-wechat-pay-and-affirm.md",
+  "status": 200,
+  "n_bytes": 19818,
+  "sha256": "e3bab5ba8fb45d7174ae2deb0b75c2f7b254bd8cef2a9707869baafdd016582a",
+  "fetched_at": "2026-10-30T04:15:11Z"
+ },
  "https://docs.stripe.com/changelog/basil/2025-06-30/accounts-proof-of-address.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-06-30/accounts-proof-of-address.md",
   "path": "050-changelog-basil-2025-06-30-accounts-proof-of-address.md",
@@ -142,6 +958,46 @@
   "n_bytes": 9802,
   "sha256": "318946c272e8450196fcc9897f37bee98f9daf52221794e35baeea8ab796c88c",
   "fetched_at": "2026-10-30T03:22:51Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-06-30/adds-unsupported-capability-status.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-06-30/adds-unsupported-capability-status.md",
+  "path": "391-changelog-basil-2025-06-30-adds-unsupported-capability-status.md",
+  "status": 200,
+  "n_bytes": 58227,
+  "sha256": "d0b3699ab82bd7395ffa5ab29e0a000b80b14b19d7186bce72d4aeb9de482d98",
+  "fetched_at": "2026-10-30T04:15:10Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-06-30/enhance-money-management-apis.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-06-30/enhance-money-management-apis.md",
+  "path": "090-changelog-basil-2025-06-30-enhance-money-management-apis.md",
+  "status": 200,
+  "n_bytes": 29643,
+  "sha256": "70978d4db4eb8b35a5cd4d185e6ff95ae0ce8cf66716de6f0a4a23b5681466e8",
+  "fetched_at": "2026-10-30T04:10:07Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-06-30/flexible-schedules-payouts.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-06-30/flexible-schedules-payouts.md",
+  "path": "363-changelog-basil-2025-06-30-flexible-schedules-payouts.md",
+  "status": 200,
+  "n_bytes": 11637,
+  "sha256": "4b5eb02dd93b60d6d7d2be0d4e513b36b4382db53e266fe725e1a007ad3cec35",
+  "fetched_at": "2026-10-30T04:14:41Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-06-30/ideal-buut-support.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-06-30/ideal-buut-support.md",
+  "path": "271-changelog-basil-2025-06-30-ideal-buut-support.md",
+  "status": 200,
+  "n_bytes": 14717,
+  "sha256": "f8b1c28f663f8a4c93753da1b3e4235ec659ffa4ffca40b3a4cd3783ca00d8a2",
+  "fetched_at": "2026-10-30T04:13:09Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-06-30/identity-related-person.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-06-30/identity-related-person.md",
+  "path": "255-changelog-basil-2025-06-30-identity-related-person.md",
+  "status": 200,
+  "n_bytes": 12080,
+  "sha256": "56ac68e135256069c14ee638ed0920d0310b3111a82e19e18c8d5eeb02e5dee9",
+  "fetched_at": "2026-10-30T04:12:53Z"
  },
  "https://docs.stripe.com/changelog/basil/2025-06-30/visa-compliance-disputes.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-06-30/visa-compliance-disputes.md",
@@ -151,6 +1007,70 @@
   "sha256": "c6ee1d02ec7b039cde0db86b1397065b8b8daf3d88e937c1b7700d28e7a552a9",
   "fetched_at": "2026-10-30T03:22:08Z"
  },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/add-new-enum-to-payment-review-close-reason.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/add-new-enum-to-payment-review-close-reason.md",
+  "path": "106-changelog-basil-2025-07-30-add-new-enum-to-payment-review-close-reason.md",
+  "status": 200,
+  "n_bytes": 7925,
+  "sha256": "af464bae3b1d2ee6c6cccf1d676b6c88a67611f044653c35ac2dca9147c60e8f",
+  "fetched_at": "2026-10-30T04:10:23Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/add-new-enum-value-to-review-close-reasons.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/add-new-enum-value-to-review-close-reasons.md",
+  "path": "109-changelog-basil-2025-07-30-add-new-enum-value-to-review-close-reasons.md",
+  "status": 200,
+  "n_bytes": 9462,
+  "sha256": "b7af0b053354f0fa4950d8ee96764ec45a4885076cf831fd75d043fe48d302f6",
+  "fetched_at": "2026-10-30T04:10:26Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/add-schedule-phase-duration.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/add-schedule-phase-duration.md",
+  "path": "312-changelog-basil-2025-07-30-add-schedule-phase-duration.md",
+  "status": 200,
+  "n_bytes": 11993,
+  "sha256": "4090faa75a79ebadac357954fedaca7e6ff5ed6d4d02dc0425642da1309d3463",
+  "fetched_at": "2026-10-30T04:13:50Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/add_terminal_tipping_currency_aed_bgn_huf_chf_ron.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/add_terminal_tipping_currency_aed_bgn_huf_chf_ron.md",
+  "path": "377-changelog-basil-2025-07-30-add_terminal_tipping_currency_aed_bgn_huf_chf_ron.md",
+  "status": 200,
+  "n_bytes": 11394,
+  "sha256": "2e6c8cfd753c0dfea1a10f5c281dd3cfed2e61bb69f473fce352fa527625b9b4",
+  "fetched_at": "2026-10-30T04:14:55Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/adds-smart-disputes.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/adds-smart-disputes.md",
+  "path": "103-changelog-basil-2025-07-30-adds-smart-disputes.md",
+  "status": 200,
+  "n_bytes": 8923,
+  "sha256": "e35bb5c5c61b73c7bbe3cb138a3a3b6180a16ad4e334009bf5b523ad55a76f0f",
+  "fetched_at": "2026-10-30T04:10:20Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/cancel-at-enums.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/cancel-at-enums.md",
+  "path": "166-changelog-basil-2025-07-30-cancel-at-enums.md",
+  "status": 200,
+  "n_bytes": 12450,
+  "sha256": "b6260b814804b39188abbcc603e60b6cc0c4d1ec76986d5b14187210f3cf0882",
+  "fetched_at": "2026-10-30T04:11:23Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/checkout-payment-link-invoice-rendering-templates.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/checkout-payment-link-invoice-rendering-templates.md",
+  "path": "349-changelog-basil-2025-07-30-checkout-payment-link-invoice-rendering-templates.md",
+  "status": 200,
+  "n_bytes": 15548,
+  "sha256": "d3dd874b8fbdf1453b3597eeb7755b3f8b9bc4eaf7f78bdbfa3b6015043330f5",
+  "fetched_at": "2026-10-30T04:14:27Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/cs-upi-pmo-subscription-support.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/cs-upi-pmo-subscription-support.md",
+  "path": "324-changelog-basil-2025-07-30-cs-upi-pmo-subscription-support.md",
+  "status": 200,
+  "n_bytes": 21752,
+  "sha256": "45df90e4c2368d47dacd69631ec73adf620d997ed068768e32edfec4917388d0",
+  "fetched_at": "2026-10-30T04:14:02Z"
+ },
  "https://docs.stripe.com/changelog/basil/2025-07-30/customer-portal-subscription-update-quantity-limits.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-07-30/customer-portal-subscription-update-quantity-limits.md",
   "path": "022-hangelog-basil-2025-07-30-customer-portal-subscription-update-quantity-limit.md",
@@ -158,6 +1078,30 @@
   "n_bytes": 13283,
   "sha256": "06ff1111df70fef8417d1efc4c9fd07d5f763ef209376415a863590964cce150",
   "fetched_at": "2026-10-30T03:22:23Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/disable-future-usage-of-pix-in-checkout-sessions.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/disable-future-usage-of-pix-in-checkout-sessions.md",
+  "path": "115-changelog-basil-2025-07-30-disable-future-usage-of-pix-in-checkout-sessions.md",
+  "status": 200,
+  "n_bytes": 10965,
+  "sha256": "0b7f8561c1947ffdfeef3f166577865af3a7095a6175e6543ff3c30cd76234a7",
+  "fetched_at": "2026-10-30T04:10:32Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/increase-payment-line-items-limit-to-200.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/increase-payment-line-items-limit-to-200.md",
+  "path": "183-changelog-basil-2025-07-30-increase-payment-line-items-limit-to-200.md",
+  "status": 200,
+  "n_bytes": 7553,
+  "sha256": "ce3cb002308a5c33b5bef83dd8bc3aa2a5038531b0d2964deafa3184c51f44a4",
+  "fetched_at": "2026-10-30T04:11:40Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/payment-line-items-multicapture.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/payment-line-items-multicapture.md",
+  "path": "140-changelog-basil-2025-07-30-payment-line-items-multicapture.md",
+  "status": 200,
+  "n_bytes": 7681,
+  "sha256": "2d6e112c35722257d1bc415193d6e2d462fc58907bfb8fd631a336931954aa94",
+  "fetched_at": "2026-10-30T04:10:57Z"
  },
  "https://docs.stripe.com/changelog/basil/2025-07-30/payout_schedule_customization_on_balance_settings.md": {
   "url": "https://docs.stripe.com/changelog/basil/2025-07-30/payout_schedule_customization_on_balance_settings.md",
@@ -167,6 +1111,142 @@
   "sha256": "e313d3a6d06b107cde0bb0b682865d4fe8a0cabe70115cb3b073043ae61138fd",
   "fetched_at": "2026-10-30T03:22:30Z"
  },
+ "https://docs.stripe.com/changelog/basil/2025-07-30/terminal-onboarding-links.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-07-30/terminal-onboarding-links.md",
+  "path": "156-changelog-basil-2025-07-30-terminal-onboarding-links.md",
+  "status": 200,
+  "n_bytes": 9968,
+  "sha256": "5742af2a79d83cee907f74f97499e26d2d2427279bf8ab0590ef8ce5a5174454",
+  "fetched_at": "2026-10-30T04:11:13Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/add-payout-method-to-payouts.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/add-payout-method-to-payouts.md",
+  "path": "092-changelog-basil-2025-08-27-add-payout-method-to-payouts.md",
+  "status": 200,
+  "n_bytes": 9595,
+  "sha256": "0f9b0feee9e71ef6edd3107d6b3b32ff343e76009df8d02a5bfe361cefb83ded",
+  "fetched_at": "2026-10-30T04:10:09Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/add_paypay_payments_settings.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/add_paypay_payments_settings.md",
+  "path": "258-changelog-basil-2025-08-27-add_paypay_payments_settings.md",
+  "status": 200,
+  "n_bytes": 13757,
+  "sha256": "06bf74303f39d4f494a68e0567e4f0176da4d7d5b52588fb77d42074aee61f4b",
+  "fetched_at": "2026-10-30T04:12:56Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/alma-installments.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/alma-installments.md",
+  "path": "233-changelog-basil-2025-08-27-alma-installments.md",
+  "status": 200,
+  "n_bytes": 9853,
+  "sha256": "26d3da31b12e49aa2e59005ac8303cfab980152f77d3d2767d064a0ceb6730d0",
+  "fetched_at": "2026-10-30T04:12:30Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/customer-portal-config-name.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/customer-portal-config-name.md",
+  "path": "343-changelog-basil-2025-08-27-customer-portal-config-name.md",
+  "status": 200,
+  "n_bytes": 10428,
+  "sha256": "4d7943eeb04e437d0aaa3202c0445e06a2263bef1a408d118dc6b1deb815c9d6",
+  "fetched_at": "2026-10-30T04:14:21Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/embedded-payout-details-public-preview.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/embedded-payout-details-public-preview.md",
+  "path": "108-changelog-basil-2025-08-27-embedded-payout-details-public-preview.md",
+  "status": 200,
+  "n_bytes": 9991,
+  "sha256": "1cf25d776ac2323e47346ded30076667345859371cedc9afb512efafab3d8ed9",
+  "fetched_at": "2026-10-30T04:10:25Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/embedded-payout-details.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/embedded-payout-details.md",
+  "path": "226-changelog-basil-2025-08-27-embedded-payout-details.md",
+  "status": 200,
+  "n_bytes": 10146,
+  "sha256": "883a2d2276bb062714ef098669d1f91c70d92e97cdf20a721ad676508350ad70",
+  "fetched_at": "2026-10-30T04:12:23Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/financial-account-display-name.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/financial-account-display-name.md",
+  "path": "100-changelog-basil-2025-08-27-financial-account-display-name.md",
+  "status": 200,
+  "n_bytes": 9932,
+  "sha256": "c641429731510b73b0c9be7ed3e1c03204f36b832dcbcaa4913729dd7ad90b1c",
+  "fetched_at": "2026-10-30T04:10:17Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/issuing-custom-expiration-dates.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/issuing-custom-expiration-dates.md",
+  "path": "173-changelog-basil-2025-08-27-issuing-custom-expiration-dates.md",
+  "status": 200,
+  "n_bytes": 8681,
+  "sha256": "0037b70eb5b34088442662f7e57162a1fe0d7a04d8401543f8258303d487414d",
+  "fetched_at": "2026-10-30T04:11:30Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/make-cvc-optional.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/make-cvc-optional.md",
+  "path": "362-changelog-basil-2025-08-27-make-cvc-optional.md",
+  "status": 200,
+  "n_bytes": 8600,
+  "sha256": "f6bb0112d71b174fe098593a1d7e5211fbf975df9ab7369cc6efe4bc71bcf373",
+  "fetched_at": "2026-10-30T04:14:40Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/mandates_listing_support.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/mandates_listing_support.md",
+  "path": "102-changelog-basil-2025-08-27-mandates_listing_support.md",
+  "status": 200,
+  "n_bytes": 10429,
+  "sha256": "0667ed2a3ef07a39fd50d7198a82d725324638f78cbdc6036a4d202ea915b61f",
+  "fetched_at": "2026-10-30T04:10:19Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/payment-line-items-overcapture.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/payment-line-items-overcapture.md",
+  "path": "072-changelog-basil-2025-08-27-payment-line-items-overcapture.md",
+  "status": 200,
+  "n_bytes": 7599,
+  "sha256": "d26dd6cd5d36741ece7fd94efbceee898e132b05797ae106f479c8fb1872a282",
+  "fetched_at": "2026-10-30T04:09:49Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/payment-records.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/payment-records.md",
+  "path": "129-changelog-basil-2025-08-27-payment-records.md",
+  "status": 200,
+  "n_bytes": 15104,
+  "sha256": "9a8c0552bd82cd960de593e27e5e80975b219281a80cea17850db677ead51115",
+  "fetched_at": "2026-10-30T04:10:46Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/payout-payout-method.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/payout-payout-method.md",
+  "path": "333-changelog-basil-2025-08-27-payout-payout-method.md",
+  "status": 200,
+  "n_bytes": 7844,
+  "sha256": "312e560c874fe8390df835c9030c414104e4a8f6e4c4a25b3ad4779078c00b55",
+  "fetched_at": "2026-10-30T04:14:11Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/terminal-paynow-api.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/terminal-paynow-api.md",
+  "path": "353-changelog-basil-2025-08-27-terminal-paynow-api.md",
+  "status": 200,
+  "n_bytes": 9343,
+  "sha256": "e8fd3c0f6d2081a804013993ce0ba02b0a3f180fbb6b84f164c1ead8e8557074",
+  "fetched_at": "2026-10-30T04:14:31Z"
+ },
+ "https://docs.stripe.com/changelog/basil/2025-08-27/transaction-id.md": {
+  "url": "https://docs.stripe.com/changelog/basil/2025-08-27/transaction-id.md",
+  "path": "220-changelog-basil-2025-08-27-transaction-id.md",
+  "status": 200,
+  "n_bytes": 18956,
+  "sha256": "fdc851d67b6f4043e04801285552750407cab7474b6e46141f0fa16cf6c57a0f",
+  "fetched_at": "2026-10-30T04:12:17Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/add-japan-fields-to-terminal-locations.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/add-japan-fields-to-terminal-locations.md",
+  "path": "253-changelog-clover-2025-09-30-add-japan-fields-to-terminal-locations.md",
+  "status": 200,
+  "n_bytes": 13587,
+  "sha256": "9569bc5798b2afed290fa5ebb500bcfad09e62f0ce149476cb44baa8a56df2a5",
+  "fetched_at": "2026-10-30T04:12:51Z"
+ },
  "https://docs.stripe.com/changelog/clover/2025-09-30/balance-settings-ga.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-09-30/balance-settings-ga.md",
   "path": "009-changelog-clover-2025-09-30-balance-settings-ga.md",
@@ -174,6 +1254,22 @@
   "n_bytes": 17031,
   "sha256": "b7e1a221702893bbdbd7d07e4871de7c5565c70a941f6ae836e9c1596f579d07",
   "fetched_at": "2026-10-30T03:22:10Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/business-type-error-code.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/business-type-error-code.md",
+  "path": "141-changelog-clover-2025-09-30-business-type-error-code.md",
+  "status": 200,
+  "n_bytes": 15450,
+  "sha256": "2e2c92743c588802112ef85203f652d5bb32ca5b5e6b36786003ea0d70df8d42",
+  "fetched_at": "2026-10-30T04:10:58Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/chargeback-loss-reason.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/chargeback-loss-reason.md",
+  "path": "199-changelog-clover-2025-09-30-chargeback-loss-reason.md",
+  "status": 200,
+  "n_bytes": 9926,
+  "sha256": "effcf150e42c44e38fb1eb0d01baa37e9162394b65ea0b6b00466451cbcc5065",
+  "fetched_at": "2026-10-30T04:11:56Z"
  },
  "https://docs.stripe.com/changelog/clover/2025-09-30/checkout-sessions-tax-and-invoice-settings.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-09-30/checkout-sessions-tax-and-invoice-settings.md",
@@ -183,6 +1279,38 @@
   "sha256": "d8a25d5d7856c0cff474076338347365680a11655de56fde7c74f77e82ba17d4",
   "fetched_at": "2026-10-30T03:22:26Z"
  },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/client-secret-reuse.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/client-secret-reuse.md",
+  "path": "238-changelog-clover-2025-09-30-client-secret-reuse.md",
+  "status": 200,
+  "n_bytes": 3164,
+  "sha256": "b19f05cf937776534792b03be560b1df48dce7dfbb23c0be57e34e6c07d552de",
+  "fetched_at": "2026-10-30T04:12:35Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/crypto-cash-value.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/crypto-cash-value.md",
+  "path": "086-changelog-clover-2025-09-30-crypto-cash-value.md",
+  "status": 200,
+  "n_bytes": 8591,
+  "sha256": "ef00d8038a1b6885b38eec3bbd8385ef36f234fd2c09cbae58e19dfa84f87b49",
+  "fetched_at": "2026-10-30T04:10:03Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/custom-bbpos-wisepad3-splash-screens.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/custom-bbpos-wisepad3-splash-screens.md",
+  "path": "367-changelog-clover-2025-09-30-custom-bbpos-wisepad3-splash-screens.md",
+  "status": 200,
+  "n_bytes": 11118,
+  "sha256": "6213d75398ad8d16661e427a4b0ec606bc0535c47a89c196558a753001e7417c",
+  "fetched_at": "2026-10-30T04:14:45Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/customer-business-individual-names.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/customer-business-individual-names.md",
+  "path": "273-changelog-clover-2025-09-30-customer-business-individual-names.md",
+  "status": 200,
+  "n_bytes": 10165,
+  "sha256": "a3e2b3133e656de93e882514765a334b8569e98f7818c7e30e6872b08ce6b88c",
+  "fetched_at": "2026-10-30T04:13:11Z"
+ },
  "https://docs.stripe.com/changelog/clover/2025-09-30/dispute-submission-method.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-09-30/dispute-submission-method.md",
   "path": "011-changelog-clover-2025-09-30-dispute-submission-method.md",
@@ -190,6 +1318,30 @@
   "n_bytes": 10681,
   "sha256": "db7d10701cc35c809ccd558e7eb50b6ea19722db4b064eda903dac6290f4373d",
   "fetched_at": "2026-10-30T03:22:12Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/financial-connections-payment-method-error-codes.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/financial-connections-payment-method-error-codes.md",
+  "path": "360-changelog-clover-2025-09-30-financial-connections-payment-method-error-codes.md",
+  "status": 200,
+  "n_bytes": 11837,
+  "sha256": "bfeeee171a14948ac3f8024aa6a0f94fda562eb76de00586351674eefab1b77e",
+  "fetched_at": "2026-10-30T04:14:38Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/issuing_card_second_line.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/issuing_card_second_line.md",
+  "path": "344-changelog-clover-2025-09-30-issuing_card_second_line.md",
+  "status": 200,
+  "n_bytes": 8873,
+  "sha256": "4e0fd75d890d108306840f52f6d786915c146866a7cec31f3b254f22f881424c",
+  "fetched_at": "2026-10-30T04:14:22Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/itemize-proration-discount-amounts.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/itemize-proration-discount-amounts.md",
+  "path": "133-changelog-clover-2025-09-30-itemize-proration-discount-amounts.md",
+  "status": 200,
+  "n_bytes": 26530,
+  "sha256": "58bfcc97f6b527383519afddcaa48206011c0f37ae3cbccbb275cc9063f80c12",
+  "fetched_at": "2026-10-30T04:10:50Z"
  },
  "https://docs.stripe.com/changelog/clover/2025-09-30/lpm-descriptive-decline-codes.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-09-30/lpm-descriptive-decline-codes.md",
@@ -199,6 +1351,46 @@
   "sha256": "41bca8712d695b3342e4a8582a6fdffc9b68991dd3ae74d9db75b66567011916",
   "fetched_at": "2026-10-30T03:22:14Z"
  },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/mb-way-payments.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/mb-way-payments.md",
+  "path": "370-changelog-clover-2025-09-30-mb-way-payments.md",
+  "status": 200,
+  "n_bytes": 37464,
+  "sha256": "7cba2b030f7bb0e764950fdf21c77184fe62c30fa6b768e4c081f2a39472aed9",
+  "fetched_at": "2026-10-30T04:14:48Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/moving-identity-fields.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/moving-identity-fields.md",
+  "path": "378-changelog-clover-2025-09-30-moving-identity-fields.md",
+  "status": 200,
+  "n_bytes": 15719,
+  "sha256": "e1b6af1c11ddef3c36fb3ec4319b87d707e11fcef63307986514244bb199beaf",
+  "fetched_at": "2026-10-30T04:14:57Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/outbound-setup-intents.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/outbound-setup-intents.md",
+  "path": "178-changelog-clover-2025-09-30-outbound-setup-intents.md",
+  "status": 200,
+  "n_bytes": 7759,
+  "sha256": "3292c488f03f7005edde8b77da5ecaa361491d81ac69ab1ba399503e40223e58",
+  "fetched_at": "2026-10-30T04:11:35Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/payments-field-optional-for-update-balance-settings.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/payments-field-optional-for-update-balance-settings.md",
+  "path": "291-angelog-clover-2025-09-30-payments-field-optional-for-update-balance-setting.md",
+  "status": 200,
+  "n_bytes": 8763,
+  "sha256": "5d529b597af7349d747eec1ad5b3417ff8da61ed8e73f1b9e0950a4556d05d28",
+  "fetched_at": "2026-10-30T04:13:29Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/product-data-unit-label.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/product-data-unit-label.md",
+  "path": "244-changelog-clover-2025-09-30-product-data-unit-label.md",
+  "status": 200,
+  "n_bytes": 16680,
+  "sha256": "af426a959dfdac156684b130f3be479789cf701ffdf2d9592427422ce47ad612",
+  "fetched_at": "2026-10-30T04:12:41Z"
+ },
  "https://docs.stripe.com/changelog/clover/2025-09-30/radar-manual-review-enum.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-09-30/radar-manual-review-enum.md",
   "path": "033-changelog-clover-2025-09-30-radar-manual-review-enum.md",
@@ -206,6 +1398,134 @@
   "n_bytes": 9035,
   "sha256": "e69d298dab32e16fd025c0652e5b55c260131ac61ff1a8e07100c468135e312a",
   "fetched_at": "2026-10-30T03:22:34Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/remove-checkout-session-currency-conversion-field.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/remove-checkout-session-currency-conversion-field.md",
+  "path": "113-changelog-clover-2025-09-30-remove-checkout-session-currency-conversion-fiel.md",
+  "status": 200,
+  "n_bytes": 11493,
+  "sha256": "ed2c5f0d6869cc593029735b6407a38b7e502f18f562cdc99fbbb8b5ddd34a59",
+  "fetched_at": "2026-10-30T04:10:30Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/remove-redirect-to-checkout.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/remove-redirect-to-checkout.md",
+  "path": "286-changelog-clover-2025-09-30-remove-redirect-to-checkout.md",
+  "status": 200,
+  "n_bytes": 2140,
+  "sha256": "0237e7c0c4f022d6a945a1178fb3f4242e8a23ee560c0a99c448ffe34e5f3c05",
+  "fetched_at": "2026-10-30T04:13:24Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/risk-levels-issuing-authorizations.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/risk-levels-issuing-authorizations.md",
+  "path": "331-changelog-clover-2025-09-30-risk-levels-issuing-authorizations.md",
+  "status": 200,
+  "n_bytes": 10573,
+  "sha256": "0fcd33d0abf05be5782941f974815035068ececd648363d611319989570b0b48",
+  "fetched_at": "2026-10-30T04:14:09Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/stablecoin-payments-processing-status.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/stablecoin-payments-processing-status.md",
+  "path": "323-changelog-clover-2025-09-30-stablecoin-payments-processing-status.md",
+  "status": 200,
+  "n_bytes": 8792,
+  "sha256": "2e89d959c3a6bcfcba8c4315e890b0fff7cd481b6b3453db10f2dacfc8059a3a",
+  "fetched_at": "2026-10-30T04:14:01Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/stripe-js-developer-assistant.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/stripe-js-developer-assistant.md",
+  "path": "142-changelog-clover-2025-09-30-stripe-js-developer-assistant.md",
+  "status": 200,
+  "n_bytes": 622,
+  "sha256": "c1e7575ec91ba56b128ae127ee19fd8e0d4b7fc20d5477d7d75682fcf8dad5ef",
+  "fetched_at": "2026-10-30T04:10:59Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/stripejs-deprecated-elements-removal.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/stripejs-deprecated-elements-removal.md",
+  "path": "298-changelog-clover-2025-09-30-stripejs-deprecated-elements-removal.md",
+  "status": 200,
+  "n_bytes": 1716,
+  "sha256": "2d36c84a570079de0abbb1338ec291954d2a1b6daaa0d7e1bae04772e18236b8",
+  "fetched_at": "2026-10-30T04:13:36Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/subscriptions-prebilling.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/subscriptions-prebilling.md",
+  "path": "387-changelog-clover-2025-09-30-subscriptions-prebilling.md",
+  "status": 200,
+  "n_bytes": 13249,
+  "sha256": "e3b0b2cb7904826882a73b9099cd1764123bc9a39413e3204522075b34c04648",
+  "fetched_at": "2026-10-30T04:15:06Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/update-init-checkout-synchronous.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/update-init-checkout-synchronous.md",
+  "path": "160-changelog-clover-2025-09-30-update-init-checkout-synchronous.md",
+  "status": 200,
+  "n_bytes": 4434,
+  "sha256": "4eee277e0b87b436db8a4e424c3a7a4723983d5699ac88ad11363b0158de2131",
+  "fetched_at": "2026-10-30T04:11:17Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-09-30/update-meter-usage-fields.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-09-30/update-meter-usage-fields.md",
+  "path": "297-changelog-clover-2025-09-30-update-meter-usage-fields.md",
+  "status": 200,
+  "n_bytes": 19745,
+  "sha256": "e98b998745b12be93ed3d0d9e0ac5bbba77edf531c3fbfd1e358cf471e71aa99",
+  "fetched_at": "2026-10-30T04:13:35Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/automatic-tax-provider.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/automatic-tax-provider.md",
+  "path": "315-changelog-clover-2025-10-29-automatic-tax-provider.md",
+  "status": 200,
+  "n_bytes": 9621,
+  "sha256": "03e5925495bb9ea3ec9a7558bf31a4fcdaeeddb60a81f38ef913fe5c0fed84aa",
+  "fetched_at": "2026-10-30T04:13:53Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/balance-settings-updated-webhook.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/balance-settings-updated-webhook.md",
+  "path": "081-changelog-clover-2025-10-29-balance-settings-updated-webhook.md",
+  "status": 200,
+  "n_bytes": 11155,
+  "sha256": "9c5f8f7ae168b69da8203a1184d0ecf794b5abe00d3bb0131201d9ef98e8cf18",
+  "fetched_at": "2026-10-30T04:09:58Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/crypto-network-solana.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/crypto-network-solana.md",
+  "path": "070-changelog-clover-2025-10-29-crypto-network-solana.md",
+  "status": 200,
+  "n_bytes": 9211,
+  "sha256": "a05a1bf99107172375df24412abc24d75f25b2127edc1487047271804688b13c",
+  "fetched_at": "2026-10-30T04:09:47Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/custom-payment-methods.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/custom-payment-methods.md",
+  "path": "130-changelog-clover-2025-10-29-custom-payment-methods.md",
+  "status": 200,
+  "n_bytes": 15660,
+  "sha256": "8cdf5d2fe7918e9801a87175b8deceeced3742f123932180e8999b1a2ae8e603",
+  "fetched_at": "2026-10-30T04:10:47Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/customer-sessions-mpe-customer-sheet.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/customer-sessions-mpe-customer-sheet.md",
+  "path": "123-changelog-clover-2025-10-29-customer-sessions-mpe-customer-sheet.md",
+  "status": 200,
+  "n_bytes": 11867,
+  "sha256": "e7daae60f3967e2cf4087d3f97d1a0329cac3bf9928cbc422e759d54014931f1",
+  "fetched_at": "2026-10-30T04:10:40Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/exclude-payment-methods-setup-intents.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/exclude-payment-methods-setup-intents.md",
+  "path": "285-changelog-clover-2025-10-29-exclude-payment-methods-setup-intents.md",
+  "status": 200,
+  "n_bytes": 11416,
+  "sha256": "9837dd92085ba3cd2c21befe91849b2c16a695028e76bee01324648c4a72e7c8",
+  "fetched_at": "2026-10-30T04:13:23Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/invoice-payment-attempt-required-event.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/invoice-payment-attempt-required-event.md",
+  "path": "358-changelog-clover-2025-10-29-invoice-payment-attempt-required-event.md",
+  "status": 200,
+  "n_bytes": 11497,
+  "sha256": "c3c06fcfe8b821681a43e045c091831cadca4066ccb2f5ce42229124c9426370",
+  "fetched_at": "2026-10-30T04:14:36Z"
  },
  "https://docs.stripe.com/changelog/clover/2025-10-29/klarna-items-payment-intents.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-10-29/klarna-items-payment-intents.md",
@@ -223,6 +1543,22 @@
   "sha256": "86ac1faf6be0c84b649acc00ec99c553df8a3ed18e00487facd8554c829eb673",
   "fetched_at": "2026-10-30T03:22:40Z"
  },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/list-bank-accounts.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/list-bank-accounts.md",
+  "path": "260-changelog-clover-2025-10-29-list-bank-accounts.md",
+  "status": 200,
+  "n_bytes": 10050,
+  "sha256": "cec68d2c3ed17e94377d0636027d11f6f0d110555bb9941d29b764878567d6da",
+  "fetched_at": "2026-10-30T04:12:58Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/payment-line-items.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/payment-line-items.md",
+  "path": "270-changelog-clover-2025-10-29-payment-line-items.md",
+  "status": 200,
+  "n_bytes": 21053,
+  "sha256": "25fc0e2f0469d36b2f82a0f87f779d393a14011813bf14899ccf77938f612f8d",
+  "fetched_at": "2026-10-30T04:13:08Z"
+ },
  "https://docs.stripe.com/changelog/clover/2025-10-29/payment-records.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-10-29/payment-records.md",
   "path": "054-changelog-clover-2025-10-29-payment-records.md",
@@ -231,6 +1567,94 @@
   "sha256": "50a8afc289dafd20b059256c5beca1de74a0ecc9d78e130e476674a6dd6c7c3d",
   "fetched_at": "2026-10-30T03:22:55Z"
  },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/representative-declaration.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/representative-declaration.md",
+  "path": "352-changelog-clover-2025-10-29-representative-declaration.md",
+  "status": 200,
+  "n_bytes": 13415,
+  "sha256": "8165d2e525722562e49077e9c1c3a0289a77438b6c1f2f0b5e361c9cbb157e5d",
+  "fetched_at": "2026-10-30T04:14:30Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/stablecoin-payments-pmc.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/stablecoin-payments-pmc.md",
+  "path": "325-changelog-clover-2025-10-29-stablecoin-payments-pmc.md",
+  "status": 200,
+  "n_bytes": 11750,
+  "sha256": "fd8c62b4c0058f348821cdf48dc87ad1a58042e14d5beaa50ca16f0958b997a4",
+  "fetched_at": "2026-10-30T04:14:03Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/stripe-tax-taiwan-remote-support.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/stripe-tax-taiwan-remote-support.md",
+  "path": "171-changelog-clover-2025-10-29-stripe-tax-taiwan-remote-support.md",
+  "status": 200,
+  "n_bytes": 10316,
+  "sha256": "e4ecb392453bd5d1b04029811fab273e4257e1a8b2dabb6f98ad1cae0822c77c",
+  "fetched_at": "2026-10-30T04:11:28Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/tax-provider-customer-location.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/tax-provider-customer-location.md",
+  "path": "062-changelog-clover-2025-10-29-tax-provider-customer-location.md",
+  "status": 200,
+  "n_bytes": 8904,
+  "sha256": "83d61a59126f716038c88fcdb69b7622e79153d19c1203177fbb05f4c5f084cc",
+  "fetched_at": "2026-10-30T04:09:39Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/terminal-tips-gip.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/terminal-tips-gip.md",
+  "path": "104-changelog-clover-2025-10-29-terminal-tips-gip.md",
+  "status": 200,
+  "n_bytes": 11429,
+  "sha256": "8914d4d4ea5b3a28c10e589b7497d4b7e0a870a9e5a40fdcd998d9a909e746c4",
+  "fetched_at": "2026-10-30T04:10:21Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-10-29/twint-checkout-sessions.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-10-29/twint-checkout-sessions.md",
+  "path": "110-changelog-clover-2025-10-29-twint-checkout-sessions.md",
+  "status": 200,
+  "n_bytes": 11985,
+  "sha256": "a8c1f47bf1d7b9969545d6db195031e1440b8b33570c3446f9f2eb7a003f245c",
+  "fetched_at": "2026-10-30T04:10:27Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/account-v2-storer-config-eur.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/account-v2-storer-config-eur.md",
+  "path": "181-changelog-clover-2025-11-17-account-v2-storer-config-eur.md",
+  "status": 200,
+  "n_bytes": 15084,
+  "sha256": "4007bfb42a313ec0800641ca4cf67fdee310eab5e2640101cd5cb406407e53d7",
+  "fetched_at": "2026-10-30T04:11:38Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/accounts-v2-konbini-payments.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/accounts-v2-konbini-payments.md",
+  "path": "359-changelog-clover-2025-11-17-accounts-v2-konbini-payments.md",
+  "status": 200,
+  "n_bytes": 13553,
+  "sha256": "01507874cb3ec8ccf5e4967061e648cd4cac6a6cf074f518ca48f5bf4e1d80a5",
+  "fetched_at": "2026-10-30T04:14:37Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/accounts-v2-tokens.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/accounts-v2-tokens.md",
+  "path": "376-changelog-clover-2025-11-17-accounts-v2-tokens.md",
+  "status": 200,
+  "n_bytes": 15834,
+  "sha256": "13cbb3713f96c1c010d0db4943151b8db8235948deedab1631cb0c4f57eaf8b0",
+  "fetched_at": "2026-10-30T04:14:55Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/argentine-id-types.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/argentine-id-types.md",
+  "path": "164-changelog-clover-2025-11-17-argentine-id-types.md",
+  "status": 200,
+  "n_bytes": 14204,
+  "sha256": "3117529a4b8cd2e96626fb66329fbb5933e3bc8bc7a2272068644eb1d120d381",
+  "fetched_at": "2026-10-30T04:11:21Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/card-present-capture-method.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/card-present-capture-method.md",
+  "path": "139-changelog-clover-2025-11-17-card-present-capture-method.md",
+  "status": 200,
+  "n_bytes": 14475,
+  "sha256": "d7ec8fb129c0e89f311535fa4e1eb9616e113eb8148ae304fdee7fc4d4f47da8",
+  "fetched_at": "2026-10-30T04:10:56Z"
+ },
  "https://docs.stripe.com/changelog/clover/2025-11-17/customer-balance-transactions-list-created.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-11-17/customer-balance-transactions-list-created.md",
   "path": "018-changelog-clover-2025-11-17-customer-balance-transactions-list-created.md",
@@ -238,6 +1662,14 @@
   "n_bytes": 11163,
   "sha256": "9e1574a3b077b2d9ac90b7a24008c245b241456cd957bcf6dd4f80aa21a1166c",
   "fetched_at": "2026-10-30T03:22:19Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/event-generation-failure-alert.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/event-generation-failure-alert.md",
+  "path": "375-changelog-clover-2025-11-17-event-generation-failure-alert.md",
+  "status": 200,
+  "n_bytes": 9789,
+  "sha256": "bd3787aed43c42a9545fe2b12a03b761e3cbe1d5ed595b72f4f10155f88ce82d",
+  "fetched_at": "2026-10-30T04:14:53Z"
  },
  "https://docs.stripe.com/changelog/clover/2025-11-17/financial-connections-client-secret.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-11-17/financial-connections-client-secret.md",
@@ -255,6 +1687,54 @@
   "sha256": "cbdc0c1478f7edd34fe7f28217c7d148e7cb53d62848c07ca64e6f9a760ccebb",
   "fetched_at": "2026-10-30T03:22:39Z"
  },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/industry-fields-cards-klarna.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/industry-fields-cards-klarna.md",
+  "path": "084-changelog-clover-2025-11-17-industry-fields-cards-klarna.md",
+  "status": 200,
+  "n_bytes": 19580,
+  "sha256": "03eaf16811d5a0528a99dc3939b29adeb8f09e946860d6de2f3d6e3b49e1a9a6",
+  "fetched_at": "2026-10-30T04:10:01Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/invoice-payments-list-created.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/invoice-payments-list-created.md",
+  "path": "308-changelog-clover-2025-11-17-invoice-payments-list-created.md",
+  "status": 200,
+  "n_bytes": 10714,
+  "sha256": "3aa2fecd99f17e1da103ac173ea549129c536ed335f9ca1aa6067c2fd974322c",
+  "fetched_at": "2026-10-30T04:13:46Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/issuing-fraud-warnings.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/issuing-fraud-warnings.md",
+  "path": "292-changelog-clover-2025-11-17-issuing-fraud-warnings.md",
+  "status": 200,
+  "n_bytes": 9686,
+  "sha256": "e430019ddde28148a40d7aab94779255b9f19d0b51f274772aec768e29c85832",
+  "fetched_at": "2026-10-30T04:13:30Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/stablecoin-fa-tos.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/stablecoin-fa-tos.md",
+  "path": "316-changelog-clover-2025-11-17-stablecoin-fa-tos.md",
+  "status": 200,
+  "n_bytes": 9725,
+  "sha256": "f837240ccee64ad2ba4f6f2bd33e5edeeb76b0945b0efee13497f83aed4e4afd",
+  "fetched_at": "2026-10-30T04:13:54Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-11-17/tax-assocation-transaction-attempts.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-11-17/tax-assocation-transaction-attempts.md",
+  "path": "127-changelog-clover-2025-11-17-tax-assocation-transaction-attempts.md",
+  "status": 200,
+  "n_bytes": 8075,
+  "sha256": "ecbca9876c6364c5ea1d1b561df766f837c83602dc68a7399f1229f14b79a968",
+  "fetched_at": "2026-10-30T04:10:44Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-12-15/accounts-digital-attestation.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-12-15/accounts-digital-attestation.md",
+  "path": "361-changelog-clover-2025-12-15-accounts-digital-attestation.md",
+  "status": 200,
+  "n_bytes": 14791,
+  "sha256": "c1a45c94e97fb7415524fcc4ef052b80696334269ade07fc8defdb2779a1c3d2",
+  "fetched_at": "2026-10-30T04:14:39Z"
+ },
  "https://docs.stripe.com/changelog/clover/2025-12-15/accounts-v2-capabilities-remove-requested.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-12-15/accounts-v2-capabilities-remove-requested.md",
   "path": "059-changelog-clover-2025-12-15-accounts-v2-capabilities-remove-requested.md",
@@ -262,6 +1742,46 @@
   "n_bytes": 111721,
   "sha256": "f1e1746590f9eba3408ac61ccc83d652660cbf94d8a678a79c5653e7215e6b3b",
   "fetched_at": "2026-10-30T03:23:00Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-12-15/accounts-v2-responsibilities.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-12-15/accounts-v2-responsibilities.md",
+  "path": "372-changelog-clover-2025-12-15-accounts-v2-responsibilities.md",
+  "status": 200,
+  "n_bytes": 10493,
+  "sha256": "bd971a243831b601cfacfe2b11e7c904982552ee54f957e9d06010c00db6eeed",
+  "fetched_at": "2026-10-30T04:14:50Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-12-15/cross-border-payouts-new-countries.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-12-15/cross-border-payouts-new-countries.md",
+  "path": "274-changelog-clover-2025-12-15-cross-border-payouts-new-countries.md",
+  "status": 200,
+  "n_bytes": 11567,
+  "sha256": "49825aa8e5726c84a5fbed399d7332c180a2cfe22bc1b7723ed3ba78b73bec05",
+  "fetched_at": "2026-10-30T04:13:12Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-12-15/customer-balance-transations-list-invoice.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-12-15/customer-balance-transations-list-invoice.md",
+  "path": "131-changelog-clover-2025-12-15-customer-balance-transations-list-invoice.md",
+  "status": 200,
+  "n_bytes": 9934,
+  "sha256": "8ecfa23fe0e3691b36872064e2131caccafd7d796f3b327779d1037be3a5ca1c",
+  "fetched_at": "2026-10-30T04:10:48Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-12-15/customer-portal-billing-cycle-anchor.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-12-15/customer-portal-billing-cycle-anchor.md",
+  "path": "074-changelog-clover-2025-12-15-customer-portal-billing-cycle-anchor.md",
+  "status": 200,
+  "n_bytes": 13752,
+  "sha256": "fbe9d152c4fb4ceb56379cad22a03c7dde1065d4cf76e80afdc8df479e978f77",
+  "fetched_at": "2026-10-30T04:09:51Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2025-12-15/expandable-price-details-price.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-12-15/expandable-price-details-price.md",
+  "path": "126-changelog-clover-2025-12-15-expandable-price-details-price.md",
+  "status": 200,
+  "n_bytes": 10381,
+  "sha256": "9a2a5896c3f681af45588a019a1274f93086a3b2d07afc243a35c2ab58deb07f",
+  "fetched_at": "2026-10-30T04:10:43Z"
  },
  "https://docs.stripe.com/changelog/clover/2025-12-15/generic-error-types-payout-methods.md": {
   "url": "https://docs.stripe.com/changelog/clover/2025-12-15/generic-error-types-payout-methods.md",
@@ -271,6 +1791,46 @@
   "sha256": "90e4f6e7626b90a5ad2883f288b729fbfd761238df5a83f0d3671621f6fa68d2",
   "fetched_at": "2026-10-30T03:22:32Z"
  },
+ "https://docs.stripe.com/changelog/clover/2025-12-15/mollie-ideal-issuer.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2025-12-15/mollie-ideal-issuer.md",
+  "path": "093-changelog-clover-2025-12-15-mollie-ideal-issuer.md",
+  "status": 200,
+  "n_bytes": 21409,
+  "sha256": "f2cc7611dda67a9e292d5ead37a092bc8cb667715a28a76ec1f282030b863202",
+  "fetched_at": "2026-10-30T04:10:10Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/3d-secure-version-support.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/3d-secure-version-support.md",
+  "path": "148-changelog-clover-2026-01-28-3d-secure-version-support.md",
+  "status": 200,
+  "n_bytes": 15684,
+  "sha256": "8b46729a69ca322a0f3cd137698408cd38015100ad8c9f7d70c0cd8275d97755",
+  "fetched_at": "2026-10-30T04:11:05Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/adds-adyen-as-an-issuer-for-ideal-payments.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/adds-adyen-as-an-issuer-for-ideal-payments.md",
+  "path": "209-changelog-clover-2026-01-28-adds-adyen-as-an-issuer-for-ideal-payments.md",
+  "status": 200,
+  "n_bytes": 21192,
+  "sha256": "16d90675eb35a37b2720626f4e88cc4005d975dc3551e0da5688069f748a81cd",
+  "fetched_at": "2026-10-30T04:12:06Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/alternative-reference-field.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/alternative-reference-field.md",
+  "path": "221-changelog-clover-2026-01-28-alternative-reference-field.md",
+  "status": 200,
+  "n_bytes": 11964,
+  "sha256": "a0d578056951f26346bb2e0f1f1bb797b15fddd0c75ea5c26748f57b2bc1f564",
+  "fetched_at": "2026-10-30T04:12:18Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/cross-border-payouts-new-countries.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/cross-border-payouts-new-countries.md",
+  "path": "200-changelog-clover-2026-01-28-cross-border-payouts-new-countries.md",
+  "status": 200,
+  "n_bytes": 11604,
+  "sha256": "b44f0ed5bceaaa508f134b44973987cca64cd8921da50d38ff580c87995b16ec",
+  "fetched_at": "2026-10-30T04:11:57Z"
+ },
  "https://docs.stripe.com/changelog/clover/2026-01-28/detach-payment-from-invoice.md": {
   "url": "https://docs.stripe.com/changelog/clover/2026-01-28/detach-payment-from-invoice.md",
   "path": "019-changelog-clover-2026-01-28-detach-payment-from-invoice.md",
@@ -278,6 +1838,102 @@
   "n_bytes": 9625,
   "sha256": "b8c7acb2b8cf8561b035b37d49427cc55a7fdb04d4d66dd6d802f0d36457696f",
   "fetched_at": "2026-10-30T03:22:20Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/loosen-arithmetic-validation-for-payment-line-items.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/loosen-arithmetic-validation-for-payment-line-items.md",
+  "path": "184-angelog-clover-2026-01-28-loosen-arithmetic-validation-for-payment-line-item.md",
+  "status": 200,
+  "n_bytes": 16239,
+  "sha256": "da5a5bc2060b5f6577be24ca3b94ef62c29ac1e5f282b000769bc39f2c7c58ce",
+  "fetched_at": "2026-10-30T04:11:41Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/outbound-setup-intents-error-codes.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/outbound-setup-intents-error-codes.md",
+  "path": "399-changelog-clover-2026-01-28-outbound-setup-intents-error-codes.md",
+  "status": 200,
+  "n_bytes": 10306,
+  "sha256": "3f620848610871f32f46b0de6db151c1619400dc33007e9cdc4ed6413d1adad0",
+  "fetched_at": "2026-10-30T04:15:18Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/polish-nip-tax-id-type.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/polish-nip-tax-id-type.md",
+  "path": "206-changelog-clover-2026-01-28-polish-nip-tax-id-type.md",
+  "status": 200,
+  "n_bytes": 14155,
+  "sha256": "4773909445d517d614fdf4c5d75097359732fc4ead21040b7690513a76e33dba",
+  "fetched_at": "2026-10-30T04:12:03Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/reintroduce-forever-amount-off-coupon.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/reintroduce-forever-amount-off-coupon.md",
+  "path": "117-changelog-clover-2026-01-28-reintroduce-forever-amount-off-coupon.md",
+  "status": 200,
+  "n_bytes": 7952,
+  "sha256": "f2ab71122b683b629fd7b14f1fa6eedb3ab0080be53485be409859049906703c",
+  "fetched_at": "2026-10-30T04:10:34Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/stripe-balance-remove-source-type.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/stripe-balance-remove-source-type.md",
+  "path": "152-changelog-clover-2026-01-28-stripe-balance-remove-source-type.md",
+  "status": 200,
+  "n_bytes": 9939,
+  "sha256": "463d0a5e4deb983265cc7d0ca8bec61d0271b5421a6fd2941115885234a66022",
+  "fetched_at": "2026-10-30T04:11:09Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-01-28/treasury-received-debit-linked-flows-topup.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-01-28/treasury-received-debit-linked-flows-topup.md",
+  "path": "147-changelog-clover-2026-01-28-treasury-received-debit-linked-flows-topup.md",
+  "status": 200,
+  "n_bytes": 9666,
+  "sha256": "bc49a87d3f48b70c912152f57bbb3f43d4aed77f87215ffbb1e15afa7bc05fba",
+  "fetched_at": "2026-10-30T04:11:04Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-02-25/payout-method-bank-account-identification.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-02-25/payout-method-bank-account-identification.md",
+  "path": "149-changelog-clover-2026-02-25-payout-method-bank-account-identification.md",
+  "status": 200,
+  "n_bytes": 9915,
+  "sha256": "f78e45eec795bb3b30075e2cb33e81cb9128dec75ef6e030228d16b59bbd4e40",
+  "fetched_at": "2026-10-30T04:11:06Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-02-25/reserve-holds-releases-plans-events.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-02-25/reserve-holds-releases-plans-events.md",
+  "path": "065-changelog-clover-2026-02-25-reserve-holds-releases-plans-events.md",
+  "status": 200,
+  "n_bytes": 16133,
+  "sha256": "dadd17288461abb3d2a50d5c76444832b9871b4905dc55410dbe386dbbd5dd3a",
+  "fetched_at": "2026-10-30T04:09:42Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-02-25/smart-disputes-v2-accounts.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-02-25/smart-disputes-v2-accounts.md",
+  "path": "075-changelog-clover-2026-02-25-smart-disputes-v2-accounts.md",
+  "status": 200,
+  "n_bytes": 12834,
+  "sha256": "f70e6ff3a1f0d0792dfaa3bc9f6a170544b2fa632cd5bb2f72dac831fe555840",
+  "fetched_at": "2026-10-30T04:09:52Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-02-25/stripe-reader-s710.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-02-25/stripe-reader-s710.md",
+  "path": "161-changelog-clover-2026-02-25-stripe-reader-s710.md",
+  "status": 200,
+  "n_bytes": 13249,
+  "sha256": "9f57f52e2ba39b6bb3da2e0f51e23d3d33f10b095e0626874ecc458023865f19",
+  "fetched_at": "2026-10-30T04:11:18Z"
+ },
+ "https://docs.stripe.com/changelog/clover/2026-02-25/subscription-item-deletion-payment-behavior-control.md": {
+  "url": "https://docs.stripe.com/changelog/clover/2026-02-25/subscription-item-deletion-payment-behavior-control.md",
+  "path": "078-angelog-clover-2026-02-25-subscription-item-deletion-payment-behavior-contro.md",
+  "status": 200,
+  "n_bytes": 9445,
+  "sha256": "6d45a0a09f46dfe1a536202a5a8aa366c86e63729228f1e59ea7389b352da105",
+  "fetched_at": "2026-10-30T04:09:55Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/accounts-identity-fields-global-payouts.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/accounts-identity-fields-global-payouts.md",
+  "path": "334-changelog-dahlia-2026-03-25-accounts-identity-fields-global-payouts.md",
+  "status": 200,
+  "n_bytes": 9638,
+  "sha256": "c24032ed033a1ae385d3170c223f3ffbe209ea3509f58454b2bb5b945b38f555",
+  "fetched_at": "2026-10-30T04:14:12Z"
  },
  "https://docs.stripe.com/changelog/dahlia/2026-03-25/accounts-v2-time-zone-support.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/accounts-v2-time-zone-support.md",
@@ -295,6 +1951,46 @@
   "sha256": "edfe2a93f7418281747b068e95cff3d2d98cb86fa0c6a2a61a4c9d2f876befa5",
   "fetched_at": "2026-10-30T03:22:44Z"
  },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/address-element-getvalue-and-change-event-formatting.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/address-element-getvalue-and-change-event-formatting.md",
+  "path": "246-ngelog-dahlia-2026-03-25-address-element-getvalue-and-change-event-formattin.md",
+  "status": 200,
+  "n_bytes": 2348,
+  "sha256": "589cbbed236817867c1f9c49b5893d08cab9e8a9306107c0dfe2c542b6aec2fe",
+  "fetched_at": "2026-10-30T04:12:43Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-crypto-fingerprint-support-to-radar-value-list-items.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-crypto-fingerprint-support-to-radar-value-list-items.md",
+  "path": "119-g-dahlia-2026-03-25-adds-crypto-fingerprint-support-to-radar-value-list-item.md",
+  "status": 200,
+  "n_bytes": 8554,
+  "sha256": "6aab1aefd6f1ceee4d0f3515e6fac5e8cf13c53e645f147fd28be8f8080d322d",
+  "fetched_at": "2026-10-30T04:10:36Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-description-and-counterparty-to-transactions.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-description-and-counterparty-to-transactions.md",
+  "path": "145-changelog-dahlia-2026-03-25-adds-description-and-counterparty-to-transaction.md",
+  "status": 200,
+  "n_bytes": 9438,
+  "sha256": "928d7263e183e5ae772ff32e83e3924ef944b5ca3791bc1617dfbf44b637972c",
+  "fetched_at": "2026-10-30T04:11:02Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-new-cancellation-reason-subscription-test-retention-policy.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-new-cancellation-reason-subscription-test-retention-policy.md",
+  "path": "235-ia-2026-03-25-adds-new-cancellation-reason-subscription-test-retention-polic.md",
+  "status": 200,
+  "n_bytes": 9421,
+  "sha256": "084c51c62edd7ce9e989c99246d00cf1b44895fff6cd0433d10b438328d2924e",
+  "fetched_at": "2026-10-30T04:12:32Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-pending-invoice-item-interval-parameter-to-checkout-sessions.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-pending-invoice-item-interval-parameter-to-checkout-sessions.md",
+  "path": "330-2026-03-25-adds-pending-invoice-item-interval-parameter-to-checkout-sessions.md",
+  "status": 200,
+  "n_bytes": 10166,
+  "sha256": "9a1b4d7f5e1eb7c9648027588285e429b38cd60f54edb6b66fe2acedd646f4d9",
+  "fetched_at": "2026-10-30T04:14:08Z"
+ },
  "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-support-for-azure-event-grid-as-an-event-destination.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-support-for-azure-event-grid-as-an-event-destination.md",
   "path": "046-g-dahlia-2026-03-25-adds-support-for-azure-event-grid-as-an-event-destinatio.md",
@@ -302,6 +1998,14 @@
   "n_bytes": 12342,
   "sha256": "5498f63f08cd9bcb816e99c19ad345d5995f706f471ebfd398a7dfe87641a43d",
   "fetched_at": "2026-10-30T03:22:47Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-support-for-managed-payments-on-payment-links.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/adds-support-for-managed-payments-on-payment-links.md",
+  "path": "321-hangelog-dahlia-2026-03-25-adds-support-for-managed-payments-on-payment-link.md",
+  "status": 200,
+  "n_bytes": 9350,
+  "sha256": "4a45fc5fe5df2fcfefcefc21c7b4622771aa16577995afef7dbbd72ddfec87c3",
+  "fetched_at": "2026-10-30T04:13:59Z"
  },
  "https://docs.stripe.com/changelog/dahlia/2026-03-25/batch-jobs-v2-api.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/batch-jobs-v2-api.md",
@@ -319,6 +2023,150 @@
   "sha256": "0ab9e6a6a8ef9b93a4201aaa1ea641b430a283853a95859fb9e6f0037b22ccc6",
   "fetched_at": "2026-10-30T03:22:04Z"
  },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/card-not-present-payments-surcharge-configuration-options.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/card-not-present-payments-surcharge-configuration-options.md",
+  "path": "219-g-dahlia-2026-03-25-card-not-present-payments-surcharge-configuration-option.md",
+  "status": 200,
+  "n_bytes": 15411,
+  "sha256": "f598f446d5c9fc398306475f6e60fb07268704b191303a928db7eeaf9b579018",
+  "fetched_at": "2026-10-30T04:12:16Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/cross-border-payouts-new-countries.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/cross-border-payouts-new-countries.md",
+  "path": "310-changelog-dahlia-2026-03-25-cross-border-payouts-new-countries.md",
+  "status": 200,
+  "n_bytes": 9970,
+  "sha256": "b6ca090d3fce8f9ab2af2824152251e3791d9cf7f88be3339cab63b90ceb3402",
+  "fetched_at": "2026-10-30T04:13:48Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/disallow-booleans-for-radios.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/disallow-booleans-for-radios.md",
+  "path": "198-changelog-dahlia-2026-03-25-disallow-booleans-for-radios.md",
+  "status": 200,
+  "n_bytes": 1503,
+  "sha256": "00b2fb3eb97b5692a1e4016ebb901b48687ca0b04f2acb0c79ccd01ed61d9ed1",
+  "fetched_at": "2026-10-30T04:11:55Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/elements-update-returns-promise.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/elements-update-returns-promise.md",
+  "path": "234-changelog-dahlia-2026-03-25-elements-update-returns-promise.md",
+  "status": 200,
+  "n_bytes": 2571,
+  "sha256": "113c1b7d31f343a856dda97dd56be6a1014f1bb1e6089addf5c05186f39ace80",
+  "fetched_at": "2026-10-30T04:12:31Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/multicurrency-v2-payout-methods.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/multicurrency-v2-payout-methods.md",
+  "path": "165-changelog-dahlia-2026-03-25-multicurrency-v2-payout-methods.md",
+  "status": 200,
+  "n_bytes": 30053,
+  "sha256": "11748970d725e591d522e0984a937bdf1aa5ef8220f27aba0275211bc0abd6d6",
+  "fetched_at": "2026-10-30T04:11:22Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/payment-records-card-property-requirements-and-3d-secure-properties.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/payment-records-card-property-requirements-and-3d-secure-properties.md",
+  "path": "121-026-03-25-payment-records-card-property-requirements-and-3d-secure-propertie.md",
+  "status": 200,
+  "n_bytes": 20802,
+  "sha256": "7b5c48137e52b03d8ef80b0ac469262ed410f28aa5d7b9b99d927db4b7689175",
+  "fetched_at": "2026-10-30T04:10:38Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/payout-method-restricted-property.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/payout-method-restricted-property.md",
+  "path": "116-changelog-dahlia-2026-03-25-payout-method-restricted-property.md",
+  "status": 200,
+  "n_bytes": 9330,
+  "sha256": "21bd4d685c0fc858d0e31b8f566fe071d99ab64fe8aae038ced77407db1e84cd",
+  "fetched_at": "2026-10-30T04:10:33Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/relaxed_external_account_collection_account_session.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/relaxed_external_account_collection_account_session.md",
+  "path": "215-angelog-dahlia-2026-03-25-relaxed_external_account_collection_account_sessio.md",
+  "status": 200,
+  "n_bytes": 8366,
+  "sha256": "55038c7a967b702c8cc2c2117cd18a27d484821034a675f3a17055843ebe5db0",
+  "fetched_at": "2026-10-30T04:12:12Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/rename-init-checkout-to-init-checkout-elements.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/rename-init-checkout-to-init-checkout-elements.md",
+  "path": "155-changelog-dahlia-2026-03-25-rename-init-checkout-to-init-checkout-elements.md",
+  "status": 200,
+  "n_bytes": 3684,
+  "sha256": "7391466d269a0e7ffac57b23ed3af099bf80fa4f4a99bbc633ab1c3be14606d7",
+  "fetched_at": "2026-10-30T04:11:12Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/stripe-balance-payment-method-source-type.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/stripe-balance-payment-method-source-type.md",
+  "path": "153-changelog-dahlia-2026-03-25-stripe-balance-payment-method-source-type.md",
+  "status": 200,
+  "n_bytes": 26950,
+  "sha256": "518c0143b0d7d20396ef7449e3b2573fd3779a19defb32c74dc109e1e22d9aa0",
+  "fetched_at": "2026-10-30T04:11:10Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/stripe-tax-ticket-sales-event-location.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/stripe-tax-ticket-sales-event-location.md",
+  "path": "091-changelog-dahlia-2026-03-25-stripe-tax-ticket-sales-event-location.md",
+  "status": 200,
+  "n_bytes": 31159,
+  "sha256": "0842cdf9d52d322b05bb0e979e44bad854bda2327d8d40b6c3aaf0505466296a",
+  "fetched_at": "2026-10-30T04:10:08Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-03-25/visa-card-reference-id-optional.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-03-25/visa-card-reference-id-optional.md",
+  "path": "346-changelog-dahlia-2026-03-25-visa-card-reference-id-optional.md",
+  "status": 200,
+  "n_bytes": 8700,
+  "sha256": "f9b29cf0777f98cce455ffd27d660a150a761134772010bf802c239ca3d11ed8",
+  "fetched_at": "2026-10-30T04:14:24Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/accounts-v2-expanded-availability.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/accounts-v2-expanded-availability.md",
+  "path": "125-changelog-dahlia-2026-04-22-accounts-v2-expanded-availability.md",
+  "status": 200,
+  "n_bytes": 8928,
+  "sha256": "eb2d1d7cb75be34ea2e630c2da471f021633b02c853ea8e558b86bd834cc24b8",
+  "fetched_at": "2026-10-30T04:10:42Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/adds-expandable-tax-rate-property-to-tax-rate-details.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/adds-expandable-tax-rate-property-to-tax-rate-details.md",
+  "path": "203-gelog-dahlia-2026-04-22-adds-expandable-tax-rate-property-to-tax-rate-detail.md",
+  "status": 200,
+  "n_bytes": 11573,
+  "sha256": "1b08f78e122b59fd8965f6fb5668e724e686b9ec636260ab115e72e616e68d4a",
+  "fetched_at": "2026-10-30T04:12:00Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/adds-workflows-api-with-programmatic-invocation.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/adds-workflows-api-with-programmatic-invocation.md",
+  "path": "368-changelog-dahlia-2026-04-22-adds-workflows-api-with-programmatic-invocation.md",
+  "status": 200,
+  "n_bytes": 14686,
+  "sha256": "d2ea816342cb9d226a50a0ee9f296ec13353f3949b5bf6ff9944902a9cbf4caf",
+  "fetched_at": "2026-10-30T04:14:46Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/amount-confirmation-parameter-to-paymentintent.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/amount-confirmation-parameter-to-paymentintent.md",
+  "path": "251-changelog-dahlia-2026-04-22-amount-confirmation-parameter-to-paymentintent.md",
+  "status": 200,
+  "n_bytes": 9169,
+  "sha256": "ad92aa90d90de99f07ab5c7ff5f9218321250b87fd40dcda7887fa04349ac99d",
+  "fetched_at": "2026-10-30T04:12:49Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/azure-event-grid-event-destination.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/azure-event-grid-event-destination.md",
+  "path": "389-changelog-dahlia-2026-04-22-azure-event-grid-event-destination.md",
+  "status": 200,
+  "n_bytes": 12245,
+  "sha256": "50013628da5cf6bf5c2b2b7c3c3f9170f53459cf0b48c25f4053e5f874198668",
+  "fetched_at": "2026-10-30T04:15:08Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/billing-meter-event-values-validation.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/billing-meter-event-values-validation.md",
+  "path": "397-changelog-dahlia-2026-04-22-billing-meter-event-values-validation.md",
+  "status": 200,
+  "n_bytes": 11526,
+  "sha256": "7042b33a6c82f7a7d21e26bbde6e72e5f17792e8d6d8e75b4d696b2ea7523f40",
+  "fetched_at": "2026-10-30T04:15:16Z"
+ },
  "https://docs.stripe.com/changelog/dahlia/2026-04-22/checkout-sessions-automatic-surcharge.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/checkout-sessions-automatic-surcharge.md",
   "path": "056-changelog-dahlia-2026-04-22-checkout-sessions-automatic-surcharge.md",
@@ -326,6 +2174,62 @@
   "n_bytes": 12281,
   "sha256": "2c154c0dc8fd82867059607ff00d72b46d1278113ab6f46e10da9be766de0214",
   "fetched_at": "2026-10-30T03:22:57Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/credential-reuse-with-accounts-v2.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/credential-reuse-with-accounts-v2.md",
+  "path": "190-changelog-dahlia-2026-04-22-credential-reuse-with-accounts-v2.md",
+  "status": 200,
+  "n_bytes": 8548,
+  "sha256": "88477ca2b7a5e914e8ac76029f53c4e62cff8e3c817020cde651bacf755aa0cb",
+  "fetched_at": "2026-10-30T04:11:47Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/cross-border-payouts-new-countries.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/cross-border-payouts-new-countries.md",
+  "path": "281-changelog-dahlia-2026-04-22-cross-border-payouts-new-countries.md",
+  "status": 200,
+  "n_bytes": 14659,
+  "sha256": "8d3a749f625549128c84a366d3d349356934aaf894583a8037853b4449714993",
+  "fetched_at": "2026-10-30T04:13:19Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/fulfillment-error-to-issuing-card-cancellation-and-replacement.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/fulfillment-error-to-issuing-card-cancellation-and-replacement.md",
+  "path": "317-lia-2026-04-22-fulfillment-error-to-issuing-card-cancellation-and-replacemen.md",
+  "status": 200,
+  "n_bytes": 9455,
+  "sha256": "ac7aaeda9b4de71508f2c096eba1edbf43f1644266fe6d3665c7f050a69426ed",
+  "fetched_at": "2026-10-30T04:13:55Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/issuing-card-presence-spending-control.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/issuing-card-presence-spending-control.md",
+  "path": "305-changelog-dahlia-2026-04-22-issuing-card-presence-spending-control.md",
+  "status": 200,
+  "n_bytes": 16480,
+  "sha256": "fb243ea98d0d647f526bf4d422ce130d8de79dad4d99f3ba16b8c32e4725bae8",
+  "fetched_at": "2026-10-30T04:13:43Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/klarna-payments-with-terminal-readers-qr-code-support.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/klarna-payments-with-terminal-readers-qr-code-support.md",
+  "path": "069-gelog-dahlia-2026-04-22-klarna-payments-with-terminal-readers-qr-code-suppor.md",
+  "status": 200,
+  "n_bytes": 15166,
+  "sha256": "23fd73950c9bbd9b3e070777fc27472a05059580739a5fe8013188adb4f0201d",
+  "fetched_at": "2026-10-30T04:09:46Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/managed-payments.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/managed-payments.md",
+  "path": "182-changelog-dahlia-2026-04-22-managed-payments.md",
+  "status": 200,
+  "n_bytes": 14833,
+  "sha256": "6c8bb0bd686c396874a15a4471a7de118e3e4368b47faffafb7481ecd4df637a",
+  "fetched_at": "2026-10-30T04:11:39Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/orchestrated-commerce-agreements-api.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/orchestrated-commerce-agreements-api.md",
+  "path": "383-changelog-dahlia-2026-04-22-orchestrated-commerce-agreements-api.md",
+  "status": 200,
+  "n_bytes": 13968,
+  "sha256": "54b3ab2626ceec6c09c0d377cb69b266a30b15b886674169d52a9508e706ea09",
+  "fetched_at": "2026-10-30T04:15:02Z"
  },
  "https://docs.stripe.com/changelog/dahlia/2026-04-22/payment-evaluations-optional-radar-session.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/payment-evaluations-optional-radar-session.md",
@@ -343,6 +2247,46 @@
   "sha256": "a55b52ab25994b27279e348b4fc396b9994032bb4d27bb04e142e8b29e0a0ee3",
   "fetched_at": "2026-10-30T03:22:24Z"
  },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/setup-attempt-payment-method-details-for-cards-moto.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/setup-attempt-payment-method-details-for-cards-moto.md",
+  "path": "318-angelog-dahlia-2026-04-22-setup-attempt-payment-method-details-for-cards-mot.md",
+  "status": 200,
+  "n_bytes": 10719,
+  "sha256": "f0e3174d9eaa9101448be65ce86b13b293949a5e8dd081bdff23234c825867cd",
+  "fetched_at": "2026-10-30T04:13:56Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/shared-payment-granted-token.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/shared-payment-granted-token.md",
+  "path": "195-changelog-dahlia-2026-04-22-shared-payment-granted-token.md",
+  "status": 200,
+  "n_bytes": 22702,
+  "sha256": "7940befc4eceacf5b698839d87d18c32267c2e6bab822ad0a9f1091fa7b39fe5",
+  "fetched_at": "2026-10-30T04:11:52Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/stripe-billing-blik-recurring-payments.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/stripe-billing-blik-recurring-payments.md",
+  "path": "167-changelog-dahlia-2026-04-22-stripe-billing-blik-recurring-payments.md",
+  "status": 200,
+  "n_bytes": 22681,
+  "sha256": "2ca0a24c7f4dfd3291635d94ea68b787ebb2b9dd900592bc173faad5e8c7cea7",
+  "fetched_at": "2026-10-30T04:11:24Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/stripe-fee-tax-transaction-category.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/stripe-fee-tax-transaction-category.md",
+  "path": "284-changelog-dahlia-2026-04-22-stripe-fee-tax-transaction-category.md",
+  "status": 200,
+  "n_bytes": 9817,
+  "sha256": "b371358bbf09a014f3b1c896da82c00954eba7437064787b91f2a9888026bcd6",
+  "fetched_at": "2026-10-30T04:13:22Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-04-22/sunbit-buy-now-pay-later-support.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-04-22/sunbit-buy-now-pay-later-support.md",
+  "path": "282-changelog-dahlia-2026-04-22-sunbit-buy-now-pay-later-support.md",
+  "status": 200,
+  "n_bytes": 42336,
+  "sha256": "f3fa1eaf12bb0fa0f767244af77bf2f510b7010e74cefaeda81a57a1d18bd9c1",
+  "fetched_at": "2026-10-30T04:13:20Z"
+ },
  "https://docs.stripe.com/changelog/dahlia/2026-05-27/add-contact-details-element-to-checkout.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/add-contact-details-element-to-checkout.md",
   "path": "053-changelog-dahlia-2026-05-27-add-contact-details-element-to-checkout.md",
@@ -350,6 +2294,102 @@
   "n_bytes": 1310,
   "sha256": "8ebb3759e593a3ae9a0c2f91197538ba577d85214db3a212010cddf27ef970ba",
   "fetched_at": "2026-10-30T03:22:54Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/balance-settings-automatic-transfer-rules.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/balance-settings-automatic-transfer-rules.md",
+  "path": "089-changelog-dahlia-2026-05-27-balance-settings-automatic-transfer-rules.md",
+  "status": 200,
+  "n_bytes": 11526,
+  "sha256": "e3c4d06ad3ee3335aa7d2b9f090775661015cfd15de6077eb29cce49eec75eb5",
+  "fetched_at": "2026-10-30T04:10:06Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/bizum-payments.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/bizum-payments.md",
+  "path": "085-changelog-dahlia-2026-05-27-bizum-payments.md",
+  "status": 200,
+  "n_bytes": 36099,
+  "sha256": "86c42c2349de7f001d391f0003b12c3697db5ad05a6b0e1c726d42ffd30b7eda",
+  "fetched_at": "2026-10-30T04:10:02Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/chaps-support-financial-addresses-and-received-credits.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/chaps-support-financial-addresses-and-received-credits.md",
+  "path": "122-elog-dahlia-2026-05-27-chaps-support-financial-addresses-and-received-credit.md",
+  "status": 200,
+  "n_bytes": 10400,
+  "sha256": "d8df76ec92476b218175cc96700483be54dcc91d362f7ef2925f8dd8e21625a1",
+  "fetched_at": "2026-10-30T04:10:39Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/cross-border-payouts-20-new-bank-account-types.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/cross-border-payouts-20-new-bank-account-types.md",
+  "path": "295-changelog-dahlia-2026-05-27-cross-border-payouts-20-new-bank-account-types.md",
+  "status": 200,
+  "n_bytes": 11612,
+  "sha256": "9bea6b36a90822d35cb95c62a56679aa1c29daa60430f2e2c02383dda9466568",
+  "fetched_at": "2026-10-30T04:13:33Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/invoice-item-proration-credited-items.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/invoice-item-proration-credited-items.md",
+  "path": "170-changelog-dahlia-2026-05-27-invoice-item-proration-credited-items.md",
+  "status": 200,
+  "n_bytes": 10939,
+  "sha256": "6ae276d7a5d5fdd72c7ad5ae5b0d1dbc819c8451ab34201667b729ad7caf2090",
+  "fetched_at": "2026-10-30T04:11:27Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/invoice-items-discount-eligibility.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/invoice-items-discount-eligibility.md",
+  "path": "287-changelog-dahlia-2026-05-27-invoice-items-discount-eligibility.md",
+  "status": 200,
+  "n_bytes": 17200,
+  "sha256": "0709a52bca64c760997dae0a15483a3d71c3adef9b621cdedd2c710e652fefaf",
+  "fetched_at": "2026-10-30T04:13:25Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/invoice-object-amount-paid-off-stripe-property.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/invoice-object-amount-paid-off-stripe-property.md",
+  "path": "381-changelog-dahlia-2026-05-27-invoice-object-amount-paid-off-stripe-property.md",
+  "status": 200,
+  "n_bytes": 10482,
+  "sha256": "04ea11e49a75eb6eb778dbf6983742221925e5a0fbc0468e276fcf31ac803534",
+  "fetched_at": "2026-10-30T04:15:00Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/link-authentication-element-rename.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/link-authentication-element-rename.md",
+  "path": "272-changelog-dahlia-2026-05-27-link-authentication-element-rename.md",
+  "status": 200,
+  "n_bytes": 1035,
+  "sha256": "59eae6cc47796128df470832f68254596a3fc33eaed34dd457a806a5b5750fe7",
+  "fetched_at": "2026-10-30T04:13:10Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/pause-subscriptions.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/pause-subscriptions.md",
+  "path": "080-changelog-dahlia-2026-05-27-pause-subscriptions.md",
+  "status": 200,
+  "n_bytes": 13061,
+  "sha256": "aa97186a7020a2fd81151bbc7f7ef1022d03c675c949a442363873b2b623fcb0",
+  "fetched_at": "2026-10-30T04:09:57Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/payment-method-configurations-active-status-filtering.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/payment-method-configurations-active-status-filtering.md",
+  "path": "064-gelog-dahlia-2026-05-27-payment-method-configurations-active-status-filterin.md",
+  "status": 200,
+  "n_bytes": 10207,
+  "sha256": "aa617a7347e2f8e395802cde952aedec4eece29f0eed686a61f85274619fce2c",
+  "fetched_at": "2026-10-30T04:09:41Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/recurring-payments-twint.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/recurring-payments-twint.md",
+  "path": "087-changelog-dahlia-2026-05-27-recurring-payments-twint.md",
+  "status": 200,
+  "n_bytes": 24424,
+  "sha256": "7b55f568f73ee9f5378ed09522da1e85481ca6f7ecf4fcac72bfa57c14201045",
+  "fetched_at": "2026-10-30T04:10:04Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/subscriptions-billing-schedules.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/subscriptions-billing-schedules.md",
+  "path": "120-changelog-dahlia-2026-05-27-subscriptions-billing-schedules.md",
+  "status": 200,
+  "n_bytes": 14803,
+  "sha256": "72fe2a2c84cfea21018d1b44147f8f05cc851ea5819a5dd16b1cef8ca15239e2",
+  "fetched_at": "2026-10-30T04:10:37Z"
  },
  "https://docs.stripe.com/changelog/dahlia/2026-05-27/terminal-reader-action-failures-error-details.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/terminal-reader-action-failures-error-details.md",
@@ -375,6 +2415,22 @@
   "sha256": "37b8d58e7a6b4fffbba65a55113c5dacefc7c879019d5fe0a1637c02c292009d",
   "fetched_at": "2026-10-30T03:22:11Z"
  },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/trial-offer-prices-expansion.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/trial-offer-prices-expansion.md",
+  "path": "192-changelog-dahlia-2026-05-27-trial-offer-prices-expansion.md",
+  "status": 200,
+  "n_bytes": 9912,
+  "sha256": "4c185e79a3c712133d322add2da876e3aed7d88f621d32d72817ece803c9c7d4",
+  "fetched_at": "2026-10-30T04:11:49Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-05-27/verifone-third-party-device-types.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-05-27/verifone-third-party-device-types.md",
+  "path": "185-changelog-dahlia-2026-05-27-verifone-third-party-device-types.md",
+  "status": 200,
+  "n_bytes": 14980,
+  "sha256": "b6dd09be77636c06095ac740852572e019178ef38942ba27763487325985ce55",
+  "fetched_at": "2026-10-30T04:11:42Z"
+ },
  "https://docs.stripe.com/changelog/dahlia/2026-06-24/batch-job-creation-optional-metadata.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/batch-job-creation-optional-metadata.md",
   "path": "040-changelog-dahlia-2026-06-24-batch-job-creation-optional-metadata.md",
@@ -382,6 +2438,30 @@
   "n_bytes": 8036,
   "sha256": "af4243606afef0a08b9c21d5ed2fb60a5823ea06e5db5e5a515ee340a11d3d00",
   "fetched_at": "2026-10-30T03:22:41Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/batch-job-v2-remove-rate-limit-parameter.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/batch-job-v2-remove-rate-limit-parameter.md",
+  "path": "261-changelog-dahlia-2026-06-24-batch-job-v2-remove-rate-limit-parameter.md",
+  "status": 200,
+  "n_bytes": 10131,
+  "sha256": "f4031f1d3472de64a62da5050955847fc80aaf6290d871065ab5e8749246cd1b",
+  "fetched_at": "2026-10-30T04:12:59Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/bizum-payments-buyer-id.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/bizum-payments-buyer-id.md",
+  "path": "395-changelog-dahlia-2026-06-24-bizum-payments-buyer-id.md",
+  "status": 200,
+  "n_bytes": 15569,
+  "sha256": "a62b675ad451e7fc764ccf1c84114b6becd796346a7f62bbd5722537fb269e73",
+  "fetched_at": "2026-10-30T04:15:14Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/blik-payments-buyer-id.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/blik-payments-buyer-id.md",
+  "path": "211-changelog-dahlia-2026-06-24-blik-payments-buyer-id.md",
+  "status": 200,
+  "n_bytes": 12182,
+  "sha256": "e649c7d141efe686752eaca68101c863726194aa335c154f6a176432208dac52",
+  "fetched_at": "2026-10-30T04:12:08Z"
  },
  "https://docs.stripe.com/changelog/dahlia/2026-06-24/checkout-session-response-wechat-pay-payment-method-options.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/checkout-session-response-wechat-pay-payment-method-options.md",
@@ -391,6 +2471,46 @@
   "sha256": "3a34de5c95679ba508948bd4e8833fc2f34f1998a60a2396988d0fd80816ed2b",
   "fetched_at": "2026-10-30T03:22:56Z"
  },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/checkout-sessions-billing-cycle-anchor-config.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/checkout-sessions-billing-cycle-anchor-config.md",
+  "path": "279-changelog-dahlia-2026-06-24-checkout-sessions-billing-cycle-anchor-config.md",
+  "status": 200,
+  "n_bytes": 10127,
+  "sha256": "994b8322656bd0cd19c347344d64b1f88623c7bcb385ab1a8ed5b4ebeeb1c584",
+  "fetched_at": "2026-10-30T04:13:17Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/customer-object-redaction-details.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/customer-object-redaction-details.md",
+  "path": "204-changelog-dahlia-2026-06-24-customer-object-redaction-details.md",
+  "status": 200,
+  "n_bytes": 8846,
+  "sha256": "c8fa523cb25a317402f091ee1fa32b5516a29efcca54248fb42844eb1b925272",
+  "fetched_at": "2026-10-30T04:12:01Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/enables-manual-capture-for-sunbit-payments.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/enables-manual-capture-for-sunbit-payments.md",
+  "path": "384-changelog-dahlia-2026-06-24-enables-manual-capture-for-sunbit-payments.md",
+  "status": 200,
+  "n_bytes": 14668,
+  "sha256": "3776249cb37246f09609f26ded30a278229d4cfe23ed9db54390e4cd68ad3764",
+  "fetched_at": "2026-10-30T04:15:03Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/express-connected-accounts-v1-stripe-owned-pricing-negative-balance-liability.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/express-connected-accounts-v1-stripe-owned-pricing-negative-balance-liability.md",
+  "path": "241-express-connected-accounts-v1-stripe-owned-pricing-negative-balance-liabilit.md",
+  "status": 200,
+  "n_bytes": 8146,
+  "sha256": "62d0805ddbd3a8ec319177e82cf6432809a037d74d86f02d5da13f5e3fc46ffa",
+  "fetched_at": "2026-10-30T04:12:38Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/express-connected-accounts-v2-stripe-owned-pricing-negative-balance-liability.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/express-connected-accounts-v2-stripe-owned-pricing-negative-balance-liability.md",
+  "path": "264-express-connected-accounts-v2-stripe-owned-pricing-negative-balance-liabilit.md",
+  "status": 200,
+  "n_bytes": 8721,
+  "sha256": "96bafd37a094204d46bb633a614d5419c0729bd179a0adf30762c8a802887288",
+  "fetched_at": "2026-10-30T04:13:02Z"
+ },
  "https://docs.stripe.com/changelog/dahlia/2026-06-24/financial-addresses-replace-swift-with-bic.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/financial-addresses-replace-swift-with-bic.md",
   "path": "030-changelog-dahlia-2026-06-24-financial-addresses-replace-swift-with-bic.md",
@@ -398,6 +2518,46 @@
   "n_bytes": 12596,
   "sha256": "16326391c1576bd7f9947b00465fccb8d06dfc2af5b8d12dd9a01ee3a0927492",
   "fetched_at": "2026-10-30T03:22:31Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/financial-connections-upcoming-deactivations.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/financial-connections-upcoming-deactivations.md",
+  "path": "154-changelog-dahlia-2026-06-24-financial-connections-upcoming-deactivations.md",
+  "status": 200,
+  "n_bytes": 9910,
+  "sha256": "4534198bb141ac65d9367fc60be340cad2484c0f977ad9f8fbd27f5dd9831aef",
+  "fetched_at": "2026-10-30T04:11:11Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/invoice-description-footer-and-custom-fields.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/invoice-description-footer-and-custom-fields.md",
+  "path": "394-changelog-dahlia-2026-06-24-invoice-description-footer-and-custom-fields.md",
+  "status": 200,
+  "n_bytes": 12062,
+  "sha256": "0dea75bbf861cb79eeae3cf7d39691e0531803d54237d655df192666610aea56",
+  "fetched_at": "2026-10-30T04:15:13Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/received-credit-bank-transfers-account-holder-name.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/received-credit-bank-transfers-account-holder-name.md",
+  "path": "096-hangelog-dahlia-2026-06-24-received-credit-bank-transfers-account-holder-nam.md",
+  "status": 200,
+  "n_bytes": 10397,
+  "sha256": "33148d800cecdd80a44352547a5e08a02cec0494edef96fb0b10431b46e9c5c1",
+  "fetched_at": "2026-10-30T04:10:13Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/received-debits-failure-reason-enum-capability-inactive.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/received-debits-failure-reason-enum-capability-inactive.md",
+  "path": "262-log-dahlia-2026-06-24-received-debits-failure-reason-enum-capability-inactiv.md",
+  "status": 200,
+  "n_bytes": 9714,
+  "sha256": "6ecc3a9af6ff5f5dd3b7e5d2d6798bef49be728be4489ded69480efdd51655ce",
+  "fetched_at": "2026-10-30T04:13:00Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/redaction-property.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/redaction-property.md",
+  "path": "168-changelog-dahlia-2026-06-24-redaction-property.md",
+  "status": 200,
+  "n_bytes": 18752,
+  "sha256": "380bb5f062f7288daff65a88333f0496d9c8561c0ac434375fe13690adc146fb",
+  "fetched_at": "2026-10-30T04:11:25Z"
  },
  "https://docs.stripe.com/changelog/dahlia/2026-06-24/sunbit-accounts-v2.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/sunbit-accounts-v2.md",
@@ -407,6 +2567,70 @@
   "sha256": "56c321cb33b448ae0fe6cac656a5c2d86da6030848e61c85f524c500b5ce97fd",
   "fetched_at": "2026-10-30T03:23:01Z"
  },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/sunbit-checkout-pmo.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/sunbit-checkout-pmo.md",
+  "path": "364-changelog-dahlia-2026-06-24-sunbit-checkout-pmo.md",
+  "status": 200,
+  "n_bytes": 12647,
+  "sha256": "570cead996fae5581e0e88dcd729013c599bf7b189451737dda81dfd0e8b2fb8",
+  "fetched_at": "2026-10-30T04:14:42Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/top-ups-payment-method-support-for-us-bank-accounts.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/top-ups-payment-method-support-for-us-bank-accounts.md",
+  "path": "400-angelog-dahlia-2026-06-24-top-ups-payment-method-support-for-us-bank-account.md",
+  "status": 200,
+  "n_bytes": 9199,
+  "sha256": "e9b6235438d8638ef3dd8c9a275d1e4c424908b0551b2b4ace601a34c66d1dc3",
+  "fetched_at": "2026-10-30T04:15:19Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-06-24/v2-financial-accounts-statuses-filter.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-06-24/v2-financial-accounts-statuses-filter.md",
+  "path": "169-changelog-dahlia-2026-06-24-v2-financial-accounts-statuses-filter.md",
+  "status": 200,
+  "n_bytes": 12259,
+  "sha256": "c52b61783c6e8d1be08fe545613ba7280dc9c2e4fb976cf30f9e50f15c324a2c",
+  "fetched_at": "2026-10-30T04:11:26Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/account-session-embedded-components-smart-disputes-management.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/account-session-embedded-components-smart-disputes-management.md",
+  "path": "128-hlia-2026-07-29-account-session-embedded-components-smart-disputes-managemen.md",
+  "status": 200,
+  "n_bytes": 21407,
+  "sha256": "b719e0cc4d4ac796d680c8797b85ed651a70266c653cc300f5eed9a4f4fbc4a9",
+  "fetched_at": "2026-10-30T04:10:45Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/accounts-v2-address-fields.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/accounts-v2-address-fields.md",
+  "path": "217-changelog-dahlia-2026-07-29-accounts-v2-address-fields.md",
+  "status": 200,
+  "n_bytes": 14694,
+  "sha256": "13b7ada8d4d004bc2ccdcb053a1dcd273ad201b2178cb158e8a5663fc8eddbad",
+  "fetched_at": "2026-10-30T04:12:14Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/adds-correos-as-an-issuing-card-shipping-carrier-in-the-eu.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/adds-correos-as-an-issuing-card-shipping-carrier-in-the-eu.md",
+  "path": "307-dahlia-2026-07-29-adds-correos-as-an-issuing-card-shipping-carrier-in-the-eu.md",
+  "status": 200,
+  "n_bytes": 8612,
+  "sha256": "f05430c64d2ab485a8d9e9e48e74ff80cd683193b3a87ba14e89816a91a724e8",
+  "fetched_at": "2026-10-30T04:13:45Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/adds-list-and-retrieve-api-methods-for-trial-offers.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/adds-list-and-retrieve-api-methods-for-trial-offers.md",
+  "path": "157-angelog-dahlia-2026-07-29-adds-list-and-retrieve-api-methods-for-trial-offer.md",
+  "status": 200,
+  "n_bytes": 9043,
+  "sha256": "3f1bb69c7aad217c5198d86070538b0acfb453d8431383b31a87c94276fbc33c",
+  "fetched_at": "2026-10-30T04:11:14Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/adds-subscription-metadata-support-to-invoice-preview.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/adds-subscription-metadata-support-to-invoice-preview.md",
+  "path": "063-gelog-dahlia-2026-07-29-adds-subscription-metadata-support-to-invoice-previe.md",
+  "status": 200,
+  "n_bytes": 9765,
+  "sha256": "843e6f372025dd5b419fd8077291f467427771f74bd3803c0f2621e3c53f377f",
+  "fetched_at": "2026-10-30T04:09:40Z"
+ },
  "https://docs.stripe.com/changelog/dahlia/2026-07-29/alipay-support-for-invoices-and-subscriptions-with-sendinvoice-collection.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/alipay-support-for-invoices-and-subscriptions-with-sendinvoice-collection.md",
   "path": "052-29-alipay-support-for-invoices-and-subscriptions-with-sendinvoice-collection.md",
@@ -415,6 +2639,46 @@
   "sha256": "c0f0d89b4003387ca2ceb098997c44cdb3505a3a6b5ca0de586da6e0642ed655",
   "fetched_at": "2026-10-30T03:22:53Z"
  },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/financial-connections-advanced-session-config.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/financial-connections-advanced-session-config.md",
+  "path": "243-changelog-dahlia-2026-07-29-financial-connections-advanced-session-config.md",
+  "status": 200,
+  "n_bytes": 20170,
+  "sha256": "2d88672e1810abde416cb52b016012508f38e71084f75d05f92b8849fdab7ceb",
+  "fetched_at": "2026-10-30T04:12:40Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/industry-metadata-taxes-parameter-rename.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/industry-metadata-taxes-parameter-rename.md",
+  "path": "061-changelog-dahlia-2026-07-29-industry-metadata-taxes-parameter-rename.md",
+  "status": 200,
+  "n_bytes": 70823,
+  "sha256": "adcbedf27ff69f34d299f7201c6d4a32d1ca1dd6d31afb312545d1e28586f818",
+  "fetched_at": "2026-10-30T04:09:38Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/list-payment-records.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/list-payment-records.md",
+  "path": "267-changelog-dahlia-2026-07-29-list-payment-records.md",
+  "status": 200,
+  "n_bytes": 9970,
+  "sha256": "e852c64dd67450f0d5259d856015bf61dc76f7e94e71191d43225fcd66582d28",
+  "fetched_at": "2026-10-30T04:13:05Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/payment-links-update-endpoint-new-parameters.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/payment-links-update-endpoint-new-parameters.md",
+  "path": "232-changelog-dahlia-2026-07-29-payment-links-update-endpoint-new-parameters.md",
+  "status": 200,
+  "n_bytes": 14563,
+  "sha256": "f9387c25b2ba29fef561f747e43479feb12aaab6746b8ba6d1c2f6728091b7ab",
+  "fetched_at": "2026-10-30T04:12:29Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/radar-options-referrer.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/radar-options-referrer.md",
+  "path": "144-changelog-dahlia-2026-07-29-radar-options-referrer.md",
+  "status": 200,
+  "n_bytes": 11308,
+  "sha256": "866af66cb2adbed3bb55d4523c5c2e494dd29a3f5dcaa49098f6b8d56552c60c",
+  "fetched_at": "2026-10-30T04:11:01Z"
+ },
  "https://docs.stripe.com/changelog/dahlia/2026-07-29/received-credit-payout-v1-deprecation.md": {
   "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/received-credit-payout-v1-deprecation.md",
   "path": "004-changelog-dahlia-2026-07-29-received-credit-payout-v1-deprecation.md",
@@ -422,6 +2686,142 @@
   "n_bytes": 12665,
   "sha256": "191d552efbcafd1257daa24e446bfdcaf40ff9f15058dc80766ad2346e0954fb",
   "fetched_at": "2026-10-30T03:22:05Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/samsung-pay-and-payco-setup-future-usage-none-only.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/samsung-pay-and-payco-setup-future-usage-none-only.md",
+  "path": "304-hangelog-dahlia-2026-07-29-samsung-pay-and-payco-setup-future-usage-none-onl.md",
+  "status": 200,
+  "n_bytes": 24743,
+  "sha256": "7eb59e1eadd935c8fbfce1e476affc7ba11a9251e8d28f4feefb086d7a5eb6ec",
+  "fetched_at": "2026-10-30T04:13:42Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/shows-errors-for-eventually-due-requirements.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/shows-errors-for-eventually-due-requirements.md",
+  "path": "240-changelog-dahlia-2026-07-29-shows-errors-for-eventually-due-requirements.md",
+  "status": 200,
+  "n_bytes": 8230,
+  "sha256": "954d19fa977710eb21f47add6470431417b6bc5c82036f325963eccc79a9ad1a",
+  "fetched_at": "2026-10-30T04:12:37Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-07-29/us-parking-tax-registration-types.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-07-29/us-parking-tax-registration-types.md",
+  "path": "118-changelog-dahlia-2026-07-29-us-parking-tax-registration-types.md",
+  "status": 200,
+  "n_bytes": 21078,
+  "sha256": "d74e7522c7ddae7d824f70d7d1cf066e789bd0730805f20a49fb85eacaa6dcbe",
+  "fetched_at": "2026-10-30T04:10:35Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/2026-08-17-blocks-unsupported-integration-patterns.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/2026-08-17-blocks-unsupported-integration-patterns.md",
+  "path": "275-hangelog-dahlia-2026-08-26-2026-08-17-blocks-unsupported-integration-pattern.md",
+  "status": 200,
+  "n_bytes": 7824,
+  "sha256": "87a4126b44950fbd0f7923da45155f41aeeec1f863b58f0d96359b116c250f4c",
+  "fetched_at": "2026-10-30T04:13:13Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-a-customer-update-deep-link-for-billing-portal-sessions.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-a-customer-update-deep-link-for-billing-portal-sessions.md",
+  "path": "180-ahlia-2026-08-26-adds-a-customer-update-deep-link-for-billing-portal-session.md",
+  "status": 200,
+  "n_bytes": 11596,
+  "sha256": "424439e2127495afeaca347b351dbabe318ce111205579c201a71efb62f9ddbb",
+  "fetched_at": "2026-10-30T04:11:37Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-account-signals-account-evaluations-and-account-activity-apis-in-public-preview.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-account-signals-account-evaluations-and-account-activity-apis-in-public-preview.md",
+  "path": "288-count-signals-account-evaluations-and-account-activity-apis-in-public-previe.md",
+  "status": 200,
+  "n_bytes": 17904,
+  "sha256": "f0a54773e52908e222f07dceee4a7d1581798de5eb68e9a35e954b5bcfdc7bc3",
+  "fetched_at": "2026-10-30T04:13:26Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-frozen-fields-property-to-invoice-items.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-frozen-fields-property-to-invoice-items.md",
+  "path": "328-changelog-dahlia-2026-08-26-adds-frozen-fields-property-to-invoice-items.md",
+  "status": 200,
+  "n_bytes": 10224,
+  "sha256": "cba3581400452f558594a51d8cccd15d75dba2340aad23c47f465685dccd47e9",
+  "fetched_at": "2026-10-30T04:14:06Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-funding-source-group-property-to-link-wallet-payments-on-card-charges.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-funding-source-group-property-to-link-wallet-payments-on-card-charges.md",
+  "path": "172-26-adds-funding-source-group-property-to-link-wallet-payments-on-card-charge.md",
+  "status": 200,
+  "n_bytes": 10103,
+  "sha256": "a14604dcc34d07419f232384deb6d7251d20c8ccd35fcf068e21abc9e9d81fd7",
+  "fetched_at": "2026-10-30T04:11:29Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-payment-method-error-codes.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/adds-payment-method-error-codes.md",
+  "path": "245-changelog-dahlia-2026-08-26-adds-payment-method-error-codes.md",
+  "status": 200,
+  "n_bytes": 10656,
+  "sha256": "87f895cc1c396d49712ff3fd804fcc73efd81808bb0f9b6668a11812d828d5a9",
+  "fetched_at": "2026-10-30T04:12:42Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/customer-session-improvements.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/customer-session-improvements.md",
+  "path": "083-changelog-dahlia-2026-08-26-customer-session-improvements.md",
+  "status": 200,
+  "n_bytes": 13925,
+  "sha256": "22ff01f5aea0db1288066254b13a0ff5064778530db35716ebe2351dafdc04d9",
+  "fetched_at": "2026-10-30T04:10:00Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/flexible-subscription-item-limits.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/flexible-subscription-item-limits.md",
+  "path": "197-changelog-dahlia-2026-08-26-flexible-subscription-item-limits.md",
+  "status": 200,
+  "n_bytes": 7761,
+  "sha256": "ca5879ac19a09cce918b0e96329833f39d91fe63925c6a4aa2fd17389e7edf4e",
+  "fetched_at": "2026-10-30T04:11:54Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/payment-method-settings-disable-stripe-user-authentication.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/payment-method-settings-disable-stripe-user-authentication.md",
+  "path": "082-dahlia-2026-08-26-payment-method-settings-disable-stripe-user-authentication.md",
+  "status": 200,
+  "n_bytes": 11907,
+  "sha256": "2a7f14b1c89004ee8a55a43d456400e8dbf1e603311b5e3ea53f6c34dd4a8da7",
+  "fetched_at": "2026-10-30T04:09:59Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/trial-offers-return-deleted-prices.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/trial-offers-return-deleted-prices.md",
+  "path": "252-changelog-dahlia-2026-08-26-trial-offers-return-deleted-prices.md",
+  "status": 200,
+  "n_bytes": 9618,
+  "sha256": "1589d33a2096b2779bb19eb90b38bd05d126df038c8de7a50d35d150b4bb9c15",
+  "fetched_at": "2026-10-30T04:12:50Z"
+ },
+ "https://docs.stripe.com/changelog/dahlia/2026-08-26/updates-v2-payout-method-and-vault-bank-account-resources.md": {
+  "url": "https://docs.stripe.com/changelog/dahlia/2026-08-26/updates-v2-payout-method-and-vault-bank-account-resources.md",
+  "path": "214-g-dahlia-2026-08-26-updates-v2-payout-method-and-vault-bank-account-resource.md",
+  "status": 200,
+  "n_bytes": 14879,
+  "sha256": "02fcef7907b5ce11f216ace0c25024659873936abedda6dba1bde60c8e610325",
+  "fetched_at": "2026-10-30T04:12:11Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/add-card-on-file-usage-indicators.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/add-card-on-file-usage-indicators.md",
+  "path": "150-changelog-endive-2026-09-30-add-card-on-file-usage-indicators.md",
+  "status": 200,
+  "n_bytes": 23827,
+  "sha256": "9dec3dd321233f4f5f23b3473a2437a2e5ab7f9b51f33ed73d39721e365c4920",
+  "fetched_at": "2026-10-30T04:11:07Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/additional-shared-fields-customer-sharing.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/additional-shared-fields-customer-sharing.md",
+  "path": "248-changelog-endive-2026-09-30-additional-shared-fields-customer-sharing.md",
+  "status": 200,
+  "n_bytes": 9057,
+  "sha256": "09873b3bd8416c0f105e58480fe07fa260431e8f29274cfe62bd1d15cd51b4b2",
+  "fetched_at": "2026-10-30T04:12:45Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/adds-a-new-outcome-type-for-rerouted-bank-payments-to-payment-evaluations.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/adds-a-new-outcome-type-for-rerouted-bank-payments-to-payment-evaluations.md",
+  "path": "162-30-adds-a-new-outcome-type-for-rerouted-bank-payments-to-payment-evaluations.md",
+  "status": 200,
+  "n_bytes": 8527,
+  "sha256": "f4fa57878688cd0d0caf5f243ae95006c4278e5a1511bfe639ad8a812a5c87be",
+  "fetched_at": "2026-10-30T04:11:19Z"
  },
  "https://docs.stripe.com/changelog/endive/2026-09-30/adds-authentication-and-money-movement-actions-to-activity-logs.md": {
   "url": "https://docs.stripe.com/changelog/endive/2026-09-30/adds-authentication-and-money-movement-actions-to-activity-logs.md",
@@ -439,6 +2839,150 @@
   "sha256": "e52c2f026aae107bc9cf6cd59fbadc1e36ddd2e6516be41ff583deb00d404d5a",
   "fetched_at": "2026-10-30T03:22:42Z"
  },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/adds-momo-payment-method-details-to-payment-records.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/adds-momo-payment-method-details-to-payment-records.md",
+  "path": "193-angelog-endive-2026-09-30-adds-momo-payment-method-details-to-payment-record.md",
+  "status": 200,
+  "n_bytes": 15141,
+  "sha256": "543887aec02ce9d96aeb804a1ff1efd36df6210cb62c5dc92e691fba084d3615",
+  "fetched_at": "2026-10-30T04:11:50Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/adds-network-fee-details-to-estimated-fees.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/adds-network-fee-details-to-estimated-fees.md",
+  "path": "210-changelog-endive-2026-09-30-adds-network-fee-details-to-estimated-fees.md",
+  "status": 200,
+  "n_bytes": 13330,
+  "sha256": "5928bdf66a7b6353c948d3d5423697c5799f940d0f92d8bab1176eed180da84b",
+  "fetched_at": "2026-10-30T04:12:07Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/blik-recurring-off-session-payments.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/blik-recurring-off-session-payments.md",
+  "path": "105-changelog-endive-2026-09-30-blik-recurring-off-session-payments.md",
+  "status": 200,
+  "n_bytes": 54931,
+  "sha256": "07b469a2ffe275e30d9ac8da83197b0cafb21a8ec135b85566d83b6084c753f6",
+  "fetched_at": "2026-10-30T04:10:22Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/canada-financing-disclaimer-variant-for-capital-for-platforms.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/canada-financing-disclaimer-variant-for-capital-for-platforms.md",
+  "path": "187-dive-2026-09-30-canada-financing-disclaimer-variant-for-capital-for-platform.md",
+  "status": 200,
+  "n_bytes": 9681,
+  "sha256": "3c008a4fab62a33bfa03844df1fe7012e781c28d622c13ac12efb214d41f4a9a",
+  "fetched_at": "2026-10-30T04:11:44Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/data-share-only.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/data-share-only.md",
+  "path": "231-changelog-endive-2026-09-30-data-share-only.md",
+  "status": 200,
+  "n_bytes": 16942,
+  "sha256": "550cd014a14ce68b3d941a123e4b88948bc149744e62fef4e58710fe30a98349",
+  "fetched_at": "2026-10-30T04:12:28Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/deprecate-payment-request-button.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/deprecate-payment-request-button.md",
+  "path": "256-changelog-endive-2026-09-30-deprecate-payment-request-button.md",
+  "status": 200,
+  "n_bytes": 4626,
+  "sha256": "7a6c24396b3e0d1e9d5886b5d919624ab5d69908eb4831c6d04296234f9d0a49",
+  "fetched_at": "2026-10-30T04:12:54Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/expands-reserve-plan-listing-access.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/expands-reserve-plan-listing-access.md",
+  "path": "189-changelog-endive-2026-09-30-expands-reserve-plan-listing-access.md",
+  "status": 200,
+  "n_bytes": 11148,
+  "sha256": "3464f38d1d232ea579de25a1c6aaed1b1ef340fb945d6a7c61bbbed50507f731",
+  "fetched_at": "2026-10-30T04:11:46Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/expiration-timestamp-swish-qr.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/expiration-timestamp-swish-qr.md",
+  "path": "094-changelog-endive-2026-09-30-expiration-timestamp-swish-qr.md",
+  "status": 200,
+  "n_bytes": 10113,
+  "sha256": "71e70ef6abd9a3ca6561cbf36f991a5429f068254fdfc4ac0f2dd3708db133e6",
+  "fetched_at": "2026-10-30T04:10:11Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/feedback-options-api.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/feedback-options-api.md",
+  "path": "134-changelog-endive-2026-09-30-feedback-options-api.md",
+  "status": 200,
+  "n_bytes": 13467,
+  "sha256": "9690d43022e146ef04d6e9fd2236530bddc817db396df818e215930a2be62025",
+  "fetched_at": "2026-10-30T04:10:51Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/invoice-items-proration-details.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/invoice-items-proration-details.md",
+  "path": "257-changelog-endive-2026-09-30-invoice-items-proration-details.md",
+  "status": 200,
+  "n_bytes": 8954,
+  "sha256": "4bddfc3623688dee8acfe8c97fa313fcb09dbe8d2ec0bf4940fa326cb68f008d",
+  "fetched_at": "2026-10-30T04:12:55Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/invoicing-rules-for-invoice-items.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/invoicing-rules-for-invoice-items.md",
+  "path": "276-changelog-endive-2026-09-30-invoicing-rules-for-invoice-items.md",
+  "status": 200,
+  "n_bytes": 10543,
+  "sha256": "03b2eaf6e28b62332f7d3b30e3169640666c3f05c82592bd6af5df4cf43dfe22",
+  "fetched_at": "2026-10-30T04:13:14Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/link-funding-source-group-payment-records.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/link-funding-source-group-payment-records.md",
+  "path": "237-changelog-endive-2026-09-30-link-funding-source-group-payment-records.md",
+  "status": 200,
+  "n_bytes": 16297,
+  "sha256": "5888d04b70d4f1fa4ec3e04ea7471642470e343a6e80aa67a61b667fdc8a40ac",
+  "fetched_at": "2026-10-30T04:12:34Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/live-mode-indicator-for-fx-quotes.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/live-mode-indicator-for-fx-quotes.md",
+  "path": "379-changelog-endive-2026-09-30-live-mode-indicator-for-fx-quotes.md",
+  "status": 200,
+  "n_bytes": 8817,
+  "sha256": "3f8506f7b66b3e75348eca7cf617718735a51ef86ddf19b42a0071518d0ace0f",
+  "fetched_at": "2026-10-30T04:14:58Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/page-limit-validation-for-dispute-evidence.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/page-limit-validation-for-dispute-evidence.md",
+  "path": "283-changelog-endive-2026-09-30-page-limit-validation-for-dispute-evidence.md",
+  "status": 200,
+  "n_bytes": 9579,
+  "sha256": "cd52bc1b1d905d5537654e74bf187f0e8db1f5e17cddf851ee94807103ad1922",
+  "fetched_at": "2026-10-30T04:13:21Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/payment-evaluations-nullable-score.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/payment-evaluations-nullable-score.md",
+  "path": "390-changelog-endive-2026-09-30-payment-evaluations-nullable-score.md",
+  "status": 200,
+  "n_bytes": 16337,
+  "sha256": "d18993951f6d5e8122e6ff7213044f23a0cd467796061e2aa2026cf95532c067",
+  "fetched_at": "2026-10-30T04:15:09Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/payment-method-type-payment-failures.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/payment-method-type-payment-failures.md",
+  "path": "265-changelog-endive-2026-09-30-payment-method-type-payment-failures.md",
+  "status": 200,
+  "n_bytes": 11317,
+  "sha256": "50fbb46b9b7f76be0c72fa54a126216bb246f03f5735da884324c5231942e07c",
+  "fetched_at": "2026-10-30T04:13:03Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/polymorphic-billing-cycle-anchor.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/polymorphic-billing-cycle-anchor.md",
+  "path": "393-changelog-endive-2026-09-30-polymorphic-billing-cycle-anchor.md",
+  "status": 200,
+  "n_bytes": 13175,
+  "sha256": "dc0cb3609e5e242a3027f8c4a4e18ad8fe178a261156dcabf91dc828885e32fa",
+  "fetched_at": "2026-10-30T04:15:12Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/pre-ga-upgrades-v2-poms.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/pre-ga-upgrades-v2-poms.md",
+  "path": "303-changelog-endive-2026-09-30-pre-ga-upgrades-v2-poms.md",
+  "status": 200,
+  "n_bytes": 21296,
+  "sha256": "b6684a66100996e20c42ab616b3cda90098739fbe0109f53c9642df44afe3a2f",
+  "fetched_at": "2026-10-30T04:13:41Z"
+ },
  "https://docs.stripe.com/changelog/endive/2026-09-30/provisional-credit-issuing-disputes-balance-transaction-types.md": {
   "url": "https://docs.stripe.com/changelog/endive/2026-09-30/provisional-credit-issuing-disputes-balance-transaction-types.md",
   "path": "024-dive-2026-09-30-provisional-credit-issuing-disputes-balance-transaction-type.md",
@@ -447,6 +2991,78 @@
   "sha256": "b8e791ff1d5bf6747b349edab2637d640a6ee3c714a9f61550df6e3f33b78015",
   "fetched_at": "2026-10-30T03:22:25Z"
  },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/reference-and-company-details-billie.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/reference-and-company-details-billie.md",
+  "path": "294-changelog-endive-2026-09-30-reference-and-company-details-billie.md",
+  "status": 200,
+  "n_bytes": 23765,
+  "sha256": "e10901997e16b7c24c0b905edd0e24b4b8a02a61af2ce4bafde06cfe60a2d19f",
+  "fetched_at": "2026-10-30T04:13:32Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/rejected-accounts-v2-capabilities-preview.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/rejected-accounts-v2-capabilities-preview.md",
+  "path": "341-changelog-endive-2026-09-30-rejected-accounts-v2-capabilities-preview.md",
+  "status": 200,
+  "n_bytes": 65431,
+  "sha256": "6fac7beff793ea72a1f059f6d55f842ff1a1489c062418e94d006fd1e1ee9cb8",
+  "fetched_at": "2026-10-30T04:14:19Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/rejected-accounts-v2-capabilities.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/rejected-accounts-v2-capabilities.md",
+  "path": "132-changelog-endive-2026-09-30-rejected-accounts-v2-capabilities.md",
+  "status": 200,
+  "n_bytes": 126602,
+  "sha256": "1eea3658b003a9cfa658b737f9f01f1160300b4262591f837c7a6c078b5a0ad5",
+  "fetched_at": "2026-10-30T04:10:49Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/remove-elements-deferred-intent-payment-method-types.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/remove-elements-deferred-intent-payment-method-types.md",
+  "path": "348-ngelog-endive-2026-09-30-remove-elements-deferred-intent-payment-method-type.md",
+  "status": 200,
+  "n_bytes": 4904,
+  "sha256": "feebf3db1cd6aba243c5c3ed5fb8ae4f924838e32f8ceb2b0fcd8d20b7cca923",
+  "fetched_at": "2026-10-30T04:14:26Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/remove-payment-method-types-checkout-sessions.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/remove-payment-method-types-checkout-sessions.md",
+  "path": "293-changelog-endive-2026-09-30-remove-payment-method-types-checkout-sessions.md",
+  "status": 200,
+  "n_bytes": 17278,
+  "sha256": "56c4311dfa05cc81b773d240f8d4341c0a0e6b9d35158888f58112d8ef4e26e9",
+  "fetched_at": "2026-10-30T04:13:31Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/removed-payto-fields.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/removed-payto-fields.md",
+  "path": "337-changelog-endive-2026-09-30-removed-payto-fields.md",
+  "status": 200,
+  "n_bytes": 13833,
+  "sha256": "94aa34f5786bd7aae1137cec330285996ad8a673b33cb146e253b9d41928853c",
+  "fetched_at": "2026-10-30T04:14:15Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/removes-capture-method-parameter-for-paypay-payments.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/removes-capture-method-parameter-for-paypay-payments.md",
+  "path": "230-ngelog-endive-2026-09-30-removes-capture-method-parameter-for-paypay-payment.md",
+  "status": 200,
+  "n_bytes": 13668,
+  "sha256": "8e422abe7c0e0ae4ac065054afcfb155faeb2436610a1a82c245cd5d89fdc8c3",
+  "fetched_at": "2026-10-30T04:12:27Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/removes-configurations-parameter-from-v2-core-account-links-api.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/removes-configurations-parameter-from-v2-core-account-links-api.md",
+  "path": "076-ve-2026-09-30-removes-configurations-parameter-from-v2-core-account-links-ap.md",
+  "status": 200,
+  "n_bytes": 15586,
+  "sha256": "88ab90ae48e25b6d78d4055ee52364a12a1f9bb1219b4c3fbdef0706d6b08dac",
+  "fetched_at": "2026-10-30T04:09:53Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/removes-level-property-from-inbound-transfer-history-and-changes-date-filtering-syntax-for-list-endpoints.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/removes-level-property-from-inbound-transfer-history-and-changes-date-filtering-syntax-for-list-endpoints.md",
+  "path": "112-inbound-transfer-history-and-changes-date-filtering-syntax-for-list-endpoint.md",
+  "status": 200,
+  "n_bytes": 18971,
+  "sha256": "0a433508255b7e3f97d2852a6129885957d98adac31c56c279b5bb4f2c944ab1",
+  "fetched_at": "2026-10-30T04:10:29Z"
+ },
  "https://docs.stripe.com/changelog/endive/2026-09-30/removes-the-payment-method-types-parameter-from-payment-intents-and-setup-intents.md": {
   "url": "https://docs.stripe.com/changelog/endive/2026-09-30/removes-the-payment-method-types-parameter-from-payment-intents-and-setup-intents.md",
   "path": "006-ves-the-payment-method-types-parameter-from-payment-intents-and-setup-intent.md",
@@ -454,6 +3070,14 @@
   "n_bytes": 18708,
   "sha256": "849280ce0c2dd51816bf7e7dd13aaadb48f2ff1f630c1d8b6a60364471b4b87b",
   "fetched_at": "2026-10-30T03:22:07Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/rename-financial-connections-countries-filter-to-country.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/rename-financial-connections-countries-filter-to-country.md",
+  "path": "254-og-endive-2026-09-30-rename-financial-connections-countries-filter-to-countr.md",
+  "status": 200,
+  "n_bytes": 13112,
+  "sha256": "1528a53ce633091c2893639d8670cfe8b90fcf150f132a94709ca3be593adb2e",
+  "fetched_at": "2026-10-30T04:12:52Z"
  },
  "https://docs.stripe.com/changelog/endive/2026-09-30/reporting-canceled-payments.md": {
   "url": "https://docs.stripe.com/changelog/endive/2026-09-30/reporting-canceled-payments.md",
@@ -471,6 +3095,30 @@
   "sha256": "b2c83325fe689bb8d0d50f4bfd2074db18c3cff58db23794822e4050484fe239",
   "fetched_at": "2026-10-30T03:22:33Z"
  },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/scheduled-subscription-cancellation.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/scheduled-subscription-cancellation.md",
+  "path": "373-changelog-endive-2026-09-30-scheduled-subscription-cancellation.md",
+  "status": 200,
+  "n_bytes": 11120,
+  "sha256": "99387737fa92ad779036ba2a6af145f0e42d0f486cf1ae1f956920f7584d6755",
+  "fetched_at": "2026-10-30T04:14:51Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/sepa-debit-settings-accounts.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/sepa-debit-settings-accounts.md",
+  "path": "386-changelog-endive-2026-09-30-sepa-debit-settings-accounts.md",
+  "status": 200,
+  "n_bytes": 13517,
+  "sha256": "399583482604375a1a869c78413766be251db6aea84a5c662ea2538edfd28b80",
+  "fetched_at": "2026-10-30T04:15:05Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/sequra-payments.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/sequra-payments.md",
+  "path": "322-changelog-endive-2026-09-30-sequra-payments.md",
+  "status": 200,
+  "n_bytes": 59962,
+  "sha256": "03a1bfaf5ed216011dd80b9157735a9cf85b32e5d2aa13b2e3882a0b1ba5f35b",
+  "fetched_at": "2026-10-30T04:14:00Z"
+ },
  "https://docs.stripe.com/changelog/endive/2026-09-30/settlement-reserve-api.md": {
   "url": "https://docs.stripe.com/changelog/endive/2026-09-30/settlement-reserve-api.md",
   "path": "028-changelog-endive-2026-09-30-settlement-reserve-api.md",
@@ -479,6 +3127,22 @@
   "sha256": "b2448668af1e277fb86ea752125a1b673c3a8ee926de29362308c57520bbeb1a",
   "fetched_at": "2026-10-30T03:22:29Z"
  },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/shows-errors-for-eventually-due-requirements.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/shows-errors-for-eventually-due-requirements.md",
+  "path": "101-changelog-endive-2026-09-30-shows-errors-for-eventually-due-requirements.md",
+  "status": 200,
+  "n_bytes": 9835,
+  "sha256": "e0a6a4c1ad5a4dee2b5ae20927b484fee5797ebbfc208089bdb12fd6d8c06746",
+  "fetched_at": "2026-10-30T04:10:18Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/skip-format-validation-empty-optional-address-fields.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/skip-format-validation-empty-optional-address-fields.md",
+  "path": "280-ngelog-endive-2026-09-30-skip-format-validation-empty-optional-address-field.md",
+  "status": 200,
+  "n_bytes": 1196,
+  "sha256": "03f6dc25ea953dbf62a4461523de39e60e5ab47bdc08328d0d53a4a8c3d959b1",
+  "fetched_at": "2026-10-30T04:13:18Z"
+ },
  "https://docs.stripe.com/changelog/endive/2026-09-30/standalone-3ds.md": {
   "url": "https://docs.stripe.com/changelog/endive/2026-09-30/standalone-3ds.md",
   "path": "027-changelog-endive-2026-09-30-standalone-3ds.md",
@@ -486,5 +3150,61 @@
   "n_bytes": 15657,
   "sha256": "916e34a23978c32cdd44fc6dc07468eadd6dcc663e5be3438fac7f242d93067a",
   "fetched_at": "2026-10-30T03:22:28Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/strict-billing-details-validation.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/strict-billing-details-validation.md",
+  "path": "299-changelog-endive-2026-09-30-strict-billing-details-validation.md",
+  "status": 200,
+  "n_bytes": 4188,
+  "sha256": "0eacae1c000e2586114d8be5cf5e61507a4827fe398f329e349aee9224ade14b",
+  "fetched_at": "2026-10-30T04:13:37Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/stripe-tax-new-tax-types.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/stripe-tax-new-tax-types.md",
+  "path": "095-changelog-endive-2026-09-30-stripe-tax-new-tax-types.md",
+  "status": 200,
+  "n_bytes": 16586,
+  "sha256": "45c872d26e7db9fa24947287a5b994a63437f11feb17e4234245723fdedd11fa",
+  "fetched_at": "2026-10-30T04:10:12Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/stripe-tax-tickets.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/stripe-tax-tickets.md",
+  "path": "191-changelog-endive-2026-09-30-stripe-tax-tickets.md",
+  "status": 200,
+  "n_bytes": 38426,
+  "sha256": "ba32597b46fe2b1dc2ed18ed09302baf3bc912323333aace5b7b5d663157f888",
+  "fetched_at": "2026-10-30T04:11:48Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/submit-evidence-to-appeal-dispute-decision.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/submit-evidence-to-appeal-dispute-decision.md",
+  "path": "137-changelog-endive-2026-09-30-submit-evidence-to-appeal-dispute-decision.md",
+  "status": 200,
+  "n_bytes": 13551,
+  "sha256": "c780dd982fea9794ad461b628875c93094323aec00fd82e46d762b55e5e9bc14",
+  "fetched_at": "2026-10-30T04:10:54Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/thin-events-for-api-v1-resources-generally-available.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/thin-events-for-api-v1-resources-generally-available.md",
+  "path": "357-ngelog-endive-2026-09-30-thin-events-for-api-v1-resources-generally-availabl.md",
+  "status": 200,
+  "n_bytes": 84883,
+  "sha256": "8fef94b1c18fee4b7fc45a6a33da68b6b27fa8a32932cc16af227c7baca6d977",
+  "fetched_at": "2026-10-30T04:14:35Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/trial-offer-ga.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/trial-offer-ga.md",
+  "path": "222-changelog-endive-2026-09-30-trial-offer-ga.md",
+  "status": 200,
+  "n_bytes": 26418,
+  "sha256": "4ba567eecd67c16ca62eaf7f8d67f0aa78dad61c8da90056f30af4c179116406",
+  "fetched_at": "2026-10-30T04:12:19Z"
+ },
+ "https://docs.stripe.com/changelog/endive/2026-09-30/updated-reject-reason-codes.md": {
+  "url": "https://docs.stripe.com/changelog/endive/2026-09-30/updated-reject-reason-codes.md",
+  "path": "306-changelog-endive-2026-09-30-updated-reject-reason-codes.md",
+  "status": 200,
+  "n_bytes": 11209,
+  "sha256": "dd84d33b5240e4b24f573bb14ddbaf92c1d4460c697765b283f50ad59952fb27",
+  "fetched_at": "2026-10-30T04:13:44Z"
  }
 }

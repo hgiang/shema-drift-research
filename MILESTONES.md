@@ -703,6 +703,30 @@ site and film still show the September analysis; they are rebuilt in Phase 4.
   Round-1 answers are kept verbatim as `coder_*_answers.round1.jsonl` and are not analysed.
   Fixed by Phase 3 amendment 2, below, before round 2. Spend $19.975.
 
+- 2026-10-30 Blind coding, round 2 (after amendment 2; $0.804 for coder B; cumulative $20.779).
+  345 digests (Stripe's draw continued to 400 entries, 212 digests; GitHub's own
+  breaking-changes page now coded at rank -1), 1,299 candidate spans. Coder A returned 91
+  distinct units, coder B 96, with 78 matched. Amendment 2's matching fix worked: unit-set
+  Jaccard rose from 0.583 to 0.716. `agent_visible` agreement 0.949.
+  **Label agreement 69/78 = 0.885, kappa 0.820 — below the locked 0.90, so under the
+  pre-registered rule no prevalence number is quoted and both passes are re-run.**
+  The 9 disagreements are not scattered; they fall into exactly three groups, each a gap in
+  the guide rather than a coder error:
+  (a) `other` vs `rename`, 3 cases — a parameter *removed*, sometimes with a named
+      replacement ("Removes `customer_consent_collected` and replaces it with
+      `allow_redisplay`") and sometimes not ("`price` and `plan` are no longer available").
+      The guide never says how to code a removal.
+  (b) `other` vs `required`, 4 cases — a parameter that became *optional* ("Previously
+      `metadata` was required"), a *newly added* required parameter on existing endpoints
+      ("adding the required `currency` parameter"), and *conditional* requiredness ("when you
+      set `fees[payer]` to account, you must also set `losses[payments]`"). The guide defines
+      `required` only as "optional became required" and says nothing about these.
+  (c) `compound` vs `enum_tighten`, 2 cases — a value set that becomes an enum ("you must
+      update it to use the enum values instead"), which is both a smaller value set and a
+      type change. The guide does not say whether that is one class or two.
+  Round-2 answers are kept verbatim as `coder_*_answers.round2.jsonl` and are not analysed.
+  Fixed by Phase 3 amendment 3, below, before round 3.
+
 ## Phase 3 pre-registration — LOCKED 2026-10-30
 
 Written before any page is fetched and before any Phase-3 model call. Execution plan: `phase3/PLAN.md`.
@@ -899,6 +923,45 @@ failed. Prevalence is reported per source and pooled, the pooled figure is label
 source-weighted, and the per-source counts are printed next to it so a reader can see that
 the pooled number is mostly Stripe. If a predicted share's CI is too wide to decide at this
 corpus size, the prediction is reported undecided rather than argued either way.
+
+## Phase 3 amendment 3 — 2026-10-30, after blind coding round 2, before round 3
+
+Invokes the remedy the lock already names — "below [0.90] the coding guide is clarified and
+both passes are re-run before any prevalence number is quoted" — for the three gaps round 2
+exposed. **No definition, label, threshold, cap, draw or prediction changes.** The three
+rulings below are readings of the locked words, not new rules, and each is justified from the
+locked text rather than from which coder happened to give which answer.
+
+**Ruling 1 — a removed parameter.** `rename` is locked as "the parameter's name changed". A
+removal is therefore `rename` **only when the entry names the parameter that replaces it**;
+a removal with no named replacement is a qualifying change that is none of the five, which
+the locked labels already call `other`.
+
+**Ruling 2 — requiredness.** `required` is locked as "a parameter that was optional became
+required". Three readings follow directly:
+- a parameter that became **optional** is the opposite of that label, so it is `other`;
+- a **newly added required** parameter on an existing endpoint qualifies — the locked
+  exclusion is for new parameters "that add no constraint to an existing call", and a new
+  required parameter is exactly such a constraint — and its label is `required`;
+- **conditional** requiredness ("when you set X you must also set Y") is `required`.
+
+**Ruling 3 — a value set that becomes an enum.** `enum_tighten` is "the set of values got
+smaller" and `type_change` is "the type changed". When a free-form or boolean value is
+replaced by a fixed enum, both are true of the same parameter in one release, and `compound`
+is locked as "two or more of the five above, on the same parameter, in one release". It is
+therefore `compound`.
+
+**This is the last round.** Re-running until a threshold is met would be fishing, so the
+pre-commitment is explicit: round 3 is final. If label agreement is still below 0.90, the
+corpus is reported as **failing its reliability threshold**, P17-P20 are reported as not
+scored, and no prevalence number is quoted anywhere — in `analysis.json`, in the results
+section or in the write-up. The corpus and both coders' answers stay in the repository as
+data for whoever does this better.
+
+**Mechanics.** The three rulings are added to the guide as worked clauses, with no example
+drawn from a specific entry and no hint of how common any label is. Round-2 answers are kept
+verbatim as `coder_<name>_answers.round2.jsonl`, are not analysed, and round 3 is a clean
+pass by both coders over the same 345 digests. Projected cost of coder B: ≤ $1.
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified

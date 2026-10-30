@@ -84,3 +84,18 @@ def test_parse_normalises_a_non_boolean_agent_visible():
                          {"digest_id": "slack:004", "units": []}])
     units, _ = cg.parse(answer, BATCH)
     assert units[0]["agent_visible"] is None
+
+
+def test_the_guide_rules_on_the_three_gaps_round_two_exposed():
+    """Phase 3 amendment 3: removal, requiredness and a value set becoming an enum."""
+    g = cg.GUIDE.lower()
+    assert "removed" in g and "names the parameter that replaces" in g
+    assert "became optional" in g and "newly added required" in g and "conditional" in g
+    assert "value set that becomes an enum" in g and "compound" in g
+
+
+def test_the_rulings_still_leak_no_prediction():
+    text = cg.GUIDE.lower()
+    for leak in ("p17", "p18", "p19", "p20", "prevalence", "we expect", "common", "rare",
+                 "most", "usually", "schemadrift", "%"):
+        assert leak not in text, leak
