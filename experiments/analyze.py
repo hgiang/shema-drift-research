@@ -22,9 +22,11 @@ import harness  # noqa: E402
 RNG = np.random.default_rng(20260909)
 RNG_P1 = np.random.default_rng(20261019)  # Phase 1 draws never touch the September stream
 RNG_P2 = np.random.default_rng(20261020)  # Phase 2 likewise (MILESTONES.md "Phase 2 pre-registration")
+RNG_P3 = np.random.default_rng(20261030)  # Phase 3 likewise (MILESTONES.md "Phase 3 pre-registration")
 N_BOOT, N_PERM = 10_000, 20_000
 PHASE1 = RESULTS / "phase1"
 PHASE2 = RESULTS / "phase2"
+PHASE3 = RESULTS / "phase3"
 P1_PREFIX, P2_PREFIX = "p1:", "p2:"
 CLASSES = ["rename", "enum_tighten", "required", "type_change", "default_change"]
 CONDS = ["A", "B_strict", "B_lenient", "C", "D", "E"]
@@ -349,6 +351,23 @@ def _families(args, out, phase1, phase2):
         _refuse_partial(args, "Phase-2", phase2["family"], phase2["status"])
 
 
+def share_ci(flags, rng=RNG_P3, n_boot=N_BOOT):
+    """Bootstrap CI for a proportion (Phase 3; the corpus registers no BH test)."""
+    import numpy as _np
+    vec = _np.asarray(flags, dtype=float)
+    if not vec.size:
+        return {"point": None, "ci95": None, "n": 0}
+    draws = rng.integers(0, vec.size, size=(n_boot, vec.size))
+    means = vec[draws].mean(axis=1)
+    return {"point": float(vec.mean()),
+            "ci95": [float(_np.percentile(means, 2.5)), float(_np.percentile(means, 97.5))],
+            "n": int(vec.size)}
+
+
+def phase3_ctx():
+    return SimpleNamespace(rng=RNG_P3, share=lambda flags: share_ci(flags, RNG_P3))
+
+
 def _print_summary(out, models):
     print(f"analysis.json written: {out['n_records']} records, {len(models)} models, "
           f"{out['bh']['n_tests']} tests, {out['bh']['n_survive']} survive BH")
@@ -368,6 +387,7 @@ def main(argv=None):
     ap.add_argument("--out", type=pathlib.Path, default=RESULTS / "analysis.json")
     ap.add_argument("--phase1-dir", type=pathlib.Path, default=PHASE1)
     ap.add_argument("--phase2-dir", type=pathlib.Path, default=PHASE2)
+    ap.add_argument("--phase3-dir", type=pathlib.Path, default=PHASE3)
     ap.add_argument("--allow-partial", action="store_true",
                     help="write results/analysis.json even if a phase's BH family is incomplete")
     args = ap.parse_args(argv)
@@ -395,6 +415,11 @@ def main(argv=None):
     phase2 = ap2.analyze(p2runs, phase2_ctx(), sept_noise, args.phase2_dir)
     if phase2:
         out["phase2"] = phase2
+    import analyze_phase3 as ap3  # after Phase 2: the earlier blocks keep their RNG draws
+    phase3 = ap3.analyze(args.phase3_dir, phase3_ctx()) if args.phase3_dir.exists() else None
+    if phase3:
+        phase3["predictions"] = ap3.predictions(phase3)
+        out["phase3"] = phase3
     _families(args, out, phase1, phase2)
     args.out.write_text(json.dumps(out, indent=1))
     _print_summary(out, models)
