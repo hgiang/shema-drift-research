@@ -27,7 +27,7 @@ N_BOOT, N_PERM = 10_000, 20_000
 PHASE1 = RESULTS / "phase1"
 PHASE2 = RESULTS / "phase2"
 PHASE3 = RESULTS / "phase3"
-P1_PREFIX, P2_PREFIX = "p1:", "p2:"
+P1_PREFIX, P2_PREFIX, P3_PREFIX = "p1:", "p2:", "p3:"
 CLASSES = ["rename", "enum_tighten", "required", "type_change", "default_change"]
 CONDS = ["A", "B_strict", "B_lenient", "C", "D", "E"]
 LEVERS = ["C", "D", "E"]
@@ -324,6 +324,17 @@ def _refuse_partial(args, name, family, status):
                          "Use --out <file> for an interim look, or --allow-partial.")
 
 
+def before_p3():
+    """BH over everything the catalog arm did not add, for the Phase-3 bh_changes list."""
+    return bh(tests=[t for t in ALL_P if not t[0].startswith(P3_PREFIX)])
+
+
+def _bh_changes_p3(before, after):
+    old = set(before["survivors"])
+    new = {lab for lab in after["survivors"] if not lab.startswith(P3_PREFIX)}
+    return {"lost": sorted(old - new), "gained": sorted(new - old)}
+
+
 def _bh_changes(before, after):
     """Earlier tests whose BH verdict moves when the Phase-2 tests join the family."""
     old = set(before["survivors"])
@@ -331,24 +342,37 @@ def _bh_changes(before, after):
     return {"lost": sorted(old - new), "gained": sorted(new - old)}
 
 
-def _families(args, out, phase1, phase2):
+def _families(args, out, phase1, phase2, phase3=None, catalog=None):
     """One BH family over everything; Phase 1 keeps the verdicts of its own 194-test family."""
     import analyze_phase1 as ap1
     import analyze_phase2 as ap2
     out["bh"] = bh()
-    before = bh(tests=[t for t in ALL_P if not t[0].startswith(P2_PREFIX)])
+    before = bh(tests=[t for t in ALL_P if not t[0].startswith((P2_PREFIX, P3_PREFIX))])
     if phase1:
-        out["bh_original_family"] = bh(tests=[t for t in ALL_P if not t[0].startswith((P1_PREFIX, P2_PREFIX))])
+        out["bh_original_family"] = bh(
+            tests=[t for t in ALL_P if not t[0].startswith((P1_PREFIX, P2_PREFIX, P3_PREFIX))])
         phase1["predictions"] = ap1.predictions(phase1, set(before["survivors"]))
         phase1["family"] = {"n_tests": before["n_tests"], "expected": ap1.EXPECTED_TESTS,
                             "complete": before["n_tests"] == ap1.EXPECTED_TESTS}
         _refuse_partial(args, "Phase-1", phase1["family"], phase1["status"])
     if phase2:
-        phase2["predictions"] = ap2.predictions(phase2, set(out["bh"]["survivors"]))
-        phase2["family"] = {"n_tests": out["bh"]["n_tests"], "expected": ap2.EXPECTED_TESTS,
-                            "complete": out["bh"]["n_tests"] == ap2.EXPECTED_TESTS}
+        phase2["predictions"] = ap2.predictions(phase2, set(bh(
+            tests=[t for t in ALL_P if not t[0].startswith(P3_PREFIX)])["survivors"]))
+        p2_tests = bh(tests=[t for t in ALL_P if not t[0].startswith(P3_PREFIX)])
+        phase2["family"] = {"n_tests": p2_tests["n_tests"], "expected": ap2.EXPECTED_TESTS,
+                            "complete": p2_tests["n_tests"] == ap2.EXPECTED_TESTS}
         phase2["bh_changes"] = _bh_changes(before, out["bh"])
         _refuse_partial(args, "Phase-2", phase2["family"], phase2["status"])
+    if phase3:
+        import analyze_phase3 as ap3
+        import analyze_phase3_catalog as ap3c
+        corpus_preds = ap3.predictions(phase3) if "pooled" in phase3 else {}
+        phase3["predictions"] = {**corpus_preds,
+                                 **ap3c.predictions(catalog, set(out["bh"]["survivors"]))}
+        if catalog:
+            phase3["family"] = {"n_tests": out["bh"]["n_tests"], "expected": ap3c.EXPECTED_TESTS,
+                                "complete": out["bh"]["n_tests"] == ap3c.EXPECTED_TESTS}
+            phase3["bh_changes"] = _bh_changes_p3(before_p3(), out["bh"])
 
 
 def share_ci(flags, rng=RNG_P3, n_boot=N_BOOT):
@@ -365,7 +389,10 @@ def share_ci(flags, rng=RNG_P3, n_boot=N_BOOT):
 
 
 def phase3_ctx():
-    return SimpleNamespace(rng=RNG_P3, share=lambda flags: share_ci(flags, RNG_P3))
+    return SimpleNamespace(rng=RNG_P3, share=lambda flags: share_ci(flags, RNG_P3),
+                           paired=lambda d, label: paired_stats(d, label, RNG_P3),
+                           boot=lambda d: boot_ci(d, RNG_P3),
+                           register=lambda label, p: ALL_P.append((label, p)))
 
 
 def _print_summary(out, models):
@@ -416,11 +443,18 @@ def main(argv=None):
     if phase2:
         out["phase2"] = phase2
     import analyze_phase3 as ap3  # after Phase 2: the earlier blocks keep their RNG draws
-    phase3 = ap3.analyze(args.phase3_dir, phase3_ctx()) if args.phase3_dir.exists() else None
-    if phase3:
-        phase3["predictions"] = ap3.predictions(phase3)
+    import analyze_phase3_catalog as ap3c
+    ctx3 = phase3_ctx()
+    phase3 = ap3.analyze(args.phase3_dir, ctx3) if args.phase3_dir.exists() else None
+    p3runs = ap3c.load_catalog_runs(args.phase3_dir) if args.phase3_dir.exists() else []
+    catalog = ap3c.analyze(p3runs, ctx3, sept_noise)
+    if phase3 or catalog:
+        phase3 = phase3 or {"status": {}}
+        if catalog:
+            phase3["catalog"] = catalog
+            phase3["status"] = {**phase3.get("status", {}), **catalog["status"]}
         out["phase3"] = phase3
-    _families(args, out, phase1, phase2)
+    _families(args, out, phase1, phase2, phase3, catalog)
     args.out.write_text(json.dumps(out, indent=1))
     _print_summary(out, models)
 

@@ -25,7 +25,7 @@ from test_phase1 import oracle  # noqa: E402
 
 COMMITTED = json.loads((HERE.parent / "results" / "analysis.json").read_text())
 SEPT_BH = COMMITTED.get("bh_original_family", COMMITTED["bh"])  # the 112-test family alone
-SEPT = {**{k: v for k, v in COMMITTED.items() if k not in ("phase1", "phase2", "bh_original_family")},
+SEPT = {**{k: v for k, v in COMMITTED.items() if k not in ("phase1", "phase2", "phase3", "bh_original_family")},
         "bh": SEPT_BH}
 
 
@@ -61,9 +61,9 @@ def phase1_dir(tmp_path_factory):
     return d
 
 
-def no_phase2(tmp_path):
-    """An empty Phase-2 directory: these tests look at Phase 1 alone."""
-    d = tmp_path / "no_phase2"
+def no_phase2(tmp_path, name="no_phase2"):
+    """An empty later-phase directory: these tests look at Phase 1 alone."""
+    d = tmp_path / name
     d.mkdir(exist_ok=True)
     return d
 
@@ -71,7 +71,8 @@ def no_phase2(tmp_path):
 def run_analysis(tmp_path, phase1_dir):
     out = tmp_path / "analysis.json"
     res = subprocess.run([sys.executable, str(HERE / "analyze.py"), "--out", str(out),
-                          "--phase1-dir", str(phase1_dir), "--phase2-dir", str(no_phase2(tmp_path))],
+                          "--phase1-dir", str(phase1_dir), "--phase2-dir", str(no_phase2(tmp_path)),
+                          "--phase3-dir", str(no_phase2(tmp_path, "no_phase3"))],
                          capture_output=True, text=True)
     return res, (json.loads(out.read_text()) if out.exists() else None)
 
