@@ -99,3 +99,18 @@ def test_the_rulings_still_leak_no_prediction():
     for leak in ("p17", "p18", "p19", "p20", "prevalence", "we expect", "common", "rare",
                  "most", "usually", "schemadrift", "%"):
         assert leak not in text, leak
+
+
+def test_parse_finds_the_answer_after_prose_that_contains_brackets():
+    """A coder may explain itself first; a bracketed aside must not be mistaken for the answer."""
+    answer = ('I could only see the candidate spans, so these rest on limited evidence [1, 2, 3].\n'
+              '- mcp:086: a command name, not a parameter.\n'
+              '[{"digest_id": "stripe:000", "units": [{"parameter": "a", "label": "rename",'
+              ' "agent_visible": true}]}, {"digest_id": "slack:004", "units": []}]')
+    units, problems = cg.parse(answer, BATCH)
+    assert problems == [] and len(units) == 1 and units[0]["parameter"] == "a"
+
+
+def test_parse_still_reports_an_answer_with_no_array_at_all():
+    units, problems = cg.parse("No arrays here [just prose].", BATCH)
+    assert units == [] and problems and "no JSON array" in problems[0]

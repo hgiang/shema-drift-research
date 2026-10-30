@@ -727,6 +727,21 @@ site and film still show the September analysis; they are rebuilt in Phase 4.
   Round-2 answers are kept verbatim as `coder_*_answers.round2.jsonl` and are not analysed.
   Fixed by Phase 3 amendment 3, below, before round 3.
 
+- 2026-10-30 Blind coding, round 3 (after amendment 3; $0.793 for coder B; cumulative $21.572).
+  Same 345 digests, same two coders, guide carrying the three rulings. Coder A returned 103
+  distinct units, coder B 93, 79 matched. **Label agreement 75/79 = 0.949, kappa 0.930 — above
+  the locked 0.90, so the corpus is scored.** `agent_visible` agreement 0.962; unit-set
+  Jaccard 0.675 (coder A found 10 more units than in round 2).
+  One repair, with no new model call. Coder B's batch 7 put three sentences of prose before
+  its JSON, and the prose contained a bracketed aside, which the parser mistook for the answer
+  array ("unparsable JSON for mcp:086…"). The parser now tries every `[` and keeps the first
+  array of objects carrying a `digest_id`. Re-parsing the **archived** answer recovered it:
+  coder B had returned six empty unit lists, so no unit was lost and no figure moved. This is
+  why raw answers are archived; the fix is to the reader, never to an answer.
+  Corpus: 71 agreed units from 52 entries — Stripe 60 (at the locked cap), Slack 5, MCP 4,
+  GitHub 2. Round-3 answers are `coder_*_answers.jsonl`; rounds 1 and 2 are kept beside them
+  and are not analysed.
+
 ## Phase 3 pre-registration — LOCKED 2026-10-30
 
 Written before any page is fetched and before any Phase-3 model call. Execution plan: `phase3/PLAN.md`.
@@ -962,6 +977,65 @@ data for whoever does this better.
 drawn from a specific entry and no hint of how common any label is. Round-2 answers are kept
 verbatim as `coder_<name>_answers.round2.jsonl`, are not analysed, and round 3 is a clean
 pass by both coders over the same 345 digests. Projected cost of coder B: ≤ $1.
+
+## Phase 3 corpus results — 2026-10-30
+
+Source: `results/analysis.json → phase3` (regenerated twice, identical hash `76123301`).
+The corpus is descriptive and **registers no BH test**, so the family stays at 301 with 165
+survivors, and `models`, `token_costs`, `n_records`, `phase1`, `phase2`, `bh` and
+`bh_original_family` are byte-identical to `a8971be`. The catalog arm (P21) has not run; it
+is Tasks 6–9 of `phase3/PLAN.md`.
+
+**The corpus.** 71 units both blind coders found **and** labelled the same, from 52 entries:
+Stripe 60 (at the locked 60-unit cap), Slack 5, MCP 4, GitHub 2. Reliability after amendment
+3: label agreement 0.949, Cohen's kappa 0.930, `agent_visible` agreement 0.962. **The pooled
+figures are Stripe-weighted**, and not because the cap failed: Slack's 156 entries, MCP's 314
+and GitHub's 220 are the whole of those sources in the window, and they yielded 5, 4 and 2
+units between them. Read every pooled number beside `phase3.by_source`.
+
+**Verdicts (copied from `phase3.predictions`).**
+- P17 **fails.** The five SchemaDrift classes plus `compound` cover 0.563 of qualifying
+  units, CI [0.451, 0.676], wholly below the predicted 0.70. **This is the headline, and it
+  goes against the study.** 31 of 71 real request-parameter changes are none of the things
+  SchemaDrift-120 models.
+- P18 **undecided.** `required` + `default_change` is 0.127, CI [0.056, 0.211], which
+  straddles 0.20. At n = 71 the corpus cannot separate the two.
+- P19 **holds.** Among the 23 units whose visibility is decidable, 0.826 are `agent_visible`,
+  CI [0.652, 0.957], above 0.50. The caveat is in the n: 48 of 71 units are `unknown`,
+  because a changelog entry usually shows neither requiredness nor an example request.
+- P20 **undecided.** `compound` is 0.070, CI [0.014, 0.141], straddling 0.10. The corpus
+  neither justifies nor rules out the compound-drift plan.
+
+**What the taxonomy misses.** The `other` bucket is 0.437 of the corpus, and the largest
+identifiable group in it is the **removal of a request parameter with no named replacement**
+— 9 of the 31, from entries titled "Removes the `configurations` parameter…", "Removes
+legacy usage-based billing", "Removes the source type parameter…". SchemaDrift-120 has no
+removal class: its five classes change a parameter, they never take one away. The rest of
+`other` is mostly a parameter becoming optional, and new values or parameters that constrain
+an existing call without fitting any of the five. A sixth class, `removed`, is the first
+thing a successor testbed should add.
+
+**Prevalence by label (pooled, source-weighted).** `other` 0.437, `rename` 0.254, `required`
+0.113, `type_change` 0.085, `compound` 0.070, `enum_tighten` 0.028, `default_change` 0.014.
+`rename` is the commonest modelled class and `default_change` the rarest — the inverse of
+how much the September study found they cost, which is worth saying plainly: the drift that
+hurts an agent most is not the drift APIs publish most.
+
+**Limitations, stated rather than buried.**
+- One source carries the corpus. The pooled numbers are close to Stripe's numbers.
+- The sampling frame is four changelogs, not "APIs". Three of them turned out to publish
+  almost no request-parameter changes at all, which is itself a finding about where this kind
+  of drift lives.
+- `agent_visible` is unknown for 48 of 71 units, so P19 rests on 23.
+- Units enter only when two coders agree on both existence and label, which is conservative:
+  24 units one coder found alone and 4 labelled differently are excluded and listed in
+  `results/phase3/agreement.json`.
+- The candidate filter proposes; it does not decide. Its recall is unmeasured — a real change
+  whose wording the filter never surfaced would never reach a coder, and the corpus cannot
+  see it.
+
+**Spend.** Cumulative $21.572 of the $50 hard stop. Phase 3 so far: coder B over three rounds
+$1.884 (rounds 1–3 at $0.287, $0.804, $0.793); coder A, collection and analysis $0.
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified

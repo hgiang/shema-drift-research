@@ -13388,6 +13388,923 @@
    "gained": []
   }
  },
+ "phase3": {
+  "pooled": {
+   "n_units": 71,
+   "n_entries": 52,
+   "labels": {
+    "rename": 18,
+    "enum_tighten": 2,
+    "required": 8,
+    "type_change": 6,
+    "default_change": 1,
+    "compound": 5,
+    "other": 31
+   },
+   "agent_visible": {
+    "true": 19,
+    "false": 4,
+    "unknown": 48
+   },
+   "shares": {
+    "coverage": {
+     "point": 0.5633802816901409,
+     "ci95": [
+      0.4507042253521127,
+      0.676056338028169
+     ],
+     "n": 71
+    },
+    "costly": {
+     "point": 0.1267605633802817,
+     "ci95": [
+      0.056338028169014086,
+      0.2112676056338028
+     ],
+     "n": 71
+    },
+    "reach": {
+     "point": 0.8260869565217391,
+     "ci95": [
+      0.6521739130434783,
+      0.9565217391304348
+     ],
+     "n": 23
+    },
+    "compound": {
+     "point": 0.07042253521126761,
+     "ci95": [
+      0.014084507042253521,
+      0.14084507042253522
+     ],
+     "n": 71
+    }
+   },
+   "note": "source-weighted: read beside by_source"
+  },
+  "by_source": {
+   "github": {
+    "n_units": 2,
+    "n_entries": 1,
+    "labels": {
+     "rename": 1,
+     "other": 1
+    },
+    "agent_visible": {
+     "true": 0,
+     "false": 0,
+     "unknown": 2
+    },
+    "shares": {
+     "coverage": {
+      "point": 0.5,
+      "ci95": [
+       0.0,
+       1.0
+      ],
+      "n": 2
+     },
+     "costly": {
+      "point": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n": 2
+     },
+     "reach": {
+      "point": null,
+      "ci95": null,
+      "n": 0
+     },
+     "compound": {
+      "point": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n": 2
+     }
+    }
+   },
+   "mcp": {
+    "n_units": 4,
+    "n_entries": 1,
+    "labels": {
+     "type_change": 4
+    },
+    "agent_visible": {
+     "true": 0,
+     "false": 4,
+     "unknown": 0
+    },
+    "shares": {
+     "coverage": {
+      "point": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n": 4
+     },
+     "costly": {
+      "point": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n": 4
+     },
+     "reach": {
+      "point": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n": 4
+     },
+     "compound": {
+      "point": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n": 4
+     }
+    }
+   },
+   "slack": {
+    "n_units": 5,
+    "n_entries": 5,
+    "labels": {
+     "compound": 1,
+     "other": 4
+    },
+    "agent_visible": {
+     "true": 2,
+     "false": 0,
+     "unknown": 3
+    },
+    "shares": {
+     "coverage": {
+      "point": 0.2,
+      "ci95": [
+       0.0,
+       0.6
+      ],
+      "n": 5
+     },
+     "costly": {
+      "point": 0.0,
+      "ci95": [
+       0.0,
+       0.0
+      ],
+      "n": 5
+     },
+     "reach": {
+      "point": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n": 2
+     },
+     "compound": {
+      "point": 0.2,
+      "ci95": [
+       0.0,
+       0.6
+      ],
+      "n": 5
+     }
+    }
+   },
+   "stripe": {
+    "n_units": 60,
+    "n_entries": 45,
+    "labels": {
+     "rename": 17,
+     "enum_tighten": 2,
+     "required": 8,
+     "type_change": 2,
+     "default_change": 1,
+     "compound": 4,
+     "other": 26
+    },
+    "agent_visible": {
+     "true": 17,
+     "false": 0,
+     "unknown": 43
+    },
+    "shares": {
+     "coverage": {
+      "point": 0.5666666666666667,
+      "ci95": [
+       0.45,
+       0.6833333333333333
+      ],
+      "n": 60
+     },
+     "costly": {
+      "point": 0.15,
+      "ci95": [
+       0.06666666666666667,
+       0.25
+      ],
+      "n": 60
+     },
+     "reach": {
+      "point": 1.0,
+      "ci95": [
+       1.0,
+       1.0
+      ],
+      "n": 17
+     },
+     "compound": {
+      "point": 0.06666666666666667,
+      "ci95": [
+       0.016666666666666666,
+       0.13333333333333333
+      ],
+      "n": 60
+     }
+    }
+   }
+  },
+  "agreement": {
+   "unit_sets": {
+    "n_a": 103,
+    "n_b": 93,
+    "n_both": 79,
+    "n_only_a": 24,
+    "n_only_b": 14,
+    "jaccard": 0.6752,
+    "agreed": [
+     [
+      "github:index",
+      "permission"
+     ],
+     [
+      "github:index",
+      "use_squash_pr_title_as_default"
+     ],
+     [
+      "mcp:304",
+      "branchfromthought"
+     ],
+     [
+      "mcp:304",
+      "isrevision"
+     ],
+     [
+      "mcp:304",
+      "needsmorethoughts"
+     ],
+     [
+      "mcp:304",
+      "revisesthought"
+     ],
+     [
+      "slack:026",
+      "thread_ts"
+     ],
+     [
+      "slack:094",
+      "rows"
+     ],
+     [
+      "slack:109",
+      "thread_ts"
+     ],
+     [
+      "slack:147",
+      "limit"
+     ],
+     [
+      "slack:155",
+      "user_ids"
+     ],
+     [
+      "stripe:005",
+      "payment_method_types"
+     ],
+     [
+      "stripe:006",
+      "fee_acknowledged"
+     ],
+     [
+      "stripe:008",
+      "delay_days_override"
+     ],
+     [
+      "stripe:013",
+      "aggregate_usage"
+     ],
+     [
+      "stripe:013",
+      "billing_thresholds"
+     ],
+     [
+      "stripe:013",
+      "meter"
+     ],
+     [
+      "stripe:015",
+      "allow_redisplay"
+     ],
+     [
+      "stripe:015",
+      "customer_consent_collected"
+     ],
+     [
+      "stripe:022",
+      "setup_future_usage"
+     ],
+     [
+      "stripe:028",
+      "monthly_anchor"
+     ],
+     [
+      "stripe:028",
+      "weekly_anchor"
+     ],
+     [
+      "stripe:039",
+      "metadata"
+     ],
+     [
+      "stripe:060",
+      "taxes"
+     ],
+     [
+      "stripe:065",
+      "fields"
+     ],
+     [
+      "stripe:070",
+      "expand"
+     ],
+     [
+      "stripe:075",
+      "configurations"
+     ],
+     [
+      "stripe:078",
+      "capture_method"
+     ],
+     [
+      "stripe:086",
+      "setup_future_usage"
+     ],
+     [
+      "stripe:087",
+      "volume_decimal"
+     ],
+     [
+      "stripe:104",
+      "setup_future_usage"
+     ],
+     [
+      "stripe:111",
+      "created"
+     ],
+     [
+      "stripe:111",
+      "created_gt"
+     ],
+     [
+      "stripe:111",
+      "created_gte"
+     ],
+     [
+      "stripe:111",
+      "created_lt"
+     ],
+     [
+      "stripe:111",
+      "created_lte"
+     ],
+     [
+      "stripe:114",
+      "setup_future_usage"
+     ],
+     [
+      "stripe:121",
+      "network"
+     ],
+     [
+      "stripe:123",
+      "tax_id"
+     ],
+     [
+      "stripe:128",
+      "payment_reference"
+     ],
+     [
+      "stripe:151",
+      "source_type"
+     ],
+     [
+      "stripe:152",
+      "source_type"
+     ],
+     [
+      "stripe:159",
+      "fetchclientsecret"
+     ],
+     [
+      "stripe:162",
+      "price"
+     ],
+     [
+      "stripe:162",
+      "unit_amount"
+     ],
+     [
+      "stripe:164",
+      "account_number"
+     ],
+     [
+      "stripe:164",
+      "currency"
+     ],
+     [
+      "stripe:164",
+      "sort_code"
+     ],
+     [
+      "stripe:165",
+      "cancel_at"
+     ],
+     [
+      "stripe:168",
+      "status"
+     ],
+     [
+      "stripe:193",
+      "political_exposure"
+     ],
+     [
+      "stripe:197",
+      "radios"
+     ],
+     [
+      "stripe:214",
+      "external_account_collection"
+     ],
+     [
+      "stripe:216",
+      "additional_addresses"
+     ],
+     [
+      "stripe:221",
+      "missing_payment_method"
+     ],
+     [
+      "stripe:229",
+      "capture_method"
+     ],
+     [
+      "stripe:240",
+      "losses[payments"
+     ],
+     [
+      "stripe:252",
+      "address"
+     ],
+     [
+      "stripe:252",
+      "display_name"
+     ],
+     [
+      "stripe:253",
+      "countries"
+     ],
+     [
+      "stripe:263",
+      "fees_collector"
+     ],
+     [
+      "stripe:263",
+      "losses_collector"
+     ],
+     [
+      "stripe:290",
+      "payments"
+     ],
+     [
+      "stripe:292",
+      "payment_method_types"
+     ],
+     [
+      "stripe:296",
+      "end_time"
+     ],
+     [
+      "stripe:296",
+      "meter_id"
+     ],
+     [
+      "stripe:296",
+      "start_time"
+     ],
+     [
+      "stripe:305",
+      "reason"
+     ],
+     [
+      "stripe:319",
+      "statement_descriptor_prefix"
+     ],
+     [
+      "stripe:334",
+      "capture_method"
+     ],
+     [
+      "stripe:336",
+      "payto"
+     ],
+     [
+      "stripe:341",
+      "origin_payment_method"
+     ],
+     [
+      "stripe:347",
+      "paymentmethodtypes"
+     ],
+     [
+      "stripe:361",
+      "cvc"
+     ],
+     [
+      "stripe:373",
+      "prices"
+     ],
+     [
+      "stripe:377",
+      "doing_business_as"
+     ],
+     [
+      "stripe:377",
+      "product_description"
+     ],
+     [
+      "stripe:377",
+      "url"
+     ],
+     [
+      "stripe:383",
+      "capture_method"
+     ]
+    ],
+    "only_a": [
+     [
+      "slack:130",
+      "channel_ids"
+     ],
+     [
+      "stripe:011",
+      "outcome"
+     ],
+     [
+      "stripe:043",
+      "action_groups"
+     ],
+     [
+      "stripe:051",
+      "payment_method_types"
+     ],
+     [
+      "stripe:158",
+      "configuration"
+     ],
+     [
+      "stripe:158",
+      "id"
+     ],
+     [
+      "stripe:191",
+      "expand"
+     ],
+     [
+      "stripe:205",
+      "type"
+     ],
+     [
+      "stripe:214",
+      "disable_stripe_user_authentication"
+     ],
+     [
+      "stripe:237",
+      "client secret"
+     ],
+     [
+      "stripe:278",
+      "day_of_month"
+     ],
+     [
+      "stripe:303",
+      "setup_future_usage"
+     ],
+     [
+      "stripe:336",
+      "payto[account_number"
+     ],
+     [
+      "stripe:336",
+      "payto[bsb_number"
+     ],
+     [
+      "stripe:336",
+      "payto[pay_id"
+     ],
+     [
+      "stripe:372",
+      "cancel_at_period_end"
+     ],
+     [
+      "stripe:373",
+      "price_type"
+     ],
+     [
+      "stripe:392",
+      "billing_cycle_anchor (invoice preview)"
+     ],
+     [
+      "stripe:392",
+      "billing_cycle_anchor (subscription resume)"
+     ],
+     [
+      "stripe:392",
+      "billing_cycle_anchor (subscription update)"
+     ],
+     [
+      "stripe:392",
+      "timestamp (invoice preview)"
+     ],
+     [
+      "stripe:392",
+      "type (invoice preview)"
+     ],
+     [
+      "stripe:392",
+      "type (subscription resume)"
+     ],
+     [
+      "stripe:392",
+      "type (subscription update)"
+     ]
+    ],
+    "only_b": [
+     [
+      "github:077",
+      "disabledlanguages"
+     ],
+     [
+      "slack:014",
+      "code_challenge"
+     ],
+     [
+      "slack:014",
+      "code_challenge_method"
+     ],
+     [
+      "slack:014",
+      "code_verifier"
+     ],
+     [
+      "slack:033",
+      "agent"
+     ],
+     [
+      "slack:033",
+      "clienttls"
+     ],
+     [
+      "slack:097",
+      "auth"
+     ],
+     [
+      "stripe:132",
+      "proration_discounts"
+     ],
+     [
+      "stripe:227",
+      "device_type"
+     ],
+     [
+      "stripe:260",
+      "maximum_rps"
+     ],
+     [
+      "stripe:276",
+      "required"
+     ],
+     [
+      "stripe:298",
+      "billingdetails"
+     ],
+     [
+      "stripe:311",
+      "iterations"
+     ],
+     [
+      "stripe:392",
+      "billing_cycle_anchor"
+     ]
+    ]
+   },
+   "label": {
+    "n": 79,
+    "n_agree": 75,
+    "rate": 0.9494,
+    "kappa": 0.9304,
+    "disagreements": [
+     {
+      "digest_id": "stripe:065",
+      "parameter": "fields",
+      "a": "compound",
+      "b": "default_change"
+     },
+     {
+      "digest_id": "stripe:086",
+      "parameter": "setup_future_usage",
+      "a": "type_change",
+      "b": "other"
+     },
+     {
+      "digest_id": "stripe:159",
+      "parameter": "fetchclientsecret",
+      "a": "type_change",
+      "b": "other"
+     },
+     {
+      "digest_id": "stripe:168",
+      "parameter": "status",
+      "a": "compound",
+      "b": "rename"
+     }
+    ]
+   },
+   "agent_visible": {
+    "n": 79,
+    "n_agree": 76,
+    "rate": 0.962,
+    "kappa": 0.921,
+    "disagreements": [
+     {
+      "digest_id": "slack:026",
+      "parameter": "thread_ts",
+      "a": false,
+      "b": true
+     },
+     {
+      "digest_id": "stripe:015",
+      "parameter": "customer_consent_collected",
+      "a": true,
+      "b": null
+     },
+     {
+      "digest_id": "stripe:341",
+      "parameter": "origin_payment_method",
+      "a": false,
+      "b": true
+     }
+    ]
+   },
+   "threshold": 0.9,
+   "passes": true
+  },
+  "coding": {
+   "corpus_summary": {
+    "pooled": {
+     "n_units": 71,
+     "n_entries": 52,
+     "labels": {
+      "compound": 5,
+      "default_change": 1,
+      "enum_tighten": 2,
+      "other": 31,
+      "rename": 18,
+      "required": 8,
+      "type_change": 6
+     },
+     "agent_visible": {
+      "true": 19,
+      "false": 4,
+      "unknown": 48
+     },
+     "n_agent_visible_disputed": 3
+    },
+    "by_source": {
+     "github": {
+      "n_units": 2,
+      "n_entries": 1,
+      "labels": {
+       "other": 1,
+       "rename": 1
+      },
+      "agent_visible": {
+       "true": 0,
+       "false": 0,
+       "unknown": 2
+      },
+      "n_agent_visible_disputed": 0
+     },
+     "mcp": {
+      "n_units": 4,
+      "n_entries": 1,
+      "labels": {
+       "type_change": 4
+      },
+      "agent_visible": {
+       "true": 0,
+       "false": 4,
+       "unknown": 0
+      },
+      "n_agent_visible_disputed": 0
+     },
+     "slack": {
+      "n_units": 5,
+      "n_entries": 5,
+      "labels": {
+       "compound": 1,
+       "other": 4
+      },
+      "agent_visible": {
+       "true": 2,
+       "false": 0,
+       "unknown": 3
+      },
+      "n_agent_visible_disputed": 1
+     },
+     "stripe": {
+      "n_units": 60,
+      "n_entries": 45,
+      "labels": {
+       "compound": 4,
+       "default_change": 1,
+       "enum_tighten": 2,
+       "other": 26,
+       "rename": 17,
+       "required": 8,
+       "type_change": 2
+      },
+      "agent_visible": {
+       "true": 17,
+       "false": 0,
+       "unknown": 43
+      },
+      "n_agent_visible_disputed": 2
+     }
+    },
+    "note": "pooled shares are source-weighted; read them next to by_source"
+   },
+   "digests": {
+    "github": {
+     "n_entries_read": 221,
+     "n_digests": 38,
+     "n_candidates": 61
+    },
+    "mcp": {
+     "n_entries_read": 314,
+     "n_digests": 41,
+     "n_candidates": 196
+    },
+    "slack": {
+     "n_entries_read": 156,
+     "n_digests": 54,
+     "n_candidates": 100
+    },
+    "stripe": {
+     "n_entries_read": 400,
+     "n_digests": 212,
+     "n_candidates": 942
+    }
+   }
+  },
+  "status": {},
+  "predictions": {
+   "P17": {
+    "holds": false,
+    "basis": "share of units in the five classes or compound 0.563 CI [0.451, 0.676] on n=71; needs >= 0.7"
+   },
+   "P18": {
+    "holds": null,
+    "basis": "share of units that are required or default_change 0.127 CI [0.056, 0.211] on n=71; needs >= 0.2"
+   },
+   "P19": {
+    "holds": true,
+    "basis": "share of decided units that are agent_visible 0.826 CI [0.652, 0.957] on n=23; needs >= 0.5"
+   },
+   "P20": {
+    "holds": null,
+    "basis": "share of units that are compound 0.070 CI [0.014, 0.141] on n=71; needs >= 0.1"
+   }
+  }
+ },
  "bh": {
   "n_tests": 301,
   "effective_threshold": 0.0225,

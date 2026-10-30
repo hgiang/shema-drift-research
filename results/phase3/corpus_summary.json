@@ -1,0 +1,84 @@
+{
+ "pooled": {
+  "n_units": 71,
+  "n_entries": 52,
+  "labels": {
+   "compound": 5,
+   "default_change": 1,
+   "enum_tighten": 2,
+   "other": 31,
+   "rename": 18,
+   "required": 8,
+   "type_change": 6
+  },
+  "agent_visible": {
+   "true": 19,
+   "false": 4,
+   "unknown": 48
+  },
+  "n_agent_visible_disputed": 3
+ },
+ "by_source": {
+  "github": {
+   "n_units": 2,
+   "n_entries": 1,
+   "labels": {
+    "other": 1,
+    "rename": 1
+   },
+   "agent_visible": {
+    "true": 0,
+    "false": 0,
+    "unknown": 2
+   },
+   "n_agent_visible_disputed": 0
+  },
+  "mcp": {
+   "n_units": 4,
+   "n_entries": 1,
+   "labels": {
+    "type_change": 4
+   },
+   "agent_visible": {
+    "true": 0,
+    "false": 4,
+    "unknown": 0
+   },
+   "n_agent_visible_disputed": 0
+  },
+  "slack": {
+   "n_units": 5,
+   "n_entries": 5,
+   "labels": {
+    "compound": 1,
+    "other": 4
+   },
+   "agent_visible": {
+    "true": 2,
+    "false": 0,
+    "unknown": 3
+   },
+   "n_agent_visible_disputed": 1
+  },
+  "stripe": {
+   "n_units": 60,
+   "n_entries": 45,
+   "labels": {
+    "compound": 4,
+    "default_change": 1,
+    "enum_tighten": 2,
+    "other": 26,
+    "rename": 17,
+    "required": 8,
+    "type_change": 2
+   },
+   "agent_visible": {
+    "true": 17,
+    "false": 0,
+    "unknown": 43
+   },
+   "n_agent_visible_disputed": 2
+  }
+ },
+ "note": "pooled shares are source-weighted; read them next to by_source"
+}

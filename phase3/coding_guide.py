@@ -76,6 +76,28 @@ def prompt_for(batch):
     return f"{GUIDE}\nDIGESTS ({len(batch)}):\n{body}\n"
 
 
+def _find_array(text):
+    """The answer array, which a coder may precede with prose.
+
+    Taking the first "[" is not enough: an aside like "limited evidence [1, 2, 3]" parses as
+    JSON and swallows the real answer. Try every "[" and keep the first array of objects that
+    carry a digest_id.
+    """
+    decoder, fallback = json.JSONDecoder(), None
+    for start in (i for i, ch in enumerate(text) if ch == "["):
+        try:
+            value, _ = decoder.raw_decode(text, start)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, list) and any(isinstance(r, dict) and "digest_id" in r for r in value):
+            return value, None
+        if fallback is None and isinstance(value, list):
+            fallback = value
+    if fallback is not None:
+        return fallback, None
+    return None, "no JSON array in the answer"
+
+
 def parse(answer, batch):
     """Parse one coder answer into units. Unknown labels and stray digest ids are dropped.
 
@@ -83,13 +105,9 @@ def parse(answer, batch):
     """
     ids = {d["digest_id"] for d in batch}
     text = _FENCE.sub("", answer.strip())
-    start, end = text.find("["), text.rfind("]")
-    if start < 0 or end < start:
-        return [], [f"no JSON array in the answer for {sorted(ids)}"]
-    try:
-        rows = json.loads(text[start:end + 1])
-    except json.JSONDecodeError as e:
-        return [], [f"unparsable JSON for {sorted(ids)}: {e}"]
+    rows, error = _find_array(text)
+    if rows is None:
+        return [], [f"{error} for {sorted(ids)}"]
     units, problems = [], []
     for row in rows if isinstance(rows, list) else []:
         digest_id = (row or {}).get("digest_id")
