@@ -1037,6 +1037,49 @@ hurts an agent most is not the drift APIs publish most.
 **Spend.** Cumulative $21.572 of the $50 hard stop. Phase 3 so far: coder B over three rounds
 $1.884 (rounds 1–3 at $0.287, $0.804, $0.793); coder A, collection and analysis $0.
 
+## Phase 3 amendment 4 — 2026-10-30, before the catalog arm runs
+
+Corrects the catalog arm's description, which was wrong about the instrument, and sizes it to
+what the frozen testbed can actually serve. **P21's decision rule is unchanged**: in each
+family, the paired difference C(large catalog) − C(small catalog) on the same pairs has a 95%
+CI inside [−0.10, +0.10], and A and B_strict are reported as the manipulation check. The
+corpus arm and its results are untouched.
+
+**What the lock got wrong.** It said the catalog testbed would hold "the six SchemaDrift tools
+byte-identical … plus distractor tools until the catalog holds 100", with a `catalog_small`
+view of "the six frozen tools only". Two errors. The frozen testbed has **30** tools, not six.
+And the harness has never declared all of them: `harness.build_condition` declares only the
+tools the task's own steps use — measured over the 120 primary tasks, that is **1 tool in 90
+tasks and 2 in 30, a mean of 1.25 declarations per episode**. Every number in this study,
+September and Phase 1 and Phase 2 alike, was produced with one or two tools in context.
+
+**That makes the arm more interesting, not less**, and it is worth stating as a finding about
+the existing work before the arm runs: the whole study's claim about diff-following rests on
+a context where the model has essentially no choice of tool.
+
+**The arm, corrected.**
+- **Small catalog** = the condition exactly as it has always run: the task's own 1–2 tool
+  declarations. This is not a new arm, it is the study's baseline, re-run inside this arm so
+  the comparison is paired within one run.
+- **Large catalog** = the same episode with **all 30 frozen tools declared**, byte-identical
+  to `testbed_frozen.json`, exactly one of them drifted. Order is drawn once from `RNG_P3` and
+  fixed, so the drifted tool's position is constant across conditions and families.
+- **No new testbed and no new hash.** The large catalog is a *view* of the frozen testbed, not
+  a new artefact, so `e8bbd71c…` still covers every declaration the arm serves. This also
+  removes the risk the lock's design carried: 70 invented distractor tools would have made a
+  null result unreadable, since "a big catalog" and "a catalog full of obvious filler" would
+  not be separable.
+- **Reported as a limitation, not hidden:** the contrast is 1.25 → 30 declarations, not
+  1.25 → 100. A null P21 at 30 tools is weaker evidence than a null at 100 would have been,
+  and the results section says so. Enlarging the catalog beyond the frozen tools needs a new
+  testbed with its own hash, which is a separate plan.
+
+**Unchanged:** families Gemini Flash (`MINIMAL`) and Claude Haiku 5.5 (`anthropic` pinned,
+provider-default thinking); conditions A, B_strict, C; 40 of the 120 primary pairs, 8 per
+drift class, drawn with `RNG_P3`; 40 × 3 × 2 = 240 episodes per family, 480 in all;
+temperature 0; `max_tokens` 700 (OpenRouter) and 1024 (Gemini); the six BH tests with `p3:`
+labels, taking the family from 301 to 307; each family keeps its existing noise floor.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)
