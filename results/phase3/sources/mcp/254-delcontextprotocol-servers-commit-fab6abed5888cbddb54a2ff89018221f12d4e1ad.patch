@@ -1,0 +1,58 @@
+From fab6abed5888cbddb54a2ff89018221f12d4e1ad Mon Sep 17 00:00:00 2001
+From: "dependabot[bot]" <49699333+dependabot[bot]@users.noreply.github.com>
+Date: Wed, 29 Jul 2026 22:02:15 +0000
+Subject: [PATCH] chore(deps): bump actions/setup-node from 6 to 7
+
+Bumps [actions/setup-node](https://github.com/actions/setup-node) from 6 to 7.
+- [Release notes](https://github.com/actions/setup-node/releases)
+- [Commits](https://github.com/actions/setup-node/compare/v6...v7)
+
+---
+updated-dependencies:
+- dependency-name: actions/setup-node
+  dependency-version: '7'
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+---
+ .github/workflows/release.yml    | 2 +-
+ .github/workflows/typescript.yml | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index f02a26332b..e31fa8f8c8 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -173,7 +173,7 @@ jobs:
+         with:
+           ref: ${{ needs.create-metadata.outputs.version }}
+ 
+-      - uses: actions/setup-node@v6
++      - uses: actions/setup-node@v7
+         with:
+           node-version: 22
+           cache: npm
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index 8d1b81e6c2..d9594b4119 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -34,7 +34,7 @@ jobs:
+     steps:
+       - uses: actions/checkout@v6
+ 
+-      - uses: actions/setup-node@v6
++      - uses: actions/setup-node@v7
+         with:
+           node-version: 22
+           cache: npm
+@@ -57,7 +57,7 @@ jobs:
+     steps:
+       - uses: actions/checkout@v6
+ 
+-      - uses: actions/setup-node@v6
++      - uses: actions/setup-node@v7
+         with:
+           node-version: 22
+           cache: npm

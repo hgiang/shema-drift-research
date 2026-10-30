@@ -1,0 +1,81 @@
+From a160653441da3c943a31c000cf44948fe5138f17 Mon Sep 17 00:00:00 2001
+From: Ola Hungerford <olahungerford@gmail.com>
+Date: Wed, 21 Jan 2026 17:55:10 -0700
+Subject: [PATCH] Apply suggestions from code review
+
+Co-authored-by: Cliff Hall <cliff@futurescale.com>
+---
+ src/everything/docs/features.md                        |  2 +-
+ .../tools/trigger-elicitation-request-async.ts         | 10 ++++------
+ src/everything/tools/trigger-sampling-request-async.ts | 10 ++++------
+ 3 files changed, 9 insertions(+), 13 deletions(-)
+
+diff --git a/src/everything/docs/features.md b/src/everything/docs/features.md
+index 65640d99e3..392293cdc1 100644
+--- a/src/everything/docs/features.md
++++ b/src/everything/docs/features.md
+@@ -96,7 +96,7 @@ MCP Tasks are bidirectional - both server and client can be task executors:
+ | Server -> Client | `elicitation/create` | Client | `trigger-elicitation-request-async` |
+ 
+ For client-side tasks:
+-1. Server sends request with task metadata (e.g., `_meta.task.ttl`)
++1. Server sends request with task metadata (e.g., `params.task.ttl`)
+ 2. Client creates task and returns `CreateTaskResult` with `taskId`
+ 3. Server polls `tasks/get` for status updates
+ 4. When complete, server calls `tasks/result` to retrieve the result
+diff --git a/src/everything/tools/trigger-elicitation-request-async.ts b/src/everything/tools/trigger-elicitation-request-async.ts
+index 752d5a28e0..2de0afb0ab 100644
+--- a/src/everything/tools/trigger-elicitation-request-async.ts
++++ b/src/everything/tools/trigger-elicitation-request-async.ts
+@@ -53,6 +53,10 @@ export const registerTriggerElicitationRequestAsyncTool = (server: McpServer) =>
+         const request = {
+           method: "elicitation/create" as const,
+           params: {
++            task: {
++                ttl: 600000, // 10 minutes (user input may take a while)
++                pollInterval: POLL_INTERVAL,
++              },
+             message: "Please provide inputs for the following fields (async task demo):",
+             requestedSchema: {
+               type: "object" as const,
+@@ -76,12 +80,6 @@ export const registerTriggerElicitationRequestAsyncTool = (server: McpServer) =>
+               },
+               required: ["name"],
+             },
+-            _meta: {
+-              task: {
+-                ttl: 600000, // 10 minutes (user input may take a while)
+-                pollInterval: POLL_INTERVAL,
+-              },
+-            },
+           },
+         };
+ 
+diff --git a/src/everything/tools/trigger-sampling-request-async.ts b/src/everything/tools/trigger-sampling-request-async.ts
+index f71285cf57..c93cc12e7c 100644
+--- a/src/everything/tools/trigger-sampling-request-async.ts
++++ b/src/everything/tools/trigger-sampling-request-async.ts
+@@ -67,6 +67,10 @@ export const registerTriggerSamplingRequestAsyncTool = (server: McpServer) => {
+         const request: CreateMessageRequest & { params: { _meta?: { task: { ttl: number; pollInterval: number } } } } = {
+           method: "sampling/createMessage",
+           params: {
++            task: {
++              ttl: 300000, // 5 minutes
++              pollInterval: POLL_INTERVAL,
++            },
+             messages: [
+               {
+                 role: "user",
+@@ -79,12 +83,6 @@ export const registerTriggerSamplingRequestAsyncTool = (server: McpServer) => {
+             systemPrompt: "You are a helpful test server.",
+             maxTokens,
+             temperature: 0.7,
+-            _meta: {
+-              task: {
+-                ttl: 300000, // 5 minutes
+-                pollInterval: POLL_INTERVAL,
+-              },
+-            },
+           },
+         };
+ 

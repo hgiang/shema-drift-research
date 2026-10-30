@@ -1,0 +1,54 @@
+From 81f8301cd2b4a9c32d925083b86c0885b1ba9fbf Mon Sep 17 00:00:00 2001
+From: Niels Kaspers <153818647+nielskaspers@users.noreply.github.com>
+Date: Sun, 15 Mar 2026 17:51:02 +0200
+Subject: [PATCH] feat(time): add tool annotations to get_current_time and
+ convert_time (#3574) (#3581)
+
+feat(time): add tool annotations
+
+Adds MCP ToolAnnotations to both time server tools (get_current_time, convert_time). Both are read-only, non-destructive, idempotent, and closed-world.
+
+Fixes #3574
+---
+ src/time/src/mcp_server_time/server.py | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/src/time/src/mcp_server_time/server.py b/src/time/src/mcp_server_time/server.py
+index e10d6b4eed..83e97af333 100644
+--- a/src/time/src/mcp_server_time/server.py
++++ b/src/time/src/mcp_server_time/server.py
+@@ -8,7 +8,7 @@
+ 
+ from mcp.server import Server
+ from mcp.server.stdio import stdio_server
+-from mcp.types import Tool, TextContent, ImageContent, EmbeddedResource, ErrorData, INVALID_PARAMS
++from mcp.types import Tool, ToolAnnotations, TextContent, ImageContent, EmbeddedResource, ErrorData, INVALID_PARAMS
+ from mcp.shared.exceptions import McpError
+ 
+ from pydantic import BaseModel
+@@ -142,6 +142,12 @@ async def list_tools() -> list[Tool]:
+                     },
+                     "required": ["timezone"],
+                 },
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=TimeTools.CONVERT_TIME.value,
+@@ -164,6 +170,12 @@ async def list_tools() -> list[Tool]:
+                     },
+                     "required": ["source_timezone", "time", "target_timezone"],
+                 },
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+         ]
+ 

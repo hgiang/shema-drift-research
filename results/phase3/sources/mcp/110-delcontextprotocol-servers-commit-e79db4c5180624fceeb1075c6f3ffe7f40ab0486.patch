@@ -1,0 +1,75 @@
+From e79db4c5180624fceeb1075c6f3ffe7f40ab0486 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 02:22:44 -0400
+Subject: [PATCH] fix(issue-triage): require an issue for duplicate/keep
+ closes; clarify public score
+
+Copilot round 6 on #4906 (previously-missed findings):
+- the close loop stops on a duplicate or keep row with no harvest issue
+- the trust-boundary note says the score comment is public
+- issue-create describes form-filed arrivals (v2 + type, no scope label)
+- the plan's class table gains the Archived server row
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/issue-create/SKILL.md |  4 +++-
+ .claude/skills/issue-triage/SKILL.md | 10 +++++++---
+ docs/contribution-model.md           |  1 +
+ 3 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/.claude/skills/issue-create/SKILL.md b/.claude/skills/issue-create/SKILL.md
+index 377e0de484..551b22585c 100644
+--- a/.claude/skills/issue-create/SKILL.md
++++ b/.claude/skills/issue-create/SKILL.md
+@@ -188,7 +188,9 @@ well as its number, because project numbers are only unique per owner.
+ ## Issues that arrive from elsewhere
+ 
+ An issue opened through the GitHub UI, by an outside reporter or by a
+-maintainer, arrives with **no `v2` label, no milestone and no card**. That is
++maintainer, arrives with **no milestone and no card**, and with no labels unless
++it came through an issue form (the forms apply `v2` and `bug` or `enhancement`,
++never a scope label). That is
+ normal on arrival, not a defect to fix the moment it lands: it is not approved
+ yet, so it enters the board in **Incoming**, unmilestoned, through triage (the
+ `issue-triage` skill), never through this flow.
+diff --git a/.claude/skills/issue-triage/SKILL.md b/.claude/skills/issue-triage/SKILL.md
+index 4f3f3b07c1..dcd22c2d52 100644
+--- a/.claude/skills/issue-triage/SKILL.md
++++ b/.claude/skills/issue-triage/SKILL.md
+@@ -223,8 +223,9 @@ score comment; a rubric nobody may overrule is a rubric people route around.
+ ### Trust boundary: who can set what
+ 
+ **Board #43 is private.** Its Status and Priority are visible only to people
+-with project access, so a reporter never sees how their issue was scored. It is
+-the maintainers' working queue, not a published commitment.
++with project access. It is the maintainers' working queue, not a published
++commitment. The **score comment** below is public, though: it is how the
++reasoning survives, so write it for the reporter to read too.
+ 
+ **Fields → Priority** on the issue page is the opposite: an org-level issue
+ field, public, and settable by people outside maintainer triage (the two fields
+@@ -405,7 +406,10 @@ while IFS=$'\t' read -r PR CLASS ISSUE _; do
+   case "$CLASS" in
+     listing|new-server) BODY=$(cat "$D/responses/registry.md") ;;
+     archived) BODY=$(cat "$D/responses/archived.md") ;;
+-    no-op|duplicate|keep|out-of-scope)
++    duplicate|keep) [ "$ISSUE" != "-" ] \
++        || { echo "#$PR is $CLASS but names no issue — stopping; harvest first" >&2; break; }
++      BODY=$(sed "s/#ISSUE/#$ISSUE/" "$D/responses/general-tracked.md") ;;
++    no-op|out-of-scope)
+       if [ "$ISSUE" != "-" ]; then BODY=$(sed "s/#ISSUE/#$ISSUE/" "$D/responses/general-tracked.md")
+       else BODY=$(cat "$D/responses/general-untracked.md"); fi ;;
+     security) echo "skipping #$PR: a security fix closes only on a maintainer's call" >&2; continue ;;
+diff --git a/docs/contribution-model.md b/docs/contribution-model.md
+index 34ed52d854..6f00074da1 100644
+--- a/docs/contribution-model.md
++++ b/docs/contribution-model.md
+@@ -94,6 +94,7 @@ its paths:
+ | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+ | **Listing**                    | Adds or promotes a server entry in `README.md` or `ADDITIONAL.md` (a correction to an existing entry is read on its merits)     | No. Close with the Registry comment         |
+ | **New server**                 | Adds a server implementation, in or outside `src/`                                                                              | No. Close with the Registry comment         |
++| **Archived server**            | Changes a server that moved to `servers-archived`                                                                               | No. Close with the Archived pointer         |
+ | **No-op or spam**              | No effective change, a rename to the same name, unrelated or generated content                                                  | No. Close with the general comment          |
+ | **Duplicate**                  | Races another open PR, or an existing issue, for the same fix                                                                   | Once per group, through its best member     |
+ | **Security fix**               | Fixes a vulnerability: path traversal, symlink or Roots escape, SSRF, injection, a vulnerable dependency                        | See [Security fixes](#security-fixes)       |

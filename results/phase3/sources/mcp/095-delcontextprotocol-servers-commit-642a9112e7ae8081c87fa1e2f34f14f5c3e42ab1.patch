@@ -1,0 +1,236 @@
+From 642a9112e7ae8081c87fa1e2f34f14f5c3e42ab1 Mon Sep 17 00:00:00 2001
+From: Teddy100x <teddiesloco@gmail.com>
+Date: Sat, 29 Aug 2026 00:00:33 +0700
+Subject: [PATCH] fix(memory): write the knowledge graph atomically (#4642)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+* fix(memory): write the knowledge graph atomically
+
+`saveGraph()` wrote the graph straight to the memory file:
+
+    await fs.writeFile(this.memoryFilePath, lines.join("\n"));
+
+`fs.writeFile` opens the target with `'w'`, which truncates it before any
+new bytes are written. If the process is interrupted between truncation
+and completion — SIGKILL, container or host stop, OOM kill, power loss —
+the memory file is left empty or half-written.
+
+That file is the only persistence layer for the knowledge graph, so the
+window is small but the loss is total and unrecoverable.
+
+The fix writes to a temporary file in the same directory and renames it
+over the target. `rename(2)` is atomic on POSIX filesystems: a reader
+sees either the complete old file or the complete new one, never an
+intermediate state. Keeping the temp file in the same directory ensures
+the rename stays on one filesystem, since cross-device renames fail with
+EXDEV. On failure the temp file is removed so no strays accumulate.
+
+Tests added in `__tests__/atomic-save.test.ts`:
+
+- the live memory file is never opened for truncating writes
+- a committed graph survives a write that fails midway
+- no temporary files remain after a successful write
+- the temporary file is cleaned up when the rename fails
+- graph contents still round-trip correctly across reloads
+
+The first and fourth fail against the previous implementation.
+
+Full suite: 55 passed (50 existing, 5 new). `tsc --noEmit` clean.
+
+Fixes #4614
+
+* fix(memory): use randomBytes for temp filename to avoid concurrent collision
+
+---------
+
+Co-authored-by: teddiesloco <teddiesloco@users.noreply.github.com>
+---
+ src/memory/__tests__/atomic-save.test.ts | 133 +++++++++++++++++++++++
+ src/memory/index.ts                      |  25 ++++-
+ 2 files changed, 157 insertions(+), 1 deletion(-)
+ create mode 100644 src/memory/__tests__/atomic-save.test.ts
+
+diff --git a/src/memory/__tests__/atomic-save.test.ts b/src/memory/__tests__/atomic-save.test.ts
+new file mode 100644
+index 0000000000..8c702b5f7e
+--- /dev/null
++++ b/src/memory/__tests__/atomic-save.test.ts
+@@ -0,0 +1,133 @@
++import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
++import { promises as fs } from 'fs';
++import path from 'path';
++import os from 'os';
++import { KnowledgeGraphManager, Entity } from '../index.js';
++
++/**
++ * Regression tests for durable persistence of the knowledge graph.
++ *
++ * saveGraph() previously called fs.writeFile() directly on the memory file.
++ * fs.writeFile opens the target with 'w', which truncates it before any new
++ * bytes are written. If the process dies between truncation and completion
++ * (SIGKILL, container stop, OOM kill, power loss) the memory file — the sole
++ * persistence layer for the graph — is left empty or half-written, and the
++ * accumulated memory is unrecoverable.
++ *
++ * The fix writes to a temporary file in the same directory and then renames
++ * it over the target. rename(2) is atomic on POSIX filesystems: a reader
++ * either sees the complete old file or the complete new one, never a
++ * truncated intermediate state.
++ */
++describe('KnowledgeGraphManager persistence durability', () => {
++  let testDir: string;
++  let testFilePath: string;
++
++  beforeEach(async () => {
++    testDir = await fs.mkdtemp(path.join(os.tmpdir(), 'mcp-memory-atomic-'));
++    testFilePath = path.join(testDir, 'memory.jsonl');
++  });
++
++  afterEach(async () => {
++    vi.restoreAllMocks();
++    await fs.rm(testDir, { recursive: true, force: true });
++  });
++
++  it('never truncates the live memory file in place', async () => {
++    const manager = new KnowledgeGraphManager(testFilePath);
++    await manager.createEntities([
++      { name: 'Alice', entityType: 'person', observations: ['works at Acme Corp'] },
++    ]);
++
++    // Any write that targets the live file directly is destructive: it
++    // truncates committed data before the replacement is durable.
++    const writeFileSpy = vi.spyOn(fs, 'writeFile');
++    const openSpy = vi.spyOn(fs, 'open');
++
++    await manager.createEntities([
++      { name: 'Bob', entityType: 'person', observations: ['likes programming'] },
++    ]);
++
++    const destructiveTargets = [
++      ...writeFileSpy.mock.calls.map(call => call[0]),
++      ...openSpy.mock.calls.map(call => call[0]),
++    ].filter(target => target === testFilePath);
++
++    expect(destructiveTargets).toEqual([]);
++  });
++
++  it('leaves the committed graph intact when the write fails midway', async () => {
++    const manager = new KnowledgeGraphManager(testFilePath);
++    await manager.createEntities([
++      { name: 'Alice', entityType: 'person', observations: ['works at Acme Corp'] },
++    ]);
++
++    const before = await fs.readFile(testFilePath, 'utf-8');
++    expect(before).toContain('Alice');
++
++    // Simulate the process being interrupted while persisting the next write.
++    vi.spyOn(fs, 'writeFile').mockImplementationOnce(async () => {
++      throw new Error('ENOSPC: simulated interruption');
++    });
++
++    await expect(
++      manager.createEntities([
++        { name: 'Bob', entityType: 'person', observations: ['likes programming'] },
++      ])
++    ).rejects.toThrow();
++
++    vi.restoreAllMocks();
++
++    // The previously committed graph must survive untouched.
++    expect(await fs.readFile(testFilePath, 'utf-8')).toBe(before);
++
++    const graph = await new KnowledgeGraphManager(testFilePath).readGraph();
++    expect(graph.entities.map(e => e.name)).toEqual(['Alice']);
++  });
++
++  it('does not leave temporary files behind after a successful write', async () => {
++    const manager = new KnowledgeGraphManager(testFilePath);
++    await manager.createEntities([
++      { name: 'Alice', entityType: 'person', observations: ['works at Acme Corp'] },
++    ]);
++
++    expect(await fs.readdir(testDir)).toEqual(['memory.jsonl']);
++  });
++
++  it('cleans up the temporary file when the write fails', async () => {
++    const manager = new KnowledgeGraphManager(testFilePath);
++    await manager.createEntities([
++      { name: 'Alice', entityType: 'person', observations: ['works at Acme Corp'] },
++    ]);
++
++    vi.spyOn(fs, 'rename').mockImplementationOnce(async () => {
++      throw new Error('EXDEV: simulated rename failure');
++    });
++
++    await expect(
++      manager.createEntities([
++        { name: 'Bob', entityType: 'person', observations: ['likes programming'] },
++      ])
++    ).rejects.toThrow();
++
++    vi.restoreAllMocks();
++    expect(await fs.readdir(testDir)).toEqual(['memory.jsonl']);
++  });
++
++  it('still persists graph contents correctly across reloads', async () => {
++    const manager = new KnowledgeGraphManager(testFilePath);
++    await manager.createEntities([
++      { name: 'Alice', entityType: 'person', observations: ['works at Acme Corp'] },
++      { name: 'Bob', entityType: 'person', observations: ['likes programming'] },
++    ]);
++    await manager.createRelations([
++      { from: 'Alice', to: 'Bob', relationType: 'knows' },
++    ]);
++
++    const reloaded = await new KnowledgeGraphManager(testFilePath).readGraph();
++    expect(reloaded.entities.map(e => e.name).sort()).toEqual(['Alice', 'Bob']);
++    expect(reloaded.relations).toEqual([
++      { from: 'Alice', to: 'Bob', relationType: 'knows' },
++    ]);
++  });
++});
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index 9865c5318e..b8704a9515 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -6,6 +6,7 @@ import { SubscribeRequestSchema, UnsubscribeRequestSchema } from "@modelcontextp
+ import { z } from "zod";
+ import { promises as fs } from 'fs';
+ import path from 'path';
++import { randomBytes } from 'crypto';
+ import { fileURLToPath } from 'url';
+ 
+ // Define memory file path using environment variable with fallback
+@@ -114,7 +115,29 @@ export class KnowledgeGraphManager {
+         relationType: r.relationType
+       })),
+     ];
+-    await fs.writeFile(this.memoryFilePath, lines.join("\n"));
++
++    // Write to a temporary file in the same directory, then rename it over
++    // the target. fs.writeFile would truncate the memory file before writing,
++    // so an interruption (SIGKILL, container stop, OOM, power loss) would
++    // leave the only copy of the graph truncated and unrecoverable.
++    // rename(2) is atomic on POSIX filesystems: readers see either the
++    // complete old file or the complete new one, never a partial state.
++    // The temp file is kept in the same directory so the rename stays on one
++    // filesystem — renaming across mount points fails with EXDEV.
++    const directory = path.dirname(this.memoryFilePath);
++    const tempFilePath = path.join(
++      directory,
++      `${path.basename(this.memoryFilePath)}.${randomBytes(16).toString('hex')}.tmp`
++    );
++
++    try {
++      await fs.writeFile(tempFilePath, lines.join("\n"));
++      await fs.rename(tempFilePath, this.memoryFilePath);
++    } catch (error) {
++      // Never leave a stray temp file behind on failure.
++      await fs.unlink(tempFilePath).catch(() => {});
++      throw error;
++    }
+   }
+ 
+   async createEntities(entities: Entity[]): Promise<Entity[]> {

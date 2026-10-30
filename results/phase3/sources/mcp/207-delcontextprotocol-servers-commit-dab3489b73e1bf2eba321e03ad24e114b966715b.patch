@@ -1,0 +1,48 @@
+From dab3489b73e1bf2eba321e03ad24e114b966715b Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 10:01:31 -0400
+Subject: [PATCH] ci(release): run tests before publishing
+
+Gate both publish jobs on the package's test suite: npm test
+--if-present before the npm build/publish, and pytest (when a tests/
+or test/ directory exists, matching python.yml's guard) before the
+PyPI build/publish. Previously nothing between tagging and publishing
+ran a single test.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/release.yml | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index e6456a53a3..579631059d 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -138,6 +138,15 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: uv run --frozen pyright
+ 
++      - name: Run tests
++        working-directory: src/${{ matrix.package }}
++        run: |
++          if [ -d "tests" ] || [ -d "test" ]; then
++            uv run pytest
++          else
++            echo "No tests directory, skipping"
++          fi
++
+       - name: Build package
+         working-directory: src/${{ matrix.package }}
+         run: uv build
+@@ -189,6 +198,10 @@ jobs:
+           fi
+           echo "Version $VERSION is new, proceeding with publish"
+ 
++      - name: Run tests
++        working-directory: src/${{ matrix.package }}
++        run: npm test --if-present
++
+       - name: Build package
+         working-directory: src/${{ matrix.package }}
+         run: npm run build

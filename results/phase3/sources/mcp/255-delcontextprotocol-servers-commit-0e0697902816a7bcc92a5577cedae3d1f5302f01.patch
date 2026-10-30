@@ -1,0 +1,21 @@
+From 0e0697902816a7bcc92a5577cedae3d1f5302f01 Mon Sep 17 00:00:00 2001
+From: David Wong <dwong@figma.com>
+Date: Tue, 24 Feb 2026 17:35:23 +0000
+Subject: [PATCH] add figma to official integrations list (#3363)
+
+---
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/README.md b/README.md
+index 5d25fe6899..8a232ffc33 100644
+--- a/README.md
++++ b/README.md
+@@ -225,6 +225,7 @@ Official integrations are maintained by companies building production ready MCP
+ - <img height="12" width="12" src="https://fetchserp.com/icon.png" alt="fetchSERP Logo" /> **[fetchSERP](https://github.com/fetchSERP/fetchserp-mcp-server-node)** - All-in-One SEO & Web Intelligence Toolkit API [fetchSERP](https://www.fetchserp.com/)
+ - <img height="12" width="12" src="https://fewsats.com/favicon.svg" alt="Fewsats Logo" /> **[Fewsats](https://github.com/Fewsats/fewsats-mcp)** - Enable AI Agents to purchase anything in a secure way using [Fewsats](https://fewsats.com)
+ - <img height="12" width="12" src="https://fibery.io/favicon.svg" alt="Fibery Logo" /> **[Fibery](https://github.com/Fibery-inc/fibery-mcp-server)** - Perform queries and entity operations in your [Fibery](https://fibery.io) workspace.
++- <img height="12" width="12" src="https://static.figma.com/app/icon/2/favicon.ico" alt="Figma Logo" /> **[Figma](https://github.com/figma/mcp-server-guide)** - Bring Figma directly into your workflow by providing important design information and context to AI agents generating code from design files with the official [Figma](https://www.figma.com) MCP server.
+ - <img height="12" width="12" src="https://financialdatasets.ai/favicon.ico" alt="Financial Datasets Logo" /> **[Financial Datasets](https://github.com/financial-datasets/mcp-server)** - Stock market API made for AI agents
+ - <img height="12" width="12" src="https://www.gstatic.com/devrel-devsite/prod/v7aeef7f1393bb1d75a4489145c511cdd5aeaa8e13ad0a83ec1b5b03612e66330/firebase/images/favicon.png" alt="Firebase Logo" /> **[Firebase](https://github.com/firebase/firebase-tools/blob/master/src/mcp)** - Firebase's experimental [MCP Server](https://firebase.google.com/docs/cli/mcp-server) to power your AI Tools
+ - <img height="12" width="12" src="https://firecrawl.dev/favicon.ico" alt="Firecrawl Logo" /> **[Firecrawl](https://github.com/firecrawl/firecrawl-mcp-server)** - Extract web data with [Firecrawl](https://firecrawl.dev)

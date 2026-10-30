@@ -1,0 +1,143 @@
+From d6402efee6cc6446b23adbcb63051f9dc8612be5 Mon Sep 17 00:00:00 2001
+From: Amir Fathi <amirfathi.me@gmail.com>
+Date: Fri, 28 Aug 2026 11:57:34 -0600
+Subject: [PATCH] fix(sequentialthinking): restore nextThoughtNeeded in the
+ advertised inputSchema required array (#4652)
+
+* fix(sequentialthinking): restore nextThoughtNeeded in the advertised inputSchema required array
+
+commit 1cdf806d (#3533) wrapped nextThoughtNeeded in a z.preprocess-based
+coercedBoolean to fix a real footgun (string "false" coercing to true).
+zod's toJSONSchema(..., { io: "input" }) treats a z.preprocess()-wrapped
+field's input type as unknown, so it silently drops that field from the
+emitted required array, even though it carries no .optional(). A client
+that builds its call arguments from the advertised schema then omits
+nextThoughtNeeded and gets a -32602 Invalid params from the runtime
+validator, which still requires it.
+
+Rebuild coercedBoolean as a transform on an explicit z.union([z.boolean(),
+z.string()]) instead of z.preprocess. The union gives toJSONSchema a
+concrete input type to report, so nextThoughtNeeded stays in required,
+while parse behavior (including the case-insensitive string coercion
+#3533 added) is unchanged.
+
+Fixes #4651
+
+* test(sequentialthinking): pin nextThoughtNeeded in required and string coercion
+
+Runs against the built server so it checks the schema the SDK emits.
+Skips when dist/ is absent, matching server-version.test.ts.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_018Wo28CHPXyM3DHoLWvKnCK
+
+---------
+
+Co-authored-by: olaservo <olahungerford@gmail.com>
+Co-authored-by: Claude Fable 5 <noreply@anthropic.com>
+---
+ .../__tests__/input-schema.test.ts            | 66 +++++++++++++++++++
+ src/sequentialthinking/index.ts               | 16 ++---
+ 2 files changed, 74 insertions(+), 8 deletions(-)
+ create mode 100644 src/sequentialthinking/__tests__/input-schema.test.ts
+
+diff --git a/src/sequentialthinking/__tests__/input-schema.test.ts b/src/sequentialthinking/__tests__/input-schema.test.ts
+new file mode 100644
+index 0000000000..4ff7be663c
+--- /dev/null
++++ b/src/sequentialthinking/__tests__/input-schema.test.ts
+@@ -0,0 +1,66 @@
++import { describe, it, expect, beforeAll, afterAll } from 'vitest';
++import { existsSync } from 'node:fs';
++import path from 'node:path';
++import { fileURLToPath } from 'node:url';
++import { Client } from '@modelcontextprotocol/sdk/client/index.js';
++import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
++
++const packageRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
++const distIndexPath = path.join(packageRoot, 'dist', 'index.js');
++
++// Regression coverage for #4651: nextThoughtNeeded must stay in the advertised
++// `required` array, and string coercion must keep accepting "True"/"FALSE"
++// while rejecting anything else. Runs against the built server so it checks
++// the schema the SDK actually emits, not the zod object.
++describe.skipIf(!existsSync(distIndexPath))('sequentialthinking input schema', () => {
++  let client: Client;
++
++  beforeAll(async () => {
++    const transport = new StdioClientTransport({
++      command: process.execPath,
++      args: [distIndexPath],
++      cwd: packageRoot,
++      stderr: 'pipe',
++    });
++    client = new Client({ name: 'input-schema-test', version: '0.0.0' });
++    await client.connect(transport);
++  });
++
++  afterAll(async () => {
++    await client?.close();
++  });
++
++  it('advertises nextThoughtNeeded as required', async () => {
++    const { tools } = await client.listTools();
++    const tool = tools.find(t => t.name === 'sequentialthinking');
++    expect(tool).toBeDefined();
++    expect(tool!.inputSchema.required).toEqual(
++      expect.arrayContaining(['thought', 'nextThoughtNeeded', 'thoughtNumber', 'totalThoughts'])
++    );
++  });
++
++  it('rejects a call that omits nextThoughtNeeded', async () => {
++    const result = await client.callTool({
++      name: 'sequentialthinking',
++      arguments: { thought: 't', thoughtNumber: 1, totalThoughts: 1 },
++    });
++    expect(result.isError).toBe(true);
++    expect(JSON.stringify(result.content)).toMatch(/nextThoughtNeeded/);
++  });
++
++  it.each(['True', 'FALSE', 'true', 'false'])('accepts the string %s', async (value) => {
++    const result = await client.callTool({
++      name: 'sequentialthinking',
++      arguments: { thought: 't', nextThoughtNeeded: value, thoughtNumber: 1, totalThoughts: 1 },
++    });
++    expect(result.isError).toBeFalsy();
++  });
++
++  it.each(['yes', '', '1'])('rejects the string %j', async (value) => {
++    const result = await client.callTool({
++      name: 'sequentialthinking',
++      arguments: { thought: 't', nextThoughtNeeded: value, thoughtNumber: 1, totalThoughts: 1 },
++    });
++    expect(result.isError).toBe(true);
++  });
++});
+diff --git a/src/sequentialthinking/index.ts b/src/sequentialthinking/index.ts
+index 54c42df199..1ae09d1db8 100644
+--- a/src/sequentialthinking/index.ts
++++ b/src/sequentialthinking/index.ts
+@@ -6,15 +6,15 @@ import { z } from "zod";
+ import { SequentialThinkingServer } from './lib.js';
+ import { SERVER_VERSION } from './version.js';
+ 
+-/** Safe boolean coercion that correctly handles string "false" */
+-const coercedBoolean = z.preprocess((val) => {
++/** Safe boolean coercion that correctly handles string "false". A union+transform,
++ * not z.preprocess (whose input type is `unknown`), so toJSONSchema keeps this required. */
++const coercedBoolean = z.union([z.boolean(), z.string()]).transform((val, ctx) => {
+   if (typeof val === "boolean") return val;
+-  if (typeof val === "string") {
+-    if (val.toLowerCase() === "true") return true;
+-    if (val.toLowerCase() === "false") return false;
+-  }
+-  return val;
+-}, z.boolean());
++  if (val.toLowerCase() === "true") return true;
++  if (val.toLowerCase() === "false") return false;
++  ctx.addIssue({ code: "custom", message: `Expected boolean or "true"/"false" string, received "${val}"` });
++  return z.NEVER;
++});
+ 
+ const server = new McpServer({
+   name: "sequential-thinking-server",

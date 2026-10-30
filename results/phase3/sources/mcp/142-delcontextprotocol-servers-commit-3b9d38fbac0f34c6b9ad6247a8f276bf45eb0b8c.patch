@@ -1,0 +1,59 @@
+From 3b9d38fbac0f34c6b9ad6247a8f276bf45eb0b8c Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 18:36:43 -0400
+Subject: [PATCH] ci: run CI on pushes to any branch, cancel superseded runs
+
+Previously push-triggered CI ran only on main, so same-repo branches
+got no CI until a PR was opened (fork contributions were and remain
+covered by pull_request, which fires on open and on every subsequent
+push). Run on all pushes, and add a per-ref concurrency group so rapid
+amend-pushes cancel superseded runs. Same-repo branches with an open
+PR will run under both events; acceptable at this repo's scale.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/python.yml     | 7 +++++--
+ .github/workflows/typescript.yml | 7 +++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index 15f63945cd..76bdc106fb 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -2,10 +2,13 @@ name: Python
+ 
+ on:
+   push:
+-    branches:
+-      - main
+   pull_request:
+ 
++# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes)
++concurrency:
++  group: ${{ github.workflow }}-${{ github.ref }}
++  cancel-in-progress: true
++
+ jobs:
+   detect-packages:
+     runs-on: ubuntu-latest
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index 154d5adda5..e56ddd90f0 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -2,10 +2,13 @@ name: TypeScript
+ 
+ on:
+   push:
+-    branches:
+-      - main
+   pull_request:
+ 
++# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes)
++concurrency:
++  group: ${{ github.workflow }}-${{ github.ref }}
++  cancel-in-progress: true
++
+ jobs:
+   detect-packages:
+     runs-on: ubuntu-latest

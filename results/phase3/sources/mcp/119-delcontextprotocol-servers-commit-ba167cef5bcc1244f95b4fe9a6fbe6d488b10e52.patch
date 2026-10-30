@@ -1,0 +1,96 @@
+From ba167cef5bcc1244f95b4fe9a6fbe6d488b10e52 Mon Sep 17 00:00:00 2001
+From: Yufeng He <40085740+he-yufeng@users.noreply.github.com>
+Date: Thu, 3 Sep 2026 09:15:26 +0800
+Subject: [PATCH] fix: declare zod runtime dependencies (#4289)
+
+Co-authored-by: olaservo <olahungerford@gmail.com>
+---
+ package-lock.json                   | 9 ++++++---
+ src/filesystem/package.json         | 3 ++-
+ src/memory/package.json             | 3 ++-
+ src/sequentialthinking/package.json | 5 +++--
+ 4 files changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/package-lock.json b/package-lock.json
+index 1845571736..632d3404ad 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -3866,7 +3866,8 @@
+         "@modelcontextprotocol/sdk": "^1.30.0",
+         "diff": "^8.0.3",
+         "glob": "^13.0.6",
+-        "minimatch": "^10.0.1"
++        "minimatch": "^10.0.1",
++        "zod": "^4.0.0"
+       },
+       "bin": {
+         "mcp-server-filesystem": "dist/index.js"
+@@ -3886,7 +3887,8 @@
+       "version": "0.6.3",
+       "license": "SEE LICENSE IN LICENSE",
+       "dependencies": {
+-        "@modelcontextprotocol/sdk": "^1.30.0"
++        "@modelcontextprotocol/sdk": "^1.30.0",
++        "zod": "^4.0.0"
+       },
+       "bin": {
+         "mcp-server-memory": "dist/index.js"
+@@ -3906,7 +3908,8 @@
+       "dependencies": {
+         "@modelcontextprotocol/sdk": "^1.30.0",
+         "chalk": "^5.3.0",
+-        "yargs": "^17.7.2"
++        "yargs": "^17.7.2",
++        "zod": "^4.0.0"
+       },
+       "bin": {
+         "mcp-server-sequential-thinking": "dist/index.js"
+diff --git a/src/filesystem/package.json b/src/filesystem/package.json
+index 139c4f00b4..3c288a2673 100644
+--- a/src/filesystem/package.json
++++ b/src/filesystem/package.json
+@@ -28,7 +28,8 @@
+     "@modelcontextprotocol/sdk": "^1.30.0",
+     "diff": "^8.0.3",
+     "glob": "^13.0.6",
+-    "minimatch": "^10.0.1"
++    "minimatch": "^10.0.1",
++    "zod": "^4.0.0"
+   },
+   "devDependencies": {
+     "@types/diff": "^5.0.9",
+diff --git a/src/memory/package.json b/src/memory/package.json
+index 4fdcd3f9a4..ea10979f1b 100644
+--- a/src/memory/package.json
++++ b/src/memory/package.json
+@@ -25,7 +25,8 @@
+     "test": "vitest run --coverage"
+   },
+   "dependencies": {
+-    "@modelcontextprotocol/sdk": "^1.30.0"
++    "@modelcontextprotocol/sdk": "^1.30.0",
++    "zod": "^4.0.0"
+   },
+   "devDependencies": {
+     "@types/node": "^22",
+diff --git a/src/sequentialthinking/package.json b/src/sequentialthinking/package.json
+index 03fbb2b361..a668a47fd9 100644
+--- a/src/sequentialthinking/package.json
++++ b/src/sequentialthinking/package.json
+@@ -27,7 +27,8 @@
+   "dependencies": {
+     "@modelcontextprotocol/sdk": "^1.30.0",
+     "chalk": "^5.3.0",
+-    "yargs": "^17.7.2"
++    "yargs": "^17.7.2",
++    "zod": "^4.0.0"
+   },
+   "devDependencies": {
+     "@types/node": "^22",
+@@ -37,4 +38,4 @@
+     "typescript": "^5.3.3",
+     "vitest": "^4.1.8"
+   }
+-}
+\ No newline at end of file
++}

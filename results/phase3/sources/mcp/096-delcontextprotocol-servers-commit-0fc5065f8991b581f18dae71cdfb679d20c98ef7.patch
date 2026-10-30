@@ -1,0 +1,146 @@
+From 0fc5065f8991b581f18dae71cdfb679d20c98ef7 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 28 Sep 2026 23:49:31 -0400
+Subject: [PATCH] fix: handle failed simulated sends; correct two comments
+
+- everything's simulated logging and resource-update sends (immediate and
+  interval) now log a rejected send instead of discarding it, so a closed
+  transport cannot produce an unhandled rejection.
+- everything's tsconfig.test.json comment no longer claims its build
+  config excludes the tests.
+- verify:dep-lockstep's wording now matches its rule: no two declarations
+  may disagree; a single declaration anywhere is one range.
+
+Refs #4864
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ scripts/verify-dep-lockstep.mjs           |  9 ++++++---
+ scripts/verify-dep-lockstep.test.mjs      |  2 +-
+ src/everything/resources/subscriptions.ts | 16 +++++++++++-----
+ src/everything/server/logging.ts          | 16 +++++++++++-----
+ src/everything/tsconfig.test.json         | 10 +++++-----
+ 5 files changed, 34 insertions(+), 19 deletions(-)
+
+diff --git a/scripts/verify-dep-lockstep.mjs b/scripts/verify-dep-lockstep.mjs
+index a0caa84014..2baeeae0b2 100644
+--- a/scripts/verify-dep-lockstep.mjs
++++ b/scripts/verify-dep-lockstep.mjs
+@@ -15,8 +15,11 @@
+ //
+ // So the rule is the smaller one §2.3 of docs/agent-guidance-inception.md
+ // sets: every SHARED toolchain package is declared with ONE range everywhere it
+-// is declared — across the root and every workspace, in any dependency section
+-// — or declared only once (hoisted to the root). The shared set is named
++// is declared — across the root and every workspace, in any dependency section.
++// Declaring it in a single manifest (the root, as `prettier` is) is the
++// degenerate case of the same rule: one declaration is one range. Where a
++// package is declared is not this guard's question — only that no two
++// declarations disagree. The shared set is named
+ // below. The Python servers are independent by design and have no manifest
+ // here, so they are out of scope.
+ //
+@@ -119,7 +122,7 @@ export function main() {
+     );
+     for (const p of problems) console.error(`  ${p}`);
+     console.error(
+-      "\nDeclare each with one identical range everywhere it is declared, or only once at the root.",
++      "\nDeclare each with one identical range everywhere it is declared (or in a single manifest).",
+     );
+     console.error(
+       "Bump it in every manifest in the same change, then `npm install` at the root so the lockfile follows.",
+diff --git a/scripts/verify-dep-lockstep.test.mjs b/scripts/verify-dep-lockstep.test.mjs
+index 41e3c031a4..8bb1469488 100644
+--- a/scripts/verify-dep-lockstep.test.mjs
++++ b/scripts/verify-dep-lockstep.test.mjs
+@@ -34,7 +34,7 @@ test("lockstep: one range everywhere passes", () => {
+   );
+ });
+ 
+-test("lockstep: declared only once (hoisted to the root) passes", () => {
++test("lockstep: a single declaration (e.g. only at the root) passes", () => {
+   assert.deepEqual(
+     lockstepProblems([
+       { dir: ".", pkg: { devDependencies: { prettier: "3.8.4" } } },
+diff --git a/src/everything/resources/subscriptions.ts b/src/everything/resources/subscriptions.ts
+index 62a1f5f7fe..295e186e4a 100644
+--- a/src/everything/resources/subscriptions.ts
++++ b/src/everything/resources/subscriptions.ts
+@@ -138,15 +138,21 @@ export const beginSimulatedResourceUpdates = (
+   sessionId: string | undefined,
+ ) => {
+   if (!subsUpdateIntervals.has(sessionId)) {
+-    // Send once immediately. Fire-and-forget: this function is synchronous by
+-    // contract (its callers start a background simulation), exactly like the
+-    // interval callback below, so the caller cannot hold the promise.
+-    void sendSimulatedResourceUpdates(server, sessionId);
++    // Send once immediately, then every 5 seconds. Fire-and-forget: this
++    // function is synchronous by contract (its callers start a background
++    // simulation), so neither send can be awaited. A send that fails (e.g. the
++    // transport closed before the updates were stopped) is logged rather than
++    // left to become an unhandled rejection.
++    const send = () =>
++      sendSimulatedResourceUpdates(server, sessionId).catch((error: unknown) =>
++        console.error("Simulated resource update failed:", error),
++      );
++    void send();
+ 
+     // Set the interval to send later resource update notifications to this client
+     subsUpdateIntervals.set(
+       sessionId,
+-      setInterval(() => sendSimulatedResourceUpdates(server, sessionId), 5000),
++      setInterval(() => void send(), 5000),
+     );
+   }
+ };
+diff --git a/src/everything/server/logging.ts b/src/everything/server/logging.ts
+index 0a0437e738..8d3d25868c 100644
+--- a/src/everything/server/logging.ts
++++ b/src/everything/server/logging.ts
+@@ -52,15 +52,21 @@ export const beginSimulatedLogging = (
+ 
+   // Set the interval to send later logging messages to this client
+   if (!logsUpdateIntervals.has(sessionId)) {
+-    // Send once immediately. Fire-and-forget: this function is synchronous by
+-    // contract (it starts a background simulation), exactly like the interval
+-    // callback below, so the caller cannot hold the promise.
+-    void sendSimulatedLoggingMessage(sessionId);
++    // Send once immediately, then every 5 seconds. Fire-and-forget: this
++    // function is synchronous by contract (it starts a background simulation),
++    // so neither send can be awaited. A send that fails (e.g. the transport
++    // closed before `stopSimulatedLogging`) is logged rather than left to
++    // become an unhandled rejection.
++    const send = () =>
++      sendSimulatedLoggingMessage(sessionId).catch((error: unknown) =>
++        console.error("Simulated logging message failed:", error),
++      );
++    void send();
+ 
+     // Send a randomly-leveled log message every 5 seconds
+     logsUpdateIntervals.set(
+       sessionId,
+-      setInterval(() => sendSimulatedLoggingMessage(sessionId), 5000),
++      setInterval(() => void send(), 5000),
+     );
+   }
+ };
+diff --git a/src/everything/tsconfig.test.json b/src/everything/tsconfig.test.json
+index 1876ccdb6f..25566ce891 100644
+--- a/src/everything/tsconfig.test.json
++++ b/src/everything/tsconfig.test.json
+@@ -1,9 +1,9 @@
+ {
+-  // The typecheck program for the whole workspace (#4864). `tsconfig.json` is
+-  // the build config and leaves the tests out, so tsc does not emit them into
+-  // `dist/`; this one adds them back without emitting anything. `npm run
+-  // typecheck` runs it, and it is the parser project the root ESLint config
+-  // uses, so what is linted and what is typechecked are the same file set.
++  // The no-emit typecheck program for the whole workspace (#4864). Here the
++  // build `tsconfig.json` already includes the tests; this file exists so every
++  // workspace has the same `tsconfig.test.json` that `npm run typecheck` runs
++  // and the root ESLint config uses as its parser project, so what is linted
++  // and what is typechecked are the same file set in every server.
+   "extends": "./tsconfig.json",
+   "compilerOptions": {
+     "noEmit": true

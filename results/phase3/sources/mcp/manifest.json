@@ -79,6 +79,14 @@
   "sha256": "e25989efb2249d31474a892118aa9da81eb3dc6138de9ee1e43a29c25f37a23f",
   "fetched_at": "2026-10-30T03:19:55Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/00ce9cf134bbcb2dd3ff7834e7211d7c26f26b04.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/00ce9cf134bbcb2dd3ff7834e7211d7c26f26b04.patch",
+  "path": "226-delcontextprotocol-servers-commit-00ce9cf134bbcb2dd3ff7834e7211d7c26f26b04.patch",
+  "status": 200,
+  "n_bytes": 1926,
+  "sha256": "83da2161d7f6ab372503f86756a33232fd5efb59e5e0b8dc34d1ed4a3355f28e",
+  "fetched_at": "2026-10-30T03:47:44Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/0208e93f8500a9e8e1b641410faefa0899abe324.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/0208e93f8500a9e8e1b641410faefa0899abe324.patch",
   "path": "062-delcontextprotocol-servers-commit-0208e93f8500a9e8e1b641410faefa0899abe324.patch",
@@ -87,6 +95,22 @@
   "sha256": "78e7a4a67eb23f71a6e5daf6de3bd51a6e218628b52dce7a68bd2b5c2b8de08a",
   "fetched_at": "2026-10-30T03:20:50Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/03f276bfe2d07481f915d88d96760a33b27c4fec.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/03f276bfe2d07481f915d88d96760a33b27c4fec.patch",
+  "path": "261-delcontextprotocol-servers-commit-03f276bfe2d07481f915d88d96760a33b27c4fec.patch",
+  "status": 200,
+  "n_bytes": 2993,
+  "sha256": "ee80b1f2bea21d17e316bfff4d27a96828572946841e9d115229dd3bf0812f2f",
+  "fetched_at": "2026-10-30T03:48:19Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/040b5a96dba7ad586b7b74960b4cbcd0d7681350.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/040b5a96dba7ad586b7b74960b4cbcd0d7681350.patch",
+  "path": "281-delcontextprotocol-servers-commit-040b5a96dba7ad586b7b74960b4cbcd0d7681350.patch",
+  "status": 200,
+  "n_bytes": 2345,
+  "sha256": "8487c56e6ad03f456944ffdd750d3cf43036fe86c6d063c4e61bde8edf33ee29",
+  "fetched_at": "2026-10-30T03:48:39Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/04cce79b4c2bbaa313095e9c2a466381f5fd1e64.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/04cce79b4c2bbaa313095e9c2a466381f5fd1e64.patch",
   "path": "030-delcontextprotocol-servers-commit-04cce79b4c2bbaa313095e9c2a466381f5fd1e64.patch",
@@ -94,6 +118,86 @@
   "n_bytes": 3528,
   "sha256": "a5c2060ee00e4dfd10791b7fbec673d4ba56cceaf8d8d08762e0ee60775b450a",
   "fetched_at": "2026-10-30T03:20:17Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/0588ec098e4630e986f35dc137019f845b47d4cc.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/0588ec098e4630e986f35dc137019f845b47d4cc.patch",
+  "path": "141-delcontextprotocol-servers-commit-0588ec098e4630e986f35dc137019f845b47d4cc.patch",
+  "status": 200,
+  "n_bytes": 207871,
+  "sha256": "be5bf8c61403dc6b4d7ce8f46b74362d3e0c40e90ee4f512cdc260c7d4c650a3",
+  "fetched_at": "2026-10-30T03:46:19Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/06a8169e6f0fa6db3fce0b15173d896e31bfc9a4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/06a8169e6f0fa6db3fce0b15173d896e31bfc9a4.patch",
+  "path": "130-delcontextprotocol-servers-commit-06a8169e6f0fa6db3fce0b15173d896e31bfc9a4.patch",
+  "status": 200,
+  "n_bytes": 6310,
+  "sha256": "9d672afcb8f457cb973259bd8a76988a3fe2fc96d70e934dc3bb58ac01cd3898",
+  "fetched_at": "2026-10-30T03:46:07Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/079618a527f80d7a247bf877eb1a72e65cadfd8b.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/079618a527f80d7a247bf877eb1a72e65cadfd8b.patch",
+  "path": "184-delcontextprotocol-servers-commit-079618a527f80d7a247bf877eb1a72e65cadfd8b.patch",
+  "status": 200,
+  "n_bytes": 5307,
+  "sha256": "379623444de5df2d5d68de8e3f9847177f2d105fba43520cf3867fa100b11bff",
+  "fetched_at": "2026-10-30T03:47:02Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/0ba86f8d4fe615f11a8b7366a1252ec671ff03b3.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/0ba86f8d4fe615f11a8b7366a1252ec671ff03b3.patch",
+  "path": "283-delcontextprotocol-servers-commit-0ba86f8d4fe615f11a8b7366a1252ec671ff03b3.patch",
+  "status": 200,
+  "n_bytes": 908,
+  "sha256": "fd8af0056dfa3f2bd1a02c0a66a805eaa173cdfdd42cc6780d5b75d187aa9f08",
+  "fetched_at": "2026-10-30T03:48:41Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/0ca9921e20c64b27a59385c3ebd10a81600d6e2e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/0ca9921e20c64b27a59385c3ebd10a81600d6e2e.patch",
+  "path": "216-delcontextprotocol-servers-commit-0ca9921e20c64b27a59385c3ebd10a81600d6e2e.patch",
+  "status": 200,
+  "n_bytes": 22466,
+  "sha256": "22c221b8a33d60d0ad7ce1992609267b6a1e5aaf82df04f9b437fbcd885bf58c",
+  "fetched_at": "2026-10-30T03:47:34Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/0db9a34071c9b4d7568e4d1508139e3405434e1c.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/0db9a34071c9b4d7568e4d1508139e3405434e1c.patch",
+  "path": "124-delcontextprotocol-servers-commit-0db9a34071c9b4d7568e4d1508139e3405434e1c.patch",
+  "status": 200,
+  "n_bytes": 181775,
+  "sha256": "5b9851473c0d0dc8f6496767990df219b24c2116d49bbb683e9b46dcf2c8a18c",
+  "fetched_at": "2026-10-30T03:46:01Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/0df46778f7bd6b073b7a6703bc9dabc224de19c1.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/0df46778f7bd6b073b7a6703bc9dabc224de19c1.patch",
+  "path": "082-delcontextprotocol-servers-commit-0df46778f7bd6b073b7a6703bc9dabc224de19c1.patch",
+  "status": 200,
+  "n_bytes": 12432,
+  "sha256": "ae07fa35642e11eb641847d4f726b59e04c9e8b6eafcd25e0328a4e540ce6364",
+  "fetched_at": "2026-10-30T03:45:19Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/0e0697902816a7bcc92a5577cedae3d1f5302f01.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/0e0697902816a7bcc92a5577cedae3d1f5302f01.patch",
+  "path": "255-delcontextprotocol-servers-commit-0e0697902816a7bcc92a5577cedae3d1f5302f01.patch",
+  "status": 200,
+  "n_bytes": 2391,
+  "sha256": "eaa179bfb4dccec6ae924415c56b1f3bdc11b20517d19cdfdc5c85acb1773a3b",
+  "fetched_at": "2026-10-30T03:48:13Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/0e30ad18c7b583cb3999c1d525b25909a1e4168f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/0e30ad18c7b583cb3999c1d525b25909a1e4168f.patch",
+  "path": "146-delcontextprotocol-servers-commit-0e30ad18c7b583cb3999c1d525b25909a1e4168f.patch",
+  "status": 200,
+  "n_bytes": 2345,
+  "sha256": "8487c56e6ad03f456944ffdd750d3cf43036fe86c6d063c4e61bde8edf33ee29",
+  "fetched_at": "2026-10-30T03:46:24Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/0fc5065f8991b581f18dae71cdfb679d20c98ef7.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/0fc5065f8991b581f18dae71cdfb679d20c98ef7.patch",
+  "path": "096-delcontextprotocol-servers-commit-0fc5065f8991b581f18dae71cdfb679d20c98ef7.patch",
+  "status": 200,
+  "n_bytes": 7194,
+  "sha256": "66611ceef804709c9a0928eb72015c299c548fab505a08ef446a896df71ccf19",
+  "fetched_at": "2026-10-30T03:45:33Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/106216491eebe0969baebfac88126253b6f7d191.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/106216491eebe0969baebfac88126253b6f7d191.patch",
@@ -111,6 +215,30 @@
   "sha256": "502e7aad8eb9d240ef754f86df14b2b5be1c3c1d546e3da1009c2e19ad08a9f4",
   "fetched_at": "2026-10-30T03:20:42Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/10d382798ec93debafe7e795fe5d1f96530dd1df.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/10d382798ec93debafe7e795fe5d1f96530dd1df.patch",
+  "path": "149-delcontextprotocol-servers-commit-10d382798ec93debafe7e795fe5d1f96530dd1df.patch",
+  "status": 200,
+  "n_bytes": 6073,
+  "sha256": "f844a1f8a91241eec6d2e978e53376dd1cce0aa59524591d87678e5b7aefc3e3",
+  "fetched_at": "2026-10-30T03:46:27Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/11845d51cbb42cba9695566f9134f5bd43d1216a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/11845d51cbb42cba9695566f9134f5bd43d1216a.patch",
+  "path": "287-delcontextprotocol-servers-commit-11845d51cbb42cba9695566f9134f5bd43d1216a.patch",
+  "status": 200,
+  "n_bytes": 6523,
+  "sha256": "41681fb606188d06d8b340eed1126e4d738ed609c97d3c034d8a350dfae4f91e",
+  "fetched_at": "2026-10-30T03:48:45Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/1432d0515635f9ae9667262fbbd192afd57b15a6.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1432d0515635f9ae9667262fbbd192afd57b15a6.patch",
+  "path": "291-delcontextprotocol-servers-commit-1432d0515635f9ae9667262fbbd192afd57b15a6.patch",
+  "status": 200,
+  "n_bytes": 2590,
+  "sha256": "4b2a926df7572a5f5e3cb4dff4024dcd0d101f1adecf84a9ea58752b49d16115",
+  "fetched_at": "2026-10-30T03:48:49Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/14c2593e88fbe79421ced09cec42910ec2082593.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/14c2593e88fbe79421ced09cec42910ec2082593.patch",
   "path": "066-delcontextprotocol-servers-commit-14c2593e88fbe79421ced09cec42910ec2082593.patch",
@@ -118,6 +246,14 @@
   "n_bytes": 2736,
   "sha256": "7a2be9576569297c2f9a1f618cd91460b8db55d8c65046de112ed0883dd4368a",
   "fetched_at": "2026-10-30T03:20:54Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/150d4043e7c0841ad32f62eff3845cc0bf9231c5.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/150d4043e7c0841ad32f62eff3845cc0bf9231c5.patch",
+  "path": "080-delcontextprotocol-servers-commit-150d4043e7c0841ad32f62eff3845cc0bf9231c5.patch",
+  "status": 200,
+  "n_bytes": 998,
+  "sha256": "d18699be8a0d671b5a3d6af3f1ce7dffd5059ce3d2061968d4bc80d9de1b2610",
+  "fetched_at": "2026-10-30T03:45:17Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/1542b65154e5514811aa157ade40c31bf58e19c1.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/1542b65154e5514811aa157ade40c31bf58e19c1.patch",
@@ -135,6 +271,38 @@
   "sha256": "e2498c23b204dcec6f05b858c8e33918af96ace2246cb55c3c09b856a9b76e9b",
   "fetched_at": "2026-10-30T03:20:37Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/17a2be23200584738f9f3ce9aa75ef6902af2a73.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/17a2be23200584738f9f3ce9aa75ef6902af2a73.patch",
+  "path": "177-delcontextprotocol-servers-commit-17a2be23200584738f9f3ce9aa75ef6902af2a73.patch",
+  "status": 200,
+  "n_bytes": 18876,
+  "sha256": "375dad88099018f7cbec0ac75f2e54cd9e27d41230c1d6fae6d87232d3ac1ffc",
+  "fetched_at": "2026-10-30T03:46:55Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/17aaa455bbbd28ae1912ba43912ca0f6c8608e0b.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/17aaa455bbbd28ae1912ba43912ca0f6c8608e0b.patch",
+  "path": "323-delcontextprotocol-servers-commit-17aaa455bbbd28ae1912ba43912ca0f6c8608e0b.patch",
+  "status": 200,
+  "n_bytes": 1314,
+  "sha256": "e2f871a8aa3ba5df56cb80ddd8b5d1daed4cc94490a06249b6eab8268af2e2e1",
+  "fetched_at": "2026-10-30T03:49:22Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/18ce19763999dcf7697b00c86c3a427f01eb2919.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/18ce19763999dcf7697b00c86c3a427f01eb2919.patch",
+  "path": "129-delcontextprotocol-servers-commit-18ce19763999dcf7697b00c86c3a427f01eb2919.patch",
+  "status": 200,
+  "n_bytes": 4529,
+  "sha256": "0a429daca0ddb5f9dcd3ec8d1d64016d19a90d1f6ddb140be8d25f5b810b545f",
+  "fetched_at": "2026-10-30T03:46:06Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/18f09adae3aa0913b6ae331fb80ad582b788047e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/18f09adae3aa0913b6ae331fb80ad582b788047e.patch",
+  "path": "170-delcontextprotocol-servers-commit-18f09adae3aa0913b6ae331fb80ad582b788047e.patch",
+  "status": 200,
+  "n_bytes": 1888,
+  "sha256": "d8b2b00412b7199fcdb7ad35b6a27eb1925430ec713ef200403bd68eeee30ff6",
+  "fetched_at": "2026-10-30T03:46:48Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/1a4ecb7575f12dd2330daf43e2518618c3f6e8cf.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/1a4ecb7575f12dd2330daf43e2518618c3f6e8cf.patch",
   "path": "063-delcontextprotocol-servers-commit-1a4ecb7575f12dd2330daf43e2518618c3f6e8cf.patch",
@@ -142,6 +310,14 @@
   "n_bytes": 5318,
   "sha256": "9e2121e993f106c8dfe46f4a147bcbc2fb05106277ae99ff13f6a50365d51634",
   "fetched_at": "2026-10-30T03:20:51Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/1ae217d74d2dabd231448bbaee6eabd3fae3247a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1ae217d74d2dabd231448bbaee6eabd3fae3247a.patch",
+  "path": "088-delcontextprotocol-servers-commit-1ae217d74d2dabd231448bbaee6eabd3fae3247a.patch",
+  "status": 200,
+  "n_bytes": 1697,
+  "sha256": "b39d12fd0d3ccabfc467ff8f374693ddd9c8eae1a16f2f8ff4dfa415c81f0135",
+  "fetched_at": "2026-10-30T03:45:25Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/1b8f376b90a4c274b44323b9db9bd1f7d6a1f0e9.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/1b8f376b90a4c274b44323b9db9bd1f7d6a1f0e9.patch",
@@ -151,6 +327,62 @@
   "sha256": "588e9370fea2e64b199bfa6779f2e73a4fc6dc0a14dc2aa6a274fbaadc9ff7b5",
   "fetched_at": "2026-10-30T03:20:16Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/1b8fd53c62e3cd36050400b1e956837f1181c3bb.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1b8fd53c62e3cd36050400b1e956837f1181c3bb.patch",
+  "path": "074-delcontextprotocol-servers-commit-1b8fd53c62e3cd36050400b1e956837f1181c3bb.patch",
+  "status": 200,
+  "n_bytes": 6075,
+  "sha256": "a6b415b87a0739006994459ebc2b68959ff8302e4103f3b0b7c9830fde5cf496",
+  "fetched_at": "2026-10-30T03:45:11Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/1b96551ef07d64a324dd1f542d1bfb18912ed8b2.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1b96551ef07d64a324dd1f542d1bfb18912ed8b2.patch",
+  "path": "211-delcontextprotocol-servers-commit-1b96551ef07d64a324dd1f542d1bfb18912ed8b2.patch",
+  "status": 200,
+  "n_bytes": 1333,
+  "sha256": "5672dd2a014645c5e268d7c37a35ff3812d4aec4fa39ece14d98e6095e841950",
+  "fetched_at": "2026-10-30T03:47:29Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/1c0fdc3063b2d393436b224b6ab08d80cdea1db3.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1c0fdc3063b2d393436b224b6ab08d80cdea1db3.patch",
+  "path": "304-delcontextprotocol-servers-commit-1c0fdc3063b2d393436b224b6ab08d80cdea1db3.patch",
+  "status": 200,
+  "n_bytes": 5533,
+  "sha256": "4f4c94643ceeba7b5f74a9955a8dab5a7cd33329dca386c4ed37bda88c8026c8",
+  "fetched_at": "2026-10-30T03:49:03Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/1cd1096d2991f18091a34f2ac9ed5938e14ba65d.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1cd1096d2991f18091a34f2ac9ed5938e14ba65d.patch",
+  "path": "156-delcontextprotocol-servers-commit-1cd1096d2991f18091a34f2ac9ed5938e14ba65d.patch",
+  "status": 200,
+  "n_bytes": 1712,
+  "sha256": "434b9945d0c93f96d69571fd50395c154c3757b49717ff4ab17f9054c0ab24f6",
+  "fetched_at": "2026-10-30T03:46:34Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/1cda86effbd8166241ef344b8acded8c694fb2ea.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1cda86effbd8166241ef344b8acded8c694fb2ea.patch",
+  "path": "293-delcontextprotocol-servers-commit-1cda86effbd8166241ef344b8acded8c694fb2ea.patch",
+  "status": 200,
+  "n_bytes": 4208,
+  "sha256": "dfcbc0c28e454af42a79fd523dff3c64f8133615593f1bb70e8128e06e5f6770",
+  "fetched_at": "2026-10-30T03:48:51Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/1cdf806d21c3afdeb203c04705e8892d0f9d832f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1cdf806d21c3afdeb203c04705e8892d0f9d832f.patch",
+  "path": "314-delcontextprotocol-servers-commit-1cdf806d21c3afdeb203c04705e8892d0f9d832f.patch",
+  "status": 200,
+  "n_bytes": 3477,
+  "sha256": "19d10dea8602e2013627d1ca9e0efd5d74a99ebc36e5aca8c43c02fad0a876f2",
+  "fetched_at": "2026-10-30T03:49:13Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/1ec570c27d977a122a619da58ae3104f7fdf8be7.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/1ec570c27d977a122a619da58ae3104f7fdf8be7.patch",
+  "path": "195-delcontextprotocol-servers-commit-1ec570c27d977a122a619da58ae3104f7fdf8be7.patch",
+  "status": 200,
+  "n_bytes": 4688,
+  "sha256": "ec481a094c98d5b69456dfa839ebefbd8112726f7296255162e1ab475254e436",
+  "fetched_at": "2026-10-30T03:47:13Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/20527e417509a7998e81b0762eaad21177587153.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/20527e417509a7998e81b0762eaad21177587153.patch",
   "path": "039-delcontextprotocol-servers-commit-20527e417509a7998e81b0762eaad21177587153.patch",
@@ -158,6 +390,142 @@
   "n_bytes": 10061,
   "sha256": "5e4d06b281ce7b87c828484968116771094b9d19c54a0457fc0b7c615e62082a",
   "fetched_at": "2026-10-30T03:20:27Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/20b5783d3b66b238965c3f88ef0fb511ffefa5d0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/20b5783d3b66b238965c3f88ef0fb511ffefa5d0.patch",
+  "path": "137-delcontextprotocol-servers-commit-20b5783d3b66b238965c3f88ef0fb511ffefa5d0.patch",
+  "status": 200,
+  "n_bytes": 1244,
+  "sha256": "6689e90cea48eee6488ba634bee2ac03d73fd292c13490ae4ee646428c7d36ae",
+  "fetched_at": "2026-10-30T03:46:14Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/218f5ce5217a09ec9e9ffd5a1c70f5cee3274421.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/218f5ce5217a09ec9e9ffd5a1c70f5cee3274421.patch",
+  "path": "260-delcontextprotocol-servers-commit-218f5ce5217a09ec9e9ffd5a1c70f5cee3274421.patch",
+  "status": 200,
+  "n_bytes": 4968,
+  "sha256": "1b1d69460d143643a5ba346bc13e1cddb2779f27623cdec9e3171857c00b940b",
+  "fetched_at": "2026-10-30T03:48:18Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/2201958ff69021db605e37406ce76e08ccbf92c0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/2201958ff69021db605e37406ce76e08ccbf92c0.patch",
+  "path": "108-delcontextprotocol-servers-commit-2201958ff69021db605e37406ce76e08ccbf92c0.patch",
+  "status": 200,
+  "n_bytes": 16756,
+  "sha256": "c4fd6160f0910ae4e948179b22a5a0f39a60a57b7aa8c2706db0c1541c4b1cd3",
+  "fetched_at": "2026-10-30T03:45:45Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/223503a2a472e18c84c0f5e4011f7d2f8be4ccd1.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/223503a2a472e18c84c0f5e4011f7d2f8be4ccd1.patch",
+  "path": "178-delcontextprotocol-servers-commit-223503a2a472e18c84c0f5e4011f7d2f8be4ccd1.patch",
+  "status": 200,
+  "n_bytes": 9412,
+  "sha256": "693e0b724f1cb2690d7c165d12f5d6fc7b84d995aaefeddc5c3f0097d92ab5f8",
+  "fetched_at": "2026-10-30T03:46:56Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/242751e8ee46c8b87e1bd82cbc2fb0cbcf8ff9ea.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/242751e8ee46c8b87e1bd82cbc2fb0cbcf8ff9ea.patch",
+  "path": "315-delcontextprotocol-servers-commit-242751e8ee46c8b87e1bd82cbc2fb0cbcf8ff9ea.patch",
+  "status": 200,
+  "n_bytes": 4754,
+  "sha256": "bd95f49aca0b49247c57d56511ea4038b7c071f209c16c5a5995f45f2660abf1",
+  "fetched_at": "2026-10-30T03:49:14Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/25e5f3a6e8fb0435dde559607146a2b417a79c63.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/25e5f3a6e8fb0435dde559607146a2b417a79c63.patch",
+  "path": "222-delcontextprotocol-servers-commit-25e5f3a6e8fb0435dde559607146a2b417a79c63.patch",
+  "status": 200,
+  "n_bytes": 20198,
+  "sha256": "cc3992673d7736187ec03ff8cc03685b843110a9c04b3ea3f2fbdcf528dfb94a",
+  "fetched_at": "2026-10-30T03:47:40Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/26c0d57d57922e21ffccf205d68103186454bc04.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/26c0d57d57922e21ffccf205d68103186454bc04.patch",
+  "path": "143-delcontextprotocol-servers-commit-26c0d57d57922e21ffccf205d68103186454bc04.patch",
+  "status": 200,
+  "n_bytes": 1092,
+  "sha256": "2a1b85f322fded8bd3d4c687f596b9f0cc7851b0b5cefb6278e507e70d5ec8e8",
+  "fetched_at": "2026-10-30T03:46:21Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/275175cda17ca9c49920ceed2bcf27e12e59f8b2.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/275175cda17ca9c49920ceed2bcf27e12e59f8b2.patch",
+  "path": "285-delcontextprotocol-servers-commit-275175cda17ca9c49920ceed2bcf27e12e59f8b2.patch",
+  "status": 200,
+  "n_bytes": 8614,
+  "sha256": "ad92551551f61bd34858045741aaa959ff498b67651d8bf5d94c352dac7bb9e4",
+  "fetched_at": "2026-10-30T03:48:43Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/278a9f2b4eb1554e93baf899224f926484d00454.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/278a9f2b4eb1554e93baf899224f926484d00454.patch",
+  "path": "321-delcontextprotocol-servers-commit-278a9f2b4eb1554e93baf899224f926484d00454.patch",
+  "status": 200,
+  "n_bytes": 10209,
+  "sha256": "4a493d56fbd729586055c9cc849090983a55abe34dd92d788f9a4dc3b2b486e1",
+  "fetched_at": "2026-10-30T03:49:20Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/289339f4c5a387656ff7ffaf2e68ea89aa85cd53.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/289339f4c5a387656ff7ffaf2e68ea89aa85cd53.patch",
+  "path": "118-delcontextprotocol-servers-commit-289339f4c5a387656ff7ffaf2e68ea89aa85cd53.patch",
+  "status": 200,
+  "n_bytes": 60413,
+  "sha256": "6f56344a167cffa6f87cb284dbc0f9f33fce61c04df583b26434b648f9f1fc8d",
+  "fetched_at": "2026-10-30T03:45:55Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/29a20bfd0ae662b3def36b0a4df782c91e8b4220.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/29a20bfd0ae662b3def36b0a4df782c91e8b4220.patch",
+  "path": "131-delcontextprotocol-servers-commit-29a20bfd0ae662b3def36b0a4df782c91e8b4220.patch",
+  "status": 200,
+  "n_bytes": 1506,
+  "sha256": "82f3c5136fc77eba9344d421375c46237326345fd65dc5c9e5e53994802639bc",
+  "fetched_at": "2026-10-30T03:46:08Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/2b97691152e14ce05c7148ee2e8e1647230b19ee.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/2b97691152e14ce05c7148ee2e8e1647230b19ee.patch",
+  "path": "154-delcontextprotocol-servers-commit-2b97691152e14ce05c7148ee2e8e1647230b19ee.patch",
+  "status": 200,
+  "n_bytes": 59031,
+  "sha256": "164d86bc5f6f10c476bc48bc47d81302c38f64eba2d5f5d38cf1bf50b854952e",
+  "fetched_at": "2026-10-30T03:46:32Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/2dfa15dc6e2dd5997fbe293f11c1d80ea1c73308.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/2dfa15dc6e2dd5997fbe293f11c1d80ea1c73308.patch",
+  "path": "190-delcontextprotocol-servers-commit-2dfa15dc6e2dd5997fbe293f11c1d80ea1c73308.patch",
+  "status": 200,
+  "n_bytes": 6073,
+  "sha256": "f844a1f8a91241eec6d2e978e53376dd1cce0aa59524591d87678e5b7aefc3e3",
+  "fetched_at": "2026-10-30T03:47:08Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/2e15194d4e249bca0998714c2cf016ab2308f99e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/2e15194d4e249bca0998714c2cf016ab2308f99e.patch",
+  "path": "174-delcontextprotocol-servers-commit-2e15194d4e249bca0998714c2cf016ab2308f99e.patch",
+  "status": 200,
+  "n_bytes": 2355,
+  "sha256": "510408d148d551577820a0ec4271f6d635437081a766a1a6e1b8ecee01a472e1",
+  "fetched_at": "2026-10-30T03:46:52Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/2e3e4c7ab74e08c664974e147620785d5748a3c9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/2e3e4c7ab74e08c664974e147620785d5748a3c9.patch",
+  "path": "107-delcontextprotocol-servers-commit-2e3e4c7ab74e08c664974e147620785d5748a3c9.patch",
+  "status": 200,
+  "n_bytes": 1552,
+  "sha256": "6ba25201c0bcc0cc9c1e4ab1fbbbfbddd1e1d743624d198a4a924b974fb8d207",
+  "fetched_at": "2026-10-30T03:45:44Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/306380ca2e7c9a4158d61aa50b10331dc6913241.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/306380ca2e7c9a4158d61aa50b10331dc6913241.patch",
+  "path": "215-delcontextprotocol-servers-commit-306380ca2e7c9a4158d61aa50b10331dc6913241.patch",
+  "status": 200,
+  "n_bytes": 10945,
+  "sha256": "5a2ce59e0b792ae037bc78fc8bf92524fc926387eb1449b28df758532993befd",
+  "fetched_at": "2026-10-30T03:47:33Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/31bd12967f4bef65cc7ae9b1e72ab4685be14756.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/31bd12967f4bef65cc7ae9b1e72ab4685be14756.patch",
+  "path": "197-delcontextprotocol-servers-commit-31bd12967f4bef65cc7ae9b1e72ab4685be14756.patch",
+  "status": 200,
+  "n_bytes": 1990,
+  "sha256": "6683ca9a8d792a483e21c95c21725b55e42dd882a9d7405b9d3187aa3698652b",
+  "fetched_at": "2026-10-30T03:47:15Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/3269185eb79f071ac740bf348640bd09f5a9c8e0.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/3269185eb79f071ac740bf348640bd09f5a9c8e0.patch",
@@ -167,6 +535,118 @@
   "sha256": "a284ac56a21a52bf8a9c397e33c577fa820a93450ce855d26168376a8abb67c3",
   "fetched_at": "2026-10-30T03:20:06Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/37b2926d2f8bad39f880a04047fb4f807c9c60e3.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/37b2926d2f8bad39f880a04047fb4f807c9c60e3.patch",
+  "path": "113-delcontextprotocol-servers-commit-37b2926d2f8bad39f880a04047fb4f807c9c60e3.patch",
+  "status": 200,
+  "n_bytes": 2498,
+  "sha256": "0ec546ef3f9e603c72dcccf4544260b725746c29a70f3f6cd5ceeac0454c4c66",
+  "fetched_at": "2026-10-30T03:45:50Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/37c20a68c97c8f0d951c7484cf101e9c2ae3e8b3.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/37c20a68c97c8f0d951c7484cf101e9c2ae3e8b3.patch",
+  "path": "262-delcontextprotocol-servers-commit-37c20a68c97c8f0d951c7484cf101e9c2ae3e8b3.patch",
+  "status": 200,
+  "n_bytes": 0,
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "fetched_at": "2026-10-30T03:48:20Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3827fd00b36f14930cbd3237da971485053f5b60.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3827fd00b36f14930cbd3237da971485053f5b60.patch",
+  "path": "151-delcontextprotocol-servers-commit-3827fd00b36f14930cbd3237da971485053f5b60.patch",
+  "status": 200,
+  "n_bytes": 1293,
+  "sha256": "a284ac56a21a52bf8a9c397e33c577fa820a93450ce855d26168376a8abb67c3",
+  "fetched_at": "2026-10-30T03:46:29Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3921f5c04169f93b54b7999bbb7cfe50953225bc.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3921f5c04169f93b54b7999bbb7cfe50953225bc.patch",
+  "path": "302-delcontextprotocol-servers-commit-3921f5c04169f93b54b7999bbb7cfe50953225bc.patch",
+  "status": 200,
+  "n_bytes": 552753,
+  "sha256": "c36737868de1040c11fff8a033ef191136fa1468433c24a8da72f83b397328c9",
+  "fetched_at": "2026-10-30T03:49:00Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/39a1db9bf2002146a6f904d3c3ad935a3183d8b0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/39a1db9bf2002146a6f904d3c3ad935a3183d8b0.patch",
+  "path": "303-delcontextprotocol-servers-commit-39a1db9bf2002146a6f904d3c3ad935a3183d8b0.patch",
+  "status": 200,
+  "n_bytes": 3965225,
+  "sha256": "885df9548732c02e05a2f2cf954883922209c2090713293d078c8b8cafcadcdf",
+  "fetched_at": "2026-10-30T03:49:03Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3a32d1024b3d0fde13d78a2e26cb392460fe63da.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3a32d1024b3d0fde13d78a2e26cb392460fe63da.patch",
+  "path": "272-delcontextprotocol-servers-commit-3a32d1024b3d0fde13d78a2e26cb392460fe63da.patch",
+  "status": 200,
+  "n_bytes": 25029,
+  "sha256": "0d31223884afd01d23c06146f180c6e09bfc8184c6f8cdd8108843b133144fd2",
+  "fetched_at": "2026-10-30T03:48:30Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3aa19f557436298c0cc514fcab5e3b5eaacc1fc3.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3aa19f557436298c0cc514fcab5e3b5eaacc1fc3.patch",
+  "path": "167-delcontextprotocol-servers-commit-3aa19f557436298c0cc514fcab5e3b5eaacc1fc3.patch",
+  "status": 200,
+  "n_bytes": 8289,
+  "sha256": "421a1c296f3cae62f9813ec2495e9a462ea7d2302cdfb89e4036b082d1df22d8",
+  "fetched_at": "2026-10-30T03:46:45Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3b9d38fbac0f34c6b9ad6247a8f276bf45eb0b8c.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3b9d38fbac0f34c6b9ad6247a8f276bf45eb0b8c.patch",
+  "path": "142-delcontextprotocol-servers-commit-3b9d38fbac0f34c6b9ad6247a8f276bf45eb0b8c.patch",
+  "status": 200,
+  "n_bytes": 1929,
+  "sha256": "199030d3f320d73270a8182191b2738b6d4a7e9f357725c72049b0bfbbadacbd",
+  "fetched_at": "2026-10-30T03:46:19Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3bad9658fd2bd941cd5c83c3ebb17c159f7d86aa.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3bad9658fd2bd941cd5c83c3ebb17c159f7d86aa.patch",
+  "path": "132-delcontextprotocol-servers-commit-3bad9658fd2bd941cd5c83c3ebb17c159f7d86aa.patch",
+  "status": 200,
+  "n_bytes": 3683,
+  "sha256": "0bc04f4889f470bb7c10f07a07b28fd0057170ce1666a34e8f831f493c6a533b",
+  "fetched_at": "2026-10-30T03:46:09Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3bcfedd8e40212a1fd6e4bd3ab5abf459257f83b.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3bcfedd8e40212a1fd6e4bd3ab5abf459257f83b.patch",
+  "path": "199-delcontextprotocol-servers-commit-3bcfedd8e40212a1fd6e4bd3ab5abf459257f83b.patch",
+  "status": 200,
+  "n_bytes": 15727,
+  "sha256": "49d08bf454e4a428899e80733b383bede6c996a7643319f5bdf1f071543fb4d6",
+  "fetched_at": "2026-10-30T03:47:17Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3d6c7c1391794996ef50393ffe01f0fc1def42b3.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3d6c7c1391794996ef50393ffe01f0fc1def42b3.patch",
+  "path": "295-delcontextprotocol-servers-commit-3d6c7c1391794996ef50393ffe01f0fc1def42b3.patch",
+  "status": 200,
+  "n_bytes": 2298,
+  "sha256": "19deb0200dded064d2f3ed390ddbd0398211d582c046cabd7edfeae0708c2905",
+  "fetched_at": "2026-10-30T03:48:53Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3e1be88c3bf20bcaf8cb007d190c708f69057fee.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3e1be88c3bf20bcaf8cb007d190c708f69057fee.patch",
+  "path": "274-delcontextprotocol-servers-commit-3e1be88c3bf20bcaf8cb007d190c708f69057fee.patch",
+  "status": 200,
+  "n_bytes": 2846,
+  "sha256": "cf201b080e673ea97be3a524380595d9e7fd77acd42106077a828b13dd8442ee",
+  "fetched_at": "2026-10-30T03:48:32Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3f40d6e73180ff8e301d69fa97c0b545fe111a8e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3f40d6e73180ff8e301d69fa97c0b545fe111a8e.patch",
+  "path": "169-delcontextprotocol-servers-commit-3f40d6e73180ff8e301d69fa97c0b545fe111a8e.patch",
+  "status": 200,
+  "n_bytes": 31237,
+  "sha256": "886f8a7b3b8689dedc77e8a192daa9c5fe99aaf397c4926e53de9dd9a50bb223",
+  "fetched_at": "2026-10-30T03:46:47Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/3fd7fb618ad92e686bec5c4a86c203b0abc0a253.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/3fd7fb618ad92e686bec5c4a86c203b0abc0a253.patch",
+  "path": "263-delcontextprotocol-servers-commit-3fd7fb618ad92e686bec5c4a86c203b0abc0a253.patch",
+  "status": 200,
+  "n_bytes": 335039,
+  "sha256": "90af8b198f41abfad8e2215b3a15c58d8b4d604905ffcb42396f03ec7c0faf7f",
+  "fetched_at": "2026-10-30T03:48:21Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/40a8de87ed31a307c2a85cae21a78da9b7c1caf8.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/40a8de87ed31a307c2a85cae21a78da9b7c1caf8.patch",
   "path": "067-delcontextprotocol-servers-commit-40a8de87ed31a307c2a85cae21a78da9b7c1caf8.patch",
@@ -174,6 +654,14 @@
   "n_bytes": 5983,
   "sha256": "bf5c4358dd375e5fceb7e5763608dcce6ebd7285d8a1e06dde0020942e09811b",
   "fetched_at": "2026-10-30T03:20:55Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/40ce2f784e5c5c4a59f64499f709975dd7c2bae3.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/40ce2f784e5c5c4a59f64499f709975dd7c2bae3.patch",
+  "path": "175-delcontextprotocol-servers-commit-40ce2f784e5c5c4a59f64499f709975dd7c2bae3.patch",
+  "status": 200,
+  "n_bytes": 1739,
+  "sha256": "d16204bac35e6ed333e0ac5f30f5320250df00c9ab7cf739291deca31381d026",
+  "fetched_at": "2026-10-30T03:46:53Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/414ac2162ae25294ec8b368623f535e6ee0b4042.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/414ac2162ae25294ec8b368623f535e6ee0b4042.patch",
@@ -199,6 +687,30 @@
   "sha256": "6689e90cea48eee6488ba634bee2ac03d73fd292c13490ae4ee646428c7d36ae",
   "fetched_at": "2026-10-30T03:20:08Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/4307b95aee3a3c3935e180e7d4344a3dfb3ac5d5.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/4307b95aee3a3c3935e180e7d4344a3dfb3ac5d5.patch",
+  "path": "249-delcontextprotocol-servers-commit-4307b95aee3a3c3935e180e7d4344a3dfb3ac5d5.patch",
+  "status": 200,
+  "n_bytes": 1665,
+  "sha256": "faa9b20f427567508075521b839c2898e5533d0b96acc284c81fc5d2a1da574b",
+  "fetched_at": "2026-10-30T03:48:07Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/43263d3a8f1f21ecd4d5e290046eae0148285732.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/43263d3a8f1f21ecd4d5e290046eae0148285732.patch",
+  "path": "241-delcontextprotocol-servers-commit-43263d3a8f1f21ecd4d5e290046eae0148285732.patch",
+  "status": 200,
+  "n_bytes": 1134261,
+  "sha256": "ab8a05cbb0d7015039a64664052f60f1aac239ae4cc66a9ccffccb02d36d6959",
+  "fetched_at": "2026-10-30T03:47:59Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/44faf3a200b118a3f374639e73cd6efa59468b55.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/44faf3a200b118a3f374639e73cd6efa59468b55.patch",
+  "path": "237-delcontextprotocol-servers-commit-44faf3a200b118a3f374639e73cd6efa59468b55.patch",
+  "status": 200,
+  "n_bytes": 1390,
+  "sha256": "173e433262b56f73313928d4a14ae1dac6e84c9144c00bf2fb6a6f96e1317709",
+  "fetched_at": "2026-10-30T03:47:55Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/4503e2d12b799448cd05f789dd40f9643a8d1a6c.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/4503e2d12b799448cd05f789dd40f9643a8d1a6c.patch",
   "path": "020-delcontextprotocol-servers-commit-4503e2d12b799448cd05f789dd40f9643a8d1a6c.patch",
@@ -206,6 +718,14 @@
   "n_bytes": 6520,
   "sha256": "c311c539864fa927aaa91cf3959ce770e7fad32bda99921f8ba339c737266a47",
   "fetched_at": "2026-10-30T03:20:07Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/4633b76350937652d96ad8b7c54cc03e24e1121f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/4633b76350937652d96ad8b7c54cc03e24e1121f.patch",
+  "path": "076-delcontextprotocol-servers-commit-4633b76350937652d96ad8b7c54cc03e24e1121f.patch",
+  "status": 200,
+  "n_bytes": 4523,
+  "sha256": "be0006797519fe7b2f002926996c076138cfae3c648d49a954dccce7d2760626",
+  "fetched_at": "2026-10-30T03:45:13Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/4750df40c7a94de258f3554c2196fc8c993e117b.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/4750df40c7a94de258f3554c2196fc8c993e117b.patch",
@@ -215,6 +735,22 @@
   "sha256": "70cad722d225029596c32f0b8bffb985da51861c097db434d4ba788a863e0894",
   "fetched_at": "2026-10-30T03:20:45Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/4852bb3fc436bbc7d084020a48808faffc6c6816.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/4852bb3fc436bbc7d084020a48808faffc6c6816.patch",
+  "path": "297-delcontextprotocol-servers-commit-4852bb3fc436bbc7d084020a48808faffc6c6816.patch",
+  "status": 200,
+  "n_bytes": 1739,
+  "sha256": "d16204bac35e6ed333e0ac5f30f5320250df00c9ab7cf739291deca31381d026",
+  "fetched_at": "2026-10-30T03:48:55Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/48723c95dc54ffb743650f0d75484434c8c254c6.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/48723c95dc54ffb743650f0d75484434c8c254c6.patch",
+  "path": "235-delcontextprotocol-servers-commit-48723c95dc54ffb743650f0d75484434c8c254c6.patch",
+  "status": 200,
+  "n_bytes": 3442,
+  "sha256": "1eb2e3dc2b863babbd12f325ef7cf7fd05559bafb462dbc1bc53e948cf529deb",
+  "fetched_at": "2026-10-30T03:47:53Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/49864332a1fa0710e871120a0694f755ecd98d7b.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/49864332a1fa0710e871120a0694f755ecd98d7b.patch",
   "path": "055-delcontextprotocol-servers-commit-49864332a1fa0710e871120a0694f755ecd98d7b.patch",
@@ -223,6 +759,78 @@
   "sha256": "8febe5f3d38e81b8ff0c095c294744ce22ebec8375f7a74e1bc2475b18f091ca",
   "fetched_at": "2026-10-30T03:20:43Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/4b07e9cbfb3bb074029935099947d420fdcc36fe.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/4b07e9cbfb3bb074029935099947d420fdcc36fe.patch",
+  "path": "239-delcontextprotocol-servers-commit-4b07e9cbfb3bb074029935099947d420fdcc36fe.patch",
+  "status": 200,
+  "n_bytes": 88726,
+  "sha256": "48249c9cc44b6ca235459dffc58d670fe9aba44aeabd4cd8b8acead858f0aadb",
+  "fetched_at": "2026-10-30T03:47:57Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/4d1f726c87b76c5181c7a6117a8861c4977fc78a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/4d1f726c87b76c5181c7a6117a8861c4977fc78a.patch",
+  "path": "284-delcontextprotocol-servers-commit-4d1f726c87b76c5181c7a6117a8861c4977fc78a.patch",
+  "status": 200,
+  "n_bytes": 3441,
+  "sha256": "fefec72796ebec9056411c7919cef3441cc9db78244fa053309608a4cc539eb3",
+  "fetched_at": "2026-10-30T03:48:42Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/5150a953094623be26f13b345efc09932ef099ee.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/5150a953094623be26f13b345efc09932ef099ee.patch",
+  "path": "094-delcontextprotocol-servers-commit-5150a953094623be26f13b345efc09932ef099ee.patch",
+  "status": 200,
+  "n_bytes": 1409,
+  "sha256": "831088044d575433be5ea605aefd061d856c4fa7ab36402b649a01bea7ff3ded",
+  "fetched_at": "2026-10-30T03:45:31Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/5156cff9dcf1a724eed6b102b882ddf2e4d45b4e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/5156cff9dcf1a724eed6b102b882ddf2e4d45b4e.patch",
+  "path": "256-delcontextprotocol-servers-commit-5156cff9dcf1a724eed6b102b882ddf2e4d45b4e.patch",
+  "status": 200,
+  "n_bytes": 11439,
+  "sha256": "b55cfc65f7436b36504417d410d5f186470ad1b6bbe860eee21242a8dcb098c8",
+  "fetched_at": "2026-10-30T03:48:14Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/51bf368d0ddc6a345f5604c83fa28e883a64bafb.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/51bf368d0ddc6a345f5604c83fa28e883a64bafb.patch",
+  "path": "279-delcontextprotocol-servers-commit-51bf368d0ddc6a345f5604c83fa28e883a64bafb.patch",
+  "status": 200,
+  "n_bytes": 1607,
+  "sha256": "f17c888488f20a5ff3e8738288953d9577a9807fe8ea301621b5aaf8e6e1efa0",
+  "fetched_at": "2026-10-30T03:48:37Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/53cc385d4e8f989a46f4205759421ba46365e499.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/53cc385d4e8f989a46f4205759421ba46365e499.patch",
+  "path": "229-delcontextprotocol-servers-commit-53cc385d4e8f989a46f4205759421ba46365e499.patch",
+  "status": 200,
+  "n_bytes": 952,
+  "sha256": "5fa2e701e2cd45ae1eae92a19054593fabd8b025441e0011054887d73cb7b22c",
+  "fetched_at": "2026-10-30T03:47:47Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/53dbe83b7a9ee1f597179ea395962383d333eac9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/53dbe83b7a9ee1f597179ea395962383d333eac9.patch",
+  "path": "251-delcontextprotocol-servers-commit-53dbe83b7a9ee1f597179ea395962383d333eac9.patch",
+  "status": 200,
+  "n_bytes": 8252,
+  "sha256": "aaab14b5db9c0275a87589016ae6fad3a8f52534602fd4b1055d8f97018383d6",
+  "fetched_at": "2026-10-30T03:48:09Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/549dd025e25fc4bf9ddd07792662a0c64383281c.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/549dd025e25fc4bf9ddd07792662a0c64383281c.patch",
+  "path": "097-delcontextprotocol-servers-commit-549dd025e25fc4bf9ddd07792662a0c64383281c.patch",
+  "status": 200,
+  "n_bytes": 21363,
+  "sha256": "6d964fd6cb810e72a68f70832ba40158ea3530b473d029d11a16219676d382bb",
+  "fetched_at": "2026-10-30T03:45:34Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/55a3056a048edca1159f32b41057c3df9618aeba.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/55a3056a048edca1159f32b41057c3df9618aeba.patch",
+  "path": "309-delcontextprotocol-servers-commit-55a3056a048edca1159f32b41057c3df9618aeba.patch",
+  "status": 200,
+  "n_bytes": 221484,
+  "sha256": "fa97d736931f4d49dee5958485cf6820b4443dc69a9120ec1c150159c5b19b57",
+  "fetched_at": "2026-10-30T03:49:08Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/55d256293fc8305cf1062fe624306aea9dd2a0be.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/55d256293fc8305cf1062fe624306aea9dd2a0be.patch",
   "path": "034-delcontextprotocol-servers-commit-55d256293fc8305cf1062fe624306aea9dd2a0be.patch",
@@ -230,6 +838,38 @@
   "n_bytes": 3663,
   "sha256": "d431ef58450a7ba3540fd935582b2ba36593cbefb175ba3fbbd4ce47aa35a00a",
   "fetched_at": "2026-10-30T03:20:22Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/562feeb2817266e0d155b9e4bff54a0233557f12.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/562feeb2817266e0d155b9e4bff54a0233557f12.patch",
+  "path": "085-delcontextprotocol-servers-commit-562feeb2817266e0d155b9e4bff54a0233557f12.patch",
+  "status": 200,
+  "n_bytes": 7158,
+  "sha256": "e18f3034f9b15b50d9319afaa2f4ea7b06a38eed80449eed46ef479a25c30051",
+  "fetched_at": "2026-10-30T03:45:22Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/574cba879b6edbc76fb820ee4402f05bb0ab134f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/574cba879b6edbc76fb820ee4402f05bb0ab134f.patch",
+  "path": "204-delcontextprotocol-servers-commit-574cba879b6edbc76fb820ee4402f05bb0ab134f.patch",
+  "status": 200,
+  "n_bytes": 87260,
+  "sha256": "2376d9d912d2da9ab3d595f77c55c341664b6249c99a258101950d4567766a73",
+  "fetched_at": "2026-10-30T03:47:22Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/579c3903f30044eb702a599a74b3ae77588e722e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/579c3903f30044eb702a599a74b3ae77588e722e.patch",
+  "path": "133-delcontextprotocol-servers-commit-579c3903f30044eb702a599a74b3ae77588e722e.patch",
+  "status": 200,
+  "n_bytes": 1934,
+  "sha256": "0d5a8d2adfdd53b6e6705850bf2ba590f1cd3d9cbc336da8fda87931b13a7bf0",
+  "fetched_at": "2026-10-30T03:46:10Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/5850690363a1dd85a6efa205cf654787d91f8239.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/5850690363a1dd85a6efa205cf654787d91f8239.patch",
+  "path": "294-delcontextprotocol-servers-commit-5850690363a1dd85a6efa205cf654787d91f8239.patch",
+  "status": 200,
+  "n_bytes": 1896,
+  "sha256": "c9c90ec2df7d056ff9915245fc20c4fd570914c2645686c55a43269a8029ad9c",
+  "fetched_at": "2026-10-30T03:48:52Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/58581d87d028159abeeabef76b685f4b8351da6d.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/58581d87d028159abeeabef76b685f4b8351da6d.patch",
@@ -247,6 +887,54 @@
   "sha256": "4e21d2662e860ddbae45ce3f7be3a0de03e6bd7bec19023979dfb3c4cccd6f12",
   "fetched_at": "2026-10-30T03:20:21Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/599b170e9d750326c069ae87fd5991b099fb964a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/599b170e9d750326c069ae87fd5991b099fb964a.patch",
+  "path": "089-delcontextprotocol-servers-commit-599b170e9d750326c069ae87fd5991b099fb964a.patch",
+  "status": 200,
+  "n_bytes": 3528,
+  "sha256": "a5c2060ee00e4dfd10791b7fbec673d4ba56cceaf8d8d08762e0ee60775b450a",
+  "fetched_at": "2026-10-30T03:45:26Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/599dafc1054550a6eeb87a6545c1e1b03b3ca827.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/599dafc1054550a6eeb87a6545c1e1b03b3ca827.patch",
+  "path": "123-delcontextprotocol-servers-commit-599dafc1054550a6eeb87a6545c1e1b03b3ca827.patch",
+  "status": 200,
+  "n_bytes": 10744,
+  "sha256": "03027a5e126f40ed802947e0af2f0ab31046bfba5add0a83ea37374b9078e95c",
+  "fetched_at": "2026-10-30T03:46:00Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/59e60b5a694392de46fac8b7ef92b954cfcfb6da.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/59e60b5a694392de46fac8b7ef92b954cfcfb6da.patch",
+  "path": "193-delcontextprotocol-servers-commit-59e60b5a694392de46fac8b7ef92b954cfcfb6da.patch",
+  "status": 200,
+  "n_bytes": 668332,
+  "sha256": "48e6e9a6e5e57db4724026e35c2382166f78afc59e1c6d5eadc6934dd5b30076",
+  "fetched_at": "2026-10-30T03:47:11Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/5cb1c6e042c1704b7d5e840256de1250c4e7a7ff.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/5cb1c6e042c1704b7d5e840256de1250c4e7a7ff.patch",
+  "path": "179-delcontextprotocol-servers-commit-5cb1c6e042c1704b7d5e840256de1250c4e7a7ff.patch",
+  "status": 200,
+  "n_bytes": 447487,
+  "sha256": "cf3113d82ce1947192d9a9a921d2b7d608de12a9e25153f0c46b5a737fc2332e",
+  "fetched_at": "2026-10-30T03:46:57Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/5d146b379e0ae223d0eee9f9f4b3addb555297c9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/5d146b379e0ae223d0eee9f9f4b3addb555297c9.patch",
+  "path": "306-delcontextprotocol-servers-commit-5d146b379e0ae223d0eee9f9f4b3addb555297c9.patch",
+  "status": 200,
+  "n_bytes": 337784,
+  "sha256": "4e21d2662e860ddbae45ce3f7be3a0de03e6bd7bec19023979dfb3c4cccd6f12",
+  "fetched_at": "2026-10-30T03:49:05Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/5e3735d0812b0a1fbe141592e90d0814d5f9bcf7.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/5e3735d0812b0a1fbe141592e90d0814d5f9bcf7.patch",
+  "path": "276-delcontextprotocol-servers-commit-5e3735d0812b0a1fbe141592e90d0814d5f9bcf7.patch",
+  "status": 200,
+  "n_bytes": 2854,
+  "sha256": "6885affa933141e9a576c9c29cfeb1129b5a7a4253a6c3d97f7031105338bc37",
+  "fetched_at": "2026-10-30T03:48:34Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/5fb7a710834f47761cd9d7db6059502ef0ff140b.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/5fb7a710834f47761cd9d7db6059502ef0ff140b.patch",
   "path": "015-delcontextprotocol-servers-commit-5fb7a710834f47761cd9d7db6059502ef0ff140b.patch",
@@ -263,6 +951,46 @@
   "sha256": "93348b3a6d80c4d631f21d5a98f6a8bd899710e633eaa5562e9882f7d2536bf6",
   "fetched_at": "2026-10-30T03:20:47Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/623aa8f45911f002760c74152867f44a77621203.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/623aa8f45911f002760c74152867f44a77621203.patch",
+  "path": "091-delcontextprotocol-servers-commit-623aa8f45911f002760c74152867f44a77621203.patch",
+  "status": 200,
+  "n_bytes": 7110,
+  "sha256": "76b79c043127f5d8f752d7f73a3eccca90ed748b0384126da54f24b96137d233",
+  "fetched_at": "2026-10-30T03:45:28Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/63df72cb15b14ba68d8eaedbe19127d4179131b1.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/63df72cb15b14ba68d8eaedbe19127d4179131b1.patch",
+  "path": "079-delcontextprotocol-servers-commit-63df72cb15b14ba68d8eaedbe19127d4179131b1.patch",
+  "status": 200,
+  "n_bytes": 2486,
+  "sha256": "00f08ab8b9186ae962eca891109c11bfba091d884302fb6d6f03f9f3411cc473",
+  "fetched_at": "2026-10-30T03:45:16Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/642a9112e7ae8081c87fa1e2f34f14f5c3e42ab1.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/642a9112e7ae8081c87fa1e2f34f14f5c3e42ab1.patch",
+  "path": "095-delcontextprotocol-servers-commit-642a9112e7ae8081c87fa1e2f34f14f5c3e42ab1.patch",
+  "status": 200,
+  "n_bytes": 9428,
+  "sha256": "5fbf929cba13ba8b9c358866b25233f8c33af72eb1d587aafd51a127433fbdc7",
+  "fetched_at": "2026-10-30T03:45:32Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/649af5856e8fc4b8598ceb1e75cc31215a9e0e90.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/649af5856e8fc4b8598ceb1e75cc31215a9e0e90.patch",
+  "path": "145-delcontextprotocol-servers-commit-649af5856e8fc4b8598ceb1e75cc31215a9e0e90.patch",
+  "status": 200,
+  "n_bytes": 5753,
+  "sha256": "b2f229ec08cdf9a1a8579d34d090b94429ff30c0093c9b94ce851d63608438d3",
+  "fetched_at": "2026-10-30T03:46:23Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/64b1cb0208cc49a4f5ae55fa71df5cf67a3cdc3d.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/64b1cb0208cc49a4f5ae55fa71df5cf67a3cdc3d.patch",
+  "path": "083-delcontextprotocol-servers-commit-64b1cb0208cc49a4f5ae55fa71df5cf67a3cdc3d.patch",
+  "status": 200,
+  "n_bytes": 3912,
+  "sha256": "fad16dcdf3c419d96ac57e1ace74e734a4d801b0192f7497668eae03cd6a0c3f",
+  "fetched_at": "2026-10-30T03:45:20Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/6556e339cb248cf9874510815efefb05a0298914.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/6556e339cb248cf9874510815efefb05a0298914.patch",
   "path": "065-delcontextprotocol-servers-commit-6556e339cb248cf9874510815efefb05a0298914.patch",
@@ -270,6 +998,14 @@
   "n_bytes": 232313,
   "sha256": "41136175af9bcf595ad938b92d82a309b029fdd10730111a11beeeafa864b652",
   "fetched_at": "2026-10-30T03:20:53Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/6611260d49912d7333c9beb79b8cb2a030112d89.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/6611260d49912d7333c9beb79b8cb2a030112d89.patch",
+  "path": "252-delcontextprotocol-servers-commit-6611260d49912d7333c9beb79b8cb2a030112d89.patch",
+  "status": 200,
+  "n_bytes": 6648,
+  "sha256": "3d00119905bb402e6ec748b4bd2cc54caf61c6ca28d1f991d0563626bcbc35b7",
+  "fetched_at": "2026-10-30T03:48:10Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/6668b3d1bd1e353c0caeb557878093edcfe1f2e6.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/6668b3d1bd1e353c0caeb557878093edcfe1f2e6.patch",
@@ -279,6 +1015,14 @@
   "sha256": "e1e0a8ac9238b5429c2a50e93cf09092b1e78d9919c137fabd054dde8fb75661",
   "fetched_at": "2026-10-30T03:20:38Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/677f40a38f76f3983ebf54dda659543b15b23032.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/677f40a38f76f3983ebf54dda659543b15b23032.patch",
+  "path": "160-delcontextprotocol-servers-commit-677f40a38f76f3983ebf54dda659543b15b23032.patch",
+  "status": 200,
+  "n_bytes": 975,
+  "sha256": "3c14877ea4903cd503f85dc65d69ca29ac63e857d3f9e95af777265ba029f335",
+  "fetched_at": "2026-10-30T03:46:38Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/67a71f1b602fa3b7bcc9147a073ee8aedacce9fb.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/67a71f1b602fa3b7bcc9147a073ee8aedacce9fb.patch",
   "path": "064-delcontextprotocol-servers-commit-67a71f1b602fa3b7bcc9147a073ee8aedacce9fb.patch",
@@ -287,6 +1031,70 @@
   "sha256": "ad92551551f61bd34858045741aaa959ff498b67651d8bf5d94c352dac7bb9e4",
   "fetched_at": "2026-10-30T03:20:52Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/688498886eaf5de6c4785a47dbaf85cb1fefc7e0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/688498886eaf5de6c4785a47dbaf85cb1fefc7e0.patch",
+  "path": "100-delcontextprotocol-servers-commit-688498886eaf5de6c4785a47dbaf85cb1fefc7e0.patch",
+  "status": 200,
+  "n_bytes": 1249,
+  "sha256": "a1e7e8b974395266cd915e362b0298f8aa2a056fcbb52231fb9bb007addb58c4",
+  "fetched_at": "2026-10-30T03:45:37Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/6a690065cf6cd76172d94e180561f12afbf02166.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/6a690065cf6cd76172d94e180561f12afbf02166.patch",
+  "path": "104-delcontextprotocol-servers-commit-6a690065cf6cd76172d94e180561f12afbf02166.patch",
+  "status": 200,
+  "n_bytes": 9977,
+  "sha256": "bd23960c13940a06f1aec51f9166ea68d26dc8936e86b5d1ee3a67716a043e10",
+  "fetched_at": "2026-10-30T03:45:41Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/6a914b9db874381cdbc4983073a60ec66d8ce2ab.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/6a914b9db874381cdbc4983073a60ec66d8ce2ab.patch",
+  "path": "071-delcontextprotocol-servers-commit-6a914b9db874381cdbc4983073a60ec66d8ce2ab.patch",
+  "status": 200,
+  "n_bytes": 2854,
+  "sha256": "6885affa933141e9a576c9c29cfeb1129b5a7a4253a6c3d97f7031105338bc37",
+  "fetched_at": "2026-10-30T03:45:08Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/6abf04eef15b6f73985215a515e2d55cd5c06056.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/6abf04eef15b6f73985215a515e2d55cd5c06056.patch",
+  "path": "157-delcontextprotocol-servers-commit-6abf04eef15b6f73985215a515e2d55cd5c06056.patch",
+  "status": 200,
+  "n_bytes": 950,
+  "sha256": "116cb83576ef17292fbf198a39f554cc4f3216093e87377888fcb019427f8131",
+  "fetched_at": "2026-10-30T03:46:35Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/6ad8af71303a57f8b965a0ae68a6c81b1ffaec16.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/6ad8af71303a57f8b965a0ae68a6c81b1ffaec16.patch",
+  "path": "292-delcontextprotocol-servers-commit-6ad8af71303a57f8b965a0ae68a6c81b1ffaec16.patch",
+  "status": 200,
+  "n_bytes": 1080,
+  "sha256": "a8843316f5ba060b434e324ff7d93fa3148a2ee4448a3d268dba58702ba76573",
+  "fetched_at": "2026-10-30T03:48:50Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/6b36e3c22311faed9bd570547d0d90718846fc20.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/6b36e3c22311faed9bd570547d0d90718846fc20.patch",
+  "path": "182-delcontextprotocol-servers-commit-6b36e3c22311faed9bd570547d0d90718846fc20.patch",
+  "status": 200,
+  "n_bytes": 16610,
+  "sha256": "c06f745fcdba840cc455adfa998315f5335e6f0713b4ca042820df2b4092ebf9",
+  "fetched_at": "2026-10-30T03:47:00Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/6c88e66b7aef8447147ef9303ffcbc665e48edf9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/6c88e66b7aef8447147ef9303ffcbc665e48edf9.patch",
+  "path": "140-delcontextprotocol-servers-commit-6c88e66b7aef8447147ef9303ffcbc665e48edf9.patch",
+  "status": 200,
+  "n_bytes": 2326,
+  "sha256": "ef0ca299d0d5df08713d832b33dc0a8c6a04dc329a8498c9b6065ba2aa0dc87d",
+  "fetched_at": "2026-10-30T03:46:17Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/6d977ddc62da8aa851cdbbc56e9198ca985a5f45.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/6d977ddc62da8aa851cdbbc56e9198ca985a5f45.patch",
+  "path": "246-delcontextprotocol-servers-commit-6d977ddc62da8aa851cdbbc56e9198ca985a5f45.patch",
+  "status": 200,
+  "n_bytes": 6989,
+  "sha256": "7788d34803ff4039b10e46b11b1c6f0042177f09e6a63f6f1486c67214165bc6",
+  "fetched_at": "2026-10-30T03:48:04Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/6e320090c030c439637c06ac197cbbecf8e1ec53.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/6e320090c030c439637c06ac197cbbecf8e1ec53.patch",
   "path": "012-delcontextprotocol-servers-commit-6e320090c030c439637c06ac197cbbecf8e1ec53.patch",
@@ -294,6 +1102,86 @@
   "n_bytes": 6087,
   "sha256": "cc540c0930f8ee54e047e733eb3a29047a7549cf4c62b649d08a3e5c31589ba7",
   "fetched_at": "2026-10-30T03:19:59Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/7097923966fb760965654eedc0ee6455576f6d96.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7097923966fb760965654eedc0ee6455576f6d96.patch",
+  "path": "245-delcontextprotocol-servers-commit-7097923966fb760965654eedc0ee6455576f6d96.patch",
+  "status": 200,
+  "n_bytes": 48605,
+  "sha256": "0211b88d9780198b76885d677d2fb7a761ce2315dc1bed819b5e9cec7628151a",
+  "fetched_at": "2026-10-30T03:48:03Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/70c549be694c1128a29568c53d0fbdfed0e02702.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/70c549be694c1128a29568c53d0fbdfed0e02702.patch",
+  "path": "087-delcontextprotocol-servers-commit-70c549be694c1128a29568c53d0fbdfed0e02702.patch",
+  "status": 200,
+  "n_bytes": 1092,
+  "sha256": "2a1b85f322fded8bd3d4c687f596b9f0cc7851b0b5cefb6278e507e70d5ec8e8",
+  "fetched_at": "2026-10-30T03:45:24Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/70feb6f2b0062b586ff4e18fbd0ffb97bf24705f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/70feb6f2b0062b586ff4e18fbd0ffb97bf24705f.patch",
+  "path": "158-delcontextprotocol-servers-commit-70feb6f2b0062b586ff4e18fbd0ffb97bf24705f.patch",
+  "status": 200,
+  "n_bytes": 882,
+  "sha256": "bd740ddb4d8121ef350a1f24eb9d2afd1a05e1e4f60202f3fc7474e414649aac",
+  "fetched_at": "2026-10-30T03:46:36Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/7112282ce2aaec033bd477b7a57efab4f391f13d.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7112282ce2aaec033bd477b7a57efab4f391f13d.patch",
+  "path": "253-delcontextprotocol-servers-commit-7112282ce2aaec033bd477b7a57efab4f391f13d.patch",
+  "status": 200,
+  "n_bytes": 57418,
+  "sha256": "f5b5ec234c94134cac97dc228e48d6ce075f692b881148b872f8f0b4c91c0bb8",
+  "fetched_at": "2026-10-30T03:48:11Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/71a59645c93f2d907c5a442cf5793964e125a551.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/71a59645c93f2d907c5a442cf5793964e125a551.patch",
+  "path": "120-delcontextprotocol-servers-commit-71a59645c93f2d907c5a442cf5793964e125a551.patch",
+  "status": 200,
+  "n_bytes": 7110,
+  "sha256": "76b79c043127f5d8f752d7f73a3eccca90ed748b0384126da54f24b96137d233",
+  "fetched_at": "2026-10-30T03:45:57Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/71d5d71a80fe7df815f01c9c2ce27c94d141387a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/71d5d71a80fe7df815f01c9c2ce27c94d141387a.patch",
+  "path": "319-delcontextprotocol-servers-commit-71d5d71a80fe7df815f01c9c2ce27c94d141387a.patch",
+  "status": 200,
+  "n_bytes": 420884,
+  "sha256": "d7dfde4224a10e472d4e0399748c3231e2d3e9bf048b06fb9b158b15703a40fb",
+  "fetched_at": "2026-10-30T03:49:18Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/71e3cfbd1e7e0ff88fa24ce5406f8e220ceae5c4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/71e3cfbd1e7e0ff88fa24ce5406f8e220ceae5c4.patch",
+  "path": "152-delcontextprotocol-servers-commit-71e3cfbd1e7e0ff88fa24ce5406f8e220ceae5c4.patch",
+  "status": 200,
+  "n_bytes": 3808,
+  "sha256": "adbbd9ac4cc4d568c1605ffe4462b016d333af1a94ab095aa05ea923acb94f8a",
+  "fetched_at": "2026-10-30T03:46:30Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/72e11113edff5919e74de1d69b71203991fe2f05.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/72e11113edff5919e74de1d69b71203991fe2f05.patch",
+  "path": "242-delcontextprotocol-servers-commit-72e11113edff5919e74de1d69b71203991fe2f05.patch",
+  "status": 200,
+  "n_bytes": 5744,
+  "sha256": "f3e695edbfe59195b20ce3a7c792c56a223ab811e78d8f8e6ed0bcc8e0aba6f3",
+  "fetched_at": "2026-10-30T03:48:00Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/72efc429765fdde0c0c5fa561599ace789bcfbe4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/72efc429765fdde0c0c5fa561599ace789bcfbe4.patch",
+  "path": "270-delcontextprotocol-servers-commit-72efc429765fdde0c0c5fa561599ace789bcfbe4.patch",
+  "status": 200,
+  "n_bytes": 2132,
+  "sha256": "9af181c05215329022622fad7748c6c862a909652517b5bd1cf44cea0fe5ee12",
+  "fetched_at": "2026-10-30T03:48:28Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/7300631a5c5a5ae538a70462a37a309071d52e2b.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7300631a5c5a5ae538a70462a37a309071d52e2b.patch",
+  "path": "090-delcontextprotocol-servers-commit-7300631a5c5a5ae538a70462a37a309071d52e2b.patch",
+  "status": 200,
+  "n_bytes": 1787,
+  "sha256": "88242a35442a91d2c2624284e50c5f7646cdbac9c842515e3096f2b4faa2380b",
+  "fetched_at": "2026-10-30T03:45:27Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/734d5c3ebb162088c2b1d96a6cec03f2b8ca0965.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/734d5c3ebb162088c2b1d96a6cec03f2b8ca0965.patch",
@@ -311,6 +1199,102 @@
   "sha256": "a1adbd148f33f210de1bc276421985888ee7a36ed5c4fd83e039ca5ebd62f74d",
   "fetched_at": "2026-10-30T03:20:24Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/737ce98e4a430547c8b2ab818e7273de2cc359d8.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/737ce98e4a430547c8b2ab818e7273de2cc359d8.patch",
+  "path": "290-delcontextprotocol-servers-commit-737ce98e4a430547c8b2ab818e7273de2cc359d8.patch",
+  "status": 200,
+  "n_bytes": 8236,
+  "sha256": "a223366fef8364efb1cb689977d654b9bd7056f8c11c283b769744480b7463af",
+  "fetched_at": "2026-10-30T03:48:48Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/73f0c8b9662d3880ef8c97720e246568cdf121ff.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/73f0c8b9662d3880ef8c97720e246568cdf121ff.patch",
+  "path": "278-delcontextprotocol-servers-commit-73f0c8b9662d3880ef8c97720e246568cdf121ff.patch",
+  "status": 200,
+  "n_bytes": 335039,
+  "sha256": "90af8b198f41abfad8e2215b3a15c58d8b4d604905ffcb42396f03ec7c0faf7f",
+  "fetched_at": "2026-10-30T03:48:36Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/74cdb4d867227832bd6bf00a936ef933cd5d2611.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/74cdb4d867227832bd6bf00a936ef933cd5d2611.patch",
+  "path": "250-delcontextprotocol-servers-commit-74cdb4d867227832bd6bf00a936ef933cd5d2611.patch",
+  "status": 200,
+  "n_bytes": 779,
+  "sha256": "93c1de170b4ce899303ff5ed7eafca7a5a1082a29abf38e7cc449ce6cfb49744",
+  "fetched_at": "2026-10-30T03:48:08Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/752985790e5f9f3dd4a77a9935d579320e56af13.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/752985790e5f9f3dd4a77a9935d579320e56af13.patch",
+  "path": "223-delcontextprotocol-servers-commit-752985790e5f9f3dd4a77a9935d579320e56af13.patch",
+  "status": 200,
+  "n_bytes": 2186,
+  "sha256": "2022fba5a05dd9bed5bcc30cdb2b2a05dd5bc32bfc78f988792185d990c21f0f",
+  "fetched_at": "2026-10-30T03:47:41Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/756db5b42ad8c243d5a17d1ee184d1e5f25da9c0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/756db5b42ad8c243d5a17d1ee184d1e5f25da9c0.patch",
+  "path": "227-delcontextprotocol-servers-commit-756db5b42ad8c243d5a17d1ee184d1e5f25da9c0.patch",
+  "status": 200,
+  "n_bytes": 6087,
+  "sha256": "cc540c0930f8ee54e047e733eb3a29047a7549cf4c62b649d08a3e5c31589ba7",
+  "fetched_at": "2026-10-30T03:47:45Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/75c4afdd3df327d36d54ce67768dc15dff3bde47.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/75c4afdd3df327d36d54ce67768dc15dff3bde47.patch",
+  "path": "150-delcontextprotocol-servers-commit-75c4afdd3df327d36d54ce67768dc15dff3bde47.patch",
+  "status": 200,
+  "n_bytes": 4124,
+  "sha256": "bef8f8d591db87e0733a1e75ee3c2ae347a158b6400067658c14ab6133fbadc2",
+  "fetched_at": "2026-10-30T03:46:27Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/760829a778bdf2204e42bc929ddd3b8264b29e99.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/760829a778bdf2204e42bc929ddd3b8264b29e99.patch",
+  "path": "234-delcontextprotocol-servers-commit-760829a778bdf2204e42bc929ddd3b8264b29e99.patch",
+  "status": 200,
+  "n_bytes": 16610,
+  "sha256": "c06f745fcdba840cc455adfa998315f5335e6f0713b4ca042820df2b4092ebf9",
+  "fetched_at": "2026-10-30T03:47:52Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/76639ead0c2d840db2c7b17e426d2b10ba13e093.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/76639ead0c2d840db2c7b17e426d2b10ba13e093.patch",
+  "path": "186-delcontextprotocol-servers-commit-76639ead0c2d840db2c7b17e426d2b10ba13e093.patch",
+  "status": 200,
+  "n_bytes": 15727,
+  "sha256": "49d08bf454e4a428899e80733b383bede6c996a7643319f5bdf1f071543fb4d6",
+  "fetched_at": "2026-10-30T03:47:04Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/7676a8fd95cc6ed2d14aa3d8d48a6f6d34e743ea.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7676a8fd95cc6ed2d14aa3d8d48a6f6d34e743ea.patch",
+  "path": "232-delcontextprotocol-servers-commit-7676a8fd95cc6ed2d14aa3d8d48a6f6d34e743ea.patch",
+  "status": 200,
+  "n_bytes": 33642,
+  "sha256": "a88fe2e5d52431987ea50116f27497eb62218db036c98b890161a28a6e152ee5",
+  "fetched_at": "2026-10-30T03:47:50Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/76d64c822f5125032f89eb71dbdb94e42b434821.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/76d64c822f5125032f89eb71dbdb94e42b434821.patch",
+  "path": "208-delcontextprotocol-servers-commit-76d64c822f5125032f89eb71dbdb94e42b434821.patch",
+  "status": 200,
+  "n_bytes": 2486,
+  "sha256": "00f08ab8b9186ae962eca891109c11bfba091d884302fb6d6f03f9f3411cc473",
+  "fetched_at": "2026-10-30T03:47:26Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/781a93db14c430b9410d89910f42a65a3c9d0c72.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/781a93db14c430b9410d89910f42a65a3c9d0c72.patch",
+  "path": "191-delcontextprotocol-servers-commit-781a93db14c430b9410d89910f42a65a3c9d0c72.patch",
+  "status": 200,
+  "n_bytes": 5358,
+  "sha256": "9da9a9073fa830f1e42bea362cf42423e61135093b8a70e0ee41feba9fc8cc1b",
+  "fetched_at": "2026-10-30T03:47:09Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/7948a81e4fbc66241cc7da3a77bd6cb9e5dcfb98.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7948a81e4fbc66241cc7da3a77bd6cb9e5dcfb98.patch",
+  "path": "310-delcontextprotocol-servers-commit-7948a81e4fbc66241cc7da3a77bd6cb9e5dcfb98.patch",
+  "status": 200,
+  "n_bytes": 3915,
+  "sha256": "b6c600763b2541a00482024fff8940f6192ed76deff049b9f74cf081367dc848",
+  "fetched_at": "2026-10-30T03:49:09Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/7a8c25d3936bade3446209fe6ee7f43a5dfd9372.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/7a8c25d3936bade3446209fe6ee7f43a5dfd9372.patch",
   "path": "024-delcontextprotocol-servers-commit-7a8c25d3936bade3446209fe6ee7f43a5dfd9372.patch",
@@ -327,6 +1311,134 @@
   "sha256": "d014bda1fcb05d888b946680f22853d55295e9807dd8eaef7e82a53a8065578e",
   "fetched_at": "2026-10-30T03:20:15Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/7b1170d1da1e36bc9f553f51e76e64cbfd652b3e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7b1170d1da1e36bc9f553f51e76e64cbfd652b3e.patch",
+  "path": "081-delcontextprotocol-servers-commit-7b1170d1da1e36bc9f553f51e76e64cbfd652b3e.patch",
+  "status": 200,
+  "n_bytes": 12108,
+  "sha256": "6bbdd2e2ace3badf8ddbf251ad3f995a2c69a494d939f7edc4fbfa47163192fc",
+  "fetched_at": "2026-10-30T03:45:18Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/7b8592538fce3285899b9b9636a7e2c400b331ad.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7b8592538fce3285899b9b9636a7e2c400b331ad.patch",
+  "path": "188-delcontextprotocol-servers-commit-7b8592538fce3285899b9b9636a7e2c400b331ad.patch",
+  "status": 200,
+  "n_bytes": 11960,
+  "sha256": "8bee03072345fbb7925ad7f7c17e8199bcbabcf155cb64b8914a389310c4a794",
+  "fetched_at": "2026-10-30T03:47:06Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/7bdcdb6a8523eb8fe8e9f31b499e1260b18f1a48.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7bdcdb6a8523eb8fe8e9f31b499e1260b18f1a48.patch",
+  "path": "313-delcontextprotocol-servers-commit-7bdcdb6a8523eb8fe8e9f31b499e1260b18f1a48.patch",
+  "status": 200,
+  "n_bytes": 1990,
+  "sha256": "6683ca9a8d792a483e21c95c21725b55e42dd882a9d7405b9d3187aa3698652b",
+  "fetched_at": "2026-10-30T03:49:12Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/7e6b7807af8fbffc80c826cadffa30ea672a6120.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/7e6b7807af8fbffc80c826cadffa30ea672a6120.patch",
+  "path": "201-delcontextprotocol-servers-commit-7e6b7807af8fbffc80c826cadffa30ea672a6120.patch",
+  "status": 200,
+  "n_bytes": 1409,
+  "sha256": "831088044d575433be5ea605aefd061d856c4fa7ab36402b649a01bea7ff3ded",
+  "fetched_at": "2026-10-30T03:47:19Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/80397a9d3b0799e818a3591a0b99416d060ef330.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/80397a9d3b0799e818a3591a0b99416d060ef330.patch",
+  "path": "127-delcontextprotocol-servers-commit-80397a9d3b0799e818a3591a0b99416d060ef330.patch",
+  "status": 200,
+  "n_bytes": 2993,
+  "sha256": "ee80b1f2bea21d17e316bfff4d27a96828572946841e9d115229dd3bf0812f2f",
+  "fetched_at": "2026-10-30T03:46:04Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8102fbe27a92535754cf44d42987af150b08f105.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8102fbe27a92535754cf44d42987af150b08f105.patch",
+  "path": "122-delcontextprotocol-servers-commit-8102fbe27a92535754cf44d42987af150b08f105.patch",
+  "status": 200,
+  "n_bytes": 1766,
+  "sha256": "588ab70ba26cb687db68446b2bc74aee87efff8a41c40ce80e48480a44674a55",
+  "fetched_at": "2026-10-30T03:45:59Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8126179a0a157747c731f1e70728d6c6e5077ee9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8126179a0a157747c731f1e70728d6c6e5077ee9.patch",
+  "path": "155-delcontextprotocol-servers-commit-8126179a0a157747c731f1e70728d6c6e5077ee9.patch",
+  "status": 200,
+  "n_bytes": 2552,
+  "sha256": "a83fa14ec1fb970cf1bb87653a0ac386c2fbd287742ab60121cdd9baa7709c89",
+  "fetched_at": "2026-10-30T03:46:33Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/81f8301cd2b4a9c32d925083b86c0885b1ba9fbf.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/81f8301cd2b4a9c32d925083b86c0885b1ba9fbf.patch",
+  "path": "086-delcontextprotocol-servers-commit-81f8301cd2b4a9c32d925083b86c0885b1ba9fbf.patch",
+  "status": 200,
+  "n_bytes": 2121,
+  "sha256": "a7d6407c1caa149e5f87f2c4b31223c24e372bf7d360ce4e3880772116fd550e",
+  "fetched_at": "2026-10-30T03:45:23Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/82cda366d68c41ce50c8d6a1cef6dcedf497ae77.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/82cda366d68c41ce50c8d6a1cef6dcedf497ae77.patch",
+  "path": "070-delcontextprotocol-servers-commit-82cda366d68c41ce50c8d6a1cef6dcedf497ae77.patch",
+  "status": 200,
+  "n_bytes": 948,
+  "sha256": "983dd5efba83775e3766202d6a4411d9c7005f16c5f0a01f57e53fa988b21a4c",
+  "fetched_at": "2026-10-30T03:45:07Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/834021a3dfbea32b1334fd5c10e0dd2158af64b4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/834021a3dfbea32b1334fd5c10e0dd2158af64b4.patch",
+  "path": "225-delcontextprotocol-servers-commit-834021a3dfbea32b1334fd5c10e0dd2158af64b4.patch",
+  "status": 200,
+  "n_bytes": 1371,
+  "sha256": "38a3a926a50d5e61cd46894406a171be10bd1342ceda569ea5ebaf769d1a4e04",
+  "fetched_at": "2026-10-30T03:47:43Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/83b22050b833a1c64e8f7b277c60e17c79d860f9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/83b22050b833a1c64e8f7b277c60e17c79d860f9.patch",
+  "path": "273-delcontextprotocol-servers-commit-83b22050b833a1c64e8f7b277c60e17c79d860f9.patch",
+  "status": 200,
+  "n_bytes": 1285,
+  "sha256": "af2396f0f3b6573ccf4ac7ac6403ff47f3e7496a9918d33a0f4fe9121772ae0b",
+  "fetched_at": "2026-10-30T03:48:31Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/84dc28b4c9d1719b4b822e8d0884a91f85ba49aa.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/84dc28b4c9d1719b4b822e8d0884a91f85ba49aa.patch",
+  "path": "269-delcontextprotocol-servers-commit-84dc28b4c9d1719b4b822e8d0884a91f85ba49aa.patch",
+  "status": 200,
+  "n_bytes": 6058,
+  "sha256": "788b9a6141192014b347d3097ef9ec1104b5bac9c8812164a56d613ed72a79d7",
+  "fetched_at": "2026-10-30T03:48:27Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8614dff06ff6cb0eee75af36674f1e19f035cabc.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8614dff06ff6cb0eee75af36674f1e19f035cabc.patch",
+  "path": "320-delcontextprotocol-servers-commit-8614dff06ff6cb0eee75af36674f1e19f035cabc.patch",
+  "status": 200,
+  "n_bytes": 2368,
+  "sha256": "6ed6bd7fce3a44792bdd69c6b673fa37125b9a5c289318e848d8dd23f0e6f2b9",
+  "fetched_at": "2026-10-30T03:49:19Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/861c11b786b3efbc87eb2e878a4039d33846a031.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/861c11b786b3efbc87eb2e878a4039d33846a031.patch",
+  "path": "196-delcontextprotocol-servers-commit-861c11b786b3efbc87eb2e878a4039d33846a031.patch",
+  "status": 200,
+  "n_bytes": 2771,
+  "sha256": "c522fa09314b6a476081ff5fdcbea8c6ad91bb81c1dd87f4261ddb26386c8d98",
+  "fetched_at": "2026-10-30T03:47:14Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/862e717ff714987bd5577318df09858e14883863.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/862e717ff714987bd5577318df09858e14883863.patch",
+  "path": "217-delcontextprotocol-servers-commit-862e717ff714987bd5577318df09858e14883863.patch",
+  "status": 200,
+  "n_bytes": 2409,
+  "sha256": "abbd5db07049ab6fa3eb46b1951a5ddf31e9296051e236e39903ddc53fc64629",
+  "fetched_at": "2026-10-30T03:47:35Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/86b9438e0efdc4b0fa1b3eca40c857dbb4644b0a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/86b9438e0efdc4b0fa1b3eca40c857dbb4644b0a.patch",
+  "path": "299-delcontextprotocol-servers-commit-86b9438e0efdc4b0fa1b3eca40c857dbb4644b0a.patch",
+  "status": 200,
+  "n_bytes": 901,
+  "sha256": "a599d09834c44727fb1d606aa2ff4d9568e9d4f9aa45d0667cf8de2e0b3e0949",
+  "fetched_at": "2026-10-30T03:48:57Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/86fd903d5ff7b2c7bd8a268675948cea91d1895d.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/86fd903d5ff7b2c7bd8a268675948cea91d1895d.patch",
   "path": "010-delcontextprotocol-servers-commit-86fd903d5ff7b2c7bd8a268675948cea91d1895d.patch",
@@ -334,6 +1446,14 @@
   "n_bytes": 2132,
   "sha256": "9af181c05215329022622fad7748c6c862a909652517b5bd1cf44cea0fe5ee12",
   "fetched_at": "2026-10-30T03:19:57Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8758a11b37846b3dbf01a1aaa12db27f2f11b0e9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8758a11b37846b3dbf01a1aaa12db27f2f11b0e9.patch",
+  "path": "288-delcontextprotocol-servers-commit-8758a11b37846b3dbf01a1aaa12db27f2f11b0e9.patch",
+  "status": 200,
+  "n_bytes": 1042,
+  "sha256": "3b5035763498bff6b0bad81d66c43df3199eb7b057eecaeb48548b09029a59d5",
+  "fetched_at": "2026-10-30T03:48:46Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/87a996b5480be3cd5ea566d373a9c82b83f5e4d6.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/87a996b5480be3cd5ea566d373a9c82b83f5e4d6.patch",
@@ -343,6 +1463,38 @@
   "sha256": "8934bbb4428ff71cc4d9f52e876b1701403c6dcb091e3902026121f6a4401ee2",
   "fetched_at": "2026-10-30T03:20:36Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/8821de36b337d7242f17e6f2596bc667f40323fd.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8821de36b337d7242f17e6f2596bc667f40323fd.patch",
+  "path": "240-delcontextprotocol-servers-commit-8821de36b337d7242f17e6f2596bc667f40323fd.patch",
+  "status": 200,
+  "n_bytes": 51589,
+  "sha256": "7b4636a46eac0272111645bc0ec17dc68a3258c3b483ec7c7d876fd7c899fab4",
+  "fetched_at": "2026-10-30T03:47:58Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/88320daffa627575f3365505f29b56aab05a5cd0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/88320daffa627575f3365505f29b56aab05a5cd0.patch",
+  "path": "289-delcontextprotocol-servers-commit-88320daffa627575f3365505f29b56aab05a5cd0.patch",
+  "status": 200,
+  "n_bytes": 5061,
+  "sha256": "70cad722d225029596c32f0b8bffb985da51861c097db434d4ba788a863e0894",
+  "fetched_at": "2026-10-30T03:48:47Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8970850285b4eca8bdc2d57598946dc3e1f0f5aa.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8970850285b4eca8bdc2d57598946dc3e1f0f5aa.patch",
+  "path": "198-delcontextprotocol-servers-commit-8970850285b4eca8bdc2d57598946dc3e1f0f5aa.patch",
+  "status": 200,
+  "n_bytes": 9519,
+  "sha256": "24586eedfea0f889ff3060576ff1703624794bca06830ed31a8e9770ce68c647",
+  "fetched_at": "2026-10-30T03:47:16Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8a8a553fe8bf3b4147acb3ec4b8f8eb3dafefec1.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8a8a553fe8bf3b4147acb3ec4b8f8eb3dafefec1.patch",
+  "path": "224-delcontextprotocol-servers-commit-8a8a553fe8bf3b4147acb3ec4b8f8eb3dafefec1.patch",
+  "status": 200,
+  "n_bytes": 3267,
+  "sha256": "55f35697adac3ee3e99433d06b670c633ef0e6ee06c7148a78a4103105466f57",
+  "fetched_at": "2026-10-30T03:47:42Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/8af50b941823f14f0b4e99d3f7b8071d5b7f0cf8.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/8af50b941823f14f0b4e99d3f7b8071d5b7f0cf8.patch",
   "path": "013-delcontextprotocol-servers-commit-8af50b941823f14f0b4e99d3f7b8071d5b7f0cf8.patch",
@@ -350,6 +1502,46 @@
   "n_bytes": 5744,
   "sha256": "f3e695edbfe59195b20ce3a7c792c56a223ab811e78d8f8e6ed0bcc8e0aba6f3",
   "fetched_at": "2026-10-30T03:20:00Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8d0072928e9b20e97669f1c1302fca2eecc81cf2.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8d0072928e9b20e97669f1c1302fca2eecc81cf2.patch",
+  "path": "084-delcontextprotocol-servers-commit-8d0072928e9b20e97669f1c1302fca2eecc81cf2.patch",
+  "status": 200,
+  "n_bytes": 21666,
+  "sha256": "bf8448332a6a52cb8ac391d319c7705679dc88258322a187b9f1ef396ffafc6c",
+  "fetched_at": "2026-10-30T03:45:21Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8f2e9cc67884ccf57d8491da1475ef1baff3271c.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8f2e9cc67884ccf57d8491da1475ef1baff3271c.patch",
+  "path": "165-delcontextprotocol-servers-commit-8f2e9cc67884ccf57d8491da1475ef1baff3271c.patch",
+  "status": 200,
+  "n_bytes": 5567,
+  "sha256": "61e217dc9dd7420a1237a2638fab80a51e92bfd22a13d8a36b2117578a0ad63e",
+  "fetched_at": "2026-10-30T03:46:43Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/8f8f5be91ed38cc52a82ea3fde63b9c5e1769791.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/8f8f5be91ed38cc52a82ea3fde63b9c5e1769791.patch",
+  "path": "162-delcontextprotocol-servers-commit-8f8f5be91ed38cc52a82ea3fde63b9c5e1769791.patch",
+  "status": 200,
+  "n_bytes": 500515,
+  "sha256": "19585ca90a57f065f13a5c656afb995201cec79d0cebc3b6d2dc2cae664ec811",
+  "fetched_at": "2026-10-30T03:46:40Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/916fa420ecec6f1b7c9c9d635869b1166e3a5b61.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/916fa420ecec6f1b7c9c9d635869b1166e3a5b61.patch",
+  "path": "134-delcontextprotocol-servers-commit-916fa420ecec6f1b7c9c9d635869b1166e3a5b61.patch",
+  "status": 200,
+  "n_bytes": 181775,
+  "sha256": "5b9851473c0d0dc8f6496767990df219b24c2116d49bbb683e9b46dcf2c8a18c",
+  "fetched_at": "2026-10-30T03:46:11Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/922cc2a32963b47c1e74e5cfa8f607eaed2e941c.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/922cc2a32963b47c1e74e5cfa8f607eaed2e941c.patch",
+  "path": "257-delcontextprotocol-servers-commit-922cc2a32963b47c1e74e5cfa8f607eaed2e941c.patch",
+  "status": 200,
+  "n_bytes": 105265,
+  "sha256": "2d4c13a2b33b93aed12df0dcadfc0d8690db23992ecdf9eab46a8b72f6f77669",
+  "fetched_at": "2026-10-30T03:48:15Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/93a4f763b62b7926d45a6097d0c9a5682b17dd87.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/93a4f763b62b7926d45a6097d0c9a5682b17dd87.patch",
@@ -359,6 +1551,38 @@
   "sha256": "a5d1fa189204a0cf9f36b633f8e3bf634ca9049b622bd5c5f0d9491f1a6a4d8d",
   "fetched_at": "2026-10-30T03:20:14Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/93b83d376fd5bca546354229cd32f81d489fabe2.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/93b83d376fd5bca546354229cd32f81d489fabe2.patch",
+  "path": "115-delcontextprotocol-servers-commit-93b83d376fd5bca546354229cd32f81d489fabe2.patch",
+  "status": 200,
+  "n_bytes": 7070,
+  "sha256": "718c9668505aefa5dd166ded57df402d35cd6b0fd4fe812b1a6f45e05a3fd723",
+  "fetched_at": "2026-10-30T03:45:52Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9511de6a5e97b152eeca04e70c489c8099c6ea89.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9511de6a5e97b152eeca04e70c489c8099c6ea89.patch",
+  "path": "126-delcontextprotocol-servers-commit-9511de6a5e97b152eeca04e70c489c8099c6ea89.patch",
+  "status": 200,
+  "n_bytes": 27759,
+  "sha256": "fb51bc95d208dab5f60bfa2f6505052caad82ffff3599574580a81782f130793",
+  "fetched_at": "2026-10-30T03:46:03Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9691b958ec2f1a9c2db6fe359892f96d1e3ca56d.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9691b958ec2f1a9c2db6fe359892f96d1e3ca56d.patch",
+  "path": "192-delcontextprotocol-servers-commit-9691b958ec2f1a9c2db6fe359892f96d1e3ca56d.patch",
+  "status": 200,
+  "n_bytes": 8236,
+  "sha256": "a223366fef8364efb1cb689977d654b9bd7056f8c11c283b769744480b7463af",
+  "fetched_at": "2026-10-30T03:47:10Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9696d5aa1420aef21ca9c68745cb009b039a7702.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9696d5aa1420aef21ca9c68745cb009b039a7702.patch",
+  "path": "271-delcontextprotocol-servers-commit-9696d5aa1420aef21ca9c68745cb009b039a7702.patch",
+  "status": 200,
+  "n_bytes": 29291,
+  "sha256": "72a3809777da9792499fb53c8faef04f16d5668e364b8cf78ec915f237c185f0",
+  "fetched_at": "2026-10-30T03:48:29Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/96c49c73647ba8904a6916f070f282691111db19.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/96c49c73647ba8904a6916f070f282691111db19.patch",
   "path": "018-delcontextprotocol-servers-commit-96c49c73647ba8904a6916f070f282691111db19.patch",
@@ -366,6 +1590,38 @@
   "n_bytes": 4082,
   "sha256": "507959936b06a5c1de46fa7c9d415eb537e9922f1f918c8332a3f098dd5c3be0",
   "fetched_at": "2026-10-30T03:20:05Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/97b70ee25209382fb6a859527dbb5f4cf36eb318.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/97b70ee25209382fb6a859527dbb5f4cf36eb318.patch",
+  "path": "259-delcontextprotocol-servers-commit-97b70ee25209382fb6a859527dbb5f4cf36eb318.patch",
+  "status": 200,
+  "n_bytes": 14373,
+  "sha256": "b203f06a1c8fb35d6d1aa1263989c5247b829a81a6ca018f90c2a93f3a88d8ac",
+  "fetched_at": "2026-10-30T03:48:17Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/97ba6b3a65668f4c5235157fc607dd24e459d000.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/97ba6b3a65668f4c5235157fc607dd24e459d000.patch",
+  "path": "181-delcontextprotocol-servers-commit-97ba6b3a65668f4c5235157fc607dd24e459d000.patch",
+  "status": 200,
+  "n_bytes": 31237,
+  "sha256": "886f8a7b3b8689dedc77e8a192daa9c5fe99aaf397c4926e53de9dd9a50bb223",
+  "fetched_at": "2026-10-30T03:46:59Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9a437181d9e5406d9c16b2f8ac74d5d5e93dfd72.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9a437181d9e5406d9c16b2f8ac74d5d5e93dfd72.patch",
+  "path": "173-delcontextprotocol-servers-commit-9a437181d9e5406d9c16b2f8ac74d5d5e93dfd72.patch",
+  "status": 200,
+  "n_bytes": 3252,
+  "sha256": "4767613693d500dbdaff860411ed4dbc6e93ea8bc31109b49a4a76fcca34a724",
+  "fetched_at": "2026-10-30T03:46:51Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9ade57133f378aad9b018e74a1a3a9acff8b5385.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9ade57133f378aad9b018e74a1a3a9acff8b5385.patch",
+  "path": "125-delcontextprotocol-servers-commit-9ade57133f378aad9b018e74a1a3a9acff8b5385.patch",
+  "status": 200,
+  "n_bytes": 18486,
+  "sha256": "e32f9f689ba319c0cc5e278ae005351c3f61ff26e288da4e686012e28f3b9eb3",
+  "fetched_at": "2026-10-30T03:46:02Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/9b734b920bd3f93b5f2cfd8cffcf86bd9bf3b02c.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/9b734b920bd3f93b5f2cfd8cffcf86bd9bf3b02c.patch",
@@ -375,6 +1631,14 @@
   "sha256": "673ec1c98d2ac4e2320404dcdbd29ba3023884554c5ce575eb72e82960e0006a",
   "fetched_at": "2026-10-30T03:20:30Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/9bade64fce0f0c995c2d3e1a36467043d05e1c82.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9bade64fce0f0c995c2d3e1a36467043d05e1c82.patch",
+  "path": "147-delcontextprotocol-servers-commit-9bade64fce0f0c995c2d3e1a36467043d05e1c82.patch",
+  "status": 200,
+  "n_bytes": 34567,
+  "sha256": "28719fa4d3e776558672bc6962f15e91b551f8d68f26a352bf9906011c9934fc",
+  "fetched_at": "2026-10-30T03:46:25Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/9c0921276c00fcf6b139a5f4cfd1753973373870.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/9c0921276c00fcf6b139a5f4cfd1753973373870.patch",
   "path": "058-delcontextprotocol-servers-commit-9c0921276c00fcf6b139a5f4cfd1753973373870.patch",
@@ -382,6 +1646,54 @@
   "n_bytes": 12808,
   "sha256": "8c4ab16e543d69980f9cf4f2a5cd66f7a631f3a3a37d343a6b317cf2c17b5436",
   "fetched_at": "2026-10-30T03:20:46Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9c9813d9dc0b85d5daffce953501bc083e49c779.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9c9813d9dc0b85d5daffce953501bc083e49c779.patch",
+  "path": "317-delcontextprotocol-servers-commit-9c9813d9dc0b85d5daffce953501bc083e49c779.patch",
+  "status": 200,
+  "n_bytes": 221484,
+  "sha256": "fa97d736931f4d49dee5958485cf6820b4443dc69a9120ec1c150159c5b19b57",
+  "fetched_at": "2026-10-30T03:49:16Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9d863fb7e66b01dad880838e8c84f5f1c5f4f2fc.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9d863fb7e66b01dad880838e8c84f5f1c5f4f2fc.patch",
+  "path": "209-delcontextprotocol-servers-commit-9d863fb7e66b01dad880838e8c84f5f1c5f4f2fc.patch",
+  "status": 200,
+  "n_bytes": 22696,
+  "sha256": "a99d34a3525c725aee48e36797d11263c01f78763bd96f2e5a0b91fa9df8d6c9",
+  "fetched_at": "2026-10-30T03:47:27Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9e5d5b8e4b5dd6fa4fc84cad5eb291568024aad4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9e5d5b8e4b5dd6fa4fc84cad5eb291568024aad4.patch",
+  "path": "111-delcontextprotocol-servers-commit-9e5d5b8e4b5dd6fa4fc84cad5eb291568024aad4.patch",
+  "status": 200,
+  "n_bytes": 7441,
+  "sha256": "2218fa9f9f10a1823feaeb5de42bd4deddb63dfd85f18d2ac05f363cd47b44cb",
+  "fetched_at": "2026-10-30T03:45:48Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9e9dfb95b5a71ac512cfaa0cec32d0b21e9c1874.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9e9dfb95b5a71ac512cfaa0cec32d0b21e9c1874.patch",
+  "path": "233-delcontextprotocol-servers-commit-9e9dfb95b5a71ac512cfaa0cec32d0b21e9c1874.patch",
+  "status": 200,
+  "n_bytes": 1594,
+  "sha256": "adeec64867b80335dea1f177fafffe9616af1b3bcadf36e315bfe1bfe6b02970",
+  "fetched_at": "2026-10-30T03:47:51Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/9ec8ec227676e3ecb11777231ffb772ddcac7d5b.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/9ec8ec227676e3ecb11777231ffb772ddcac7d5b.patch",
+  "path": "265-delcontextprotocol-servers-commit-9ec8ec227676e3ecb11777231ffb772ddcac7d5b.patch",
+  "status": 200,
+  "n_bytes": 4801,
+  "sha256": "dd497142908cebe78ffd65a5449e4e9bf53eef25c197fc2c132b8a04906cef61",
+  "fetched_at": "2026-10-30T03:48:23Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a160653441da3c943a31c000cf44948fe5138f17.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a160653441da3c943a31c000cf44948fe5138f17.patch",
+  "path": "171-delcontextprotocol-servers-commit-a160653441da3c943a31c000cf44948fe5138f17.patch",
+  "status": 200,
+  "n_bytes": 3641,
+  "sha256": "66ea07671043de7863308c7ab47439890617bd4afc5ff0a76a6f864f4ce09a1c",
+  "fetched_at": "2026-10-30T03:46:49Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/a1f9dfa47029a2d90d345ded8f49f596d95f389a.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/a1f9dfa47029a2d90d345ded8f49f596d95f389a.patch",
@@ -391,6 +1703,86 @@
   "sha256": "3d00119905bb402e6ec748b4bd2cc54caf61c6ca28d1f991d0563626bcbc35b7",
   "fetched_at": "2026-10-30T03:20:57Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/a216dd9ab912129ce032eda61ddd6dae950cf44a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a216dd9ab912129ce032eda61ddd6dae950cf44a.patch",
+  "path": "135-delcontextprotocol-servers-commit-a216dd9ab912129ce032eda61ddd6dae950cf44a.patch",
+  "status": 200,
+  "n_bytes": 558213,
+  "sha256": "660106be6f699fdff03fb4b02276a8055652ff341193fc56cff8d012d727b9d2",
+  "fetched_at": "2026-10-30T03:46:13Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a37158bc1555ce0b1121ea98a3e740119d7fc8c7.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a37158bc1555ce0b1121ea98a3e740119d7fc8c7.patch",
+  "path": "312-delcontextprotocol-servers-commit-a37158bc1555ce0b1121ea98a3e740119d7fc8c7.patch",
+  "status": 200,
+  "n_bytes": 5574,
+  "sha256": "eb64b39492ea91315c348c6814445c719e21b9cab7ebc12bfbdf40a3ba197305",
+  "fetched_at": "2026-10-30T03:49:11Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a3ad3c8869b60c1439f628aa18d85e0cb1c98946.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a3ad3c8869b60c1439f628aa18d85e0cb1c98946.patch",
+  "path": "214-delcontextprotocol-servers-commit-a3ad3c8869b60c1439f628aa18d85e0cb1c98946.patch",
+  "status": 200,
+  "n_bytes": 2401,
+  "sha256": "ea2319e6cf6649abaceb1edef094f4a6adcd033eb38a6ff3c7947b7281856249",
+  "fetched_at": "2026-10-30T03:47:32Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a3e0e869a883ae556dbe8270d167f5fe7673ac6e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a3e0e869a883ae556dbe8270d167f5fe7673ac6e.patch",
+  "path": "121-delcontextprotocol-servers-commit-a3e0e869a883ae556dbe8270d167f5fe7673ac6e.patch",
+  "status": 200,
+  "n_bytes": 8063,
+  "sha256": "b6f202842a15f097fbdf6b720424085648422680e5f9bb66d2042b361be542ae",
+  "fetched_at": "2026-10-30T03:45:58Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a5c40bf838b324e258eac6df46425e5a69bd4504.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a5c40bf838b324e258eac6df46425e5a69bd4504.patch",
+  "path": "275-delcontextprotocol-servers-commit-a5c40bf838b324e258eac6df46425e5a69bd4504.patch",
+  "status": 200,
+  "n_bytes": 256390,
+  "sha256": "b2196b7b0dc99c1dd8eab87e3e182a122cf427b1c27e6e0b341da24ff0a7bb43",
+  "fetched_at": "2026-10-30T03:48:33Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a660ac3420995793e216811f19ee9d05fc2e1f04.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a660ac3420995793e216811f19ee9d05fc2e1f04.patch",
+  "path": "316-delcontextprotocol-servers-commit-a660ac3420995793e216811f19ee9d05fc2e1f04.patch",
+  "status": 200,
+  "n_bytes": 2898,
+  "sha256": "544ca339575a8642e302fa89cfa2ecc4ea24e31d4b534110149740cfa8e73afb",
+  "fetched_at": "2026-10-30T03:49:15Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a6cdbf4deac97aac5c9b76bd12d38eace78dac01.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a6cdbf4deac97aac5c9b76bd12d38eace78dac01.patch",
+  "path": "266-delcontextprotocol-servers-commit-a6cdbf4deac97aac5c9b76bd12d38eace78dac01.patch",
+  "status": 200,
+  "n_bytes": 2184,
+  "sha256": "e46e0cf19e38cd1ceaebafb5a65b8ae9441e39915b642836325f149c73e310d5",
+  "fetched_at": "2026-10-30T03:48:24Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a714b63b7f6a85812bc678143eb4e865ac54383e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a714b63b7f6a85812bc678143eb4e865ac54383e.patch",
+  "path": "106-delcontextprotocol-servers-commit-a714b63b7f6a85812bc678143eb4e865ac54383e.patch",
+  "status": 200,
+  "n_bytes": 7707,
+  "sha256": "b4ad7581e8ad205d3f402ecf26bca5e53d942c6e81509c70222eb4f28817e89c",
+  "fetched_at": "2026-10-30T03:45:43Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a72e93e5030241a8f717604765170b8c9f4da728.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a72e93e5030241a8f717604765170b8c9f4da728.patch",
+  "path": "258-delcontextprotocol-servers-commit-a72e93e5030241a8f717604765170b8c9f4da728.patch",
+  "status": 200,
+  "n_bytes": 3663,
+  "sha256": "d431ef58450a7ba3540fd935582b2ba36593cbefb175ba3fbbd4ce47aa35a00a",
+  "fetched_at": "2026-10-30T03:48:16Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a81083a25e1da0607569d5cbf6b2d606c029a3c4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a81083a25e1da0607569d5cbf6b2d606c029a3c4.patch",
+  "path": "153-delcontextprotocol-servers-commit-a81083a25e1da0607569d5cbf6b2d606c029a3c4.patch",
+  "status": 200,
+  "n_bytes": 68958,
+  "sha256": "d2dc2e21e1f50c889c595f9673d7d0463f03e6d913b6d56a3184ba5fdb427291",
+  "fetched_at": "2026-10-30T03:46:31Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/a83b1451c5dff7c26ec28ed4350410c32d55b6e8.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/a83b1451c5dff7c26ec28ed4350410c32d55b6e8.patch",
   "path": "041-delcontextprotocol-servers-commit-a83b1451c5dff7c26ec28ed4350410c32d55b6e8.patch",
@@ -398,6 +1790,142 @@
   "n_bytes": 5567,
   "sha256": "61e217dc9dd7420a1237a2638fab80a51e92bfd22a13d8a36b2117578a0ad63e",
   "fetched_at": "2026-10-30T03:20:29Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a96189b2af82e1fe8d79e3626e717a6684548662.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a96189b2af82e1fe8d79e3626e717a6684548662.patch",
+  "path": "136-delcontextprotocol-servers-commit-a96189b2af82e1fe8d79e3626e717a6684548662.patch",
+  "status": 200,
+  "n_bytes": 207871,
+  "sha256": "be5bf8c61403dc6b4d7ce8f46b74362d3e0c40e90ee4f512cdc260c7d4c650a3",
+  "fetched_at": "2026-10-30T03:46:13Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a97aba19eb218bedd37ae19c27893ee6659f1555.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a97aba19eb218bedd37ae19c27893ee6659f1555.patch",
+  "path": "212-delcontextprotocol-servers-commit-a97aba19eb218bedd37ae19c27893ee6659f1555.patch",
+  "status": 200,
+  "n_bytes": 2368,
+  "sha256": "6ed6bd7fce3a44792bdd69c6b673fa37125b9a5c289318e848d8dd23f0e6f2b9",
+  "fetched_at": "2026-10-30T03:47:30Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/a9cf19e16233865ffd4aa62d0f0a4d1549365b5a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/a9cf19e16233865ffd4aa62d0f0a4d1549365b5a.patch",
+  "path": "189-delcontextprotocol-servers-commit-a9cf19e16233865ffd4aa62d0f0a4d1549365b5a.patch",
+  "status": 200,
+  "n_bytes": 143660,
+  "sha256": "c4dae8df2b1dd38b57ae0637536e69ff8fdce622e42805bc597ba1fc141f251e",
+  "fetched_at": "2026-10-30T03:47:07Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/aa8d20609c981265b7963e6f5ac279af1d46c042.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/aa8d20609c981265b7963e6f5ac279af1d46c042.patch",
+  "path": "202-delcontextprotocol-servers-commit-aa8d20609c981265b7963e6f5ac279af1d46c042.patch",
+  "status": 200,
+  "n_bytes": 1954,
+  "sha256": "3b7958b284470202d2704714a8ee6afad43f2089ea2d3747212362c7ad9e2325",
+  "fetched_at": "2026-10-30T03:47:20Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/abbbddb2e3cbf1d3c24814bdff874c3c55f652e8.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/abbbddb2e3cbf1d3c24814bdff874c3c55f652e8.patch",
+  "path": "176-delcontextprotocol-servers-commit-abbbddb2e3cbf1d3c24814bdff874c3c55f652e8.patch",
+  "status": 200,
+  "n_bytes": 11508,
+  "sha256": "25fef99af2ef8442627c8b17025ba9d768fb10cef2c493a167ebe29437f7492e",
+  "fetched_at": "2026-10-30T03:46:54Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ac009e06cce0ee1af4b09bf97a96c6dadc9219da.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ac009e06cce0ee1af4b09bf97a96c6dadc9219da.patch",
+  "path": "078-delcontextprotocol-servers-commit-ac009e06cce0ee1af4b09bf97a96c6dadc9219da.patch",
+  "status": 200,
+  "n_bytes": 2787,
+  "sha256": "36ef290bc157dc28d74170be38f882cc46eb862af9a68a8aa35e28c92bd4c765",
+  "fetched_at": "2026-10-30T03:45:15Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ac4612f17758f6cefb9331f890741f5875fcc4eb.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ac4612f17758f6cefb9331f890741f5875fcc4eb.patch",
+  "path": "092-delcontextprotocol-servers-commit-ac4612f17758f6cefb9331f890741f5875fcc4eb.patch",
+  "status": 200,
+  "n_bytes": 5130,
+  "sha256": "bcac92212cf865ace54acce1249394d635e16f882b671132981b3b4af6543363",
+  "fetched_at": "2026-10-30T03:45:29Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/acedea0c24b3e20d7265f87b8b2afe2e0c6eb2f4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/acedea0c24b3e20d7265f87b8b2afe2e0c6eb2f4.patch",
+  "path": "098-delcontextprotocol-servers-commit-acedea0c24b3e20d7265f87b8b2afe2e0c6eb2f4.patch",
+  "status": 200,
+  "n_bytes": 15062,
+  "sha256": "074dfc583c3ed3964167d7b19ce617e0fb882b279a6f56acec4f73e8b339c45d",
+  "fetched_at": "2026-10-30T03:45:35Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ad334f9d82893488b1cc8a3764443bd05d1eef10.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ad334f9d82893488b1cc8a3764443bd05d1eef10.patch",
+  "path": "093-delcontextprotocol-servers-commit-ad334f9d82893488b1cc8a3764443bd05d1eef10.patch",
+  "status": 200,
+  "n_bytes": 51479,
+  "sha256": "01bc8c2ef36b0740a19a26e679fdc065e6ef6b9e3c5ab9be9ae5bc9f61aac1e3",
+  "fetched_at": "2026-10-30T03:45:30Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ad3e660cc13b5276639e98303286bf06687331b0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ad3e660cc13b5276639e98303286bf06687331b0.patch",
+  "path": "180-delcontextprotocol-servers-commit-ad3e660cc13b5276639e98303286bf06687331b0.patch",
+  "status": 200,
+  "n_bytes": 2846,
+  "sha256": "cf201b080e673ea97be3a524380595d9e7fd77acd42106077a828b13dd8442ee",
+  "fetched_at": "2026-10-30T03:46:58Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ae1e7a5500172f336c22facb0d7c317f416e10d0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ae1e7a5500172f336c22facb0d7c317f416e10d0.patch",
+  "path": "144-delcontextprotocol-servers-commit-ae1e7a5500172f336c22facb0d7c317f416e10d0.patch",
+  "status": 200,
+  "n_bytes": 2868,
+  "sha256": "5d2d50ab400367622f72709bb228e1cb6d39f824c77f6ffaed6f1e83f36751e4",
+  "fetched_at": "2026-10-30T03:46:22Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ae40ec239d80713c5fa892766ccf8285aecf1270.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ae40ec239d80713c5fa892766ccf8285aecf1270.patch",
+  "path": "213-delcontextprotocol-servers-commit-ae40ec239d80713c5fa892766ccf8285aecf1270.patch",
+  "status": 200,
+  "n_bytes": 6080,
+  "sha256": "eda11de9f8fcc9bbe764ed9cddfea1e53e68b936a4d597d254e7f26981051459",
+  "fetched_at": "2026-10-30T03:47:31Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/af15c688e41e9c32a1a86667d25bba0864bce6ee.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/af15c688e41e9c32a1a86667d25bba0864bce6ee.patch",
+  "path": "230-delcontextprotocol-servers-commit-af15c688e41e9c32a1a86667d25bba0864bce6ee.patch",
+  "status": 200,
+  "n_bytes": 6087,
+  "sha256": "8903490eae943733c654e67f06b7afbbfe3e01da5fc8cc539a31c14aa989be55",
+  "fetched_at": "2026-10-30T03:47:48Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/b1abd8ad10df68a46f37251a99d9f4822ddad4bf.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/b1abd8ad10df68a46f37251a99d9f4822ddad4bf.patch",
+  "path": "116-delcontextprotocol-servers-commit-b1abd8ad10df68a46f37251a99d9f4822ddad4bf.patch",
+  "status": 200,
+  "n_bytes": 7810,
+  "sha256": "07c831c72e32c025ef349aa07a2846b39828364b1fa76eb384ae7bbe34582e44",
+  "fetched_at": "2026-10-30T03:45:53Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/b1e1eb1a55847e0dcf78deb8ee821e2e46150a47.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/b1e1eb1a55847e0dcf78deb8ee821e2e46150a47.patch",
+  "path": "168-delcontextprotocol-servers-commit-b1e1eb1a55847e0dcf78deb8ee821e2e46150a47.patch",
+  "status": 200,
+  "n_bytes": 20412,
+  "sha256": "4d9610642de22a2419ae5ed58aa99a26f5c4b9c2dcca6fced1b135a380f45733",
+  "fetched_at": "2026-10-30T03:46:46Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/b2a94a21a53f99bee21cef9485ed50b0991c350c.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/b2a94a21a53f99bee21cef9485ed50b0991c350c.patch",
+  "path": "301-delcontextprotocol-servers-commit-b2a94a21a53f99bee21cef9485ed50b0991c350c.patch",
+  "status": 200,
+  "n_bytes": 103711,
+  "sha256": "20a4b7efbb6e5fe471623724b98d55c4ab0e1e0a2193aae284cc316a78c2fb36",
+  "fetched_at": "2026-10-30T03:48:59Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/b57eacaeda52a96453ead72ece0e152c7c2ad1d8.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/b57eacaeda52a96453ead72ece0e152c7c2ad1d8.patch",
+  "path": "185-delcontextprotocol-servers-commit-b57eacaeda52a96453ead72ece0e152c7c2ad1d8.patch",
+  "status": 200,
+  "n_bytes": 44100,
+  "sha256": "ae439480a025549a7d5d9f4c45b1cd07e6079c2237f1e9342c26568ab38aae06",
+  "fetched_at": "2026-10-30T03:47:03Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/b60eca1b3bfcd12e2afe7000882db363a1b89f6e.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/b60eca1b3bfcd12e2afe7000882db363a1b89f6e.patch",
@@ -407,6 +1935,14 @@
   "sha256": "81ed147a401143cebcb65121837f3815e16a3ad26f4f1d40b49e4d74b7bd3e19",
   "fetched_at": "2026-10-30T03:20:48Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/b68d67d1556022a9de61e3e758033adfa8e61615.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/b68d67d1556022a9de61e3e758033adfa8e61615.patch",
+  "path": "101-delcontextprotocol-servers-commit-b68d67d1556022a9de61e3e758033adfa8e61615.patch",
+  "status": 200,
+  "n_bytes": 6648,
+  "sha256": "3d00119905bb402e6ec748b4bd2cc54caf61c6ca28d1f991d0563626bcbc35b7",
+  "fetched_at": "2026-10-30T03:45:38Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/b906f726fae5462434f841b0b869ac792aedbd11.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/b906f726fae5462434f841b0b869ac792aedbd11.patch",
   "path": "035-delcontextprotocol-servers-commit-b906f726fae5462434f841b0b869ac792aedbd11.patch",
@@ -415,6 +1951,14 @@
   "sha256": "90af8b198f41abfad8e2215b3a15c58d8b4d604905ffcb42396f03ec7c0faf7f",
   "fetched_at": "2026-10-30T03:20:23Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/ba167cef5bcc1244f95b4fe9a6fbe6d488b10e52.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ba167cef5bcc1244f95b4fe9a6fbe6d488b10e52.patch",
+  "path": "119-delcontextprotocol-servers-commit-ba167cef5bcc1244f95b4fe9a6fbe6d488b10e52.patch",
+  "status": 200,
+  "n_bytes": 2942,
+  "sha256": "9d814b87503436c4d293cc6e8d57b95c540369e7ca6948703ccd8fce4216902a",
+  "fetched_at": "2026-10-30T03:45:56Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/bae042b4f213e72a3e1e8b9e813f960167a2e019.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/bae042b4f213e72a3e1e8b9e813f960167a2e019.patch",
   "path": "046-delcontextprotocol-servers-commit-bae042b4f213e72a3e1e8b9e813f960167a2e019.patch",
@@ -422,6 +1966,22 @@
   "n_bytes": 2534,
   "sha256": "2b75018131ded6ac05ff372fbf2eca56a7d15bae9c27baf0efb4dd3bcac6150d",
   "fetched_at": "2026-10-30T03:20:34Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/baf99300a2c70c9fe07cb3a45d60ab98cb95136f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/baf99300a2c70c9fe07cb3a45d60ab98cb95136f.patch",
+  "path": "161-delcontextprotocol-servers-commit-baf99300a2c70c9fe07cb3a45d60ab98cb95136f.patch",
+  "status": 200,
+  "n_bytes": 12042,
+  "sha256": "e0db67d501a59b197178837dc00242db76a14a1805a95e58d60300ade3872f5d",
+  "fetched_at": "2026-10-30T03:46:39Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/bb0a1893e75b2817e43b9c41ac71eeb92b2b65fe.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/bb0a1893e75b2817e43b9c41ac71eeb92b2b65fe.patch",
+  "path": "072-delcontextprotocol-servers-commit-bb0a1893e75b2817e43b9c41ac71eeb92b2b65fe.patch",
+  "status": 200,
+  "n_bytes": 2534,
+  "sha256": "2b75018131ded6ac05ff372fbf2eca56a7d15bae9c27baf0efb4dd3bcac6150d",
+  "fetched_at": "2026-10-30T03:45:09Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/bb5591850d0351bbe1b57e38c86412d068e47175.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/bb5591850d0351bbe1b57e38c86412d068e47175.patch",
@@ -439,6 +1999,14 @@
   "sha256": "d37a206dc4d538a489e173a3d3bb41d40c24f55a319881bde0a29b964db3c013",
   "fetched_at": "2026-10-30T03:20:20Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/c104a61f8716177555d97a99ce142d5859ab170a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c104a61f8716177555d97a99ce142d5859ab170a.patch",
+  "path": "243-delcontextprotocol-servers-commit-c104a61f8716177555d97a99ce142d5859ab170a.patch",
+  "status": 200,
+  "n_bytes": 779,
+  "sha256": "93c1de170b4ce899303ff5ed7eafca7a5a1082a29abf38e7cc449ce6cfb49744",
+  "fetched_at": "2026-10-30T03:48:01Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/c20c017171ec715ac2c33f72f70eab1404fbd73e.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/c20c017171ec715ac2c33f72f70eab1404fbd73e.patch",
   "path": "047-delcontextprotocol-servers-commit-c20c017171ec715ac2c33f72f70eab1404fbd73e.patch",
@@ -446,6 +2014,86 @@
   "n_bytes": 7110,
   "sha256": "76b79c043127f5d8f752d7f73a3eccca90ed748b0384126da54f24b96137d233",
   "fetched_at": "2026-10-30T03:20:35Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c27e937a5af26d8c8b7f9cc41434bd7927998bcc.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c27e937a5af26d8c8b7f9cc41434bd7927998bcc.patch",
+  "path": "114-delcontextprotocol-servers-commit-c27e937a5af26d8c8b7f9cc41434bd7927998bcc.patch",
+  "status": 200,
+  "n_bytes": 9679,
+  "sha256": "aae659bdafcf8b5cbe9f815aa0f4e185eca9f830671cc65901af282940b7247d",
+  "fetched_at": "2026-10-30T03:45:52Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c2ee97e792655f3452bb1c1066e58f90e036b147.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c2ee97e792655f3452bb1c1066e58f90e036b147.patch",
+  "path": "138-delcontextprotocol-servers-commit-c2ee97e792655f3452bb1c1066e58f90e036b147.patch",
+  "status": 200,
+  "n_bytes": 1226,
+  "sha256": "0c7f69688df4e81328673689387f9d4cf850a1e071e47d6b858cd5f3f318861b",
+  "fetched_at": "2026-10-30T03:46:15Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c3448d71b56cffd20980984d047008232a4914e5.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c3448d71b56cffd20980984d047008232a4914e5.patch",
+  "path": "219-delcontextprotocol-servers-commit-c3448d71b56cffd20980984d047008232a4914e5.patch",
+  "status": 200,
+  "n_bytes": 779,
+  "sha256": "7b51c6bfed7e0ad0dae574f2bf93ade826dd7b5150ba3f1c418bb3334717a5eb",
+  "fetched_at": "2026-10-30T03:47:37Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c3d8e43d1f31a4ac99b7136eb7d8c7958ed9c376.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c3d8e43d1f31a4ac99b7136eb7d8c7958ed9c376.patch",
+  "path": "159-delcontextprotocol-servers-commit-c3d8e43d1f31a4ac99b7136eb7d8c7958ed9c376.patch",
+  "status": 200,
+  "n_bytes": 6065,
+  "sha256": "c390ba90f9a93fd8bba439dddadb59a2e9fda8b885b7b08f95b35c8b6d53db5c",
+  "fetched_at": "2026-10-30T03:46:37Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c48605ec78037e728e79890537d3d07c3f6b94f4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c48605ec78037e728e79890537d3d07c3f6b94f4.patch",
+  "path": "247-delcontextprotocol-servers-commit-c48605ec78037e728e79890537d3d07c3f6b94f4.patch",
+  "status": 200,
+  "n_bytes": 32501,
+  "sha256": "9205472776f6f132e08c26e52524cc153a37b804d04a7146e446adc8d1504e0d",
+  "fetched_at": "2026-10-30T03:48:05Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c53a0f3799c8fe0bb2004d15fbd3214f1f8451e0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c53a0f3799c8fe0bb2004d15fbd3214f1f8451e0.patch",
+  "path": "128-delcontextprotocol-servers-commit-c53a0f3799c8fe0bb2004d15fbd3214f1f8451e0.patch",
+  "status": 200,
+  "n_bytes": 11617,
+  "sha256": "4fa76aa93caa303afb5848f59d0cd41a823238302302a55bef80ef4ab03832c0",
+  "fetched_at": "2026-10-30T03:46:05Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c5df3a47221fd020dd577c58b2c159a42815ca9a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c5df3a47221fd020dd577c58b2c159a42815ca9a.patch",
+  "path": "228-delcontextprotocol-servers-commit-c5df3a47221fd020dd577c58b2c159a42815ca9a.patch",
+  "status": 200,
+  "n_bytes": 420884,
+  "sha256": "d7dfde4224a10e472d4e0399748c3231e2d3e9bf048b06fb9b158b15703a40fb",
+  "fetched_at": "2026-10-30T03:47:46Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c6daef707a0cde816c6b0e0574c9883190d6f8eb.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c6daef707a0cde816c6b0e0574c9883190d6f8eb.patch",
+  "path": "103-delcontextprotocol-servers-commit-c6daef707a0cde816c6b0e0574c9883190d6f8eb.patch",
+  "status": 200,
+  "n_bytes": 2777,
+  "sha256": "431152ec43e8b5721f464080ad8e8655b7fdc48c023435a2357610098cfc46ca",
+  "fetched_at": "2026-10-30T03:45:40Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c743a10da082e76fc85d6aff06b0bd99feec8049.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c743a10da082e76fc85d6aff06b0bd99feec8049.patch",
+  "path": "220-delcontextprotocol-servers-commit-c743a10da082e76fc85d6aff06b0bd99feec8049.patch",
+  "status": 200,
+  "n_bytes": 2665,
+  "sha256": "f2f1415e892bcaa6631d7e60bc5cd42c113b2dfa4cafe7f3205272a3fd23aafa",
+  "fetched_at": "2026-10-30T03:47:38Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/c7d60d635abcad61fc0cf0bb3f0ca8d83bcd2eec.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c7d60d635abcad61fc0cf0bb3f0ca8d83bcd2eec.patch",
+  "path": "210-delcontextprotocol-servers-commit-c7d60d635abcad61fc0cf0bb3f0ca8d83bcd2eec.patch",
+  "status": 200,
+  "n_bytes": 2418,
+  "sha256": "21af21501d59d5af0e9f031dd9f3099e27998bd1ee51ff95c5e79f7b25c40072",
+  "fetched_at": "2026-10-30T03:47:28Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/c7e0c7e7302cd94a2f36be753e2b18331504407c.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/c7e0c7e7302cd94a2f36be753e2b18331504407c.patch",
@@ -455,6 +2103,14 @@
   "sha256": "b65577852463ece434eddb2296d4372064bc321874a7e5f1efefc187529f8096",
   "fetched_at": "2026-10-30T03:20:01Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/c87680122e76c9249a3d7ae5641a4190becfcefd.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/c87680122e76c9249a3d7ae5641a4190becfcefd.patch",
+  "path": "286-delcontextprotocol-servers-commit-c87680122e76c9249a3d7ae5641a4190becfcefd.patch",
+  "status": 200,
+  "n_bytes": 3272,
+  "sha256": "071395b196f0d8a3d9cdecc6e614e8fc4f7f7f9ee7ac677309f4d483f9d4495a",
+  "fetched_at": "2026-10-30T03:48:44Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/ca7ea2253ee0cea440cf70798b9bb93e128e400e.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/ca7ea2253ee0cea440cf70798b9bb93e128e400e.patch",
   "path": "025-delcontextprotocol-servers-commit-ca7ea2253ee0cea440cf70798b9bb93e128e400e.patch",
@@ -462,6 +2118,70 @@
   "n_bytes": 6989,
   "sha256": "7788d34803ff4039b10e46b11b1c6f0042177f09e6a63f6f1486c67214165bc6",
   "fetched_at": "2026-10-30T03:20:12Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/cac5bb247dfeb2993b22539ac0ed1e4763fc677c.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/cac5bb247dfeb2993b22539ac0ed1e4763fc677c.patch",
+  "path": "305-delcontextprotocol-servers-commit-cac5bb247dfeb2993b22539ac0ed1e4763fc677c.patch",
+  "status": 200,
+  "n_bytes": 1406,
+  "sha256": "eb2780a252d65a7636474840ff7be9601b7051d352d3a71df8b7f2aa70a849c3",
+  "fetched_at": "2026-10-30T03:49:04Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/cb52794efbb6a036f5d2c44ad9a24fa318aa8a86.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/cb52794efbb6a036f5d2c44ad9a24fa318aa8a86.patch",
+  "path": "218-delcontextprotocol-servers-commit-cb52794efbb6a036f5d2c44ad9a24fa318aa8a86.patch",
+  "status": 200,
+  "n_bytes": 3885,
+  "sha256": "2fdb62cf0bda91bbc990c0351ed0929befd60a4231bdf29e99aa9c1d9f3d6494",
+  "fetched_at": "2026-10-30T03:47:36Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/cce08de417857f25941503be903a86f970055c21.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/cce08de417857f25941503be903a86f970055c21.patch",
+  "path": "308-delcontextprotocol-servers-commit-cce08de417857f25941503be903a86f970055c21.patch",
+  "status": 200,
+  "n_bytes": 1471,
+  "sha256": "846e7f63b4507488a6fdec58ec3e67e88c09184951bdc4a508adbbd092b4d2c8",
+  "fetched_at": "2026-10-30T03:49:07Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ccf675184ec10a9bc66b95d6808df9181dd953ab.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ccf675184ec10a9bc66b95d6808df9181dd953ab.patch",
+  "path": "163-delcontextprotocol-servers-commit-ccf675184ec10a9bc66b95d6808df9181dd953ab.patch",
+  "status": 200,
+  "n_bytes": 99186,
+  "sha256": "66747994d4dd125b3389893d37ba1f1614a9d5ce24e9a1a3e2b954664b32a950",
+  "fetched_at": "2026-10-30T03:46:41Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/cd20aee6b4e14460535d40eb3baa2ad4dfbdaa30.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/cd20aee6b4e14460535d40eb3baa2ad4dfbdaa30.patch",
+  "path": "172-delcontextprotocol-servers-commit-cd20aee6b4e14460535d40eb3baa2ad4dfbdaa30.patch",
+  "status": 200,
+  "n_bytes": 3022,
+  "sha256": "8ed93cbbb4c6178ce744196e763d25d2c2afe897f852adcc161606a4108550df",
+  "fetched_at": "2026-10-30T03:46:50Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/cda92bdaacd558192fedf1a60d2bb27510792388.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/cda92bdaacd558192fedf1a60d2bb27510792388.patch",
+  "path": "318-delcontextprotocol-servers-commit-cda92bdaacd558192fedf1a60d2bb27510792388.patch",
+  "status": 200,
+  "n_bytes": 6758,
+  "sha256": "a70f4aa5ce17e9e82701afd2f935b6850cf82d8ea319a59bbae9642da861d1ea",
+  "fetched_at": "2026-10-30T03:49:17Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/cdbcdc551ad6a0f50ca2e78dae8f267ca35d3523.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/cdbcdc551ad6a0f50ca2e78dae8f267ca35d3523.patch",
+  "path": "164-delcontextprotocol-servers-commit-cdbcdc551ad6a0f50ca2e78dae8f267ca35d3523.patch",
+  "status": 200,
+  "n_bytes": 1916,
+  "sha256": "a216bc5fbb26eb559a50f568e018a703e9c937e085a25738f49f2e84cace55a5",
+  "fetched_at": "2026-10-30T03:46:42Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ce3b44e21b0b5ddce5a646d3e67870bd41928b24.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ce3b44e21b0b5ddce5a646d3e67870bd41928b24.patch",
+  "path": "117-delcontextprotocol-servers-commit-ce3b44e21b0b5ddce5a646d3e67870bd41928b24.patch",
+  "status": 200,
+  "n_bytes": 950,
+  "sha256": "116cb83576ef17292fbf198a39f554cc4f3216093e87377888fcb019427f8131",
+  "fetched_at": "2026-10-30T03:45:54Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/ce855b7b48cc4372defc94ec32ca56f82502ed1c.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/ce855b7b48cc4372defc94ec32ca56f82502ed1c.patch",
@@ -471,6 +2191,86 @@
   "sha256": "bb9b6cc3444e9082802a30de85b371b0e3ffb4978ee0366f706959b5d7767f43",
   "fetched_at": "2026-10-30T03:20:28Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/ced1408d3ad3ae718da1f24495d4d39a7b6c9497.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ced1408d3ad3ae718da1f24495d4d39a7b6c9497.patch",
+  "path": "099-delcontextprotocol-servers-commit-ced1408d3ad3ae718da1f24495d4d39a7b6c9497.patch",
+  "status": 200,
+  "n_bytes": 2355,
+  "sha256": "510408d148d551577820a0ec4271f6d635437081a766a1a6e1b8ecee01a472e1",
+  "fetched_at": "2026-10-30T03:45:36Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/cf0582465317e47acdaad5cb7a25b2ca08867b6b.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/cf0582465317e47acdaad5cb7a25b2ca08867b6b.patch",
+  "path": "203-delcontextprotocol-servers-commit-cf0582465317e47acdaad5cb7a25b2ca08867b6b.patch",
+  "status": 200,
+  "n_bytes": 48647,
+  "sha256": "f6d90911760ebfa9e6dbf33e1ceb71f376c007f88f5f354992a4c95e45f22b6d",
+  "fetched_at": "2026-10-30T03:47:21Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/cf05b3769492ff94fbb25dad1a16c7703cd718c8.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/cf05b3769492ff94fbb25dad1a16c7703cd718c8.patch",
+  "path": "102-delcontextprotocol-servers-commit-cf05b3769492ff94fbb25dad1a16c7703cd718c8.patch",
+  "status": 200,
+  "n_bytes": 6138,
+  "sha256": "f6e280db6a04073b419267c99bfd95962b99a0aa7e425d67ba737be4df0c14a9",
+  "fetched_at": "2026-10-30T03:45:39Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/d02c8159f39def41524ccdbaed5b8d8f97de482f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/d02c8159f39def41524ccdbaed5b8d8f97de482f.patch",
+  "path": "311-delcontextprotocol-servers-commit-d02c8159f39def41524ccdbaed5b8d8f97de482f.patch",
+  "status": 200,
+  "n_bytes": 4871,
+  "sha256": "05aeb2485eaf747b62776c4e54c6b594261e463148a4b836045d857656ec3807",
+  "fetched_at": "2026-10-30T03:49:10Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/d31124c982401739917fd817c2a59db344529c16.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/d31124c982401739917fd817c2a59db344529c16.patch",
+  "path": "268-delcontextprotocol-servers-commit-d31124c982401739917fd817c2a59db344529c16.patch",
+  "status": 200,
+  "n_bytes": 7980,
+  "sha256": "bbfa1a27f78aee48eac262743ff4c2acc2e0778ff343af13bf96144cf3c386e0",
+  "fetched_at": "2026-10-30T03:48:26Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/d5bfe349af1a3abc235e05cf6499d94400a10284.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/d5bfe349af1a3abc235e05cf6499d94400a10284.patch",
+  "path": "105-delcontextprotocol-servers-commit-d5bfe349af1a3abc235e05cf6499d94400a10284.patch",
+  "status": 200,
+  "n_bytes": 337784,
+  "sha256": "4e21d2662e860ddbae45ce3f7be3a0de03e6bd7bec19023979dfb3c4cccd6f12",
+  "fetched_at": "2026-10-30T03:45:42Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/d6402efee6cc6446b23adbcb63051f9dc8612be5.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/d6402efee6cc6446b23adbcb63051f9dc8612be5.patch",
+  "path": "236-delcontextprotocol-servers-commit-d6402efee6cc6446b23adbcb63051f9dc8612be5.patch",
+  "status": 200,
+  "n_bytes": 6114,
+  "sha256": "cd0e79db4ae89ebb7ca344c71c46803c11033042c775a21407b72b44a72b8394",
+  "fetched_at": "2026-10-30T03:47:54Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/d73f99efbfd40c3aa1b61e88728b3d49fb52608f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/d73f99efbfd40c3aa1b61e88728b3d49fb52608f.patch",
+  "path": "221-delcontextprotocol-servers-commit-d73f99efbfd40c3aa1b61e88728b3d49fb52608f.patch",
+  "status": 200,
+  "n_bytes": 14221,
+  "sha256": "9021aed6965fe6ec4e00b8fc364fc09ef0f80ea7e613192e8c2c59e2ab4733e7",
+  "fetched_at": "2026-10-30T03:47:39Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/d811ba11f1243a55bcc2e78d72ddd9b63b25f25e.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/d811ba11f1243a55bcc2e78d72ddd9b63b25f25e.patch",
+  "path": "183-delcontextprotocol-servers-commit-d811ba11f1243a55bcc2e78d72ddd9b63b25f25e.patch",
+  "status": 200,
+  "n_bytes": 2482,
+  "sha256": "56892fc7c960e204ea1e3816ed8010a5fea8c2103279cd9c293e6ca2496c6af7",
+  "fetched_at": "2026-10-30T03:47:01Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/d8cff7f016604a1edc6c362e00f3f5203fdba6c6.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/d8cff7f016604a1edc6c362e00f3f5203fdba6c6.patch",
+  "path": "277-delcontextprotocol-servers-commit-d8cff7f016604a1edc6c362e00f3f5203fdba6c6.patch",
+  "status": 200,
+  "n_bytes": 1712,
+  "sha256": "434b9945d0c93f96d69571fd50395c154c3757b49717ff4ab17f9054c0ab24f6",
+  "fetched_at": "2026-10-30T03:48:35Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/d9c45477cd6ff4d3456c138498dca984c8697f43.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/d9c45477cd6ff4d3456c138498dca984c8697f43.patch",
   "path": "053-delcontextprotocol-servers-commit-d9c45477cd6ff4d3456c138498dca984c8697f43.patch",
@@ -478,6 +2278,30 @@
   "n_bytes": 3252,
   "sha256": "4767613693d500dbdaff860411ed4dbc6e93ea8bc31109b49a4a76fcca34a724",
   "fetched_at": "2026-10-30T03:20:41Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/da08675b8af93e110452fa614734b21477d74636.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/da08675b8af93e110452fa614734b21477d74636.patch",
+  "path": "194-delcontextprotocol-servers-commit-da08675b8af93e110452fa614734b21477d74636.patch",
+  "status": 200,
+  "n_bytes": 32501,
+  "sha256": "9205472776f6f132e08c26e52524cc153a37b804d04a7146e446adc8d1504e0d",
+  "fetched_at": "2026-10-30T03:47:12Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/dab3489b73e1bf2eba321e03ad24e114b966715b.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/dab3489b73e1bf2eba321e03ad24e114b966715b.patch",
+  "path": "207-delcontextprotocol-servers-commit-dab3489b73e1bf2eba321e03ad24e114b966715b.patch",
+  "status": 200,
+  "n_bytes": 1713,
+  "sha256": "22bca9424c9a3320d0b65c0d63aef391f9a9f3f864c63fe4f1848d3748b04c5f",
+  "fetched_at": "2026-10-30T03:47:25Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/db96050800ab1eca4054c9f36918da8dba0832b4.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/db96050800ab1eca4054c9f36918da8dba0832b4.patch",
+  "path": "075-delcontextprotocol-servers-commit-db96050800ab1eca4054c9f36918da8dba0832b4.patch",
+  "status": 200,
+  "n_bytes": 1107,
+  "sha256": "2afb491f07c3ad41afeed0480bd6af47bea51bb0c4f8a372ae32ac544585b9d5",
+  "fetched_at": "2026-10-30T03:45:12Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/dca1e7ed6fde63f70da117b861f3c177340dd21a.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/dca1e7ed6fde63f70da117b861f3c177340dd21a.patch",
@@ -495,6 +2319,22 @@
   "sha256": "5d69fe7ee2f242ae964e534e003cbda2ba10d036181baf9c4b92febe486de10d",
   "fetched_at": "2026-10-30T03:20:26Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/dd6594c083b452671ed1e3899fdae2276e40aaac.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/dd6594c083b452671ed1e3899fdae2276e40aaac.patch",
+  "path": "244-delcontextprotocol-servers-commit-dd6594c083b452671ed1e3899fdae2276e40aaac.patch",
+  "status": 200,
+  "n_bytes": 1167,
+  "sha256": "594d1a565eb0d913dae5d48ff0beb777c63796c565954838aed9d0b226c96ae7",
+  "fetched_at": "2026-10-30T03:48:02Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/de54d73f3a7e65529598cdb403f206ea68fe0e99.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/de54d73f3a7e65529598cdb403f206ea68fe0e99.patch",
+  "path": "166-delcontextprotocol-servers-commit-de54d73f3a7e65529598cdb403f206ea68fe0e99.patch",
+  "status": 200,
+  "n_bytes": 1166769,
+  "sha256": "2905454ba0ab70aa4fdf10c5aaea8c5b704262083b8aa574fcc304e6d07caa5e",
+  "fetched_at": "2026-10-30T03:46:44Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/e0f1c42159a3923fddae48937480efa86cd06eb0.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/e0f1c42159a3923fddae48937480efa86cd06eb0.patch",
   "path": "045-delcontextprotocol-servers-commit-e0f1c42159a3923fddae48937480efa86cd06eb0.patch",
@@ -502,6 +2342,46 @@
   "n_bytes": 1000,
   "sha256": "fb1efdb2effd79b4de5dd625e3a6cbfeec2c38680a5a9f929f24ab39a746dfd0",
   "fetched_at": "2026-10-30T03:20:33Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/e21dbea731f2ccddcd48525cf9a1e1e405fee12f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/e21dbea731f2ccddcd48525cf9a1e1e405fee12f.patch",
+  "path": "264-delcontextprotocol-servers-commit-e21dbea731f2ccddcd48525cf9a1e1e405fee12f.patch",
+  "status": 200,
+  "n_bytes": 6520,
+  "sha256": "c311c539864fa927aaa91cf3959ce770e7fad32bda99921f8ba339c737266a47",
+  "fetched_at": "2026-10-30T03:48:22Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/e3ea3c8b7f6175706f19ee7a7284c38f456a8cc8.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/e3ea3c8b7f6175706f19ee7a7284c38f456a8cc8.patch",
+  "path": "238-delcontextprotocol-servers-commit-e3ea3c8b7f6175706f19ee7a7284c38f456a8cc8.patch",
+  "status": 200,
+  "n_bytes": 491936,
+  "sha256": "e2498c23b204dcec6f05b858c8e33918af96ace2246cb55c3c09b856a9b76e9b",
+  "fetched_at": "2026-10-30T03:47:56Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/e6b0b0f5d355530ebdd09bc547240e556fbc6c19.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/e6b0b0f5d355530ebdd09bc547240e556fbc6c19.patch",
+  "path": "200-delcontextprotocol-servers-commit-e6b0b0f5d355530ebdd09bc547240e556fbc6c19.patch",
+  "status": 200,
+  "n_bytes": 2993,
+  "sha256": "ee80b1f2bea21d17e316bfff4d27a96828572946841e9d115229dd3bf0812f2f",
+  "fetched_at": "2026-10-30T03:47:18Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/e73b9a2f9ace688c6a38ccf50ff6e34c8d1d000d.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/e73b9a2f9ace688c6a38ccf50ff6e34c8d1d000d.patch",
+  "path": "231-delcontextprotocol-servers-commit-e73b9a2f9ace688c6a38ccf50ff6e34c8d1d000d.patch",
+  "status": 200,
+  "n_bytes": 901,
+  "sha256": "a599d09834c44727fb1d606aa2ff4d9568e9d4f9aa45d0667cf8de2e0b3e0949",
+  "fetched_at": "2026-10-30T03:47:49Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/e75607aef8a82e568017740027357e1881e3460f.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/e75607aef8a82e568017740027357e1881e3460f.patch",
+  "path": "282-delcontextprotocol-servers-commit-e75607aef8a82e568017740027357e1881e3460f.patch",
+  "status": 200,
+  "n_bytes": 59760,
+  "sha256": "2681e6c2d6d5b3721ab5d27f89d6cd468cdd1460e4da1e8efbe740a16cd0e22a",
+  "fetched_at": "2026-10-30T03:48:40Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/e78024159d6cc1cd075fde05bd0d6b275dc9e3bd.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/e78024159d6cc1cd075fde05bd0d6b275dc9e3bd.patch",
@@ -511,6 +2391,54 @@
   "sha256": "782cc1553bae145b12119a2274f4d6bfb5bdc010fe8e6c4c0541bd158e60fbe2",
   "fetched_at": "2026-10-30T03:20:49Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/e79db4c5180624fceeb1075c6f3ffe7f40ab0486.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/e79db4c5180624fceeb1075c6f3ffe7f40ab0486.patch",
+  "path": "110-delcontextprotocol-servers-commit-e79db4c5180624fceeb1075c6f3ffe7f40ab0486.patch",
+  "status": 200,
+  "n_bytes": 5174,
+  "sha256": "e7a67ee94634b6bc65c82fce65a593606eba920559b3a58532e0542ca5cf6798",
+  "fetched_at": "2026-10-30T03:45:47Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/e8ab3f1e79fa1cc8eebd959bfccbef16da239cd6.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/e8ab3f1e79fa1cc8eebd959bfccbef16da239cd6.patch",
+  "path": "109-delcontextprotocol-servers-commit-e8ab3f1e79fa1cc8eebd959bfccbef16da239cd6.patch",
+  "status": 200,
+  "n_bytes": 20274,
+  "sha256": "6db75d7b10a23eb70007a4d9fd5e80ff07648622057d11ff22ec777a0c9936ca",
+  "fetched_at": "2026-10-30T03:45:46Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/e95bb9c44bc608f9c4cc7893d173aa331618e94b.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/e95bb9c44bc608f9c4cc7893d173aa331618e94b.patch",
+  "path": "077-delcontextprotocol-servers-commit-e95bb9c44bc608f9c4cc7893d173aa331618e94b.patch",
+  "status": 200,
+  "n_bytes": 9977,
+  "sha256": "bd23960c13940a06f1aec51f9166ea68d26dc8936e86b5d1ee3a67716a043e10",
+  "fetched_at": "2026-10-30T03:45:14Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ebac6314cf84a8721b9fe33b55e5ac0e4eda14b8.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ebac6314cf84a8721b9fe33b55e5ac0e4eda14b8.patch",
+  "path": "296-delcontextprotocol-servers-commit-ebac6314cf84a8721b9fe33b55e5ac0e4eda14b8.patch",
+  "status": 200,
+  "n_bytes": 891,
+  "sha256": "9a0e7ce88e409e209c763b10a91a9c84853b225067bc4ecc195a7b0067cd001b",
+  "fetched_at": "2026-10-30T03:48:54Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/ebaccfd623a2a4173da7cef43941c5e497d8d1b0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/ebaccfd623a2a4173da7cef43941c5e497d8d1b0.patch",
+  "path": "307-delcontextprotocol-servers-commit-ebaccfd623a2a4173da7cef43941c5e497d8d1b0.patch",
+  "status": 200,
+  "n_bytes": 3845,
+  "sha256": "bfe249f03f64ff45a3c2a8ce2396163e3499f0e5524ded8dc78f8ea171666cd3",
+  "fetched_at": "2026-10-30T03:49:06Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/eeae6b2a386c13dd6820d022c49faa567a4fc50a.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/eeae6b2a386c13dd6820d022c49faa567a4fc50a.patch",
+  "path": "205-delcontextprotocol-servers-commit-eeae6b2a386c13dd6820d022c49faa567a4fc50a.patch",
+  "status": 200,
+  "n_bytes": 46754,
+  "sha256": "10a8a32f84a221345259c5ec2a362a186db4e3592faa1d1c33735892b0faa3a1",
+  "fetched_at": "2026-10-30T03:47:23Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/eed70bbbdae57742c9b0401a17a8a101a6b9b957.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/eed70bbbdae57742c9b0401a17a8a101a6b9b957.patch",
   "path": "056-delcontextprotocol-servers-commit-eed70bbbdae57742c9b0401a17a8a101a6b9b957.patch",
@@ -518,6 +2446,14 @@
   "n_bytes": 1052,
   "sha256": "7c81a2afb1f5c25c6b2044b1c0782007fb147158f52205ffc7e397bd8790f2d8",
   "fetched_at": "2026-10-30T03:20:44Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/eedb060099be188be7b26d2f37ab898c0b25dba0.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/eedb060099be188be7b26d2f37ab898c0b25dba0.patch",
+  "path": "280-delcontextprotocol-servers-commit-eedb060099be188be7b26d2f37ab898c0b25dba0.patch",
+  "status": 200,
+  "n_bytes": 75239,
+  "sha256": "fe85114d04bd83201aed45e6faf5dd1d29a9e2f26a11c01b37139ac91af06e60",
+  "fetched_at": "2026-10-30T03:48:38Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/ef51b062f6e25277283064206173d346bd0ecdc2.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/ef51b062f6e25277283064206173d346bd0ecdc2.patch",
@@ -527,6 +2463,38 @@
   "sha256": "3554e70a470b1a316fc628af2e59096bf9056b80af22070b66c733c124740286",
   "fetched_at": "2026-10-30T03:20:56Z"
  },
+ "https://github.com/modelcontextprotocol/servers/commit/f114f2a158b6d326e380e0cf36be39a6e39b7453.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f114f2a158b6d326e380e0cf36be39a6e39b7453.patch",
+  "path": "248-delcontextprotocol-servers-commit-f114f2a158b6d326e380e0cf36be39a6e39b7453.patch",
+  "status": 200,
+  "n_bytes": 65412,
+  "sha256": "2ef6b147ddeec76ea3f805c050caf7befcc0fc56aeb24d6c17d2af12ea090c3e",
+  "fetched_at": "2026-10-30T03:48:06Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/f1eedf2b7ee62e79c07d4d651d64e73395584981.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f1eedf2b7ee62e79c07d4d651d64e73395584981.patch",
+  "path": "300-delcontextprotocol-servers-commit-f1eedf2b7ee62e79c07d4d651d64e73395584981.patch",
+  "status": 200,
+  "n_bytes": 2298,
+  "sha256": "19deb0200dded064d2f3ed390ddbd0398211d582c046cabd7edfeae0708c2905",
+  "fetched_at": "2026-10-30T03:48:58Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/f2450d7fa4826cd28a7232bcbde567d6b5e1e9d9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f2450d7fa4826cd28a7232bcbde567d6b5e1e9d9.patch",
+  "path": "148-delcontextprotocol-servers-commit-f2450d7fa4826cd28a7232bcbde567d6b5e1e9d9.patch",
+  "status": 200,
+  "n_bytes": 8599,
+  "sha256": "bad4e221abe540c3879a616132d54be723da587df3259065fd68e0cb959f0d90",
+  "fetched_at": "2026-10-30T03:46:26Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/f41b666edf470795d3724b06899dbca2d102b4e2.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f41b666edf470795d3724b06899dbca2d102b4e2.patch",
+  "path": "073-delcontextprotocol-servers-commit-f41b666edf470795d3724b06899dbca2d102b4e2.patch",
+  "status": 200,
+  "n_bytes": 3121,
+  "sha256": "0a7fbeb06d572877ab329f061f3d7fe8427162dcb0c59d2ecabbb1fbc8a96bd7",
+  "fetched_at": "2026-10-30T03:45:10Z"
+ },
  "https://github.com/modelcontextprotocol/servers/commit/f4244583a6af9425633e433a3eec000d23f4e011.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/f4244583a6af9425633e433a3eec000d23f4e011.patch",
   "path": "037-delcontextprotocol-servers-commit-f4244583a6af9425633e433a3eec000d23f4e011.patch",
@@ -534,6 +2502,14 @@
   "n_bytes": 737,
   "sha256": "89c4a5657ad4d188ccd3a1d5d23ef15d033c79992d9239d7e01c3209dffb4788",
   "fetched_at": "2026-10-30T03:20:25Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/f46d9578190b476b3501923ea8977d899e8db2cb.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f46d9578190b476b3501923ea8977d899e8db2cb.patch",
+  "path": "139-delcontextprotocol-servers-commit-f46d9578190b476b3501923ea8977d899e8db2cb.patch",
+  "status": 200,
+  "n_bytes": 6032,
+  "sha256": "4df27386d68f8683cec1baebd9a2adfa7e46f165e57f0b4bb04db0459fdae041",
+  "fetched_at": "2026-10-30T03:46:16Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/f48efe32066d5960021cc32d290b39e90f6542ed.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/f48efe32066d5960021cc32d290b39e90f6542ed.patch",
@@ -550,6 +2526,62 @@
   "n_bytes": 2172,
   "sha256": "dfc8ba13ff16630ef6d7a0fe4d1473c419ade773963b18e4636c663b103364d7",
   "fetched_at": "2026-10-30T03:20:13Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/f5054df1fb8665f4c224cf4f46d5314266ab5b45.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f5054df1fb8665f4c224cf4f46d5314266ab5b45.patch",
+  "path": "298-delcontextprotocol-servers-commit-f5054df1fb8665f4c224cf4f46d5314266ab5b45.patch",
+  "status": 200,
+  "n_bytes": 4760,
+  "sha256": "7113d2461bc1781575af08241beffffe05cfeb3fbf62328077719d030d0b0adf",
+  "fetched_at": "2026-10-30T03:48:56Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/f7221c4d026901bc64326e4471632ddf942b06a2.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f7221c4d026901bc64326e4471632ddf942b06a2.patch",
+  "path": "187-delcontextprotocol-servers-commit-f7221c4d026901bc64326e4471632ddf942b06a2.patch",
+  "status": 200,
+  "n_bytes": 1954,
+  "sha256": "3b7958b284470202d2704714a8ee6afad43f2089ea2d3747212362c7ad9e2325",
+  "fetched_at": "2026-10-30T03:47:05Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/f8933ec3e61ec16b627c76c3a311d6b16887abb9.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f8933ec3e61ec16b627c76c3a311d6b16887abb9.patch",
+  "path": "206-delcontextprotocol-servers-commit-f8933ec3e61ec16b627c76c3a311d6b16887abb9.patch",
+  "status": 200,
+  "n_bytes": 9092,
+  "sha256": "44ca8546fafa6d220171956e1081359966d40882ba2e0d054f78c68fd08f0485",
+  "fetched_at": "2026-10-30T03:47:24Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/f896dba632671aee76cdc6601439a5c8310b252c.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/f896dba632671aee76cdc6601439a5c8310b252c.patch",
+  "path": "322-delcontextprotocol-servers-commit-f896dba632671aee76cdc6601439a5c8310b252c.patch",
+  "status": 200,
+  "n_bytes": 8310,
+  "sha256": "20f9dd1a9264cf8d1ac0040c76a2c43988d32f247d824ced76a12eedf8b4c098",
+  "fetched_at": "2026-10-30T03:49:21Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/fa8d4d2b0df7a2ac90b7e8eaf2d563ec7579d899.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/fa8d4d2b0df7a2ac90b7e8eaf2d563ec7579d899.patch",
+  "path": "267-delcontextprotocol-servers-commit-fa8d4d2b0df7a2ac90b7e8eaf2d563ec7579d899.patch",
+  "status": 200,
+  "n_bytes": 6350,
+  "sha256": "6b32faadee399524439e54036c0859e2f512b934e1240481304fb4095b427cb4",
+  "fetched_at": "2026-10-30T03:48:25Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/fab6abed5888cbddb54a2ff89018221f12d4e1ad.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/fab6abed5888cbddb54a2ff89018221f12d4e1ad.patch",
+  "path": "254-delcontextprotocol-servers-commit-fab6abed5888cbddb54a2ff89018221f12d4e1ad.patch",
+  "status": 200,
+  "n_bytes": 1876,
+  "sha256": "502e7aad8eb9d240ef754f86df14b2b5be1c3c1d546e3da1009c2e19ad08a9f4",
+  "fetched_at": "2026-10-30T03:48:12Z"
+ },
+ "https://github.com/modelcontextprotocol/servers/commit/fd8248e56b822cc16a74b6610a88141fdfa09bd6.patch": {
+  "url": "https://github.com/modelcontextprotocol/servers/commit/fd8248e56b822cc16a74b6610a88141fdfa09bd6.patch",
+  "path": "112-delcontextprotocol-servers-commit-fd8248e56b822cc16a74b6610a88141fdfa09bd6.patch",
+  "status": 200,
+  "n_bytes": 57418,
+  "sha256": "f5b5ec234c94134cac97dc228e48d6ce075f692b881148b872f8f0b4c91c0bb8",
+  "fetched_at": "2026-10-30T03:45:49Z"
  },
  "https://github.com/modelcontextprotocol/servers/commit/ff59f0b48e97b9689f7782343e9fd2e793e53940.patch": {
   "url": "https://github.com/modelcontextprotocol/servers/commit/ff59f0b48e97b9689f7782343e9fd2e793e53940.patch",

@@ -1,0 +1,22 @@
+From 82cda366d68c41ce50c8d6a1cef6dcedf497ae77 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 13 Dec 2025 15:45:24 -0500
+Subject: [PATCH] Updated doc in get-env.ts
+
+---
+ src/everything/tools/get-env.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/everything/tools/get-env.ts b/src/everything/tools/get-env.ts
+index f1c25826d8..53e43a6b37 100644
+--- a/src/everything/tools/get-env.ts
++++ b/src/everything/tools/get-env.ts
+@@ -16,7 +16,7 @@ const config = {
+  * The registered tool Retrieves and returns the environment variables
+  * of the current process as a JSON-formatted string encapsulated in a text response.
+  *
+- * @param {McpServer} server - The MCP server instance where the Echo Tool is to be registered.
++ * @param {McpServer} server - The MCP server instance where the tool is to be registered.
+  * @returns {void}
+  */
+ export const registerGetEnvTool = (server: McpServer) => {

@@ -1,0 +1,25 @@
+From 9e9dfb95b5a71ac512cfaa0cec32d0b21e9c1874 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:31:27 -0400
+Subject: [PATCH] docs(releasing): clarify CalVer is current state, semver for
+ TS is planned
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ RELEASING.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/RELEASING.md b/RELEASING.md
+index 14328699fe..fca76c88eb 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -14,7 +14,7 @@ All packages publish exclusively from the [`release.yml`](.github/workflows/rele
+ A release run:
+ 
+ 1. **Detects changed packages** since the last release tag (a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed — READMEs ship inside the published artifacts).
+-2. **Stamps versions and tags** — versions are date-based (CalVer, e.g. `2026.7.4`).
++2. **Stamps versions and tags** — versions are currently date-based (CalVer, e.g. `2026.7.4`) for all packages. (Planned: the TypeScript packages move to semver managed by changesets, while Python stays CalVer — see [#4463](https://github.com/modelcontextprotocol/servers/issues/4463).)
+ 3. **Publishes each package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another): checkout at the release tag → install → *skip if this version already exists on the registry* → **run the package's tests** → build → publish.
+ 4. **Creates the GitHub release** with generated notes.
+ 

@@ -1,0 +1,141 @@
+From 64b1cb0208cc49a4f5ae55fa71df5cf67a3cdc3d Mon Sep 17 00:00:00 2001
+From: Yash Shah <118363237+ykshah1309@users.noreply.github.com>
+Date: Sat, 30 May 2026 14:35:20 -0400
+Subject: [PATCH] feat(memory): add tool annotations to all knowledge graph
+ tools (#3874)
+
+Add MCP ToolAnnotations to all 9 tools in the memory server, matching
+the annotation coverage already present in server-filesystem, server-git,
+server-time, and server-sequential-thinking.
+
+- Read tools (read_graph, search_nodes, open_nodes): read-only, idempotent
+- Write tools (create_entities, create_relations, add_observations): non-destructive
+- Delete tools (delete_entities, delete_observations, delete_relations): destructive, idempotent
+- All tools: openWorldHint=false (local JSONL file operations only)
+
+Co-authored-by: Ola Hungerford <olahungerford@gmail.com>
+---
+ src/memory/index.ts | 54 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index b560bf1e53..7b4c683300 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -269,6 +269,12 @@ server.registerTool(
+     },
+     outputSchema: {
+       entities: z.array(EntitySchema)
++    },
++    annotations: {
++      readOnlyHint: false,
++      destructiveHint: false,
++      idempotentHint: false,
++      openWorldHint: false,
+     }
+   },
+   async ({ entities }) => {
+@@ -291,6 +297,12 @@ server.registerTool(
+     },
+     outputSchema: {
+       relations: z.array(RelationSchema)
++    },
++    annotations: {
++      readOnlyHint: false,
++      destructiveHint: false,
++      idempotentHint: false,
++      openWorldHint: false,
+     }
+   },
+   async ({ relations }) => {
+@@ -319,6 +331,12 @@ server.registerTool(
+         entityName: z.string(),
+         addedObservations: z.array(z.string())
+       }))
++    },
++    annotations: {
++      readOnlyHint: false,
++      destructiveHint: false,
++      idempotentHint: false,
++      openWorldHint: false,
+     }
+   },
+   async ({ observations }) => {
+@@ -342,6 +360,12 @@ server.registerTool(
+     outputSchema: {
+       success: z.boolean(),
+       message: z.string()
++    },
++    annotations: {
++      readOnlyHint: false,
++      destructiveHint: true,
++      idempotentHint: true,
++      openWorldHint: false,
+     }
+   },
+   async ({ entityNames }) => {
+@@ -368,6 +392,12 @@ server.registerTool(
+     outputSchema: {
+       success: z.boolean(),
+       message: z.string()
++    },
++    annotations: {
++      readOnlyHint: false,
++      destructiveHint: true,
++      idempotentHint: true,
++      openWorldHint: false,
+     }
+   },
+   async ({ deletions }) => {
+@@ -391,6 +421,12 @@ server.registerTool(
+     outputSchema: {
+       success: z.boolean(),
+       message: z.string()
++    },
++    annotations: {
++      readOnlyHint: false,
++      destructiveHint: true,
++      idempotentHint: true,
++      openWorldHint: false,
+     }
+   },
+   async ({ relations }) => {
+@@ -412,6 +448,12 @@ server.registerTool(
+     outputSchema: {
+       entities: z.array(EntitySchema),
+       relations: z.array(RelationSchema)
++    },
++    annotations: {
++      readOnlyHint: true,
++      destructiveHint: false,
++      idempotentHint: true,
++      openWorldHint: false,
+     }
+   },
+   async () => {
+@@ -435,6 +477,12 @@ server.registerTool(
+     outputSchema: {
+       entities: z.array(EntitySchema),
+       relations: z.array(RelationSchema)
++    },
++    annotations: {
++      readOnlyHint: true,
++      destructiveHint: false,
++      idempotentHint: true,
++      openWorldHint: false,
+     }
+   },
+   async ({ query }) => {
+@@ -458,6 +506,12 @@ server.registerTool(
+     outputSchema: {
+       entities: z.array(EntitySchema),
+       relations: z.array(RelationSchema)
++    },
++    annotations: {
++      readOnlyHint: true,
++      destructiveHint: false,
++      idempotentHint: true,
++      openWorldHint: false,
+     }
+   },
+   async ({ names }) => {

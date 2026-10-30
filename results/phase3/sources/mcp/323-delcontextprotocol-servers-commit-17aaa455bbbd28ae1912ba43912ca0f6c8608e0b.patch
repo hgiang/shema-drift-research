@@ -1,0 +1,27 @@
+From 17aaa455bbbd28ae1912ba43912ca0f6c8608e0b Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Wed, 17 Dec 2025 17:49:35 -0500
+Subject: [PATCH] Sync roots at startup. This was deferred to list_roots tool
+ is used, but I'm putting it back.
+
+* In server/roots.ts
+  - Updated function doc
+---
+ src/everything/server/roots.ts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/everything/server/roots.ts b/src/everything/server/roots.ts
+index e09f0601e3..f70bb7d1d0 100644
+--- a/src/everything/server/roots.ts
++++ b/src/everything/server/roots.ts
+@@ -20,8 +20,8 @@ export const roots: Map<string | undefined, Root[]> = new Map<
+  * notification handler. This ensures that updates are automatically fetched and handled
+  * in real-time.
+  *
+- * Therefore, calls to this function should only request roots from the client once per
+- * session, but the cache will always be up to date after that first call.
++ * This function is idempotent. It should only request roots from the client once per session,
++ * returning the cached version thereafter.
+  *
+  * @param {McpServer} server - An instance of the MCP server used to communicate with the client.
+  * @param {string} [sessionId] - An optional session id used to associate the roots list with a specific client session.

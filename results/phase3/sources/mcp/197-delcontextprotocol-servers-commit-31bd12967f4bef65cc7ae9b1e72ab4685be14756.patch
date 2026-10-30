@@ -1,0 +1,58 @@
+From 31bd12967f4bef65cc7ae9b1e72ab4685be14756 Mon Sep 17 00:00:00 2001
+From: "dependabot[bot]" <49699333+dependabot[bot]@users.noreply.github.com>
+Date: Wed, 29 Jul 2026 22:02:03 +0000
+Subject: [PATCH] chore(deps): bump actions/setup-python from 6 to 7
+
+Bumps [actions/setup-python](https://github.com/actions/setup-python) from 6 to 7.
+- [Release notes](https://github.com/actions/setup-python/releases)
+- [Commits](https://github.com/actions/setup-python/compare/v6...v7)
+
+---
+updated-dependencies:
+- dependency-name: actions/setup-python
+  dependency-version: '7'
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+---
+ .github/workflows/python.yml  | 4 ++--
+ .github/workflows/release.yml | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index 0c6f0910fa..99bc457432 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -39,7 +39,7 @@ jobs:
+         uses: astral-sh/setup-uv@v3
+ 
+       - name: Set up Python
+-        uses: actions/setup-python@v6
++        uses: actions/setup-python@v7
+         with:
+           python-version-file: "src/${{ matrix.package }}/.python-version"
+ 
+@@ -76,7 +76,7 @@ jobs:
+         uses: astral-sh/setup-uv@v3
+ 
+       - name: Set up Python
+-        uses: actions/setup-python@v6
++        uses: actions/setup-python@v7
+         with:
+           python-version-file: "src/${{ matrix.package }}/.python-version"
+ 
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index f02a26332b..bde187a00c 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -124,7 +124,7 @@ jobs:
+         uses: astral-sh/setup-uv@v5
+ 
+       - name: Set up Python
+-        uses: actions/setup-python@v6
++        uses: actions/setup-python@v7
+         with:
+           python-version-file: "src/${{ matrix.package }}/.python-version"
+ 

@@ -1,0 +1,140 @@
+From cf05b3769492ff94fbb25dad1a16c7703cd718c8 Mon Sep 17 00:00:00 2001
+From: KXH <shepherdlaurie238@gmail.com>
+Date: Sat, 29 Aug 2026 01:01:08 +0800
+Subject: [PATCH] fix(filesystem): resolve Unicode-equivalent paths (#4638)
+
+Signed-off-by: KXH <shepherdlaurie238@gmail.com>
+---
+ .../__tests__/unicode-paths.test.ts           | 49 +++++++++++++++++
+ src/filesystem/lib.ts                         | 53 ++++++++++++++++---
+ 2 files changed, 94 insertions(+), 8 deletions(-)
+ create mode 100644 src/filesystem/__tests__/unicode-paths.test.ts
+
+diff --git a/src/filesystem/__tests__/unicode-paths.test.ts b/src/filesystem/__tests__/unicode-paths.test.ts
+new file mode 100644
+index 0000000000..2d28ac21f9
+--- /dev/null
++++ b/src/filesystem/__tests__/unicode-paths.test.ts
+@@ -0,0 +1,49 @@
++import fs from 'fs/promises';
++import os from 'os';
++import path from 'path';
++import { afterEach, beforeEach, describe, expect, it } from 'vitest';
++import { setAllowedDirectories, validatePath } from '../lib.js';
++
++describe('Unicode-equivalent filesystem paths', () => {
++  let testDirectory: string;
++
++  beforeEach(async () => {
++    testDirectory = await fs.mkdtemp(path.join(os.tmpdir(), 'mcp-unicode-paths-'));
++    setAllowedDirectories([testDirectory]);
++  });
++
++  afterEach(async () => {
++    setAllowedDirectories([]);
++    await fs.rm(testDirectory, { recursive: true, force: true });
++  });
++
++  it('resolves an existing decomposed path from a composed request', async () => {
++    const onDiskDirectory = 'de\u0301marche';
++    const onDiskFile = 're\u0301sume\u0301.txt';
++    await fs.mkdir(path.join(testDirectory, onDiskDirectory));
++    await fs.writeFile(path.join(testDirectory, onDiskDirectory, onDiskFile), 'content');
++
++    const resolved = await validatePath(path.join(testDirectory, 'd\u00e9marche', 'r\u00e9sum\u00e9.txt'));
++
++    expect(resolved).toBe(await fs.realpath(path.join(testDirectory, onDiskDirectory, onDiskFile)));
++  });
++
++  it('preserves a new basename after resolving a Unicode-equivalent parent', async () => {
++    const onDiskDirectory = 'de\u0301marche';
++    await fs.mkdir(path.join(testDirectory, onDiskDirectory));
++
++    const resolved = await validatePath(path.join(testDirectory, 'd\u00e9marche', 'new.txt'));
++
++    expect(resolved).toBe(path.join(await fs.realpath(path.join(testDirectory, onDiskDirectory)), 'new.txt'));
++  });
++
++  it('rejects ambiguous canonically equivalent entries', async () => {
++    const composed = 'caf\u00e9';
++    const decomposed = 'cafe\u0301';
++    await fs.mkdir(path.join(testDirectory, composed));
++    await fs.mkdir(path.join(testDirectory, decomposed));
++
++    await expect(validatePath(path.join(testDirectory, 'cafe\u0341', 'file.txt')))
++      .rejects.toThrow('Ambiguous Unicode path component');
++  });
++});
+diff --git a/src/filesystem/lib.ts b/src/filesystem/lib.ts
+index 3d0b49e6cb..f1164c3198 100644
+--- a/src/filesystem/lib.ts
++++ b/src/filesystem/lib.ts
+@@ -96,6 +96,46 @@ function resolveRelativePathAgainstAllowedDirectories(relativePath: string): str
+ }
+ 
+ // Security & Validation Functions
++async function resolveUnicodeEquivalentPath(absolutePath: string): Promise<string> {
++  const allowedDirectory = [...allowedDirectories]
++    .sort((left, right) => right.length - left.length)
++    .find(directory => isPathWithinAllowedDirectories(normalizePath(absolutePath), [directory]));
++
++  if (!allowedDirectory) {
++    return absolutePath;
++  }
++
++  let currentPath = await fs.realpath(allowedDirectory);
++  const relativeParts = path.relative(allowedDirectory, absolutePath).split(path.sep).filter(Boolean);
++
++  for (let index = 0; index < relativeParts.length; index++) {
++    const requestedPart = relativeParts[index];
++    const entries = (await fs.readdir(currentPath)) ?? [];
++    const exactMatch = entries.find(entry => entry === requestedPart);
++    const equivalentMatches = exactMatch
++      ? [exactMatch]
++      : entries.filter(entry => entry.normalize('NFC') === requestedPart.normalize('NFC'));
++
++    if (equivalentMatches.length > 1) {
++      throw new Error(`Ambiguous Unicode path component: ${requestedPart}`);
++    }
++
++    if (equivalentMatches.length === 0) {
++      if (index === relativeParts.length - 1) {
++        return path.join(currentPath, requestedPart);
++      }
++      throw new Error(`Parent directory does not exist: ${path.join(currentPath, requestedPart)}`);
++    }
++
++    currentPath = await fs.realpath(path.join(currentPath, equivalentMatches[0]));
++    if (!isPathWithinAllowedDirectories(normalizePath(currentPath), allowedDirectories)) {
++      throw new Error(`Access denied - symlink target outside allowed directories: ${currentPath} not in ${allowedDirectories.join(', ')}`);
++    }
++  }
++
++  return currentPath;
++}
++
+ export async function validatePath(requestedPath: string): Promise<string> {
+   const expandedPath = expandHome(requestedPath);
+   const absolute = path.isAbsolute(expandedPath)
+@@ -123,16 +163,13 @@ export async function validatePath(requestedPath: string): Promise<string> {
+     // Security: For new files that don't exist yet, verify parent directory
+     // This ensures we can't create files in unauthorized locations
+     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+-      const parentDir = path.dirname(absolute);
+       try {
+-        const realParentPath = await fs.realpath(parentDir);
+-        const normalizedParent = normalizePath(realParentPath);
+-        if (!isPathWithinAllowedDirectories(normalizedParent, allowedDirectories)) {
+-          throw new Error(`Access denied - parent directory outside allowed directories: ${realParentPath} not in ${allowedDirectories.join(', ')}`);
++        return await resolveUnicodeEquivalentPath(absolute);
++      } catch (resolutionError) {
++        if ((resolutionError as NodeJS.ErrnoException).code === 'ENOENT') {
++          throw new Error(`Parent directory does not exist: ${path.dirname(absolute)}`);
+         }
+-        return absolute;
+-      } catch {
+-        throw new Error(`Parent directory does not exist: ${parentDir}`);
++        throw resolutionError;
+       }
+     }
+     throw error;

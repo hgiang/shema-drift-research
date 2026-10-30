@@ -1,0 +1,26 @@
+From dd6594c083b452671ed1e3899fdae2276e40aaac Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Wed, 4 Feb 2026 05:24:02 -0700
+Subject: [PATCH] fix(filesystem): use vi.fn() instead of jest.fn() in test
+
+The project uses Vitest, not Jest. Replace jest.fn() with vi.fn()
+to fix the ReferenceError in the relative path resolution test.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+---
+ src/filesystem/__tests__/lib.test.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/filesystem/__tests__/lib.test.ts b/src/filesystem/__tests__/lib.test.ts
+index f339e81c85..f7e585af22 100644
+--- a/src/filesystem/__tests__/lib.test.ts
++++ b/src/filesystem/__tests__/lib.test.ts
+@@ -211,7 +211,7 @@ describe('Lib Functions', () => {
+         
+         // Mock process.cwd to return a directory outside allowed directories
+         const disallowedCwd = process.platform === 'win32' ? 'C:\\Windows\\System32' : '/root';
+-        (process as any).cwd = jest.fn(() => disallowedCwd);
++        (process as any).cwd = vi.fn(() => disallowedCwd);
+         
+         try {
+           const result = await validatePath(relativePath);

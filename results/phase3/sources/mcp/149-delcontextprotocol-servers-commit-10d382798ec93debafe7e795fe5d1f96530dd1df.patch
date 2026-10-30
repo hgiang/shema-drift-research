@@ -1,0 +1,166 @@
+From 2dfa15dc6e2dd5997fbe293f11c1d80ea1c73308 Mon Sep 17 00:00:00 2001
+From: lunov <lunovich@pm.me>
+Date: Sat, 10 Jan 2026 18:39:55 +0700
+Subject: [PATCH] fix(filesystem): gracefully handle unavailable directories
+
+Previously, the server would crash if any configured directory was
+unavailable (e.g., unmounted external drive). Now it:
+
+- Filters out inaccessible directories with a warning
+- Continues operating with remaining accessible directories
+- Only fails if NO directories are accessible
+
+Fixes #2815
+---
+ .../__tests__/startup-validation.test.ts      | 100 ++++++++++++++++++
+ src/filesystem/index.ts                       |  25 +++--
+ 2 files changed, 117 insertions(+), 8 deletions(-)
+ create mode 100644 src/filesystem/__tests__/startup-validation.test.ts
+
+diff --git a/src/filesystem/__tests__/startup-validation.test.ts b/src/filesystem/__tests__/startup-validation.test.ts
+new file mode 100644
+index 0000000000..3be283df74
+--- /dev/null
++++ b/src/filesystem/__tests__/startup-validation.test.ts
+@@ -0,0 +1,100 @@
++import { describe, it, expect, beforeEach, afterEach } from 'vitest';
++import { spawn } from 'child_process';
++import * as path from 'path';
++import * as fs from 'fs/promises';
++import * as os from 'os';
++
++const SERVER_PATH = path.join(__dirname, '..', 'dist', 'index.js');
++
++/**
++ * Spawns the filesystem server with given arguments and returns exit info
++ */
++async function spawnServer(args: string[], timeoutMs = 2000): Promise<{ exitCode: number | null; stderr: string }> {
++  return new Promise((resolve) => {
++    const proc = spawn('node', [SERVER_PATH, ...args], {
++      stdio: ['pipe', 'pipe', 'pipe'],
++    });
++
++    let stderr = '';
++    proc.stderr?.on('data', (data) => {
++      stderr += data.toString();
++    });
++
++    const timeout = setTimeout(() => {
++      proc.kill('SIGTERM');
++    }, timeoutMs);
++
++    proc.on('close', (code) => {
++      clearTimeout(timeout);
++      resolve({ exitCode: code, stderr });
++    });
++
++    proc.on('error', (err) => {
++      clearTimeout(timeout);
++      resolve({ exitCode: 1, stderr: err.message });
++    });
++  });
++}
++
++describe('Startup Directory Validation', () => {
++  let testDir: string;
++  let accessibleDir: string;
++  let accessibleDir2: string;
++
++  beforeEach(async () => {
++    testDir = await fs.mkdtemp(path.join(os.tmpdir(), 'fs-startup-test-'));
++    accessibleDir = path.join(testDir, 'accessible');
++    accessibleDir2 = path.join(testDir, 'accessible2');
++    await fs.mkdir(accessibleDir, { recursive: true });
++    await fs.mkdir(accessibleDir2, { recursive: true });
++  });
++
++  afterEach(async () => {
++    await fs.rm(testDir, { recursive: true, force: true });
++  });
++
++  it('should start successfully with all accessible directories', async () => {
++    const result = await spawnServer([accessibleDir, accessibleDir2]);
++    // Server starts and runs (we kill it after timeout, so exit code is null or from SIGTERM)
++    expect(result.stderr).toContain('Secure MCP Filesystem Server running on stdio');
++    expect(result.stderr).not.toContain('Error:');
++  });
++
++  it('should skip inaccessible directory and continue with accessible one', async () => {
++    const nonExistentDir = path.join(testDir, 'non-existent-dir-12345');
++
++    const result = await spawnServer([nonExistentDir, accessibleDir]);
++
++    // Should warn about inaccessible directory
++    expect(result.stderr).toContain('Warning: Cannot access directory');
++    expect(result.stderr).toContain(nonExistentDir);
++
++    // Should still start successfully
++    expect(result.stderr).toContain('Secure MCP Filesystem Server running on stdio');
++  });
++
++  it('should exit with error when ALL directories are inaccessible', async () => {
++    const nonExistent1 = path.join(testDir, 'non-existent-1');
++    const nonExistent2 = path.join(testDir, 'non-existent-2');
++
++    const result = await spawnServer([nonExistent1, nonExistent2]);
++
++    // Should exit with error
++    expect(result.exitCode).toBe(1);
++    expect(result.stderr).toContain('Error: None of the specified directories are accessible');
++  });
++
++  it('should warn when path is not a directory', async () => {
++    const filePath = path.join(testDir, 'not-a-directory.txt');
++    await fs.writeFile(filePath, 'content');
++
++    const result = await spawnServer([filePath, accessibleDir]);
++
++    // Should warn about non-directory
++    expect(result.stderr).toContain('Warning:');
++    expect(result.stderr).toContain('not a directory');
++
++    // Should still start with the valid directory
++    expect(result.stderr).toContain('Secure MCP Filesystem Server running on stdio');
++  });
++});
+diff --git a/src/filesystem/index.ts b/src/filesystem/index.ts
+index 48a599fae1..74bf0a9222 100644
+--- a/src/filesystem/index.ts
++++ b/src/filesystem/index.ts
+@@ -56,19 +56,28 @@ let allowedDirectories = await Promise.all(
+   })
+ );
+ 
+-// Validate that all directories exist and are accessible
+-await Promise.all(allowedDirectories.map(async (dir) => {
++// Filter to only accessible directories, warn about inaccessible ones
++const accessibleDirectories: string[] = [];
++for (const dir of allowedDirectories) {
+   try {
+     const stats = await fs.stat(dir);
+-    if (!stats.isDirectory()) {
+-      console.error(`Error: ${dir} is not a directory`);
+-      process.exit(1);
++    if (stats.isDirectory()) {
++      accessibleDirectories.push(dir);
++    } else {
++      console.error(`Warning: ${dir} is not a directory, skipping`);
+     }
+   } catch (error) {
+-    console.error(`Error accessing directory ${dir}:`, error);
+-    process.exit(1);
++    console.error(`Warning: Cannot access directory ${dir}, skipping`);
+   }
+-}));
++}
++
++// Exit only if ALL paths are inaccessible (and some were specified)
++if (accessibleDirectories.length === 0 && allowedDirectories.length > 0) {
++  console.error("Error: None of the specified directories are accessible");
++  process.exit(1);
++}
++
++allowedDirectories = accessibleDirectories;
+ 
+ // Initialize the global allowedDirectories in lib.ts
+ setAllowedDirectories(allowedDirectories);

@@ -1,0 +1,22 @@
+From 8758a11b37846b3dbf01a1aaa12db27f2f11b0e9 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 15 Dec 2025 17:04:35 -0500
+Subject: [PATCH] Updated server instructions.md. See
+ https://github.com/modelcontextprotocol/servers/pull/3121#discussion_r2616651611
+
+---
+ src/everything/docs/instructions.md | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/everything/docs/instructions.md b/src/everything/docs/instructions.md
+index 58a71e93aa..1f4eb886e2 100644
+--- a/src/everything/docs/instructions.md
++++ b/src/everything/docs/instructions.md
+@@ -1,7 +1,5 @@
+ # Everything Server – LLM Instructions
+ 
+-**[Architecture](architecture.md) | [Project Structure](structure.md) | [Startup Process](startup.md) | [Server Features](features.md) | [Extension Points](extension.md) | [How It Works](how-it-works.md)**
+-
+ Audience: These instructions are written for an LLM or autonomous agent integrating with the Everything MCP Server.
+ Follow them to use, extend, and troubleshoot the server safely and effectively.
+ 

@@ -1,0 +1,928 @@
+From 1a4ecb7575f12dd2330daf43e2518618c3f6e8cf Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Fri, 3 Jul 2026 20:16:55 -0400
+Subject: [PATCH 01/13] ci(release): switch npm publishing to OIDC trusted
+ publishing
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The NPM_TOKEN used by publish-npm is dead (npm classic-token sunset) —
+both June release attempts failed publishing with a disguised auth error
+(E404 on the publish PUT) after PyPI legs succeeded. Each
+@modelcontextprotocol/* package's npm trusted publisher is being bound to
+this workflow (release.yml) + the release environment, so publish-npm now
+authenticates via OIDC instead of a token:
+
+- add id-token: write permission to publish-npm (required to mint the
+  OIDC token; contents: read added explicitly since setting permissions
+  drops the defaults)
+- upgrade the npm CLI in the publish job (trusted publishing requires
+  npm >= 11.5.1; Node 22 bundles an older npm)
+- drop NODE_AUTH_TOKEN from the publish step
+
+Also touch each TypeScript server's README (add everything's missing
+License section; link each package's npm page) so scripts/release.py
+includes all four packages in the next npm publish matrix — they've been
+stranded on npm at 2026.1.26 while PyPI advanced to 2026.6.16.
+
+See #4463 for the rollout plan.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/release.yml    | 11 +++++++++--
+ src/everything/README.md         |  4 ++++
+ src/filesystem/README.md         |  2 ++
+ src/memory/README.md             |  2 ++
+ src/sequentialthinking/README.md |  2 ++
+ 5 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index a3ad5387d3..0d9151b903 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -156,6 +156,9 @@ jobs:
+         package: ${{ fromJson(needs.create-metadata.outputs.npm_packages) }}
+     name: Build ${{ matrix.package }}
+     environment: release
++    permissions:
++      contents: read
++      id-token: write # Required for npm trusted publishing (OIDC)
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v6
+@@ -168,6 +171,10 @@ jobs:
+           cache: npm
+           registry-url: 'https://registry.npmjs.org'
+ 
++      # Trusted publishing requires npm >= 11.5.1; Node 22 bundles an older npm
++      - name: Update npm for trusted publishing
++        run: npm install -g npm@latest
++
+       - name: Install dependencies
+         working-directory: src/${{ matrix.package }}
+         run: npm ci
+@@ -186,12 +193,12 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: npm run build
+ 
++      # Authenticates via OIDC trusted publishing (no token) — each package's
++      # npm trusted publisher is bound to this workflow + the release environment
+       - name: Publish package
+         working-directory: src/${{ matrix.package }}
+         run: |
+           npm publish --access public
+-        env:
+-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+ 
+   create-release:
+     needs: [update-packages, create-metadata, publish-pypi, publish-npm]
+diff --git a/src/everything/README.md b/src/everything/README.md
+index 34a948a2fe..a5943c6fce 100644
+--- a/src/everything/README.md
++++ b/src/everything/README.md
+@@ -134,3 +134,7 @@ npx @modelcontextprotocol/server-everything sse
+ ```shell
+ npx @modelcontextprotocol/server-everything streamableHttp
+ ```
++
++## License
++
++This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
+diff --git a/src/filesystem/README.md b/src/filesystem/README.md
+index c099da1e8c..76cabd0cce 100644
+--- a/src/filesystem/README.md
++++ b/src/filesystem/README.md
+@@ -2,6 +2,8 @@
+ 
+ Node.js server implementing Model Context Protocol (MCP) for filesystem operations.
+ 
++Published on npm as [`@modelcontextprotocol/server-filesystem`](https://www.npmjs.com/package/@modelcontextprotocol/server-filesystem).
++
+ ## Features
+ 
+ - Read/write files
+diff --git a/src/memory/README.md b/src/memory/README.md
+index e9fb37e241..0f294231a9 100644
+--- a/src/memory/README.md
++++ b/src/memory/README.md
+@@ -2,6 +2,8 @@
+ 
+ A basic implementation of persistent memory using a local knowledge graph. This lets Claude remember information about the user across chats.
+ 
++Published on npm as [`@modelcontextprotocol/server-memory`](https://www.npmjs.com/package/@modelcontextprotocol/server-memory).
++
+ ## Core Concepts
+ 
+ ### Entities
+diff --git a/src/sequentialthinking/README.md b/src/sequentialthinking/README.md
+index 45d2c30f75..b6b853aa56 100644
+--- a/src/sequentialthinking/README.md
++++ b/src/sequentialthinking/README.md
+@@ -2,6 +2,8 @@
+ 
+ An MCP server implementation that provides a tool for dynamic and reflective problem-solving through a structured thinking process.
+ 
++Published on npm as [`@modelcontextprotocol/server-sequential-thinking`](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking).
++
+ ## Features
+ 
+ - Break down complex problems into manageable steps
+
+From 4307b95aee3a3c3935e180e7d4344a3dfb3ac5d5 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 09:43:12 -0400
+Subject: [PATCH 02/13] ci(release): enable provenance and pin npm version for
+ OIDC publish
+
+Align with modelcontextprotocol/inspector#1199:
+- set NPM_CONFIG_PROVENANCE so published packages get provenance
+  attestations
+- pin the npm upgrade to ^11.5.1 instead of latest
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/release.yml | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index 0d9151b903..e6456a53a3 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -171,9 +171,9 @@ jobs:
+           cache: npm
+           registry-url: 'https://registry.npmjs.org'
+ 
+-      # Trusted publishing requires npm >= 11.5.1; Node 22 bundles an older npm
+-      - name: Update npm for trusted publishing
+-        run: npm install -g npm@latest
++      # OIDC trusted publishing requires npm >=11.5.1; Node 22's bundled npm is 10.x.
++      - name: Ensure npm CLI supports OIDC trusted publishing
++        run: npm install -g npm@^11.5.1
+ 
+       - name: Install dependencies
+         working-directory: src/${{ matrix.package }}
+@@ -199,6 +199,8 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: |
+           npm publish --access public
++        env:
++          NPM_CONFIG_PROVENANCE: "true"
+ 
+   create-release:
+     needs: [update-packages, create-metadata, publish-pypi, publish-npm]
+
+From dab3489b73e1bf2eba321e03ad24e114b966715b Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 10:01:31 -0400
+Subject: [PATCH 03/13] ci(release): run tests before publishing
+
+Gate both publish jobs on the package's test suite: npm test
+--if-present before the npm build/publish, and pytest (when a tests/
+or test/ directory exists, matching python.yml's guard) before the
+PyPI build/publish. Previously nothing between tagging and publishing
+ran a single test.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/release.yml | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index e6456a53a3..579631059d 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -138,6 +138,15 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: uv run --frozen pyright
+ 
++      - name: Run tests
++        working-directory: src/${{ matrix.package }}
++        run: |
++          if [ -d "tests" ] || [ -d "test" ]; then
++            uv run pytest
++          else
++            echo "No tests directory, skipping"
++          fi
++
+       - name: Build package
+         working-directory: src/${{ matrix.package }}
+         run: uv build
+@@ -189,6 +198,10 @@ jobs:
+           fi
+           echo "Version $VERSION is new, proceeding with publish"
+ 
++      - name: Run tests
++        working-directory: src/${{ matrix.package }}
++        run: npm test --if-present
++
+       - name: Build package
+         working-directory: src/${{ matrix.package }}
+         run: npm run build
+
+From f4c86ff9647d609e2ae06c90ce37718eec46cad1 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 15:29:44 -0400
+Subject: [PATCH 04/13] fix(release): count .md changes in package matrix; use
+ --frozen for pytest
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Review findings from the PR:
+- release.py's has_changes() only counted .py/.ts files, so the README
+  touches meant to enroll the four TS packages in the npm matrix would
+  have been ignored. Include .md — READMEs ship inside the published
+  package (npm tarball / PyPI long_description), so doc changes are
+  release-relevant.
+- uv run --frozen pytest for consistency with the job's other uv calls.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/release.yml | 2 +-
+ scripts/release.py            | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index 579631059d..cb853cdc05 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -142,7 +142,7 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: |
+           if [ -d "tests" ] || [ -d "test" ]; then
+-            uv run pytest
++            uv run --frozen pytest
+           else
+             echo "No tests directory, skipping"
+           fi
+diff --git a/scripts/release.py b/scripts/release.py
+index e4ce1274c3..b3dcf0c1e2 100755
+--- a/scripts/release.py
++++ b/scripts/release.py
+@@ -113,7 +113,9 @@ def has_changes(path: Path, git_hash: GitHash) -> bool:
+         )
+ 
+         changed_files = [Path(f) for f in output.stdout.splitlines()]
+-        relevant_files = [f for f in changed_files if f.suffix in [".py", ".ts"]]
++        # .md counts as a change: READMEs ship inside the published package
++        # (npm tarball / PyPI long_description)
++        relevant_files = [f for f in changed_files if f.suffix in [".py", ".ts", ".md"]]
+         return len(relevant_files) >= 1
+     except subprocess.CalledProcessError:
+         return False
+
+From 1c0fdc3063b2d393436b224b6ab08d80cdea1db3 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:08:50 -0400
+Subject: [PATCH 05/13] docs: add RELEASING.md documenting OIDC publishing and
+ retry process
+
+Describes how packages publish (release.yml + release environment,
+trusted publishing on npm and PyPI, no registry tokens, provenance),
+what a release run does, and how to recover from a failed publish leg
+(rerun --failed within the window, or ride the next release). Linked
+from the root README alongside the other maintainer docs.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ README.md    |  4 ++++
+ RELEASING.md | 51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+)
+ create mode 100644 RELEASING.md
+
+diff --git a/README.md b/README.md
+index 1a6fcb70fa..fe5351a890 100644
+--- a/README.md
++++ b/README.md
+@@ -145,6 +145,10 @@ See [ADDITIONAL.md](ADDITIONAL.md) for a curated list of frameworks and resource
+ 
+ See [CONTRIBUTING.md](CONTRIBUTING.md) for information about contributing to this repository.
+ 
++## 📦 Releasing
++
++See [RELEASING.md](RELEASING.md) for how packages are published (OIDC trusted publishing from CI — no registry tokens) and how to retry a failed publish.
++
+ ## 🔒 Security
+ 
+ See [SECURITY.md](SECURITY.md) for reporting security vulnerabilities.
+diff --git a/RELEASING.md b/RELEASING.md
+new file mode 100644
+index 0000000000..14328699fe
+--- /dev/null
++++ b/RELEASING.md
+@@ -0,0 +1,51 @@
++# Releasing
++
++How the packages in this repository are published, and what to do when a publish fails.
++
++## How publishing works
++
++All packages publish exclusively from the [`release.yml`](.github/workflows/release.yml) GitHub Actions workflow, gated by the `release` environment (a required reviewer must approve each deployment).
++
++**Authentication is OIDC trusted publishing on both registries — there are no registry tokens.**
++
++- **npm** (TypeScript servers): each `@modelcontextprotocol/*` package is registered on npmjs.com with a [trusted publisher](https://docs.npmjs.com/trusted-publishers) bound to this repository, workflow filename `release.yml`, and environment `release`. npm rejects publishes from any other workflow or environment — the binding is case-sensitive. Packages are published with [provenance attestations](https://docs.npmjs.com/generating-provenance-statements) (`NPM_CONFIG_PROVENANCE`).
++- **PyPI** (Python servers): published via [PyPI trusted publishing](https://docs.pypi.org/trusted-publishers/) using `pypa/gh-action-pypi-publish`.
++
++A release run:
++
++1. **Detects changed packages** since the last release tag (a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed — READMEs ship inside the published artifacts).
++2. **Stamps versions and tags** — versions are date-based (CalVer, e.g. `2026.7.4`).
++3. **Publishes each package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another): checkout at the release tag → install → *skip if this version already exists on the registry* → **run the package's tests** → build → publish.
++4. **Creates the GitHub release** with generated notes.
++
++Runs are triggered by a daily schedule or manually via **workflow_dispatch** on `release.yml`.
++
++## When a publish fails
++
++A failed matrix leg means that one package didn't publish; everything else that succeeded stays published (the version-exists guard makes retries idempotent).
++
++**Preferred: re-run the failed jobs on the same run.**
++
++```bash
++gh run rerun <run-id> --failed --repo modelcontextprotocol/servers
++```
++
++- A re-run is still a `release.yml` run in the `release` environment, so it satisfies the trusted-publisher binding.
++- It re-runs only the failed legs, checked out at the original release tag — it publishes exactly the tagged code.
++- It needs a fresh `release` environment approval, and the run must be complete first (approve or reject any pending deployments).
++- GitHub's re-run window is ~30 days from the original run, and re-runs execute the *original* workflow snapshot — workflow fixes on main don't apply to a re-run (secrets and registry-side registrations are read fresh).
++
++**Otherwise: let the next release pick it up.** If the re-run window has closed (or the fix required a workflow change), the failed version simply never exists on that registry — that's benign; npm and PyPI version histories don't need to match. The package publishes at the next version, provided it has a qualifying change since the last tag.
++
++**Never:**
++
++- Publish manually with an npm token or from a laptop — there are no registry tokens, and manual publishes would break the provenance/trust chain.
++- Re-dispatch `release.yml` expecting it to retry a failed version — a fresh run mints a *new* version.
++
++## Environment approvals
++
++The `release` environment's required-reviewer list is configured in the repository settings (Settings → Environments → `release`). Reviewer rights come only from that list — repository admin does not confer deployment approval.
++
++---
++
++The release process is evolving — see [#4463](https://github.com/modelcontextprotocol/servers/issues/4463) for planned changes (manual GitHub-release triggering, semver via changesets for the TypeScript packages). This document describes the process as it works today and will be updated when that lands.
+
+From 9e9dfb95b5a71ac512cfaa0cec32d0b21e9c1874 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:31:27 -0400
+Subject: [PATCH 06/13] docs(releasing): clarify CalVer is current state,
+ semver for TS is planned
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ RELEASING.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/RELEASING.md b/RELEASING.md
+index 14328699fe..fca76c88eb 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -14,7 +14,7 @@ All packages publish exclusively from the [`release.yml`](.github/workflows/rele
+ A release run:
+ 
+ 1. **Detects changed packages** since the last release tag (a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed — READMEs ship inside the published artifacts).
+-2. **Stamps versions and tags** — versions are date-based (CalVer, e.g. `2026.7.4`).
++2. **Stamps versions and tags** — versions are currently date-based (CalVer, e.g. `2026.7.4`) for all packages. (Planned: the TypeScript packages move to semver managed by changesets, while Python stays CalVer — see [#4463](https://github.com/modelcontextprotocol/servers/issues/4463).)
+ 3. **Publishes each package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another): checkout at the release tag → install → *skip if this version already exists on the registry* → **run the package's tests** → build → publish.
+ 4. **Creates the GitHub release** with generated notes.
+ 
+
+From f2450d7fa4826cd28a7232bcbde567d6b5e1e9d9 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:32:43 -0400
+Subject: [PATCH 07/13] docs(releasing): describe the go-forward release
+ process
+
+Rewrite RELEASING.md as the reference for the target process rather
+than a snapshot of the interim state: semver via changesets for
+TypeScript / CalVer for Python, versions changed only by PRs on main,
+publishing triggered by creating a GitHub Release, per-package
+registry-diff guard, OIDC trusted publishing with no registry tokens,
+and the failed-publish retry runbook. Implementation tracked in #4463.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ RELEASING.md | 44 +++++++++++++++++++++++---------------------
+ 1 file changed, 23 insertions(+), 21 deletions(-)
+
+diff --git a/RELEASING.md b/RELEASING.md
+index fca76c88eb..f7a4fb1e25 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -1,28 +1,34 @@
+ # Releasing
+ 
+-How the packages in this repository are published, and what to do when a publish fails.
++How the packages in this repository are versioned and published, and what to do when a publish fails.
+ 
+-## How publishing works
++> Implementation of this process is tracked in [#4463](https://github.com/modelcontextprotocol/servers/issues/4463).
+ 
+-All packages publish exclusively from the [`release.yml`](.github/workflows/release.yml) GitHub Actions workflow, gated by the `release` environment (a required reviewer must approve each deployment).
++## Versioning
+ 
+-**Authentication is OIDC trusted publishing on both registries — there are no registry tokens.**
++- **TypeScript packages** use **semver**, managed by [changesets](https://github.com/changesets/changesets). A PR that changes a TypeScript package includes a changeset file declaring the bump (patch/minor/major) and a changelog line — the changeset bot flags PRs that are missing one. A rolling **"Version Packages" PR** accumulates pending changesets; merging it applies the version bumps and updates each package's `CHANGELOG.md`.
++  - patch = fixes · minor = new tools/prompts/resources/options · major = breaking changes (tool removed or renamed, schema changes that break clients, protocol or Node floor bump)
++- **Python packages** use **CalVer** (`YYYY.M.D`). A prepare-release step stamps the date onto Python packages that changed since their last published version and opens a normal PR.
++- **Versions live on `main` and are only changed by pull requests.** No workflow computes a version or pushes a tag.
++
++## How publishing works
+ 
+-- **npm** (TypeScript servers): each `@modelcontextprotocol/*` package is registered on npmjs.com with a [trusted publisher](https://docs.npmjs.com/trusted-publishers) bound to this repository, workflow filename `release.yml`, and environment `release`. npm rejects publishes from any other workflow or environment — the binding is case-sensitive. Packages are published with [provenance attestations](https://docs.npmjs.com/generating-provenance-statements) (`NPM_CONFIG_PROVENANCE`).
+-- **PyPI** (Python servers): published via [PyPI trusted publishing](https://docs.pypi.org/trusted-publishers/) using `pypa/gh-action-pypi-publish`.
++Publishing is triggered by **creating a GitHub Release** on the [releases page](https://github.com/modelcontextprotocol/servers/releases) (with auto-generated notes). That fires the [`release.yml`](.github/workflows/release.yml) workflow, which is the **only** publish path:
+ 
+-A release run:
++1. Every package is a matrix job, run independently (`fail-fast: false` — one package's failure never blocks another).
++2. Each job: checkout at the release tag → install → **skip if the package's version already exists on its registry** → run the package's tests → build → publish.
++3. Publish jobs are gated by the `release` environment — a required reviewer must approve the deployment.
+ 
+-1. **Detects changed packages** since the last release tag (a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed — READMEs ship inside the published artifacts).
+-2. **Stamps versions and tags** — versions are currently date-based (CalVer, e.g. `2026.7.4`) for all packages. (Planned: the TypeScript packages move to semver managed by changesets, while Python stays CalVer — see [#4463](https://github.com/modelcontextprotocol/servers/issues/4463).)
+-3. **Publishes each package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another): checkout at the release tag → install → *skip if this version already exists on the registry* → **run the package's tests** → build → publish.
+-4. **Creates the GitHub release** with generated notes.
++Because of the version-exists guard, a release publishes exactly the packages whose versions were bumped since the last release, and re-running is always safe.
+ 
+-Runs are triggered by a daily schedule or manually via **workflow_dispatch** on `release.yml`.
++**Authentication is OIDC trusted publishing on both registries — there are no registry tokens.**
++
++- **npm**: each `@modelcontextprotocol/*` package is registered on npmjs.com with a [trusted publisher](https://docs.npmjs.com/trusted-publishers) bound to this repository, workflow filename `release.yml`, and environment `release` (the binding is case-sensitive). Packages publish with [provenance attestations](https://docs.npmjs.com/generating-provenance-statements).
++- **PyPI**: published via [PyPI trusted publishing](https://docs.pypi.org/trusted-publishers/) using `pypa/gh-action-pypi-publish`.
+ 
+ ## When a publish fails
+ 
+-A failed matrix leg means that one package didn't publish; everything else that succeeded stays published (the version-exists guard makes retries idempotent).
++A failed matrix leg means that one package didn't publish; everything that succeeded stays published.
+ 
+ **Preferred: re-run the failed jobs on the same run.**
+ 
+@@ -31,21 +37,17 @@ gh run rerun <run-id> --failed --repo modelcontextprotocol/servers
+ ```
+ 
+ - A re-run is still a `release.yml` run in the `release` environment, so it satisfies the trusted-publisher binding.
+-- It re-runs only the failed legs, checked out at the original release tag — it publishes exactly the tagged code.
++- It re-runs only the failed legs, checked out at the release tag — it publishes exactly the tagged code, and the version-exists guard makes it idempotent.
+ - It needs a fresh `release` environment approval, and the run must be complete first (approve or reject any pending deployments).
+-- GitHub's re-run window is ~30 days from the original run, and re-runs execute the *original* workflow snapshot — workflow fixes on main don't apply to a re-run (secrets and registry-side registrations are read fresh).
++- GitHub's re-run window is ~30 days from the original run, and re-runs execute the *original* workflow snapshot — workflow fixes on `main` don't apply to a re-run.
+ 
+-**Otherwise: let the next release pick it up.** If the re-run window has closed (or the fix required a workflow change), the failed version simply never exists on that registry — that's benign; npm and PyPI version histories don't need to match. The package publishes at the next version, provided it has a qualifying change since the last tag.
++**Otherwise: the next release picks it up.** The unpublished version is still on `main`, so the version-exists guard publishes it on the next release automatically. A version skipped this way simply never exists on that registry — that's benign; npm and PyPI version histories don't need to match.
+ 
+ **Never:**
+ 
+ - Publish manually with an npm token or from a laptop — there are no registry tokens, and manual publishes would break the provenance/trust chain.
+-- Re-dispatch `release.yml` expecting it to retry a failed version — a fresh run mints a *new* version.
++- Edit versions outside a reviewed PR to force a publish.
+ 
+ ## Environment approvals
+ 
+ The `release` environment's required-reviewer list is configured in the repository settings (Settings → Environments → `release`). Reviewer rights come only from that list — repository admin does not confer deployment approval.
+-
+----
+-
+-The release process is evolving — see [#4463](https://github.com/modelcontextprotocol/servers/issues/4463) for planned changes (manual GitHub-release triggering, semver via changesets for the TypeScript packages). This document describes the process as it works today and will be updated when that lands.
+
+From a714b63b7f6a85812bc678143eb4e865ac54383e Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:36:41 -0400
+Subject: [PATCH 08/13] docs(releasing): describe the process as it stands
+ after this PR
+
+RELEASING.md documents the pipeline this PR ships (scheduled/dispatch
+CalVer releases, OIDC publishing, retry runbook), with a footer noting
+the planned Phase 2 changes tracked in #4463. The doc gets updated
+when that work merges, not before.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ RELEASING.md | 38 +++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
+
+diff --git a/RELEASING.md b/RELEASING.md
+index f7a4fb1e25..51e6a52d5c 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -1,30 +1,22 @@
+ # Releasing
+ 
+-How the packages in this repository are versioned and published, and what to do when a publish fails.
+-
+-> Implementation of this process is tracked in [#4463](https://github.com/modelcontextprotocol/servers/issues/4463).
+-
+-## Versioning
+-
+-- **TypeScript packages** use **semver**, managed by [changesets](https://github.com/changesets/changesets). A PR that changes a TypeScript package includes a changeset file declaring the bump (patch/minor/major) and a changelog line — the changeset bot flags PRs that are missing one. A rolling **"Version Packages" PR** accumulates pending changesets; merging it applies the version bumps and updates each package's `CHANGELOG.md`.
+-  - patch = fixes · minor = new tools/prompts/resources/options · major = breaking changes (tool removed or renamed, schema changes that break clients, protocol or Node floor bump)
+-- **Python packages** use **CalVer** (`YYYY.M.D`). A prepare-release step stamps the date onto Python packages that changed since their last published version and opens a normal PR.
+-- **Versions live on `main` and are only changed by pull requests.** No workflow computes a version or pushes a tag.
++How the packages in this repository are published, and what to do when a publish fails.
+ 
+ ## How publishing works
+ 
+-Publishing is triggered by **creating a GitHub Release** on the [releases page](https://github.com/modelcontextprotocol/servers/releases) (with auto-generated notes). That fires the [`release.yml`](.github/workflows/release.yml) workflow, which is the **only** publish path:
++All packages publish exclusively from the [`release.yml`](.github/workflows/release.yml) GitHub Actions workflow, gated by the `release` environment (a required reviewer must approve each deployment). Runs are triggered on a daily schedule or manually via **workflow_dispatch**.
+ 
+-1. Every package is a matrix job, run independently (`fail-fast: false` — one package's failure never blocks another).
+-2. Each job: checkout at the release tag → install → **skip if the package's version already exists on its registry** → run the package's tests → build → publish.
+-3. Publish jobs are gated by the `release` environment — a required reviewer must approve the deployment.
++**Authentication is OIDC trusted publishing on both registries — there are no registry tokens.**
+ 
+-Because of the version-exists guard, a release publishes exactly the packages whose versions were bumped since the last release, and re-running is always safe.
++- **npm** (TypeScript servers): each `@modelcontextprotocol/*` package is registered on npmjs.com with a [trusted publisher](https://docs.npmjs.com/trusted-publishers) bound to this repository, workflow filename `release.yml`, and environment `release` (the binding is case-sensitive). Packages publish with [provenance attestations](https://docs.npmjs.com/generating-provenance-statements).
++- **PyPI** (Python servers): published via [PyPI trusted publishing](https://docs.pypi.org/trusted-publishers/) using `pypa/gh-action-pypi-publish`.
+ 
+-**Authentication is OIDC trusted publishing on both registries — there are no registry tokens.**
++A release run:
+ 
+-- **npm**: each `@modelcontextprotocol/*` package is registered on npmjs.com with a [trusted publisher](https://docs.npmjs.com/trusted-publishers) bound to this repository, workflow filename `release.yml`, and environment `release` (the binding is case-sensitive). Packages publish with [provenance attestations](https://docs.npmjs.com/generating-provenance-statements).
+-- **PyPI**: published via [PyPI trusted publishing](https://docs.pypi.org/trusted-publishers/) using `pypa/gh-action-pypi-publish`.
++1. **Detects changed packages** since the last release tag — a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed (READMEs ship inside the published artifacts).
++2. **Stamps versions and pushes the release tag** — versions are date-based (CalVer, e.g. `2026.7.4`).
++3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → abort if this version already exists on the registry (double-publish guard) → **run the package's tests** → build → publish.
++4. **Creates the GitHub release** with generated notes.
+ 
+ ## When a publish fails
+ 
+@@ -37,17 +29,21 @@ gh run rerun <run-id> --failed --repo modelcontextprotocol/servers
+ ```
+ 
+ - A re-run is still a `release.yml` run in the `release` environment, so it satisfies the trusted-publisher binding.
+-- It re-runs only the failed legs, checked out at the release tag — it publishes exactly the tagged code, and the version-exists guard makes it idempotent.
++- It re-runs only the failed legs, checked out at the original release tag — it publishes exactly the tagged code, and the double-publish guard keeps already-published packages safe.
+ - It needs a fresh `release` environment approval, and the run must be complete first (approve or reject any pending deployments).
+ - GitHub's re-run window is ~30 days from the original run, and re-runs execute the *original* workflow snapshot — workflow fixes on `main` don't apply to a re-run.
+ 
+-**Otherwise: the next release picks it up.** The unpublished version is still on `main`, so the version-exists guard publishes it on the next release automatically. A version skipped this way simply never exists on that registry — that's benign; npm and PyPI version histories don't need to match.
++**Otherwise: let the next release pick it up.** If the re-run window has closed (or the fix required a workflow change), the failed version simply never exists on that registry — that's benign; npm and PyPI version histories don't need to match. The package publishes at the next version, provided it has a qualifying change (`.py`, `.ts`, or `.md`) since the last release tag.
+ 
+ **Never:**
+ 
+ - Publish manually with an npm token or from a laptop — there are no registry tokens, and manual publishes would break the provenance/trust chain.
+-- Edit versions outside a reviewed PR to force a publish.
++- Re-run or re-dispatch `release.yml` expecting a fresh run to retry a failed version — a fresh run mints a *new* version.
+ 
+ ## Environment approvals
+ 
+ The `release` environment's required-reviewer list is configured in the repository settings (Settings → Environments → `release`). Reviewer rights come only from that list — repository admin does not confer deployment approval.
++
++---
++
++Planned changes to this process — semver via changesets for the TypeScript packages, publishing triggered by manually-created GitHub Releases — are tracked in [#4463](https://github.com/modelcontextprotocol/servers/issues/4463). This document will be updated when that work merges.
+
+From 06a8169e6f0fa6db3fce0b15173d896e31bfc9a4 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:45:25 -0400
+Subject: [PATCH 09/13] ci: remove dead release-triggered publish jobs; make
+ RELEASING.md claims true
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Review findings: RELEASING.md claimed publishing happens exclusively
+from release.yml with no registry tokens, but typescript.yml and
+python.yml still carried release:[published] publish jobs — never
+fired (releases are created with GITHUB_TOKEN, which suppresses
+workflow triggers) and unable to succeed under OIDC (typescript.yml's
+still referenced the deleted NPM_TOKEN). Remove both jobs and their
+release triggers; the workflows are now pure CI.
+
+Also:
+- add skip-existing to the PyPI publish action so re-runs tolerate
+  already-uploaded files, and describe the per-registry guard
+  accurately in RELEASING.md (npm aborts; PyPI skips)
+- correct the fresh-dispatch note: same-day dispatches collide on the
+  date-granular tag rather than minting a new version
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/python.yml     | 26 ------------------------
+ .github/workflows/release.yml    |  1 +
+ .github/workflows/typescript.yml | 34 --------------------------------
+ RELEASING.md                     |  4 ++--
+ 4 files changed, 3 insertions(+), 62 deletions(-)
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index df84276249..15f63945cd 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -5,8 +5,6 @@ on:
+     branches:
+       - main
+   pull_request:
+-  release:
+-    types: [published]
+ 
+ jobs:
+   detect-packages:
+@@ -95,27 +93,3 @@ jobs:
+         with:
+           name: dist-${{ matrix.package }}
+           path: src/${{ matrix.package }}/dist/
+-
+-  publish:
+-    runs-on: ubuntu-latest
+-    needs: [build, detect-packages]
+-    if: github.event_name == 'release'
+-
+-    strategy:
+-      matrix:
+-        package: ${{ fromJson(needs.detect-packages.outputs.packages) }}
+-    name: Publish ${{ matrix.package }}
+-
+-    environment: release
+-    permissions:
+-      id-token: write # Required for trusted publishing
+-
+-    steps:
+-      - name: Download artifacts
+-        uses: actions/download-artifact@v7
+-        with:
+-          name: dist-${{ matrix.package }}
+-          path: dist/
+-
+-      - name: Publish package to PyPI
+-        uses: pypa/gh-action-pypi-publish@release/v1
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index cb853cdc05..8d236071c0 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -155,6 +155,7 @@ jobs:
+         uses: pypa/gh-action-pypi-publish@release/v1
+         with:
+           packages-dir: src/${{ matrix.package }}/dist
++          skip-existing: true # re-runs tolerate already-uploaded files
+ 
+   publish-npm:
+     needs: [update-packages, create-metadata]
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index 4e29e524ad..154d5adda5 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -5,8 +5,6 @@ on:
+     branches:
+       - main
+   pull_request:
+-  release:
+-    types: [published]
+ 
+ jobs:
+   detect-packages:
+@@ -68,35 +66,3 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: npm run build
+ 
+-  publish:
+-    runs-on: ubuntu-latest
+-    needs: [build, detect-packages]
+-    if: github.event_name == 'release'
+-    environment: release
+-
+-    strategy:
+-      matrix:
+-        package: ${{ fromJson(needs.detect-packages.outputs.packages) }}
+-    name: Publish ${{ matrix.package }}
+-
+-    permissions:
+-      contents: read
+-      id-token: write
+-
+-    steps:
+-      - uses: actions/checkout@v6
+-      - uses: actions/setup-node@v6
+-        with:
+-          node-version: 22
+-          cache: npm
+-          registry-url: "https://registry.npmjs.org"
+-
+-      - name: Install dependencies
+-        working-directory: src/${{ matrix.package }}
+-        run: npm ci
+-
+-      - name: Publish package
+-        working-directory: src/${{ matrix.package }}
+-        run: npm publish --access public
+-        env:
+-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+diff --git a/RELEASING.md b/RELEASING.md
+index 51e6a52d5c..d0138e1536 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -15,7 +15,7 @@ A release run:
+ 
+ 1. **Detects changed packages** since the last release tag — a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed (READMEs ship inside the published artifacts).
+ 2. **Stamps versions and pushes the release tag** — versions are date-based (CalVer, e.g. `2026.7.4`).
+-3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → abort if this version already exists on the registry (double-publish guard) → **run the package's tests** → build → publish.
++3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → double-publish guard → **run the package's tests** (plus `pyright` for Python) → build → publish. The guard differs by registry: the npm job aborts if the version already exists; the PyPI action skips files already uploaded (`skip-existing`).
+ 4. **Creates the GitHub release** with generated notes.
+ 
+ ## When a publish fails
+@@ -38,7 +38,7 @@ gh run rerun <run-id> --failed --repo modelcontextprotocol/servers
+ **Never:**
+ 
+ - Publish manually with an npm token or from a laptop — there are no registry tokens, and manual publishes would break the provenance/trust chain.
+-- Re-run or re-dispatch `release.yml` expecting a fresh run to retry a failed version — a fresh run mints a *new* version.
++- Dispatch a fresh `release.yml` run expecting it to retry a failed version — versions are date-granular, so a same-day dispatch collides with the existing tag, and a later dispatch mints a *new* version. Neither retries the failed one.
+ 
+ ## Environment approvals
+ 
+
+From 18f09adae3aa0913b6ae331fb80ad582b788047e Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:47:52 -0400
+Subject: [PATCH 10/13] docs(releasing): note per-registry guard placement
+ precisely
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ RELEASING.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/RELEASING.md b/RELEASING.md
+index d0138e1536..f2125f7396 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -15,7 +15,7 @@ A release run:
+ 
+ 1. **Detects changed packages** since the last release tag — a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed (READMEs ship inside the published artifacts).
+ 2. **Stamps versions and pushes the release tag** — versions are date-based (CalVer, e.g. `2026.7.4`).
+-3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → double-publish guard → **run the package's tests** (plus `pyright` for Python) → build → publish. The guard differs by registry: the npm job aborts if the version already exists; the PyPI action skips files already uploaded (`skip-existing`).
++3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → double-publish guard → **run the package's tests** (plus `pyright` for Python) → build → publish. The guard differs by registry: the npm job aborts before tests if the version already exists; for PyPI the skip happens at the publish step itself (`skip-existing` on the upload action).
+ 4. **Creates the GitHub release** with generated notes.
+ 
+ ## When a publish fails
+
+From 752985790e5f9f3dd4a77a9935d579320e56af13 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 17:22:02 -0400
+Subject: [PATCH 11/13] ci(release): remove the daily release cron;
+ dispatch-only
+
+Releases are now triggered deliberately via workflow_dispatch. The
+schedule produced a year of unattended runs stuck awaiting environment
+approval, every real release was manually dispatched anyway, and two
+runs on the same UTC day collide on the date-based tag. Rename the
+workflow to "Release" accordingly and update RELEASING.md.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/release.yml | 4 +---
+ RELEASING.md                  | 2 +-
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index 8d236071c0..f02a26332b 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -1,9 +1,7 @@
+-name: Automatic Release Creation
++name: Release
+ 
+ on:
+   workflow_dispatch:
+-  schedule:
+-    - cron: '0 10 * * *'
+ 
+ jobs:
+   create-metadata:
+diff --git a/RELEASING.md b/RELEASING.md
+index f2125f7396..fc7056c4d8 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -4,7 +4,7 @@ How the packages in this repository are published, and what to do when a publish
+ 
+ ## How publishing works
+ 
+-All packages publish exclusively from the [`release.yml`](.github/workflows/release.yml) GitHub Actions workflow, gated by the `release` environment (a required reviewer must approve each deployment). Runs are triggered on a daily schedule or manually via **workflow_dispatch**.
++All packages publish exclusively from the [`release.yml`](.github/workflows/release.yml) GitHub Actions workflow, gated by the `release` environment (a required reviewer must approve each deployment). Releases are triggered deliberately by a maintainer via **workflow_dispatch** (Actions → Release → Run workflow, or `gh workflow run release.yml`) — there is no scheduled/automatic release.
+ 
+ **Authentication is OIDC trusted publishing on both registries — there are no registry tokens.**
+ 
+
+From 3b9d38fbac0f34c6b9ad6247a8f276bf45eb0b8c Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 18:36:43 -0400
+Subject: [PATCH 12/13] ci: run CI on pushes to any branch, cancel superseded
+ runs
+
+Previously push-triggered CI ran only on main, so same-repo branches
+got no CI until a PR was opened (fork contributions were and remain
+covered by pull_request, which fires on open and on every subsequent
+push). Run on all pushes, and add a per-ref concurrency group so rapid
+amend-pushes cancel superseded runs. Same-repo branches with an open
+PR will run under both events; acceptable at this repo's scale.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/python.yml     | 7 +++++--
+ .github/workflows/typescript.yml | 7 +++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index 15f63945cd..76bdc106fb 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -2,10 +2,13 @@ name: Python
+ 
+ on:
+   push:
+-    branches:
+-      - main
+   pull_request:
+ 
++# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes)
++concurrency:
++  group: ${{ github.workflow }}-${{ github.ref }}
++  cancel-in-progress: true
++
+ jobs:
+   detect-packages:
+     runs-on: ubuntu-latest
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index 154d5adda5..e56ddd90f0 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -2,10 +2,13 @@ name: TypeScript
+ 
+ on:
+   push:
+-    branches:
+-      - main
+   pull_request:
+ 
++# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes)
++concurrency:
++  group: ${{ github.workflow }}-${{ github.ref }}
++  cancel-in-progress: true
++
+ jobs:
+   detect-packages:
+     runs-on: ubuntu-latest
+
+From 5850690363a1dd85a6efa205cf654787d91f8239 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 18:44:47 -0400
+Subject: [PATCH 13/13] ci: don't cancel in-progress CI runs on main
+
+Per-ref cancellation is for superseded branch amend-pushes; on main,
+every merge keeps its own CI run so failures stay attributable to a
+specific commit.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/python.yml     | 5 +++--
+ .github/workflows/typescript.yml | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index 76bdc106fb..0c6f0910fa 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -4,10 +4,11 @@ on:
+   push:
+   pull_request:
+ 
+-# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes)
++# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes),
++# except on main, where every merge keeps its own CI run
+ concurrency:
+   group: ${{ github.workflow }}-${{ github.ref }}
+-  cancel-in-progress: true
++  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+ 
+ jobs:
+   detect-packages:
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index e56ddd90f0..8d1b81e6c2 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -4,10 +4,11 @@ on:
+   push:
+   pull_request:
+ 
+-# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes)
++# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes),
++# except on main, where every merge keeps its own CI run
+ concurrency:
+   group: ${{ github.workflow }}-${{ github.ref }}
+-  cancel-in-progress: true
++  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+ 
+ jobs:
+   detect-packages:

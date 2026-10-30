@@ -1,0 +1,22 @@
+From 70feb6f2b0062b586ff4e18fbd0ffb97bf24705f Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 15 Dec 2025 14:40:11 -0500
+Subject: [PATCH] Remove `includeContext: "thisServer"` from
+ CreateMessageRequest in trigger-sampling-request.ts
+
+---
+ src/everything/tools/trigger-sampling-request.ts | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/everything/tools/trigger-sampling-request.ts b/src/everything/tools/trigger-sampling-request.ts
+index 5d2c6950d2..1f66bf3c79 100644
+--- a/src/everything/tools/trigger-sampling-request.ts
++++ b/src/everything/tools/trigger-sampling-request.ts
+@@ -58,7 +58,6 @@ export const registerTriggerSamplingRequestTool = (server: McpServer) => {
+           systemPrompt: "You are a helpful test server.",
+           maxTokens,
+           temperature: 0.7,
+-          includeContext: "thisServer",
+         },
+       };
+ 

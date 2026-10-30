@@ -1,0 +1,77 @@
+From f41b666edf470795d3724b06899dbca2d102b4e2 Mon Sep 17 00:00:00 2001
+From: fei <fei76161@gmail.com>
+Date: Thu, 3 Sep 2026 09:35:03 +0800
+Subject: [PATCH] fix(memory): constrain search_nodes query length (#4662)
+
+The search_nodes tool accepted an unbounded query string (per
+modelcontextprotocol/servers#3537, official servers should constrain
+string parameters). An oversized query costs an O(graph) scan per
+call with no value. Cap it at 2048 chars via an exported
+SearchNodesQuerySchema, and add vitest coverage for the boundary
+(at-limit accepted, over-limit rejected, non-string still rejected).
+
+Signed-off-by: fei <204683769+feiiiiii5@users.noreply.github.com>
+---
+ .../__tests__/search-nodes-schema.test.ts     | 25 +++++++++++++++++++
+ src/memory/index.ts                           |  9 ++++++-
+ 2 files changed, 33 insertions(+), 1 deletion(-)
+ create mode 100644 src/memory/__tests__/search-nodes-schema.test.ts
+
+diff --git a/src/memory/__tests__/search-nodes-schema.test.ts b/src/memory/__tests__/search-nodes-schema.test.ts
+new file mode 100644
+index 0000000000..c03f384ebb
+--- /dev/null
++++ b/src/memory/__tests__/search-nodes-schema.test.ts
+@@ -0,0 +1,25 @@
++import { describe, it, expect } from 'vitest';
++import { SearchNodesQuerySchema, SEARCH_QUERY_MAX_LENGTH } from '../index.js';
++
++describe('search_nodes input schema', () => {
++  it('should accept a normal query', () => {
++    expect(SearchNodesQuerySchema.safeParse('Alice').success).toBe(true);
++    expect(SearchNodesQuerySchema.safeParse('works at Acme Corp').success).toBe(true);
++  });
++
++  it('should accept a query at exactly the max length', () => {
++    const atLimit = 'a'.repeat(SEARCH_QUERY_MAX_LENGTH);
++    expect(SearchNodesQuerySchema.safeParse(atLimit).success).toBe(true);
++  });
++
++  it('should reject a query longer than the max length', () => {
++    const oversized = 'a'.repeat(SEARCH_QUERY_MAX_LENGTH + 1);
++    const result = SearchNodesQuerySchema.safeParse(oversized);
++    expect(result.success).toBe(false);
++  });
++
++  it('should still reject non-string input', () => {
++    expect(SearchNodesQuerySchema.safeParse(42).success).toBe(false);
++    expect(SearchNodesQuerySchema.safeParse(null).success).toBe(false);
++  });
++});
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index c8d4987990..7555e4ad4c 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -582,6 +582,13 @@ server.registerTool(
+   }
+ );
+ 
++export const SEARCH_QUERY_MAX_LENGTH = 2048;
++
++export const SearchNodesQuerySchema = z
++  .string()
++  .max(SEARCH_QUERY_MAX_LENGTH)
++  .describe("The search query to match against entity names, types, and observation content");
++
+ // Register search_nodes tool
+ server.registerTool(
+   "search_nodes",
+@@ -589,7 +596,7 @@ server.registerTool(
+     title: "Search Nodes",
+     description: "Search for nodes in the knowledge graph based on a query",
+     inputSchema: {
+-      query: z.string().describe("The search query to match against entity names, types, and observation content")
++      query: SearchNodesQuerySchema
+     },
+     outputSchema: {
+       entities: z.array(EntitySchema),

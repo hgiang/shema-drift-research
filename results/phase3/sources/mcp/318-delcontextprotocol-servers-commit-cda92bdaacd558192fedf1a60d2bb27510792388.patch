@@ -1,0 +1,143 @@
+From cda92bdaacd558192fedf1a60d2bb27510792388 Mon Sep 17 00:00:00 2001
+From: Riley <kirkhopegrant@gmail.com>
+Date: Fri, 28 Aug 2026 18:58:19 +0100
+Subject: [PATCH] fix(filesystem): create_directory doesn't create parent
+ directories (#4631)
+
+validatePath()'s ENOENT fallback checked only the immediate parent
+directory before allowing a new path through. Creating a path with
+more than one missing level (e.g. a/b/c when none of a, b, c exist)
+made the immediate parent check fail with "Parent directory does not
+exist", even though fs.mkdir was already called with recursive: true
+one level up in the create_directory handler and an existing allowed
+ancestor was available further up the tree.
+
+Walk up through missing ancestors until an existing one is found (or
+the filesystem root is reached), verifying that ancestor still
+resolves inside an allowed directory via realpath. The top-level
+lexical containment check already ran against the full target path,
+so this only extends how far the existence/symlink check climbs.
+
+Fixes #4629
+
+Co-authored-by: Riley <313779891+rileybuilds@users.noreply.github.com>
+Co-authored-by: olaservo <olahungerford@gmail.com>
+Co-authored-by: Claude Fable 5 <noreply@anthropic.com>
+---
+ src/filesystem/__tests__/lib.test.ts          | 39 +++++++++++++------
+ .../__tests__/nested-parents.test.ts          | 35 +++++++++++++++++
+ src/filesystem/lib.ts                         |  8 ++--
+ 3 files changed, 66 insertions(+), 16 deletions(-)
+ create mode 100644 src/filesystem/__tests__/nested-parents.test.ts
+
+diff --git a/src/filesystem/__tests__/lib.test.ts b/src/filesystem/__tests__/lib.test.ts
+index 5c19e54779..eeee46b99d 100644
+--- a/src/filesystem/__tests__/lib.test.ts
++++ b/src/filesystem/__tests__/lib.test.ts
+@@ -208,19 +208,34 @@ describe('Lib Functions', () => {
+         expect(result).toBe(path.resolve(newFilePath));
+       });
+ 
+-      it('rejects when parent directory does not exist', async () => {
++      it('walks past multiple missing ancestors to an existing allowed directory', async () => {
++        // e.g. create_directory('/home/user/nonexistent/nested/newfile.txt') when
++        // neither 'nonexistent' nor 'nonexistent/nested' exist yet, but '/home/user'
++        // (an allowed directory) does. Regression test for #4629.
++        const newFilePath = process.platform === 'win32' ? 'C:\\Users\\test\\nonexistent\\nested\\newfile.txt' : '/home/user/nonexistent/nested/newfile.txt';
++
++        const enoentError = new Error('ENOENT') as NodeJS.ErrnoException;
++        enoentError.code = 'ENOENT';
++
++        // The path itself is missing. The resolver then realpaths the allowed
++        // directory ('/home/user'), which falls through to the beforeEach base
++        // implementation and echoes the path back as-is. readdir is mocked to
++        // undefined, so every component below it counts as missing.
++        mockFs.realpath.mockRejectedValueOnce(enoentError);
++
++        const result = await validatePath(newFilePath);
++        expect(result).toBe(path.resolve(newFilePath));
++      });
++
++      it('rejects when no ancestor directory exists at all', async () => {
+         const newFilePath = process.platform === 'win32' ? 'C:\\Users\\test\\nonexistent\\newfile.txt' : '/home/user/nonexistent/newfile.txt';
+-        
+-        // Create errors with the ENOENT code
+-        const enoentError1 = new Error('ENOENT') as NodeJS.ErrnoException;
+-        enoentError1.code = 'ENOENT';
+-        const enoentError2 = new Error('ENOENT') as NodeJS.ErrnoException;
+-        enoentError2.code = 'ENOENT';
+-        
+-        mockFs.realpath
+-          .mockRejectedValueOnce(enoentError1)
+-          .mockRejectedValueOnce(enoentError2);
+-        
++
++        const enoentError = new Error('ENOENT') as NodeJS.ErrnoException;
++        enoentError.code = 'ENOENT';
++
++        // Every ancestor, all the way up to the filesystem root, is missing.
++        mockFs.realpath.mockRejectedValue(enoentError);
++
+         await expect(validatePath(newFilePath))
+           .rejects.toThrow('Parent directory does not exist');
+       });
+diff --git a/src/filesystem/__tests__/nested-parents.test.ts b/src/filesystem/__tests__/nested-parents.test.ts
+new file mode 100644
+index 0000000000..854dc4405f
+--- /dev/null
++++ b/src/filesystem/__tests__/nested-parents.test.ts
+@@ -0,0 +1,35 @@
++import fs from 'fs/promises';
++import os from 'os';
++import path from 'path';
++import { afterEach, beforeEach, describe, expect, it } from 'vitest';
++import { setAllowedDirectories, validatePath } from '../lib.js';
++
++// Regression coverage for #4629: validatePath must accept a path whose
++// ancestors are missing several levels deep, so create_directory can mkdir -p.
++describe('validatePath with multiple missing ancestors', () => {
++  let allowedDir: string;
++  let outsideDir: string;
++
++  beforeEach(async () => {
++    allowedDir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'mcp-nested-allowed-')));
++    outsideDir = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), 'mcp-nested-outside-')));
++    setAllowedDirectories([allowedDir]);
++  });
++
++  afterEach(async () => {
++    setAllowedDirectories([]);
++    await fs.rm(allowedDir, { recursive: true, force: true });
++    await fs.rm(outsideDir, { recursive: true, force: true });
++  });
++
++  it('returns the full path when several ancestors do not exist', async () => {
++    const requested = path.join(allowedDir, 'a', 'b', 'c');
++    await expect(validatePath(requested)).resolves.toBe(requested);
++  });
++
++  it('rejects when the nearest existing ancestor is a symlink out of the allowed tree', async () => {
++    await fs.symlink(outsideDir, path.join(allowedDir, 'link'), 'junction');
++    await expect(validatePath(path.join(allowedDir, 'link', 'a', 'b')))
++      .rejects.toThrow('Access denied');
++  });
++});
+diff --git a/src/filesystem/lib.ts b/src/filesystem/lib.ts
+index d01e35f706..f2371a9a01 100644
+--- a/src/filesystem/lib.ts
++++ b/src/filesystem/lib.ts
+@@ -122,10 +122,10 @@ async function resolveUnicodeEquivalentPath(absolutePath: string): Promise<strin
+     }
+ 
+     if (equivalentMatches.length === 0) {
+-      if (index === relativeParts.length - 1) {
+-        return path.join(currentPath, requestedPart);
+-      }
+-      throw new Error(`Parent directory does not exist: ${path.join(currentPath, requestedPart)}`);
++      // Nothing below this point exists yet, so there are no symlinks left to
++      // resolve. currentPath is already realpath'd and inside an allowed
++      // directory; append the missing tail so create_directory can mkdir -p it.
++      return path.join(currentPath, ...relativeParts.slice(index));
+     }
+ 
+     currentPath = await fs.realpath(path.join(currentPath, equivalentMatches[0]));

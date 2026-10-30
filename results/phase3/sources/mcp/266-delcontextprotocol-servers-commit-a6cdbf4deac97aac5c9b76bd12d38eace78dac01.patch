@@ -1,0 +1,46 @@
+From a6cdbf4deac97aac5c9b76bd12d38eace78dac01 Mon Sep 17 00:00:00 2001
+From: Yohanes <Y0hanes@outlook.com>
+Date: Mon, 31 Aug 2026 05:43:38 +0800
+Subject: [PATCH] fix(filesystem): reject Windows paths on POSIX (#4704)
+
+Co-authored-by: Yohanes <CryoThrust@users.noreply.github.com>
+---
+ src/filesystem/__tests__/lib.test.ts | 7 +++++++
+ src/filesystem/lib.ts                | 6 ++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/src/filesystem/__tests__/lib.test.ts b/src/filesystem/__tests__/lib.test.ts
+index eeee46b99d..24eb18a6de 100644
+--- a/src/filesystem/__tests__/lib.test.ts
++++ b/src/filesystem/__tests__/lib.test.ts
+@@ -173,6 +173,13 @@ describe('Lib Functions', () => {
+ 
+   describe('Security & Validation Functions', () => {
+     describe('validatePath', () => {
++      it('rejects Windows drive paths on POSIX hosts', async () => {
++        if (process.platform === 'win32') return;
++
++        await expect(validatePath('C:\\Users\\me\\notes\\file.md'))
++          .rejects.toThrow('Windows-style path received on a POSIX host');
++      });
++
+       // Use Windows-compatible paths for testing
+       const allowedDirs = process.platform === 'win32' ? ['C:\\Users\\test', 'C:\\temp'] : ['/home/user', '/tmp'];
+ 
+diff --git a/src/filesystem/lib.ts b/src/filesystem/lib.ts
+index f2371a9a01..6cd2165b5a 100644
+--- a/src/filesystem/lib.ts
++++ b/src/filesystem/lib.ts
+@@ -139,6 +139,12 @@ async function resolveUnicodeEquivalentPath(absolutePath: string): Promise<strin
+ 
+ export async function validatePath(requestedPath: string): Promise<string> {
+   const expandedPath = expandHome(requestedPath);
++  // Do not silently reinterpret a Windows drive path as a relative POSIX path.
++  // This would create a literal filename such as `C:\\Users\\...` inside the
++  // allowed root and report success for the wrong location.
++  if (process.platform !== 'win32' && /^(?:[A-Za-z]:)(?:[\\/]|$)/.test(expandedPath)) {
++    throw new Error(`Access denied - Windows-style path received on a POSIX host: ${requestedPath}`);
++  }
+   const absolute = path.isAbsolute(expandedPath)
+     ? path.resolve(expandedPath)
+     : resolveRelativePathAgainstAllowedDirectories(expandedPath);

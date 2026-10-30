@@ -1,0 +1,23 @@
+From 53cc385d4e8f989a46f4205759421ba46365e499 Mon Sep 17 00:00:00 2001
+From: Cliff Hall <cliff@futurescale.com>
+Date: Thu, 18 Dec 2025 15:03:44 -0500
+Subject: [PATCH] Update src/everything/AGENTS.md
+
+Co-authored-by: adam jones <domdomegg+git@gmail.com>
+---
+ src/everything/AGENTS.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/everything/AGENTS.md b/src/everything/AGENTS.md
+index cb9912d5e5..cfdcc506a0 100644
+--- a/src/everything/AGENTS.md
++++ b/src/everything/AGENTS.md
+@@ -30,7 +30,7 @@
+ ## Extending the Server
+ 
+ The Everything Server is designed to be extended at well-defined points.
+-See [Extension Points](docs/extension.md) and [Project Structure](docsstructure.md).
++See [Extension Points](docs/extension.md) and [Project Structure](docs/structure.md).
+ The server factory is `src/everything/server/index.ts` and registers all features during startup as well as handling post-connection setup.
+ 
+ ### High-level

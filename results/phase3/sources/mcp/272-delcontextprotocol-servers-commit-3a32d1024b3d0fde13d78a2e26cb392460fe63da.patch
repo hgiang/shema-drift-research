@@ -1,0 +1,568 @@
+From 3a32d1024b3d0fde13d78a2e26cb392460fe63da Mon Sep 17 00:00:00 2001
+From: shaun smith <1936278+evalstate@users.noreply.github.com>
+Date: Thu, 4 Jun 2026 02:10:07 +0100
+Subject: [PATCH] Add URL Elicitation cases (#3334)
+
+* url elicitation
+
+* single tool for normal and error path
+
+* Address review feedback on URL elicitation tool
+
+- Remove src/everything/pnpm-lock.yaml (monorepo uses npm workspaces)
+- Drop redundant TriggerUrlElicitationSchema.parse(args) in the handler;
+  destructure directly from args like the other tools, since the SDK
+  validates against the registered schema before invoking the handler
+- Add explicit accept/decline/cancel messaging in the request path,
+  mirroring trigger-elicitation-request.ts
+- Clarify the registerTool count comment in registrations.test.ts
+  (task-based tools register via registerToolTask, counted separately)
+- Add tests covering the no-url / undefined-capability registration
+  guards, the randomUUID() elicitationId fallback, and the
+  decline/cancel response paths (100% coverage of the tool)
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+* Add tool annotations to trigger-url-elicitation
+
+Match the annotations block on sibling elicitation tools and the
+CLAUDE.md guidance. Uses openWorldHint: true since the tool drives an
+external browser flow.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+---------
+
+Co-authored-by: cliffhall <cliff@futurescale.com>
+Co-authored-by: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ .../__tests__/registrations.test.ts           |   9 +-
+ src/everything/__tests__/tools.test.ts        | 246 ++++++++++++++++++
+ src/everything/docs/features.md               |   4 +-
+ src/everything/docs/structure.md              |   9 +-
+ src/everything/tools/index.ts                 |   2 +
+ .../tools/trigger-url-elicitation.ts          | 147 +++++++++++
+ 6 files changed, 410 insertions(+), 7 deletions(-)
+ create mode 100644 src/everything/tools/trigger-url-elicitation.ts
+
+diff --git a/src/everything/__tests__/registrations.test.ts b/src/everything/__tests__/registrations.test.ts
+index ef56f7c9aa..421d759e07 100644
+--- a/src/everything/__tests__/registrations.test.ts
++++ b/src/everything/__tests__/registrations.test.ts
+@@ -54,7 +54,7 @@ describe('Registration Index Files', () => {
+         server: {
+           getClientCapabilities: vi.fn(() => ({
+             roots: {},
+-            elicitation: {},
++            elicitation: { url: {} },
+             sampling: {},
+           })),
+         },
+@@ -67,14 +67,17 @@ describe('Registration Index Files', () => {
+ 
+       registerConditionalTools(mockServerWithCapabilities);
+ 
+-      // Should register 3 conditional tools + 3 task-based tools when all capabilities present
+-      expect(mockServerWithCapabilities.registerTool).toHaveBeenCalledTimes(3);
++      // Should register 4 conditional tools via registerTool when all capabilities
++      // are present. Task-based tools register via registerToolTask (counted separately),
++      // so they are not included in this registerTool count.
++      expect(mockServerWithCapabilities.registerTool).toHaveBeenCalledTimes(4);
+ 
+       const registeredTools = (
+         mockServerWithCapabilities.registerTool as any
+       ).mock.calls.map((call: any[]) => call[0]);
+       expect(registeredTools).toContain('get-roots-list');
+       expect(registeredTools).toContain('trigger-elicitation-request');
++      expect(registeredTools).toContain('trigger-url-elicitation');
+       expect(registeredTools).toContain('trigger-sampling-request');
+ 
+       // Task-based tools are registered via experimental.tasks.registerToolTask
+diff --git a/src/everything/__tests__/tools.test.ts b/src/everything/__tests__/tools.test.ts
+index dbe463b2a5..0a457f3e5b 100644
+--- a/src/everything/__tests__/tools.test.ts
++++ b/src/everything/__tests__/tools.test.ts
+@@ -13,6 +13,7 @@ import { registerToggleSimulatedLoggingTool } from '../tools/toggle-simulated-lo
+ import { registerToggleSubscriberUpdatesTool } from '../tools/toggle-subscriber-updates.js';
+ import { registerTriggerSamplingRequestTool } from '../tools/trigger-sampling-request.js';
+ import { registerTriggerElicitationRequestTool } from '../tools/trigger-elicitation-request.js';
++import { registerTriggerUrlElicitationTool } from '../tools/trigger-url-elicitation.js';
+ import { registerGetRootsListTool } from '../tools/get-roots-list.js';
+ import { registerGZipFileAsResourceTool } from '../tools/gzip-file-as-resource.js';
+ 
+@@ -706,6 +707,251 @@ describe('Tools', () => {
+     });
+   });
+ 
++  describe('trigger-url-elicitation', () => {
++    it('should not register when client does not support URL elicitation', () => {
++      const handlers: Map<string, Function> = new Map();
++      const mockServer = {
++        registerTool: vi.fn((name: string, config: any, handler: Function) => {
++          handlers.set(name, handler);
++        }),
++        server: {
++          getClientCapabilities: vi.fn(() => ({ elicitation: { form: {} } })),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      expect(mockServer.registerTool).not.toHaveBeenCalled();
++    });
++
++    it('should register when client supports URL elicitation', () => {
++      const handlers: Map<string, Function> = new Map();
++      const mockServer = {
++        registerTool: vi.fn((name: string, config: any, handler: Function) => {
++          handlers.set(name, handler);
++        }),
++        server: {
++          getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      expect(mockServer.registerTool).toHaveBeenCalledWith(
++        'trigger-url-elicitation',
++        expect.objectContaining({
++          title: 'Trigger URL Elicitation Tool',
++          description: expect.stringContaining('URL elicitation'),
++        }),
++        expect.any(Function)
++      );
++    });
++
++    it('should send URL-mode elicitation request when errorPath is false', async () => {
++      const handlers: Map<string, Function> = new Map();
++      const mockSendRequest = vi.fn().mockResolvedValue({
++        action: 'accept',
++      });
++
++      const mockServer = {
++        registerTool: vi.fn((name: string, config: any, handler: Function) => {
++          handlers.set(name, handler);
++        }),
++        server: {
++          getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      const handler = handlers.get('trigger-url-elicitation')!;
++      const result = await handler(
++        {
++          url: 'https://example.com/verify',
++          message: 'Open this page to verify your identity',
++          elicitationId: 'elicitation-123',
++          errorPath: false,
++        },
++        { sendRequest: mockSendRequest }
++      );
++
++      expect(mockSendRequest).toHaveBeenCalledWith(
++        expect.objectContaining({
++          method: 'elicitation/create',
++          params: expect.objectContaining({
++            mode: 'url',
++            url: 'https://example.com/verify',
++            message: 'Open this page to verify your identity',
++            elicitationId: 'elicitation-123',
++          }),
++        }),
++        expect.anything(),
++        expect.anything()
++      );
++
++      expect(result.content[0].text).toContain(
++        '✅ User completed the URL elicitation flow.'
++      );
++    });
++
++    it('should not register when client has no elicitation capability at all', () => {
++      const mockServer = {
++        registerTool: vi.fn(),
++        server: {
++          getClientCapabilities: vi.fn(() => ({})),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      expect(mockServer.registerTool).not.toHaveBeenCalled();
++    });
++
++    it('should not register when client capabilities are undefined', () => {
++      const mockServer = {
++        registerTool: vi.fn(),
++        server: {
++          getClientCapabilities: vi.fn(() => undefined),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      expect(mockServer.registerTool).not.toHaveBeenCalled();
++    });
++
++    it('should default the elicitationId to a random UUID when omitted', async () => {
++      const handlers: Map<string, Function> = new Map();
++      const mockSendRequest = vi.fn().mockResolvedValue({
++        action: 'accept',
++      });
++
++      const mockServer = {
++        registerTool: vi.fn((name: string, config: any, handler: Function) => {
++          handlers.set(name, handler);
++        }),
++        server: {
++          getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      const handler = handlers.get('trigger-url-elicitation')!;
++      await handler(
++        {
++          url: 'https://example.com/verify',
++          message: 'Open this page to verify your identity',
++          errorPath: false,
++        },
++        { sendRequest: mockSendRequest }
++      );
++
++      const sentParams = mockSendRequest.mock.calls[0][0].params;
++      expect(sentParams.elicitationId).toMatch(
++        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
++      );
++    });
++
++    it('should report a declined URL elicitation', async () => {
++      const handlers: Map<string, Function> = new Map();
++      const mockSendRequest = vi.fn().mockResolvedValue({ action: 'decline' });
++
++      const mockServer = {
++        registerTool: vi.fn((name: string, config: any, handler: Function) => {
++          handlers.set(name, handler);
++        }),
++        server: {
++          getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      const handler = handlers.get('trigger-url-elicitation')!;
++      const result = await handler(
++        {
++          url: 'https://example.com/verify',
++          message: 'Open this page to verify your identity',
++          elicitationId: 'elicitation-123',
++          errorPath: false,
++        },
++        { sendRequest: mockSendRequest }
++      );
++
++      expect(result.content[0].text).toContain('❌ User declined to open the URL');
++    });
++
++    it('should report a cancelled URL elicitation', async () => {
++      const handlers: Map<string, Function> = new Map();
++      const mockSendRequest = vi.fn().mockResolvedValue({ action: 'cancel' });
++
++      const mockServer = {
++        registerTool: vi.fn((name: string, config: any, handler: Function) => {
++          handlers.set(name, handler);
++        }),
++        server: {
++          getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      const handler = handlers.get('trigger-url-elicitation')!;
++      const result = await handler(
++        {
++          url: 'https://example.com/verify',
++          message: 'Open this page to verify your identity',
++          elicitationId: 'elicitation-123',
++          errorPath: false,
++        },
++        { sendRequest: mockSendRequest }
++      );
++
++      expect(result.content[0].text).toContain(
++        '⚠️ User cancelled the URL elicitation'
++      );
++    });
++
++    it('should throw MCP error -32042 with required URL elicitation data when errorPath is true', async () => {
++      const handlers: Map<string, Function> = new Map();
++      const mockServer = {
++        registerTool: vi.fn((name: string, config: any, handler: Function) => {
++          handlers.set(name, handler);
++        }),
++        server: {
++          getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
++        },
++      } as unknown as McpServer;
++
++      registerTriggerUrlElicitationTool(mockServer);
++
++      const handler = handlers.get('trigger-url-elicitation')!;
++
++      expect.assertions(2);
++
++      try {
++        await handler(
++          {
++            url: 'https://example.com/connect',
++            message: 'Authorization is required to continue.',
++            elicitationId: 'elicitation-xyz',
++            errorPath: true,
++          },
++          {}
++        );
++      } catch (error: any) {
++        expect(error.code).toBe(-32042);
++        expect(error.data.elicitations[0]).toEqual({
++          mode: 'url',
++          url: 'https://example.com/connect',
++          message: 'Authorization is required to continue.',
++          elicitationId: 'elicitation-xyz',
++        });
++      }
++    });
++  });
++
+   describe('get-roots-list', () => {
+     it('should not register when client does not support roots', () => {
+       const { mockServer } = createMockServer();
+diff --git a/src/everything/docs/features.md b/src/everything/docs/features.md
+index 145595b820..3fc6f34a23 100644
+--- a/src/everything/docs/features.md
++++ b/src/everything/docs/features.md
+@@ -19,9 +19,11 @@
+ - `get-structured-content` (tools/get-structured-content.ts): Demonstrates structured responses. Accepts `location` input and returns both backward‑compatible `content` (a `text` block containing JSON) and `structuredContent` validated by an `outputSchema` (temperature, conditions, humidity).
+ - `get-sum` (tools/get-sum.ts): For two numbers `a` and `b` calculates and returns their sum. Uses Zod to validate inputs.
+ - `get-tiny-image` (tools/get-tiny-image.ts): Returns a tiny PNG MCP logo as an `image` content item with brief descriptive text before and after.
+-- `trigger-long-running-operation` (tools/trigger-trigger-long-running-operation.ts): Simulates a multi-step operation over a given `duration` and number of `steps`; reports progress via `notifications/progress` when a `progressToken` is provided by the client.
++- `trigger-long-running-operation` (tools/trigger-long-running-operation.ts): Simulates a multi-step operation over a given `duration` and number of `steps`; reports progress via `notifications/progress` when a `progressToken` is provided by the client.
+ - `toggle-simulated-logging` (tools/toggle-simulated-logging.ts): Starts or stops simulated, random‑leveled logging for the invoking session. Respects the client’s selected minimum logging level.
+ - `toggle-subscriber-updates` (tools/toggle-subscriber-updates.ts): Starts or stops simulated resource update notifications for URIs the invoking session has subscribed to.
++- `trigger-elicitation-request` (tools/trigger-elicitation-request.ts): Issues an `elicitation/create` request using form-mode fields (strings, numbers, booleans, enums, and format validation) and returns the resulting action/content.
++- `trigger-url-elicitation` (tools/trigger-url-elicitation.ts): Issues an `elicitation/create` request in URL mode (`mode: "url"`) with an `elicitationId`, or throws MCP error `-32042` (`UrlElicitationRequiredError`) when `errorPath=true`. Requires client capability `elicitation.url`.
+ - `trigger-sampling-request` (tools/trigger-sampling-request.ts): Issues a `sampling/createMessage` request to the client/LLM using provided `prompt` and optional generation controls; returns the LLM's response payload.
+ - `simulate-research-query` (tools/simulate-research-query.ts): Demonstrates MCP Tasks (SEP-1686) with a simulated multi-stage research operation. Accepts `topic` and `ambiguous` parameters. Returns a task that progresses through stages with status updates. If `ambiguous` is true and client supports elicitation, sends an elicitation request directly to gather clarification before completing.
+ - `trigger-sampling-request-async` (tools/trigger-sampling-request-async.ts): Demonstrates bidirectional tasks where the server sends a sampling request that the client executes as a background task. Server polls for status and retrieves the LLM result when complete. Requires client to support `tasks.requests.sampling.createMessage`.
+diff --git a/src/everything/docs/structure.md b/src/everything/docs/structure.md
+index 40ab1ab862..f6089cd31e 100644
+--- a/src/everything/docs/structure.md
++++ b/src/everything/docs/structure.md
+@@ -55,7 +55,8 @@ src/everything
+      │   ├── trigger-elicitation-request-async.ts
+      │   ├── trigger-long-running-operation.ts
+      │   ├── trigger-sampling-request.ts
+-     │   └── trigger-sampling-request-async.ts
++     │   ├── trigger-sampling-request-async.ts
++     │   └── trigger-url-elicitation.ts
+      └── transports
+          ├── sse.ts
+          ├── stdio.ts
+@@ -85,8 +86,8 @@ src/everything
+ 
+ - `architecture.md`
+   - This document.
+-- `server-instructions.md`
+-  - Human‑readable instructions intended to be passed to the client/LLM as for guidance on server use. Loaded by the server at startup and returned in the "initialize" exchange.
++- `instructions.md`
++  - Human‑readable instructions intended to be passed to the client/LLM as guidance on server use. Loaded by the server at startup and returned in the initialize exchange.
+ 
+ ### `prompts/`
+ 
+@@ -154,6 +155,8 @@ src/everything
+   - Registers a `simulate-research-query` task-based tool that demonstrates the MCP Tasks feature (SEP-1686). Simulates a multi-stage research operation with progress updates. If the query is marked as ambiguous and the client supports elicitation, it pauses mid-execution to request clarification via `elicitation/create`. Uses `server.experimental.tasks.registerToolTask()` with `execution: { taskSupport: "required" }`.
+ - `trigger-elicitation-request.ts`
+   - Registers a `trigger-elicitation-request` tool that sends an `elicitation/create` request to the client/LLM and returns the elicitation result.
++- `trigger-url-elicitation.ts`
++  - Registers a `trigger-url-elicitation` tool that either sends an out-of-band URL-mode `elicitation/create` request (`mode: "url"`) including an `elicitationId` (request path) or throws `UrlElicitationRequiredError` (`-32042`) for client-handled URL elicitation (error path).
+ - `trigger-elicitation-request-async.ts`
+   - Registers a `trigger-elicitation-request-async` tool that demonstrates bidirectional MCP tasks for elicitation. Sends an elicitation request with task metadata, then polls the client's `tasks/get` endpoint for completion status before fetching the final result.
+ - `trigger-sampling-request.ts`
+diff --git a/src/everything/tools/index.ts b/src/everything/tools/index.ts
+index 1526f09dde..0272126eea 100644
+--- a/src/everything/tools/index.ts
++++ b/src/everything/tools/index.ts
+@@ -17,6 +17,7 @@ import { registerTriggerSamplingRequestTool } from "./trigger-sampling-request.j
+ import { registerTriggerSamplingRequestAsyncTool } from "./trigger-sampling-request-async.js";
+ import { registerTriggerElicitationRequestAsyncTool } from "./trigger-elicitation-request-async.js";
+ import { registerSimulateResearchQueryTool } from "./simulate-research-query.js";
++import { registerTriggerUrlElicitationTool } from "./trigger-url-elicitation.js";
+ 
+ /**
+  * Register the tools with the MCP server.
+@@ -44,6 +45,7 @@ export const registerTools = (server: McpServer) => {
+ export const registerConditionalTools = (server: McpServer) => {
+   registerGetRootsListTool(server);
+   registerTriggerElicitationRequestTool(server);
++  registerTriggerUrlElicitationTool(server);
+   registerTriggerSamplingRequestTool(server);
+   // Task-based research tool (uses experimental tasks API)
+   registerSimulateResearchQueryTool(server);
+diff --git a/src/everything/tools/trigger-url-elicitation.ts b/src/everything/tools/trigger-url-elicitation.ts
+new file mode 100644
+index 0000000000..0f5d2082b4
+--- /dev/null
++++ b/src/everything/tools/trigger-url-elicitation.ts
+@@ -0,0 +1,147 @@
++import { randomUUID } from "node:crypto";
++import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
++import {
++  CallToolResult,
++  ElicitRequestURLParams,
++  ElicitResultSchema,
++  UrlElicitationRequiredError,
++} from "@modelcontextprotocol/sdk/types.js";
++import { z } from "zod";
++
++// Tool input schema
++const TriggerUrlElicitationSchema = z.object({
++  url: z.string().url().describe("The URL the user should open"),
++  message: z
++    .string()
++    .default("Please open the link to complete this action.")
++    .describe("Message shown to the user before opening the URL"),
++  elicitationId: z
++    .string()
++    .optional()
++    .describe("Optional explicit elicitation ID. Defaults to a random UUID."),
++  errorPath: z
++    .boolean()
++    .default(false)
++    .describe(
++      "Controls which elicitation mechanism is used. " +
++        "When false (default), sends an elicitation/create request (request path). " +
++        "When true, throws a UrlElicitationRequiredError (MCP error code -32042) so the client handles " +
++        "the URL elicitation via the error path rather than waiting for a response."
++    ),
++});
++
++// Tool configuration
++const name = "trigger-url-elicitation";
++const config = {
++  title: "Trigger URL Elicitation Tool",
++  description:
++    "Trigger a URL elicitation so the client can direct the user to a browser flow. " +
++    "Supports two mechanisms: the request path (elicitation/create, default) which awaits the user's " +
++    "response, and the error path (UrlElicitationRequiredError, -32042) which signals the client " +
++    "to handle URL elicitation via the error response. Set errorPath=true to use the error path.",
++  inputSchema: TriggerUrlElicitationSchema,
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: true,
++  },
++};
++
++/**
++ * Registers the 'trigger-url-elicitation' tool.
++ *
++ * This tool only registers when the client advertises URL-mode elicitation
++ * capability (clientCapabilities.elicitation.url).
++ *
++ * Depending on the `errorPath` argument it either:
++ *  - Sends an `elicitation/create` request and awaits the result (request path), or
++ *  - Throws a `UrlElicitationRequiredError` (MCP error -32042) for the client to
++ *    handle via the error path.
++ *
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
++ */
++export const registerTriggerUrlElicitationTool = (server: McpServer) => {
++  const clientCapabilities = server.server.getClientCapabilities() || {};
++  const clientElicitationCapabilities = clientCapabilities.elicitation as
++    | {
++        url?: object;
++      }
++    | undefined;
++
++  const clientSupportsUrlElicitation =
++    clientElicitationCapabilities?.url !== undefined;
++
++  if (clientSupportsUrlElicitation) {
++    server.registerTool(
++      name,
++      config,
++      async (args, extra): Promise<CallToolResult> => {
++        const {
++          url,
++          message,
++          elicitationId: requestedElicitationId,
++          errorPath,
++        } = args;
++
++        const elicitationId = requestedElicitationId ?? randomUUID();
++
++        const elicitationParams: ElicitRequestURLParams = {
++          mode: "url",
++          url,
++          message,
++          elicitationId,
++        };
++
++        // Error path: throw UrlElicitationRequiredError (-32042) for the client to handle
++        if (errorPath) {
++          throw new UrlElicitationRequiredError(
++            [elicitationParams],
++            "This request requires browser-based authorization."
++          );
++        }
++
++        // Request path: send elicitation/create and await the user's response
++        const elicitationResult = await extra.sendRequest(
++          {
++            method: "elicitation/create",
++            params: elicitationParams,
++          },
++          ElicitResultSchema,
++          { timeout: 10 * 60 * 1000 /* 10 minutes */ }
++        );
++
++        // Handle different response actions
++        const content: CallToolResult["content"] = [];
++
++        if (elicitationResult.action === "accept") {
++          content.push({
++            type: "text",
++            text:
++              `✅ User completed the URL elicitation flow.\n` +
++              `Elicitation ID: ${elicitationId}\n` +
++              `URL: ${url}`,
++          });
++        } else if (elicitationResult.action === "decline") {
++          content.push({
++            type: "text",
++            text: `❌ User declined to open the URL (Elicitation ID: ${elicitationId}).`,
++          });
++        } else if (elicitationResult.action === "cancel") {
++          content.push({
++            type: "text",
++            text: `⚠️ User cancelled the URL elicitation (Elicitation ID: ${elicitationId}).`,
++          });
++        }
++
++        // Include raw result for debugging
++        content.push({
++          type: "text",
++          text: `\nRaw result: ${JSON.stringify(elicitationResult, null, 2)}`,
++        });
++
++        return { content };
++      }
++    );
++  }
++};

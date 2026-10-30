@@ -1,0 +1,32 @@
+From 51bf368d0ddc6a345f5604c83fa28e883a64bafb Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:31:52 -0400
+Subject: [PATCH] test(skills): measure the pr-flow -> board-ops hand-off
+
+pr-flow points at board-ops for every card move, and a first-move case
+cannot observe whether that pointer is taken. Add a chain case in
+board-ops' eval file (the reached skill), per docs/skill-authoring.md.
+It scores 60% at RUNS=5, above the 0.5 hand-off threshold; the whole
+suite still passes (22/22 first-move, 2/2 hand-off).
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/board-ops/evals/evals.json | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/.claude/skills/board-ops/evals/evals.json b/.claude/skills/board-ops/evals/evals.json
+index 117186c55b..af55659f1b 100644
+--- a/.claude/skills/board-ops/evals/evals.json
++++ b/.claude/skills/board-ops/evals/evals.json
+@@ -23,6 +23,10 @@
+     "prompt": "Write out every command I need to run to file an issue, start to finish, for: the time server returns the wrong UTC offset for Australia/Lord_Howe during daylight saving. I'll run them myself.",
+     "chain": ["issue-create", "board-ops"]
+   },
++  {
++    "prompt": "My fix for issue 4810 is committed and the gate is green. Write out every command I need to run from here until the PR is open and tracked, start to finish. I'll run them myself.",
++    "chain": ["pr-flow", "board-ops"]
++  },
+   {
+     "prompt": "Explain the difference between TCP and UDP.",
+     "expect": null

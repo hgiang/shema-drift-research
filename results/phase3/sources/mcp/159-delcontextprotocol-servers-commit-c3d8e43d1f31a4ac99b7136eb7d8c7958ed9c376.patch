@@ -1,0 +1,146 @@
+From c3d8e43d1f31a4ac99b7136eb7d8c7958ed9c376 Mon Sep 17 00:00:00 2001
+From: Yiheng Zhao <yihengzhao0101@gmail.com>
+Date: Thu, 3 Sep 2026 09:34:58 +0800
+Subject: [PATCH] fix(memory): validate knowledge graph entries when loading
+ from disk (#4717)
+
+loadGraph() trusted the persisted memory file and pushed entities and
+relations without validating their fields. A corrupted or legacy entry
+(e.g. an entity missing entityType, or an observation that is not a string)
+would reach searchNodes and crash with "Cannot read properties of undefined
+(reading 'toLowerCase')".
+
+Validate each line against the existing EntitySchema/RelationSchema and skip
+malformed entries with a warning, so the in-memory graph only ever contains
+well-formed data. Malformed JSON lines are skipped as well.
+
+Fixes #2044
+---
+ src/memory/__tests__/knowledge-graph.test.ts | 47 +++++++++++++++++
+ src/memory/index.ts                          | 55 ++++++++++++++------
+ 2 files changed, 86 insertions(+), 16 deletions(-)
+
+diff --git a/src/memory/__tests__/knowledge-graph.test.ts b/src/memory/__tests__/knowledge-graph.test.ts
+index 0a6fc8f9b0..d1739f4f2e 100644
+--- a/src/memory/__tests__/knowledge-graph.test.ts
++++ b/src/memory/__tests__/knowledge-graph.test.ts
+@@ -617,4 +617,51 @@ describe('KnowledgeGraphManager', () => {
+       expect(result.relations[0]).not.toHaveProperty('type');
+     });
+   });
++
++  describe('loadGraph validation', () => {
++    it('skips corrupt entities instead of crashing search', async () => {
++      const lines = [
++        JSON.stringify({ type: 'entity', name: 'Alice', entityType: 'person', observations: ['works at Acme Corp'] }),
++        JSON.stringify({ type: 'entity', name: 'Broken', observations: ['missing entityType'] }),
++        JSON.stringify({ type: 'entity', name: 'BadObs', entityType: 'person', observations: ['ok', null] }),
++      ];
++      await fs.writeFile(testFilePath, lines.join('\n') + '\n');
++
++      const graph = await manager.readGraph();
++      expect(graph.entities).toHaveLength(1);
++      expect(graph.entities[0].name).toBe('Alice');
++
++      // searchNodes must not throw even though the file contains corrupt entries
++      const result = await manager.searchNodes('Acme');
++      expect(result.entities).toHaveLength(1);
++      expect(result.entities[0].name).toBe('Alice');
++    });
++
++    it('skips corrupt relations', async () => {
++      const lines = [
++        JSON.stringify({ type: 'entity', name: 'Alice', entityType: 'person', observations: [] }),
++        JSON.stringify({ type: 'relation', from: 'Alice', to: 'Bob' }), // missing relationType
++        JSON.stringify({ type: 'relation', from: 'Alice', to: 'Bob', relationType: 'knows' }),
++      ];
++      await fs.writeFile(testFilePath, lines.join('\n') + '\n');
++
++      const graph = await manager.readGraph();
++      expect(graph.entities).toHaveLength(1);
++      expect(graph.relations).toHaveLength(1);
++      expect(graph.relations[0].relationType).toBe('knows');
++    });
++
++    it('skips malformed JSON lines', async () => {
++      const lines = [
++        JSON.stringify({ type: 'entity', name: 'Alice', entityType: 'person', observations: [] }),
++        '{this is not valid json',
++        JSON.stringify({ type: 'entity', name: 'Bob', entityType: 'person', observations: [] }),
++      ];
++      await fs.writeFile(testFilePath, lines.join('\n') + '\n');
++
++      const graph = await manager.readGraph();
++      expect(graph.entities).toHaveLength(2);
++      expect(graph.entities.map(e => e.name)).toEqual(['Alice', 'Bob']);
++    });
++  });
+ });
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index 95e0bc796f..c8d4987990 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -90,24 +90,47 @@ export class KnowledgeGraphManager {
+     try {
+       const data = await fs.readFile(this.memoryFilePath, "utf-8");
+       const lines = data.split("\n").filter(line => line.trim() !== "");
+-      return lines.reduce((graph: KnowledgeGraph, line) => {
+-        const item = JSON.parse(line);
+-        if (item.type === "entity") {
+-          graph.entities.push({
+-            name: item.name,
+-            entityType: item.entityType,
+-            observations: item.observations
+-          });
++      const graph: KnowledgeGraph = { entities: [], relations: [] };
++
++      for (const line of lines) {
++        let item: unknown;
++        try {
++          item = JSON.parse(line);
++        } catch {
++          console.error("Skipping malformed line in memory file");
++          continue;
+         }
+-        if (item.type === "relation") {
+-          graph.relations.push({
+-            from: item.from,
+-            to: item.to,
+-            relationType: item.relationType
+-          });
++
++        if (typeof item !== "object" || item === null) {
++          console.error("Skipping non-object line in memory file");
++          continue;
++        }
++
++        const record = item as Record<string, unknown>;
++        if (record.type === "entity") {
++          const parsed = EntitySchema.safeParse(item);
++          if (parsed.success) {
++            graph.entities.push(parsed.data);
++          } else {
++            console.error(
++              "Skipping invalid entity in memory file:",
++              parsed.error.issues.map(issue => `${issue.path.join(".")}: ${issue.message}`).join(", ")
++            );
++          }
++        } else if (record.type === "relation") {
++          const parsed = RelationSchema.safeParse(item);
++          if (parsed.success) {
++            graph.relations.push(parsed.data);
++          } else {
++            console.error(
++              "Skipping invalid relation in memory file:",
++              parsed.error.issues.map(issue => `${issue.path.join(".")}: ${issue.message}`).join(", ")
++            );
++          }
+         }
+-        return graph;
+-      }, { entities: [], relations: [] });
++      }
++
++      return graph;
+     } catch (error) {
+       if (error instanceof Error && 'code' in error && (error as any).code === "ENOENT") {
+         return { entities: [], relations: [] };

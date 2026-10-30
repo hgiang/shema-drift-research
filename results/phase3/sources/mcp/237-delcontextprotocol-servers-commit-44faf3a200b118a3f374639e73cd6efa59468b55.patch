@@ -1,0 +1,34 @@
+From 44faf3a200b118a3f374639e73cd6efa59468b55 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Fri, 19 Dec 2025 10:18:47 -0500
+Subject: [PATCH] Remove console log statements
+
+---
+ src/everything/server/roots.ts                 | 1 -
+ src/everything/tools/get-structured-content.ts | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/src/everything/server/roots.ts b/src/everything/server/roots.ts
+index f70bb7d1d0..b3c413561a 100644
+--- a/src/everything/server/roots.ts
++++ b/src/everything/server/roots.ts
+@@ -87,7 +87,6 @@ export const syncRoots = async (server: McpServer, sessionId?: string) => {
+ 
+       // Request the initial roots list immediately
+       await requestRoots();
+-      console.log(roots.get(sessionId));
+     }
+ 
+     // Return the roots list for this client
+diff --git a/src/everything/tools/get-structured-content.ts b/src/everything/tools/get-structured-content.ts
+index a83f72a43d..83c98c0ab6 100644
+--- a/src/everything/tools/get-structured-content.ts
++++ b/src/everything/tools/get-structured-content.ts
+@@ -47,7 +47,6 @@ export const registerGetStructuredContentTool = (server: McpServer) => {
+   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
+     // Get simulated weather for the chosen city
+     let weather;
+-    console.log();
+     switch (args.location) {
+       case "New York":
+         weather = {

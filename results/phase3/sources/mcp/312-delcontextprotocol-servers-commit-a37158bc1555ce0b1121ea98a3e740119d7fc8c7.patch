@@ -1,0 +1,150 @@
+From a37158bc1555ce0b1121ea98a3e740119d7fc8c7 Mon Sep 17 00:00:00 2001
+From: Jenn Newton <153535757+jenn-newton@users.noreply.github.com>
+Date: Wed, 17 Dec 2025 11:04:30 -0500
+Subject: [PATCH] Merge commit from fork
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Validate that repo_path arguments in tool calls are within the
+configured --repository path when the --repository flag is set.
+
+The fix:
+- Adds validate_repo_path() that resolves paths and checks
+  containment using Path.relative_to()
+- Resolves symlinks before comparison
+- Maintains backward compatibility when --repository is not set
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-authored-by: Claude <noreply@anthropic.com>
+Co-authored-by: Paul Carleton <paulc@anthropic.com>
+---
+ src/git/src/mcp_server_git/server.py | 24 +++++++++++
+ src/git/tests/test_server.py         | 64 +++++++++++++++++++++++++++-
+ 2 files changed, 87 insertions(+), 1 deletion(-)
+
+diff --git a/src/git/src/mcp_server_git/server.py b/src/git/src/mcp_server_git/server.py
+index fb334b543a..23e9b53fd7 100644
+--- a/src/git/src/mcp_server_git/server.py
++++ b/src/git/src/mcp_server_git/server.py
+@@ -217,6 +217,27 @@ def git_show(repo: git.Repo, revision: str) -> str:
+             output.append(d.diff)
+     return "".join(output)
+ 
++def validate_repo_path(repo_path: Path, allowed_repository: Path | None) -> None:
++    """Validate that repo_path is within the allowed repository path."""
++    if allowed_repository is None:
++        return  # No restriction configured
++
++    # Resolve both paths to handle symlinks and relative paths
++    try:
++        resolved_repo = repo_path.resolve()
++        resolved_allowed = allowed_repository.resolve()
++    except (OSError, RuntimeError):
++        raise ValueError(f"Invalid path: {repo_path}")
++
++    # Check if repo_path is the same as or a subdirectory of allowed_repository
++    try:
++        resolved_repo.relative_to(resolved_allowed)
++    except ValueError:
++        raise ValueError(
++            f"Repository path '{repo_path}' is outside the allowed repository '{allowed_repository}'"
++        )
++
++
+ def git_branch(repo: git.Repo, branch_type: str, contains: str | None = None, not_contains: str | None = None) -> str:
+     match contains:
+         case None:
+@@ -359,6 +380,9 @@ def by_commandline() -> Sequence[str]:
+     async def call_tool(name: str, arguments: dict) -> list[TextContent]:
+         repo_path = Path(arguments["repo_path"])
+ 
++        # Validate repo_path is within allowed repository
++        validate_repo_path(repo_path, repository)
++
+         # For all commands, we need an existing repo
+         repo = git.Repo(repo_path)
+ 
+diff --git a/src/git/tests/test_server.py b/src/git/tests/test_server.py
+index 921e4a7b12..3dba7387c3 100644
+--- a/src/git/tests/test_server.py
++++ b/src/git/tests/test_server.py
+@@ -13,7 +13,8 @@
+     git_reset,
+     git_log,
+     git_create_branch,
+-    git_show
++    git_show,
++    validate_repo_path,
+ )
+ import shutil
+ 
+@@ -250,6 +251,67 @@ def test_git_show_initial_commit(test_repository):
+     assert "test.txt" in result
+ 
+ 
++# Tests for validate_repo_path (repository scoping security fix)
++
++def test_validate_repo_path_no_restriction():
++    """When no repository restriction is configured, any path should be allowed."""
++    validate_repo_path(Path("/any/path"), None)  # Should not raise
++
++
++def test_validate_repo_path_exact_match(tmp_path: Path):
++    """When repo_path exactly matches allowed_repository, validation should pass."""
++    allowed = tmp_path / "repo"
++    allowed.mkdir()
++    validate_repo_path(allowed, allowed)  # Should not raise
++
++
++def test_validate_repo_path_subdirectory(tmp_path: Path):
++    """When repo_path is a subdirectory of allowed_repository, validation should pass."""
++    allowed = tmp_path / "repo"
++    allowed.mkdir()
++    subdir = allowed / "subdir"
++    subdir.mkdir()
++    validate_repo_path(subdir, allowed)  # Should not raise
++
++
++def test_validate_repo_path_outside_allowed(tmp_path: Path):
++    """When repo_path is outside allowed_repository, validation should raise ValueError."""
++    allowed = tmp_path / "allowed_repo"
++    allowed.mkdir()
++    outside = tmp_path / "other_repo"
++    outside.mkdir()
++
++    with pytest.raises(ValueError) as exc_info:
++        validate_repo_path(outside, allowed)
++    assert "outside the allowed repository" in str(exc_info.value)
++
++
++def test_validate_repo_path_traversal_attempt(tmp_path: Path):
++    """Path traversal attempts (../) should be caught and rejected."""
++    allowed = tmp_path / "allowed_repo"
++    allowed.mkdir()
++    # Attempt to escape via ../
++    traversal_path = allowed / ".." / "other_repo"
++
++    with pytest.raises(ValueError) as exc_info:
++        validate_repo_path(traversal_path, allowed)
++    assert "outside the allowed repository" in str(exc_info.value)
++
++
++def test_validate_repo_path_symlink_escape(tmp_path: Path):
++    """Symlinks pointing outside allowed_repository should be rejected."""
++    allowed = tmp_path / "allowed_repo"
++    allowed.mkdir()
++    outside = tmp_path / "outside"
++    outside.mkdir()
++
++    # Create a symlink inside allowed that points outside
++    symlink = allowed / "escape_link"
++    symlink.symlink_to(outside)
++
++    with pytest.raises(ValueError) as exc_info:
++        validate_repo_path(symlink, allowed)
++    assert "outside the allowed repository" in str(exc_info.value)
+ # Tests for argument injection protection
+ 
+ def test_git_diff_rejects_flag_injection(test_repository):

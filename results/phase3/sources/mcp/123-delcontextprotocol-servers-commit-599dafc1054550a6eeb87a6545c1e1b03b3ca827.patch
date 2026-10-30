@@ -1,0 +1,231 @@
+From 53dbe83b7a9ee1f597179ea395962383d333eac9 Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Tue, 18 Aug 2026 08:26:30 -0700
+Subject: [PATCH 1/2] fix(python): require mcp>=1.29.0,<2 in fetch, git, and
+ time
+
+mcp 2.0.0 renamed McpError to MCPError and replaced the low-level Server
+decorators with constructor handlers. The three servers had no upper bound,
+so a fresh uvx install has resolved 2.0.0 since 2026-07-28 and failed to
+start: fetch and time raise ImportError on the McpError import, git raises
+AttributeError on server.list_tools().
+
+The floor moves to 1.29.0, the last 1.x release. The previous floors (1.0.0
+for git, 1.1.3 for fetch, 1.23.0 for time) resolved versions affected by
+GHSA-vj7q-gjh5-988w, GHSA-jpw9-pfvf-9f58, and GHSA-hvrp-rf83-w775.
+
+Porting to the v2 SDK is tracked separately.
+
+Closes #4560
+Closes #4570
+Closes #4580
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ src/fetch/pyproject.toml | 2 +-
+ src/fetch/uv.lock        | 8 ++++----
+ src/git/pyproject.toml   | 2 +-
+ src/git/uv.lock          | 8 ++++----
+ src/time/pyproject.toml  | 2 +-
+ src/time/uv.lock         | 8 ++++----
+ 6 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/src/fetch/pyproject.toml b/src/fetch/pyproject.toml
+index 84735f278a..ee97fc8633 100644
+--- a/src/fetch/pyproject.toml
++++ b/src/fetch/pyproject.toml
+@@ -18,7 +18,7 @@ classifiers = [
+ dependencies = [
+     "httpx>=0.27",
+     "markdownify>=0.13.1",
+-    "mcp>=1.1.3",
++    "mcp>=1.29.0,<2",
+     "protego>=0.3.1",
+     "pydantic>=2.0.0",
+     "readabilipy>=0.2.0",
+diff --git a/src/fetch/uv.lock b/src/fetch/uv.lock
+index d79e776d42..f35a318180 100644
+--- a/src/fetch/uv.lock
++++ b/src/fetch/uv.lock
+@@ -539,7 +539,7 @@ wheels = [
+ 
+ [[package]]
+ name = "mcp"
+-version = "1.28.1"
++version = "1.29.0"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "anyio" },
+@@ -557,9 +557,9 @@ dependencies = [
+     { name = "typing-inspection" },
+     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/6e/77/9450b8f251a13affb6281997d0523c4615f8a8b35d0b21ff30db3a5aac9d/mcp-1.28.1.tar.gz", hash = "sha256:d51e36a5f5644faea4f85ea649bfffa6bc6c26770d42798ad6a3de3d2ba69683", size = 638501, upload-time = "2026-06-26T12:57:29.093Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/30/d3/f9acc21dfc886e4f78e2add1a47db46ce16884346afde53f8a064c02c891/mcp-1.29.0.tar.gz", hash = "sha256:52d01f334de1868cc3bb2d6604931126a67631f99a6c5d3b82ba47290315ec36", size = 643148, upload-time = "2026-07-28T13:41:41.939Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/e2/5e/d118fce19f87a2e7d8101c35c8ae0ec289098a4df0ff244cec23e415aca0/mcp-1.28.1-py3-none-any.whl", hash = "sha256:2726bca5e7193f61c5dde8b12500a6de2d9acf6d1a1c0be9e8c2e706437991df", size = 222620, upload-time = "2026-06-26T12:57:27.218Z" },
++    { url = "https://files.pythonhosted.org/packages/01/c8/248b201f6d753d69fd5d6506011abbb35a946d9142b2ae311a948fd0be3d/mcp-1.29.0-py3-none-any.whl", hash = "sha256:f5a075bb611f23d6f4d080c6a1699fa62772eebc562ba9e66b306ddde1c755f7", size = 223436, upload-time = "2026-07-28T13:41:40.337Z" },
+ ]
+ 
+ [[package]]
+@@ -588,7 +588,7 @@ dev = [
+ requires-dist = [
+     { name = "httpx", specifier = ">=0.27" },
+     { name = "markdownify", specifier = ">=0.13.1" },
+-    { name = "mcp", specifier = ">=1.1.3" },
++    { name = "mcp", specifier = ">=1.29.0,<2" },
+     { name = "protego", specifier = ">=0.3.1" },
+     { name = "pydantic", specifier = ">=2.0.0" },
+     { name = "readabilipy", specifier = ">=0.2.0" },
+diff --git a/src/git/pyproject.toml b/src/git/pyproject.toml
+index c5113ae7d4..e2407ba029 100644
+--- a/src/git/pyproject.toml
++++ b/src/git/pyproject.toml
+@@ -18,7 +18,7 @@ classifiers = [
+ dependencies = [
+     "click>=8.1.7",
+     "gitpython>=3.1.50",
+-    "mcp>=1.0.0",
++    "mcp>=1.29.0,<2",
+     "pydantic>=2.0.0",
+ ]
+ 
+diff --git a/src/git/uv.lock b/src/git/uv.lock
+index 517aa8756d..2ddb41d0d9 100644
+--- a/src/git/uv.lock
++++ b/src/git/uv.lock
+@@ -337,7 +337,7 @@ wheels = [
+ 
+ [[package]]
+ name = "mcp"
+-version = "1.28.1"
++version = "1.29.0"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "anyio" },
+@@ -355,9 +355,9 @@ dependencies = [
+     { name = "typing-inspection" },
+     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/6e/77/9450b8f251a13affb6281997d0523c4615f8a8b35d0b21ff30db3a5aac9d/mcp-1.28.1.tar.gz", hash = "sha256:d51e36a5f5644faea4f85ea649bfffa6bc6c26770d42798ad6a3de3d2ba69683", size = 638501, upload-time = "2026-06-26T12:57:29.093Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/30/d3/f9acc21dfc886e4f78e2add1a47db46ce16884346afde53f8a064c02c891/mcp-1.29.0.tar.gz", hash = "sha256:52d01f334de1868cc3bb2d6604931126a67631f99a6c5d3b82ba47290315ec36", size = 643148, upload-time = "2026-07-28T13:41:41.939Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/e2/5e/d118fce19f87a2e7d8101c35c8ae0ec289098a4df0ff244cec23e415aca0/mcp-1.28.1-py3-none-any.whl", hash = "sha256:2726bca5e7193f61c5dde8b12500a6de2d9acf6d1a1c0be9e8c2e706437991df", size = 222620, upload-time = "2026-06-26T12:57:27.218Z" },
++    { url = "https://files.pythonhosted.org/packages/01/c8/248b201f6d753d69fd5d6506011abbb35a946d9142b2ae311a948fd0be3d/mcp-1.29.0-py3-none-any.whl", hash = "sha256:f5a075bb611f23d6f4d080c6a1699fa62772eebc562ba9e66b306ddde1c755f7", size = 223436, upload-time = "2026-07-28T13:41:40.337Z" },
+ ]
+ 
+ [[package]]
+@@ -382,7 +382,7 @@ dev = [
+ requires-dist = [
+     { name = "click", specifier = ">=8.1.7" },
+     { name = "gitpython", specifier = ">=3.1.50" },
+-    { name = "mcp", specifier = ">=1.0.0" },
++    { name = "mcp", specifier = ">=1.29.0,<2" },
+     { name = "pydantic", specifier = ">=2.0.0" },
+ ]
+ 
+diff --git a/src/time/pyproject.toml b/src/time/pyproject.toml
+index f9be050452..e6400d5f12 100644
+--- a/src/time/pyproject.toml
++++ b/src/time/pyproject.toml
+@@ -17,7 +17,7 @@ classifiers = [
+     "Programming Language :: Python :: 3.10",
+ ]
+ dependencies = [
+-    "mcp>=1.23.0",
++    "mcp>=1.29.0,<2",
+     "pydantic>=2.0.0",
+     "tzdata>=2024.2",
+     "tzlocal>=5.3.1",
+diff --git a/src/time/uv.lock b/src/time/uv.lock
+index 072d962fd6..542b9969f6 100644
+--- a/src/time/uv.lock
++++ b/src/time/uv.lock
+@@ -324,7 +324,7 @@ wheels = [
+ 
+ [[package]]
+ name = "mcp"
+-version = "1.28.1"
++version = "1.29.0"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "anyio" },
+@@ -342,9 +342,9 @@ dependencies = [
+     { name = "typing-inspection" },
+     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/6e/77/9450b8f251a13affb6281997d0523c4615f8a8b35d0b21ff30db3a5aac9d/mcp-1.28.1.tar.gz", hash = "sha256:d51e36a5f5644faea4f85ea649bfffa6bc6c26770d42798ad6a3de3d2ba69683", size = 638501, upload-time = "2026-06-26T12:57:29.093Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/30/d3/f9acc21dfc886e4f78e2add1a47db46ce16884346afde53f8a064c02c891/mcp-1.29.0.tar.gz", hash = "sha256:52d01f334de1868cc3bb2d6604931126a67631f99a6c5d3b82ba47290315ec36", size = 643148, upload-time = "2026-07-28T13:41:41.939Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/e2/5e/d118fce19f87a2e7d8101c35c8ae0ec289098a4df0ff244cec23e415aca0/mcp-1.28.1-py3-none-any.whl", hash = "sha256:2726bca5e7193f61c5dde8b12500a6de2d9acf6d1a1c0be9e8c2e706437991df", size = 222620, upload-time = "2026-06-26T12:57:27.218Z" },
++    { url = "https://files.pythonhosted.org/packages/01/c8/248b201f6d753d69fd5d6506011abbb35a946d9142b2ae311a948fd0be3d/mcp-1.29.0-py3-none-any.whl", hash = "sha256:f5a075bb611f23d6f4d080c6a1699fa62772eebc562ba9e66b306ddde1c755f7", size = 223436, upload-time = "2026-07-28T13:41:40.337Z" },
+ ]
+ 
+ [[package]]
+@@ -368,7 +368,7 @@ dev = [
+ 
+ [package.metadata]
+ requires-dist = [
+-    { name = "mcp", specifier = ">=1.23.0" },
++    { name = "mcp", specifier = ">=1.29.0,<2" },
+     { name = "pydantic", specifier = ">=2.0.0" },
+     { name = "tzdata", specifier = ">=2024.2" },
+     { name = "tzlocal", specifier = ">=5.3.1" },
+
+From d811ba11f1243a55bcc2e78d72ddd9b63b25f25e Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Tue, 18 Aug 2026 08:57:03 -0700
+Subject: [PATCH 2/2] docs(python): note the mcp 1.x requirement in fetch, git,
+ and time
+
+Users hitting the 2.0.0 startup failure land on the README first. Also makes
+the three packages qualify for the next release: the release workflow selects
+packages by .py/.ts/.md changes, so a dependency-only fix would merge without
+publishing.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ src/fetch/README.md | 2 ++
+ src/git/README.md   | 2 ++
+ src/time/README.md  | 2 ++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/src/fetch/README.md b/src/fetch/README.md
+index ed6d2262f4..7e2869983f 100644
+--- a/src/fetch/README.md
++++ b/src/fetch/README.md
+@@ -6,6 +6,8 @@ A Model Context Protocol server that provides web content fetching capabilities.
+ 
+ Source: https://github.com/modelcontextprotocol/servers/tree/main/src/fetch
+ 
++Requires MCP Python SDK 1.x (`mcp>=1.29.0,<2`). SDK 2.0 renamed APIs this server uses. The port to v2 is in progress.
++
+ > [!CAUTION]
+ > This server can access local/internal IP addresses and may represent a security risk. Exercise caution when using this MCP server to ensure this does not expose any sensitive data.
+ 
+diff --git a/src/git/README.md b/src/git/README.md
+index a252a4a7ba..70b00974e6 100644
+--- a/src/git/README.md
++++ b/src/git/README.md
+@@ -8,6 +8,8 @@ A Model Context Protocol server for Git repository interaction and automation. T
+ 
+ Source: https://github.com/modelcontextprotocol/servers/tree/main/src/git
+ 
++Requires MCP Python SDK 1.x (`mcp>=1.29.0,<2`). SDK 2.0 renamed APIs this server uses. The port to v2 is in progress.
++
+ Please note that mcp-server-git is currently in early development. The functionality and available tools are subject to change and expansion as we continue to develop and improve the server.
+ 
+ ### Tools
+diff --git a/src/time/README.md b/src/time/README.md
+index 9adbe19483..9a2c1c42fd 100644
+--- a/src/time/README.md
++++ b/src/time/README.md
+@@ -6,6 +6,8 @@ A Model Context Protocol server that provides time and timezone conversion capab
+ 
+ Source: https://github.com/modelcontextprotocol/servers/tree/main/src/time
+ 
++Requires MCP Python SDK 1.x (`mcp>=1.29.0,<2`). SDK 2.0 renamed APIs this server uses. The port to v2 is in progress.
++
+ ### Available Tools
+ 
+ - `get_current_time` - Get current time in a specific timezone or system timezone.

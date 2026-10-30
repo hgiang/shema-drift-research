@@ -1,0 +1,110 @@
+From 1ec570c27d977a122a619da58ae3104f7fdf8be7 Mon Sep 17 00:00:00 2001
+From: JSap0914 <116227558+JSap0914@users.noreply.github.com>
+Date: Thu, 3 Sep 2026 10:38:22 +0900
+Subject: [PATCH] fix(memory): skip duplicate entities and relations within a
+ single batch (#4383)
+
+create_entities and create_relations only de-duplicated against the existing
+graph, so passing the same entity name (or identical relation) twice in one
+call persisted duplicate records. This contradicts the documented behavior
+("Ignores entities with existing names" / "Skips duplicate relations") and
+breaks the implicit name-uniqueness invariant the rest of the manager relies
+on (e.g. addObservations/deleteEntities key on name).
+
+De-duplicate within the input batch as well, keeping the first occurrence.
+
+Co-authored-by: JSap0914 <JSap0914@users.noreply.github.com>
+Co-authored-by: olaservo <olahungerford@gmail.com>
+---
+ src/memory/__tests__/knowledge-graph.test.ts | 32 ++++++++++++++++++++
+ src/memory/index.ts                          | 20 ++++++++----
+ 2 files changed, 46 insertions(+), 6 deletions(-)
+
+diff --git a/src/memory/__tests__/knowledge-graph.test.ts b/src/memory/__tests__/knowledge-graph.test.ts
+index d1739f4f2e..17a85aa97f 100644
+--- a/src/memory/__tests__/knowledge-graph.test.ts
++++ b/src/memory/__tests__/knowledge-graph.test.ts
+@@ -59,6 +59,20 @@ describe('KnowledgeGraphManager', () => {
+       const newEntities = await manager.createEntities([]);
+       expect(newEntities).toHaveLength(0);
+     });
++
++    it('should ignore duplicate entity names within a single batch', async () => {
++      const entities: Entity[] = [
++        { name: 'Alice', entityType: 'person', observations: ['first'] },
++        { name: 'Alice', entityType: 'person', observations: ['second'] },
++      ];
++
++      const newEntities = await manager.createEntities(entities);
++      expect(newEntities).toHaveLength(1);
++
++      const graph = await manager.readGraph();
++      expect(graph.entities).toHaveLength(1);
++      expect(graph.entities[0].name).toBe('Alice');
++    });
+   });
+ 
+   describe('createRelations', () => {
+@@ -135,6 +149,24 @@ describe('KnowledgeGraphManager', () => {
+       const newRelations = await manager.createRelations([]);
+       expect(newRelations).toHaveLength(0);
+     });
++
++    it('should skip duplicate relations within a single batch', async () => {
++      await manager.createEntities([
++        { name: 'Alice', entityType: 'person', observations: [] },
++        { name: 'Bob', entityType: 'person', observations: [] },
++      ]);
++
++      const relations: Relation[] = [
++        { from: 'Alice', to: 'Bob', relationType: 'knows' },
++        { from: 'Alice', to: 'Bob', relationType: 'knows' },
++      ];
++
++      const newRelations = await manager.createRelations(relations);
++      expect(newRelations).toHaveLength(1);
++
++      const graph = await manager.readGraph();
++      expect(graph.relations).toHaveLength(1);
++    });
+   });
+ 
+   describe('addObservations', () => {
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index 7555e4ad4c..e0a8ce92cf 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -181,7 +181,11 @@ export class KnowledgeGraphManager {
+ 
+   async createEntities(entities: Entity[]): Promise<Entity[]> {
+     const graph = await this.loadGraph();
+-    const newEntities = entities.filter(e => !graph.entities.some(existingEntity => existingEntity.name === e.name));
++    const newEntities = entities.filter((e, index) =>
++      !graph.entities.some(existingEntity => existingEntity.name === e.name) &&
++      // Also skip duplicates appearing earlier in this same batch
++      !entities.slice(0, index).some(earlier => earlier.name === e.name)
++    );
+     graph.entities.push(...newEntities);
+     await this.saveGraph(graph);
+     return newEntities;
+@@ -200,11 +204,15 @@ export class KnowledgeGraphManager {
+       }
+     });
+ 
+-    const newRelations = relations.filter(r => !graph.relations.some(existingRelation => 
+-      existingRelation.from === r.from && 
+-      existingRelation.to === r.to && 
+-      existingRelation.relationType === r.relationType
+-    ));
++    const isSameRelation = (a: Relation, b: Relation) =>
++      a.from === b.from &&
++      a.to === b.to &&
++      a.relationType === b.relationType;
++    const newRelations = relations.filter((r, index) =>
++      !graph.relations.some(existingRelation => isSameRelation(existingRelation, r)) &&
++      // Also skip duplicates appearing earlier in this same batch
++      !relations.slice(0, index).some(earlier => isSameRelation(earlier, r))
++    );
+     graph.relations.push(...newRelations);
+     await this.saveGraph(graph);
+     return newRelations;

@@ -1,0 +1,49 @@
+From 40ce2f784e5c5c4a59f64499f709975dd7c2bae3 Mon Sep 17 00:00:00 2001
+From: "dependabot[bot]" <49699333+dependabot[bot]@users.noreply.github.com>
+Date: Wed, 29 Jul 2026 22:02:06 +0000
+Subject: [PATCH] chore(deps): bump actions/upload-artifact from 6 to 7
+
+Bumps [actions/upload-artifact](https://github.com/actions/upload-artifact) from 6 to 7.
+- [Release notes](https://github.com/actions/upload-artifact/releases)
+- [Commits](https://github.com/actions/upload-artifact/compare/v6...v7)
+
+---
+updated-dependencies:
+- dependency-name: actions/upload-artifact
+  dependency-version: '7'
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+---
+ .github/workflows/python.yml  | 2 +-
+ .github/workflows/release.yml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index 0c6f0910fa..f7d70e9610 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -93,7 +93,7 @@ jobs:
+         run: uv build
+ 
+       - name: Upload artifacts
+-        uses: actions/upload-artifact@v6
++        uses: actions/upload-artifact@v7
+         with:
+           name: dist-${{ matrix.package }}
+           path: src/${{ matrix.package }}/dist/
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index f02a26332b..379676deb7 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -41,7 +41,7 @@ jobs:
+           cat RELEASE_NOTES.md
+ 
+       - name: Release notes
+-        uses: actions/upload-artifact@v6
++        uses: actions/upload-artifact@v7
+         with:
+           name: release-notes
+           path: RELEASE_NOTES.md

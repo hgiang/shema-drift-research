@@ -1,0 +1,29 @@
+From 26c0d57d57922e21ffccf205d68103186454bc04 Mon Sep 17 00:00:00 2001
+From: Shubham Shukla <shubhamshkl@gmail.com>
+Date: Sun, 8 Feb 2026 22:23:30 -0800
+Subject: [PATCH] docs(time): add explicit uvx command to installation section
+
+The uv installation section mentioned using uvx but didn't show the
+actual command, unlike the PIP section which shows both install and run
+commands. This adds the missing `uvx mcp-server-time` command.
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+---
+ src/time/README.md | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/time/README.md b/src/time/README.md
+index 93d6fcab89..51107f51de 100644
+--- a/src/time/README.md
++++ b/src/time/README.md
+@@ -23,6 +23,10 @@ A Model Context Protocol server that provides time and timezone conversion capab
+ When using [`uv`](https://docs.astral.sh/uv/) no specific installation is needed. We will
+ use [`uvx`](https://docs.astral.sh/uv/guides/tools/) to directly run *mcp-server-time*.
+ 
++```bash
++uvx mcp-server-time
++```
++
+ ### Using PIP
+ 
+ Alternatively you can install `mcp-server-time` via pip:

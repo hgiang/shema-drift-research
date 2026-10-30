@@ -1,0 +1,102 @@
+From 1b8fd53c62e3cd36050400b1e956837f1181c3bb Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:56:24 -0400
+Subject: [PATCH] fix(issue-triage): validate close bodies, exact Dependabot
+ match, completed-not-Done audit check
+
+Copilot round 2 on #4906:
+- the close loop stops when a response is empty or still holds #ISSUE, so a
+  missing file can never become a close without an explanation
+- Dependabot is matched as exactly app/dependabot, not by substring
+- the audit gains 'closed completed, not Done'; Priority stays open-only,
+  now stated
+- contribution-model.md: a README-only PR pre-classifies as a listing, and
+  reading it decides the class
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/issue-triage/SKILL.md | 20 ++++++++++++++------
+ docs/contribution-model.md           |  3 ++-
+ 2 files changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/.claude/skills/issue-triage/SKILL.md b/.claude/skills/issue-triage/SKILL.md
+index bcb823b39d..eec5acf277 100644
+--- a/.claude/skills/issue-triage/SKILL.md
++++ b/.claude/skills/issue-triage/SKILL.md
+@@ -310,7 +310,7 @@ gh api "repos/$R/collaborators?per_page=100" --paginate \
+ jq -r --slurpfile m "$D/maintainers.json" '
+   ["everything","filesystem","memory","sequentialthinking","fetch","git","time"] as $seven
+   | .[] | .author.login as $a | [.files[].path] as $p
+-  | (if ($a | test("dependabot")) then "dependabot"
++  | (if $a == "app/dependabot" then "dependabot"
+      elif ($m[0] | index($a)) then "maintainer"
+      elif ($p | length) > 0 and ($p | all(. == "README.md" or . == "ADDITIONAL.md")) then "listing?"
+      elif ($p | any(startswith("src/") and ((split("/")[1]) as $d | $seven | index($d) | not))) then "new-server?"
+@@ -352,7 +352,7 @@ they fix the same thing:
+ ```sh
+ # Outside PRs grouped by their exact set of changed files; each line is a candidate group.
+ jq -r --slurpfile m "$D/maintainers.json" '
+-  [.[] | select((.author.login | test("dependabot")) | not)
++  [.[] | select(.author.login != "app/dependabot")
+        | select(.author.login as $a | $m[0] | index($a) | not)
+        | {n: .number, key: ([.files[].path] | sort | join(" "))}]
+   | group_by(.key)[] | select(length > 1)
+@@ -403,6 +403,8 @@ while IFS=$'\t' read -r PR CLASS ISSUE _; do
+     security) echo "skipping #$PR: a security fix closes only on a maintainer's call" >&2; continue ;;
+     *) echo "unknown class '$CLASS' on #$PR — stopping; fix the manifest" >&2; break ;;
+   esac
++  # A missing or unfilled response must never become a close with no explanation.
++  case "$BODY" in ""|*"#ISSUE"*) echo "no usable response for #$PR — stopping" >&2; break ;; esac
+   [ -n "$SWEEP_REF" ] && BODY="$BODY"$'\n\n'"This is part of the backlog triage in $SWEEP_REF."
+   if [ -n "$SWEEP_LABEL" ]; then
+     gh pr edit "$PR" --repo modelcontextprotocol/servers --add-label "$SWEEP_LABEL" </dev/null \
+@@ -550,6 +552,7 @@ is read-only.
+ | Open, no Priority | Every board item is prioritized | Score it with the rubric |
+ | Closed unshipped, still carded | **`Done` means the work shipped** | Delete the card |
+ | Open, but carded `Done` | A card in `Done` means its issue is closed | Close the issue, or move the card back |
++| Closed as completed, not in `Done` | Shipped work sits in `Done` | Move the card to `Done` |
+ 
+ ```sh
+ D=$(mktemp -d); R=modelcontextprotocol/servers; LIMIT=5000
+@@ -601,7 +604,10 @@ jq -nr --slurpfile o "$D/i.json" --slurpfile a "$D/b43.json" --arg R "$R" '
+     "closed unshipped, still carded":
+                              [$B[] | select(I(.n) != null and (isopen(.n) | not)
+                                             and (shipped(.n) | not)) | .n],
+-    "open, but carded Done": [$B[] | select(.s == "Done" and isopen(.n)) | .n]
++    "open, but carded Done": [$B[] | select(.s == "Done" and isopen(.n)) | .n],
++    "closed completed, not Done":
++                             [$B[] | select(I(.n) != null and (isopen(.n) | not) and shipped(.n)
++                                            and .s != "Done") | .n]
+   } | to_entries[] | "\(.value|length)\t\(.key)\t\(.value[0:10])"'
+ ```
+ 
+@@ -630,9 +636,11 @@ What the queries account for:
+ - **Count the type labels; don't test for presence.** The invariant is
+   _exactly one_, and a presence test passes an issue labeled both `bug` and
+   `enhancement`.
+-- **`Done` is checked from both sides.** One check catches a card in `Done` for
+-  work that never shipped; the other catches an issue still **open** under a
+-  `Done` card. Closing keywords do not fire on `v2/main`, so every issue is
++- **`Done` is checked from all sides.** One check catches a card for work that
++  never shipped; one catches an issue still **open** under a `Done` card; and
++  one catches an issue closed as completed whose card never reached `Done`.
++  Priority is checked on open issues only: a closed card's Priority no longer
++  orders any queue. Closing keywords do not fire on `v2/main`, so every issue is
+   closed by hand after its PR merges, and forgetting that is the usual way this
+   breaks.
+ - **`$M` holds closed issues too**, because the last checks read closed issues'
+diff --git a/docs/contribution-model.md b/docs/contribution-model.md
+index 016d79854f..c7faa2aebd 100644
+--- a/docs/contribution-model.md
++++ b/docs/contribution-model.md
+@@ -176,7 +176,8 @@ this plan:
+ - **`readme-pr-check.yml`** invited README-only PRs to continue with
+   `/i-promise-this-is-not-a-new-server`, which no longer matched the policy.
+   #4868 retired it and folded its behavior into `issue-triage`: a README-only
+-  PR is the listing class, answered with the Registry comment.
++  PR pre-classifies as a listing, and reading it decides the class (a fix to an
++  existing entry can still be one to keep).
+ - **Automatic closing** of outside PRs (a workflow, as maintainer PR #4528
+   proposes for new-server PRs, or a repository setting where GitHub offers one)
+   is a maintainer decision about repository settings and workflows.

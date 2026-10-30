@@ -1,0 +1,58 @@
+From 3269185eb79f071ac740bf348640bd09f5a9c8e0 Mon Sep 17 00:00:00 2001
+From: Aonan Guan <aonag@amazonwebservice.solutions>
+Date: Mon, 29 Dec 2025 15:33:42 -0800
+Subject: [PATCH 1/2] git: improve file path validation in add operation
+
+Add validation to ensure file paths are within repository boundaries
+before staging. This prevents potential issues with relative paths
+and improves overall robustness of the git_add function.
+---
+ src/git/src/mcp_server_git/server.py | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/git/src/mcp_server_git/server.py b/src/git/src/mcp_server_git/server.py
+index 58d8178d3a..78af1d56a5 100644
+--- a/src/git/src/mcp_server_git/server.py
++++ b/src/git/src/mcp_server_git/server.py
+@@ -132,6 +132,14 @@ def git_add(repo: git.Repo, files: list[str]) -> str:
+     if files == ["."]:
+         repo.git.add(".")
+     else:
++        # Validate paths are within repository before adding
++        for file in files:
++            try:
++                repo.git.check_attr('-a', file)
++            except git.exc.GitCommandError as e:
++                if 'outside repository' in str(e):
++                    raise ValueError(f"Path '{file}' is outside repository")
++                raise
+         repo.index.add(files)
+     return "Files staged successfully"
+ 
+
+From db96050800ab1eca4054c9f36918da8dba0832b4 Mon Sep 17 00:00:00 2001
+From: Aonan Guan <aonag@amazonwebservice.solutions>
+Date: Mon, 29 Dec 2025 15:33:42 -0800
+Subject: [PATCH 2/2] git: improve file path validation in add operation
+
+Use Git CLI directly instead of GitPython index API to ensure proper
+path validation and prevent option injection. The '--' separator ensures
+file paths starting with '-' are handled correctly.
+---
+ src/git/src/mcp_server_git/server.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/git/src/mcp_server_git/server.py b/src/git/src/mcp_server_git/server.py
+index 58d8178d3a..1d0298b465 100644
+--- a/src/git/src/mcp_server_git/server.py
++++ b/src/git/src/mcp_server_git/server.py
+@@ -132,7 +132,8 @@ def git_add(repo: git.Repo, files: list[str]) -> str:
+     if files == ["."]:
+         repo.git.add(".")
+     else:
+-        repo.index.add(files)
++        # Use '--' to prevent files starting with '-' from being interpreted as options
++        repo.git.add("--", *files)
+     return "Files staged successfully"
+ 
+ def git_reset(repo: git.Repo) -> str:

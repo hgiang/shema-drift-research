@@ -1,0 +1,22 @@
+From c104a61f8716177555d97a99ce142d5859ab170a Mon Sep 17 00:00:00 2001
+From: Nipun Negi <100460166+nipunnegi2@users.noreply.github.com>
+Date: Tue, 24 Mar 2026 12:08:13 +0530
+Subject: [PATCH] Fix formatting in README for docker usage note
+
+---
+ src/git/README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/git/README.md b/src/git/README.md
+index cdc77daa1b..c9ec3140be 100644
+--- a/src/git/README.md
++++ b/src/git/README.md
+@@ -139,7 +139,7 @@ Add this to your `claude_desktop_config.json`:
+ <details>
+ <summary>Using docker</summary>
+ 
+-* Note: replace '/Users/username' with the a path that you want to be accessible by this tool
++* Note: replace '/Users/username' with a path that you want to be accessible by this tool
+ 
+ ```json
+ "mcpServers": {

@@ -1,0 +1,66 @@
+From 8a8a553fe8bf3b4147acb3ec4b8f8eb3dafefec1 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:20:14 -0400
+Subject: [PATCH] fix(skills): pr-flow silent-round re-request and question
+ branch type
+
+Step 9 allowed another round only after a pushed fix, so a silent round
+could never be followed by a second request and the two-silent-rounds
+exit was unreachable. A silent round is now re-requested without a push
+and without raising EXPECTED; AGENTS.md's loop rule says the same.
+
+Step 2 now says a question-labeled issue has no branch type: relabel it
+with the type of the change before branching.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/pr-flow/SKILL.md | 14 +++++++++++---
+ AGENTS.md                       |  2 +-
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/.claude/skills/pr-flow/SKILL.md b/.claude/skills/pr-flow/SKILL.md
+index 7294809737..f9f8a4ce60 100644
+--- a/.claude/skills/pr-flow/SKILL.md
++++ b/.claude/skills/pr-flow/SKILL.md
+@@ -47,7 +47,9 @@ git switch -c v2/fix/4810-filesystem-symlink-escape origin/v2/main
+ ```
+ 
+ `<type>` follows the issue's type label: `bug` → `fix`, `enhancement` → `feat`,
+-`documentation` → `docs`, `chore` → `chore`. The `v2/` prefix matches the base
++`documentation` → `docs`, `chore` → `chore`. A `question` has no branch type,
++because answering one ships nothing: if it turns out to need a change, relabel
++the issue with the type that change is, then branch. The `v2/` prefix matches the base
+ branch and keeps the work legible in `git branch -a` next to `main`.
+ 
+ **Never cut from `main`.** It is the release line and does not carry `v2/main`'s
+@@ -288,8 +290,14 @@ Push the fixes (signed off, step 3) before requesting the next round.
+ 
+ ## 9. Another round, or stop
+ 
+-Request another round (step 7, with `EXPECTED` one higher) **only when you
+-pushed a fix** in response to the last one. The loop stops at the **first** of:
++Request another round (step 7) in one of two cases, and no other:
++
++- **You pushed a fix** in response to the last round. Raise `EXPECTED` by one.
++- **The last round was silent** (no review by the poll's deadline). Nothing was
++  reviewed, so request again **without** a push and **without** raising
++  `EXPECTED`: the count you are waiting for has not been reached yet.
++
++The loop stops at the **first** of:
+ 
+ | Exit | When | Then |
+ | --- | --- | --- |
+diff --git a/AGENTS.md b/AGENTS.md
+index 6c77e8e56d..26c084b35b 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -276,7 +276,7 @@ here.
+ - **After opening a PR, run a Copilot review loop to convergence, unprompted.**
+   Request a review, wait for the round to post or for Copilot's session to end
+   without one, answer every comment, and request again only when you pushed a
+-  fix. Stop on the **first** clean round (no confirming round), a round holding
++  fix or the last round ended without a review. Stop on the **first** clean round (no confirming round), a round holding
+   only out-of-scope findings, two rounds in a row that end without a review, or
+   a timeout (the loop's budget is spent while findings keep coming). The recipe
+   is the `pr-flow` skill.

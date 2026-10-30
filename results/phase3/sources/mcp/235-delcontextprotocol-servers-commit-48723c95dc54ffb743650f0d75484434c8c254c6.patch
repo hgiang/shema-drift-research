@@ -1,0 +1,89 @@
+From 48723c95dc54ffb743650f0d75484434c8c254c6 Mon Sep 17 00:00:00 2001
+From: King Star <mcxin.y@gmail.com>
+Date: Wed, 2 Sep 2026 23:04:34 +0800
+Subject: [PATCH] fix(memory): reject dangling relations (#4477)
+
+Signed-off-by: King Star <mcxin.y@gmail.com>
+---
+ src/memory/README.md                         |  1 +
+ src/memory/__tests__/knowledge-graph.test.ts | 32 ++++++++++++++++++++
+ src/memory/index.ts                          | 11 +++++++
+ 3 files changed, 44 insertions(+)
+
+diff --git a/src/memory/README.md b/src/memory/README.md
+index 0f294231a9..18851aedaa 100644
+--- a/src/memory/README.md
++++ b/src/memory/README.md
+@@ -72,6 +72,7 @@ Example:
+       - `to` (string): Target entity name
+       - `relationType` (string): Relationship type in active voice
+   - Skips duplicate relations
++  - Fails if either the source or target entity doesn't exist
+ 
+ - **add_observations**
+   - Add new observations to existing entities
+diff --git a/src/memory/__tests__/knowledge-graph.test.ts b/src/memory/__tests__/knowledge-graph.test.ts
+index 628ca567ee..61e823a2a6 100644
+--- a/src/memory/__tests__/knowledge-graph.test.ts
++++ b/src/memory/__tests__/knowledge-graph.test.ts
+@@ -99,6 +99,38 @@ describe('KnowledgeGraphManager', () => {
+       expect(graph.relations).toHaveLength(1);
+     });
+ 
++    it('should reject relations from non-existent entities', async () => {
++      await manager.createEntities([
++        { name: 'Alice', entityType: 'person', observations: [] },
++      ]);
++
++      await expect(
++        manager.createRelations([
++          { from: 'Ghost', to: 'Alice', relationType: 'knows' },
++        ])
++      ).rejects.toThrow('Entity with name Ghost not found');
++
++      const graph = await manager.readGraph();
++      expect(graph.relations).toHaveLength(0);
++    });
++
++    it('should reject relation batches that reference non-existent target entities', async () => {
++      await manager.createEntities([
++        { name: 'Alice', entityType: 'person', observations: [] },
++        { name: 'Bob', entityType: 'person', observations: [] },
++      ]);
++
++      await expect(
++        manager.createRelations([
++          { from: 'Alice', to: 'Bob', relationType: 'knows' },
++          { from: 'Alice', to: 'Ghost', relationType: 'knows' },
++        ])
++      ).rejects.toThrow('Entity with name Ghost not found');
++
++      const graph = await manager.readGraph();
++      expect(graph.relations).toHaveLength(0);
++    });
++
+     it('should handle empty relation arrays', async () => {
+       const newRelations = await manager.createRelations([]);
+       expect(newRelations).toHaveLength(0);
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index d5b862ca60..3f1179dd66 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -151,6 +151,17 @@ export class KnowledgeGraphManager {
+ 
+   async createRelations(relations: Relation[]): Promise<Relation[]> {
+     const graph = await this.loadGraph();
++    const entityNames = new Set(graph.entities.map(e => e.name));
++
++    relations.forEach(r => {
++      if (!entityNames.has(r.from)) {
++        throw new Error(`Entity with name ${r.from} not found`);
++      }
++      if (!entityNames.has(r.to)) {
++        throw new Error(`Entity with name ${r.to} not found`);
++      }
++    });
++
+     const newRelations = relations.filter(r => !graph.relations.some(existingRelation => 
+       existingRelation.from === r.from && 
+       existingRelation.to === r.to && 

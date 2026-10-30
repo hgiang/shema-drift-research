@@ -1,0 +1,44 @@
+From 80397a9d3b0799e818a3591a0b99416d060ef330 Mon Sep 17 00:00:00 2001
+From: Den Delimarsky <53200638+localden@users.noreply.github.com>
+Date: Mon, 26 Jan 2026 20:39:39 -0800
+Subject: [PATCH] Update security requirements for servers
+
+Note about security requirements, as discussed with @jenn-newton
+---
+ README.md   | 3 +++
+ SECURITY.md | 8 +++++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index c72349eab6..9b1bcce91a 100644
+--- a/README.md
++++ b/README.md
+@@ -5,6 +5,9 @@ This repository is a collection of *reference implementations* for the [Model Co
+ > [!IMPORTANT]
+ > If you are looking for a list of MCP servers, you can browse published servers on [the MCP Registry](https://registry.modelcontextprotocol.io/). The repository served by this README is dedicated to housing just the small number of reference servers maintained by the MCP steering group.
+ 
++> [!WARNING]
++> The servers in this repository are intended as **reference implementations** to demonstrate MCP features and SDK usage. They are meant to serve as educational examples for developers building their own MCP servers, not as production-ready solutions. Developers should evaluate their own security requirements and implement appropriate safeguards based on their specific threat model and use case.
++
+ The servers in this repository showcase the versatility and extensibility of MCP, demonstrating how it can be used to give Large Language Models (LLMs) secure, controlled access to tools and data sources.
+ Typically, each MCP server is implemented with an MCP SDK:
+ 
+diff --git a/SECURITY.md b/SECURITY.md
+index f26aba9cd0..bdc931e1cf 100644
+--- a/SECURITY.md
++++ b/SECURITY.md
+@@ -3,7 +3,13 @@ Thank you for helping us keep our MCP servers secure.
+ 
+ The **reference servers** in this repo are maintained by [Anthropic](https://www.anthropic.com/) as part of the Model Context Protocol project.
+ 
+-The security of our systems and user data is Anthropic’s top priority. We appreciate the work of security researchers acting in good faith in identifying and reporting potential vulnerabilities.
++The security of our systems and user data is Anthropic's top priority. We appreciate the work of security researchers acting in good faith in identifying and reporting potential vulnerabilities.
++
++## Important Notice
++
++The servers in this repository are **reference implementations** intended to demonstrate MCP features and SDK usage. They serve as educational examples for developers building their own MCP servers, not as production-ready solutions.
++
++**Bug bounties are not awarded for security vulnerabilities found in these reference servers.** Our bug bounty program applies exclusively to the [MCP SDKs](https://github.com/modelcontextprotocol) maintained by Anthropic. If you discover a vulnerability in an MCP SDK that is maintained by Anthropic, please report it through our vulnerability disclosure program below.
+ 
+ ## Vulnerability Disclosure Program
+ 

@@ -1,0 +1,218 @@
+From 7b8592538fce3285899b9b9636a7e2c400b331ad Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 13 Dec 2025 15:52:32 -0500
+Subject: [PATCH] Updated doc in all tools
+
+---
+ src/everything/tools/echo.ts                           | 2 +-
+ src/everything/tools/get-annotated-message.ts          | 2 +-
+ src/everything/tools/get-env.ts                        | 2 +-
+ src/everything/tools/get-resource-links.ts             | 2 +-
+ src/everything/tools/get-resource-reference.ts         | 2 +-
+ src/everything/tools/get-roots-list.ts                 | 2 +-
+ src/everything/tools/get-structured-content.ts         | 2 +-
+ src/everything/tools/get-sum.ts                        | 2 +-
+ src/everything/tools/get-tiny-image.ts                 | 2 +-
+ src/everything/tools/gzip-file-as-resource.ts          | 2 +-
+ src/everything/tools/toggle-simulated-logging.ts       | 2 +-
+ src/everything/tools/toggle-subscriber-updates.ts      | 2 +-
+ src/everything/tools/trigger-elicitation-request.ts    | 2 +-
+ src/everything/tools/trigger-long-running-operation.ts | 2 +-
+ src/everything/tools/trigger-sampling-request.ts       | 2 +-
+ 15 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/src/everything/tools/echo.ts b/src/everything/tools/echo.ts
+index 24a961f72b..0a3d1a934c 100644
+--- a/src/everything/tools/echo.ts
++++ b/src/everything/tools/echo.ts
+@@ -21,7 +21,7 @@ const config = {
+  * The registered tool validates input arguments using the EchoSchema and
+  * returns a response that echoes the message provided in the arguments.
+  *
+- * @param {McpServer} server - The server instance where the tool will be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  * @returns {void}
+  */
+ export const registerEchoTool = (server: McpServer) => {
+diff --git a/src/everything/tools/get-annotated-message.ts b/src/everything/tools/get-annotated-message.ts
+index 86eaf8aca0..b842c9c573 100644
+--- a/src/everything/tools/get-annotated-message.ts
++++ b/src/everything/tools/get-annotated-message.ts
+@@ -33,7 +33,7 @@ const config = {
+  * The response will have annotations and optionally contain an annotated image.
+  *
+  * @function
+- * @param {McpServer} server - The MCP server instance where the tool is to be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetAnnotatedMessageTool = (server: McpServer) => {
+   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
+diff --git a/src/everything/tools/get-env.ts b/src/everything/tools/get-env.ts
+index 53e43a6b37..a822e60776 100644
+--- a/src/everything/tools/get-env.ts
++++ b/src/everything/tools/get-env.ts
+@@ -16,7 +16,7 @@ const config = {
+  * The registered tool Retrieves and returns the environment variables
+  * of the current process as a JSON-formatted string encapsulated in a text response.
+  *
+- * @param {McpServer} server - The MCP server instance where the tool is to be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  * @returns {void}
+  */
+ export const registerGetEnvTool = (server: McpServer) => {
+diff --git a/src/everything/tools/get-resource-links.ts b/src/everything/tools/get-resource-links.ts
+index ea4dd6fda4..913e1f393b 100644
+--- a/src/everything/tools/get-resource-links.ts
++++ b/src/everything/tools/get-resource-links.ts
+@@ -36,7 +36,7 @@ const config = {
+ 
+  * The response contains a "text" introductory block and multiple "resource_link" blocks.
+  *
+- * @param {McpServer} server - An instance of the McpServer on which the tool will be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetResourceLinksTool = (server: McpServer) => {
+   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
+diff --git a/src/everything/tools/get-resource-reference.ts b/src/everything/tools/get-resource-reference.ts
+index ede976b116..0a5284b226 100644
+--- a/src/everything/tools/get-resource-reference.ts
++++ b/src/everything/tools/get-resource-reference.ts
+@@ -44,7 +44,7 @@ const config = {
+  * 3. Constructs a URI for the resource based on its type (text or blob).
+  * 4. Retrieves the resource and returns it in a content block.
+  *
+- * @param {McpServer} server - The server instance where the tool is registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetResourceReferenceTool = (server: McpServer) => {
+   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
+diff --git a/src/everything/tools/get-roots-list.ts b/src/everything/tools/get-roots-list.ts
+index 210a2608c8..60aba78f15 100644
+--- a/src/everything/tools/get-roots-list.ts
++++ b/src/everything/tools/get-roots-list.ts
+@@ -26,7 +26,7 @@ const config = {
+  * client. If for some reason the server never got the initial roots list, the tool will request the
+  * list from the client again.
+  *
+- * @param {McpServer} server - The server instance interacting with the MCP client
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetRootsListTool = (server: McpServer) => {
+   const clientSupportsRoots =
+diff --git a/src/everything/tools/get-structured-content.ts b/src/everything/tools/get-structured-content.ts
+index 89aa619991..2e19d2a76a 100644
+--- a/src/everything/tools/get-structured-content.ts
++++ b/src/everything/tools/get-structured-content.ts
+@@ -41,7 +41,7 @@ const config = {
+  * - `content`: An array of content blocks, presented as JSON stringified objects.
+  * - `structuredContent`: A JSON structured representation of the weather data.
+  *
+- * @param {McpServer} server - The server instance to which the tool will be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetStructuredContentTool = (server: McpServer) => {
+   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
+diff --git a/src/everything/tools/get-sum.ts b/src/everything/tools/get-sum.ts
+index 1529c0e51b..e24566c1f1 100644
+--- a/src/everything/tools/get-sum.ts
++++ b/src/everything/tools/get-sum.ts
+@@ -27,7 +27,7 @@ const config = {
+  *
+  * The result is returned as a Promise resolving to an object containing the computed sum in a text format.
+  *
+- * @param {McpServer} server - The server instance where the sum tool will be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetSumTool = (server: McpServer) => {
+   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
+diff --git a/src/everything/tools/get-tiny-image.ts b/src/everything/tools/get-tiny-image.ts
+index 36baf90c6b..ccfcdb8aba 100644
+--- a/src/everything/tools/get-tiny-image.ts
++++ b/src/everything/tools/get-tiny-image.ts
+@@ -22,7 +22,7 @@ const config = {
+  * The response structure includes textual content before and after the image.
+  * The image is served as a PNG data type and represents the default MCP tiny image.
+  *
+- * @param server - An instance of McpServer where the tool will be registered.
++ * @param server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetTinyImageTool = (server: McpServer) => {
+   server.registerTool(name, config, async (args): Promise<CallToolResult> => {
+diff --git a/src/everything/tools/gzip-file-as-resource.ts b/src/everything/tools/gzip-file-as-resource.ts
+index 147c980255..4e1d0955de 100644
+--- a/src/everything/tools/gzip-file-as-resource.ts
++++ b/src/everything/tools/gzip-file-as-resource.ts
+@@ -62,7 +62,7 @@ const config = {
+  *
+  * If an unrecognized `outputType` is provided, the tool throws an error.
+  *
+- * @param {McpServer} server - The server instance where the tool will be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  * @throws {Error} Throws an error if an unknown output type is specified.
+  */
+ export const registerGZipFileAsResourceTool = (server: McpServer) => {
+diff --git a/src/everything/tools/toggle-simulated-logging.ts b/src/everything/tools/toggle-simulated-logging.ts
+index 3dbbafec88..4e157d980f 100644
+--- a/src/everything/tools/toggle-simulated-logging.ts
++++ b/src/everything/tools/toggle-simulated-logging.ts
+@@ -26,7 +26,7 @@ const clients: Set<string | undefined> = new Set<string | undefined>();
+  * current state. If logging for the specified session is active, it will be stopped;
+  * if it is inactive, logging will be started.
+  *
+- * @param {McpServer} server - The server instance to which the tool is registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerToggleSimulatedLoggingTool = (server: McpServer) => {
+   server.registerTool(
+diff --git a/src/everything/tools/toggle-subscriber-updates.ts b/src/everything/tools/toggle-subscriber-updates.ts
+index 84458035f7..bb96c55a63 100644
+--- a/src/everything/tools/toggle-subscriber-updates.ts
++++ b/src/everything/tools/toggle-subscriber-updates.ts
+@@ -29,7 +29,7 @@ const clients: Set<string | undefined> = new Set<string | undefined>();
+  * The response provides feedback indicating whether simulated updates were started or stopped,
+  * including the session ID.
+  *
+- * @param {McpServer} server - The MCP server instance on which the tool is registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerToggleSubscriberUpdatesTool = (server: McpServer) => {
+   server.registerTool(
+diff --git a/src/everything/tools/trigger-elicitation-request.ts b/src/everything/tools/trigger-elicitation-request.ts
+index cee337b82d..171803b785 100644
+--- a/src/everything/tools/trigger-elicitation-request.ts
++++ b/src/everything/tools/trigger-elicitation-request.ts
+@@ -24,7 +24,7 @@ const config = {
+  * which contains both user-submitted input data (if provided) and debugging information,
+  * including raw results.
+  *
+- * @param {McpServer} server - The MCP server instance to which the tool will be registered.
++ * @param {McpServer} server - TThe McpServer instance where the tool will be registered.
+  */
+ export const registerTriggerElicitationRequestTool = (server: McpServer) => {
+   server.registerTool(
+diff --git a/src/everything/tools/trigger-long-running-operation.ts b/src/everything/tools/trigger-long-running-operation.ts
+index 5cb1b11915..db6b668627 100644
+--- a/src/everything/tools/trigger-long-running-operation.ts
++++ b/src/everything/tools/trigger-long-running-operation.ts
+@@ -31,7 +31,7 @@ const config = {
+  * At the end of the operation, the tool returns a message indicating the completion of the
+  * operation, including the total duration and steps.
+  *
+- * @param {McpServer} server - The server instance where the tool should be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerTriggerLongRunningOperationTool = (server: McpServer) => {
+   server.registerTool(
+diff --git a/src/everything/tools/trigger-sampling-request.ts b/src/everything/tools/trigger-sampling-request.ts
+index 78f5e05bba..2f687daaf9 100644
+--- a/src/everything/tools/trigger-sampling-request.ts
++++ b/src/everything/tools/trigger-sampling-request.ts
+@@ -32,7 +32,7 @@ const config = {
+  * - Sends the request to the server for sampling.
+  * - Formats and returns the sampling result content to the client.
+  *
+- * @param {McpServer} server - The instance of the MCP server where the tool will be registered.
++ * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerTriggerSamplingRequestTool = (server: McpServer) => {
+   server.registerTool(

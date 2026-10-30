@@ -1,0 +1,31 @@
+From c2ee97e792655f3452bb1c1066e58f90e036b147 Mon Sep 17 00:00:00 2001
+From: Niels Kaspers <153818647+nielskaspers@users.noreply.github.com>
+Date: Sun, 15 Mar 2026 17:50:08 +0200
+Subject: [PATCH] feat(sequential-thinking): add tool annotations (#3534)
+
+feat(sequential-thinking): add tool annotations
+
+Adds MCP ToolAnnotations (readOnlyHint, destructiveHint, idempotentHint, openWorldHint) to the sequential-thinking tool, bringing it in line with the annotation pattern established by the filesystem server.
+
+Fixes #3403
+---
+ src/sequentialthinking/index.ts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/sequentialthinking/index.ts b/src/sequentialthinking/index.ts
+index 809086a94c..a3c34ccadb 100644
+--- a/src/sequentialthinking/index.ts
++++ b/src/sequentialthinking/index.ts
+@@ -81,6 +81,12 @@ You should:
+       branchId: z.string().optional().describe("Branch identifier"),
+       needsMoreThoughts: z.boolean().optional().describe("If more thoughts are needed")
+     },
++    annotations: {
++      readOnlyHint: true,
++      destructiveHint: false,
++      idempotentHint: true,
++      openWorldHint: false,
++    },
+     outputSchema: {
+       thoughtNumber: z.number(),
+       totalThoughts: z.number(),

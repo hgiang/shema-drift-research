@@ -1,0 +1,124 @@
+From 88320daffa627575f3365505f29b56aab05a5cd0 Mon Sep 17 00:00:00 2001
+From: Paul Carleton <paulc@anthropic.com>
+Date: Thu, 18 Dec 2025 13:22:52 +0000
+Subject: [PATCH] fix(git): import BadName directly to fix pyright errors
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Import `BadName` from `git.exc` directly instead of accessing it via
+`git.exc.BadName`, which pyright doesn't recognize as a valid attribute
+access on the `git` module.
+
+This fixes the pyright CI failures introduced by the recent security
+patches (GHSA merges).
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+---
+ src/git/src/mcp_server_git/server.py |  5 +++--
+ src/git/tests/test_server.py         | 19 ++++++++++---------
+ 2 files changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/src/git/src/mcp_server_git/server.py b/src/git/src/mcp_server_git/server.py
+index 23e9b53fd7..58d8178d3a 100644
+--- a/src/git/src/mcp_server_git/server.py
++++ b/src/git/src/mcp_server_git/server.py
+@@ -13,6 +13,7 @@
+ )
+ from enum import Enum
+ import git
++from git.exc import BadName
+ from pydantic import BaseModel, Field
+ 
+ # Default number of context lines to show in diff output
+@@ -119,7 +120,7 @@ def git_diff(repo: git.Repo, target: str, context_lines: int = DEFAULT_CONTEXT_L
+     # Defense in depth: reject targets starting with '-' to prevent flag injection,
+     # even if a malicious ref with that name exists (e.g. via filesystem manipulation)
+     if target.startswith("-"):
+-        raise git.exc.BadName(f"Invalid target: '{target}' - cannot start with '-'")
++        raise BadName(f"Invalid target: '{target}' - cannot start with '-'")
+     repo.rev_parse(target)  # Validates target is a real git ref, throws BadName if not
+     return repo.git.diff(f"--unified={context_lines}", target)
+ 
+@@ -187,7 +188,7 @@ def git_checkout(repo: git.Repo, branch_name: str) -> str:
+     # Defense in depth: reject branch names starting with '-' to prevent flag injection,
+     # even if a malicious ref with that name exists (e.g. via filesystem manipulation)
+     if branch_name.startswith("-"):
+-        raise git.exc.BadName(f"Invalid branch name: '{branch_name}' - cannot start with '-'")
++        raise BadName(f"Invalid branch name: '{branch_name}' - cannot start with '-'")
+     repo.rev_parse(branch_name)  # Validates branch_name is a real git ref, throws BadName if not
+     repo.git.checkout(branch_name)
+     return f"Switched to branch '{branch_name}'"
+diff --git a/src/git/tests/test_server.py b/src/git/tests/test_server.py
+index 3dba7387c3..054bf8c756 100644
+--- a/src/git/tests/test_server.py
++++ b/src/git/tests/test_server.py
+@@ -1,6 +1,7 @@
+ import pytest
+ from pathlib import Path
+ import git
++from git.exc import BadName
+ from mcp_server_git.server import (
+     git_checkout,
+     git_branch,
+@@ -40,7 +41,7 @@ def test_git_checkout_existing_branch(test_repository):
+ 
+ def test_git_checkout_nonexistent_branch(test_repository):
+ 
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_checkout(test_repository, "nonexistent-branch")
+ 
+ def test_git_branch_local(test_repository):
+@@ -316,25 +317,25 @@ def test_validate_repo_path_symlink_escape(tmp_path: Path):
+ 
+ def test_git_diff_rejects_flag_injection(test_repository):
+     """git_diff should reject flags that could be used for argument injection."""
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_diff(test_repository, "--output=/tmp/evil")
+ 
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_diff(test_repository, "--help")
+ 
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_diff(test_repository, "-p")
+ 
+ 
+ def test_git_checkout_rejects_flag_injection(test_repository):
+     """git_checkout should reject flags that could be used for argument injection."""
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_checkout(test_repository, "--help")
+ 
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_checkout(test_repository, "--orphan=evil")
+ 
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_checkout(test_repository, "-f")
+ 
+ 
+@@ -398,7 +399,7 @@ def test_git_diff_rejects_malicious_refs(test_repository):
+     malicious_ref_path.write_text(sha)
+ 
+     # Even though the ref exists, it should be rejected
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_diff(test_repository, "--output=evil.txt")
+ 
+     # Verify no file was created (the attack was blocked)
+@@ -417,7 +418,7 @@ def test_git_checkout_rejects_malicious_refs(test_repository):
+     malicious_ref_path.write_text(sha)
+ 
+     # Even though the ref exists, it should be rejected
+-    with pytest.raises(git.exc.BadName):
++    with pytest.raises(BadName):
+         git_checkout(test_repository, "--orphan=evil")
+ 
+     # Cleanup

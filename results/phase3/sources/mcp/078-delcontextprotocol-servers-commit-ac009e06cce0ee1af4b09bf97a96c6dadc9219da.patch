@@ -1,0 +1,77 @@
+From ac009e06cce0ee1af4b09bf97a96c6dadc9219da Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 28 Sep 2026 23:57:33 -0400
+Subject: [PATCH] fix: sync the lockfile's typescript ranges; scope each CI
+ leg's install
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- package-lock.json's workspace entries now record the aligned
+  typescript range.
+- Each typescript.yml leg installs its own workspace plus the root
+  (--workspace … --include-workspace-root) instead of the whole tree, so
+  no other workspace's prepare (build) runs in its leg.
+
+Refs #4864
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .github/workflows/typescript.yml | 10 +++++-----
+ package-lock.json                |  6 +++---
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index da218ddcf2..461afacc6d 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -74,12 +74,12 @@ jobs:
+           node-version: 22
+           cache: npm
+ 
+-      # At the repo root, not in the package: run from a workspace directory,
+-      # `npm ci` installs only that workspace's dependencies, and the gate's
+-      # tools (Prettier, ESLint) are root devDependencies shared by every
+-      # package.
++      # This package plus the root: run from a workspace directory, `npm ci`
++      # installs only that workspace's dependencies, and the gate's tools
++      # (Prettier, ESLint) are root devDependencies. A bare root `npm ci` would
++      # instead run every workspace's `prepare` (a build), coupling the legs.
+       - name: Install dependencies
+-        run: npm ci
++        run: npm ci --workspace src/${{ matrix.package }} --include-workspace-root
+ 
+       - name: Validate package
+         working-directory: src/${{ matrix.package }}
+diff --git a/package-lock.json b/package-lock.json
+index 77833c748a..2422fd7b66 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -4962,7 +4962,7 @@
+         "@types/express": "^5.0.6",
+         "@vitest/coverage-v8": "^4.1.8",
+         "shx": "^0.4.0",
+-        "typescript": "^5.6.2",
++        "typescript": "^5.8.2",
+         "vitest": "^4.1.8"
+       }
+     },
+@@ -5005,7 +5005,7 @@
+         "@types/node": "^22",
+         "@vitest/coverage-v8": "^4.1.8",
+         "shx": "^0.4.0",
+-        "typescript": "^5.6.2",
++        "typescript": "^5.8.2",
+         "vitest": "^4.1.8"
+       }
+     },
+@@ -5027,7 +5027,7 @@
+         "@types/yargs": "^17.0.32",
+         "@vitest/coverage-v8": "^4.1.8",
+         "shx": "^0.4.0",
+-        "typescript": "^5.3.3",
++        "typescript": "^5.8.2",
+         "vitest": "^4.1.8"
+       }
+     }

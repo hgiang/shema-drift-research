@@ -1,0 +1,1023 @@
+From 8821de36b337d7242f17e6f2596bc667f40323fd Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:14:27 -0400
+Subject: [PATCH] docs: issues-not-PRs contribution model, issue forms, backlog
+ plan
+
+Outside pull requests are turned off, as in the Inspector (decided on
+#4861). CONTRIBUTING.md, AGENTS.md's Contributing section, the PR
+template's banner, and the fetch and time READMEs now say so.
+
+Add bug and feature issue forms with a server dropdown, a protocol-era
+field and a client field, and a config.yml that disables blank issues and
+routes security reports to the private advisory form and new servers to
+the MCP Server Registry.
+
+docs/contribution-model.md records the plan for the open outside-PR
+backlog (classify, harvest into issues, close with a canned comment,
+verify), which #4868's triage pass carries out.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .github/ISSUE_TEMPLATE/1-bug_report.yml      | 197 ++++++++++++++++++
+ .github/ISSUE_TEMPLATE/2-feature_request.yml | 134 +++++++++++++
+ .github/ISSUE_TEMPLATE/config.yml            |  58 ++++++
+ .github/pull_request_template.md             |  53 ++++-
+ AGENTS.md                                    |  21 +-
+ CONTRIBUTING.md                              | 186 +++++++++++++----
+ docs/contribution-model.md                   | 201 +++++++++++++++++++
+ src/fetch/README.md                          |   4 +-
+ src/time/README.md                           |   4 +-
+ 9 files changed, 809 insertions(+), 49 deletions(-)
+ create mode 100644 .github/ISSUE_TEMPLATE/1-bug_report.yml
+ create mode 100644 .github/ISSUE_TEMPLATE/2-feature_request.yml
+ create mode 100644 .github/ISSUE_TEMPLATE/config.yml
+ create mode 100644 docs/contribution-model.md
+
+diff --git a/.github/ISSUE_TEMPLATE/1-bug_report.yml b/.github/ISSUE_TEMPLATE/1-bug_report.yml
+new file mode 100644
+index 0000000000..7a75c4773f
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/1-bug_report.yml
+@@ -0,0 +1,197 @@
++# Bug report form (GitHub issue forms schema).
++#
++# Requires the facts triage needs before anything else: which server, its
++# version, how it was run, the transport, the protocol era the client speaks,
++# and the client itself. The server dropdown is how triage picks the
++# `server-<name>` scope label; `labels:` below is static, so it cannot apply
++# that label itself. `bug` is the type label and `v2` the version label: this
++# repository has no v1 line, so every issue is a v2 issue (AGENTS.md).
++#
++# GitHub serves issue forms from the default branch (`main`), so a change here
++# goes live at the next milestone merge from `v2/main`, not when it merges.
++name: Bug report
++description: Report something broken in one of the reference servers
++labels: ["bug", "v2"]
++body:
++  - type: markdown
++    attributes:
++      value: |
++        Thanks for reporting a bug. **Issues are how work reaches these servers.**
++
++        This repository accepts **issues, not pull requests**: design and
++        implementation are done by the maintainers through a prompt-driven
++        workflow ([`CONTRIBUTING.md`](https://github.com/modelcontextprotocol/servers/blob/main/CONTRIBUTING.md)).
++        So if you have already prototyped a fix locally, **the prompt you used
++        is worth more to us than a diff**. There is a field for it at the bottom
++        of this form.
++
++        > 🔒 **Do not report security vulnerabilities here.** Use the
++        > [private advisory form](https://github.com/modelcontextprotocol/servers/security/advisories/new)
++        > instead.
++
++  - type: dropdown
++    id: server
++    attributes:
++      label: Which server?
++      description: >
++        The servers in this repository. A server you found in the MCP Server
++        Registry or elsewhere is maintained by its own authors; report its bugs
++        to them.
++      options:
++        - everything (@modelcontextprotocol/server-everything)
++        - filesystem (@modelcontextprotocol/server-filesystem)
++        - memory (@modelcontextprotocol/server-memory)
++        - sequentialthinking (@modelcontextprotocol/server-sequential-thinking)
++        - fetch (mcp-server-fetch)
++        - git (mcp-server-git)
++        - time (mcp-server-time)
++        - More than one, or the repository itself
++    validations:
++      required: true
++
++  - type: input
++    id: server-version
++    attributes:
++      label: Server version
++      description: >
++        The version you actually ran, not "latest". For an unreleased build,
++        give the commit.
++      placeholder: "0.6.3"
++    validations:
++      required: true
++
++  - type: dropdown
++    id: install
++    attributes:
++      label: How did you run the server?
++      options:
++        - npx (npm package)
++        - uvx or pip (PyPI package)
++        - Docker image
++        - From a clone of this repository
++        - Other (say which below)
++    validations:
++      required: true
++
++  - type: dropdown
++    id: transport
++    attributes:
++      label: Transport
++      description: >
++        Every server speaks stdio. Only `everything` also serves Streamable HTTP
++        and the deprecated HTTP+SSE transport.
++      options:
++        - stdio
++        - Streamable HTTP
++        - HTTP+SSE (deprecated)
++        - Not sure
++    validations:
++      required: true
++
++  - type: dropdown
++    id: spec-era
++    attributes:
++      label: Protocol era
++      description: >
++        Which revision of the MCP specification the client negotiated. Modern
++        is 2026-07-28, the stateless revision with no `initialize` handshake.
++        Legacy is 2025-11-25 or earlier. The client's logs, or the MCP
++        Inspector, show the negotiated version.
++      options:
++        - Modern (2026-07-28)
++        - Legacy (2025-11-25 or earlier)
++        - Not sure
++    validations:
++      required: true
++
++  - type: input
++    id: client
++    attributes:
++      label: MCP client and version
++      description: The client that talked to the server, with its version.
++      placeholder: "Claude Desktop 1.2.3, MCP Inspector 2.0.0, a custom SDK client"
++    validations:
++      required: true
++
++  - type: input
++    id: environment
++    attributes:
++      label: Operating system and runtime
++      description: Your OS, plus `node --version` or `python --version` as applicable.
++      placeholder: "macOS 15.5, Node v22.19.0"
++    validations:
++      required: false
++
++  - type: textarea
++    id: config
++    attributes:
++      label: Server configuration
++      description: >
++        The command, arguments and environment variables the client launched the
++        server with (for example, the `mcpServers` entry). Redact tokens,
++        secrets and private paths.
++    validations:
++      required: false
++
++  - type: textarea
++    id: repro
++    attributes:
++      label: Steps to reproduce
++      description: >
++        Numbered steps from a fresh start of the server, including the tool,
++        resource or prompt you called and its arguments.
++      placeholder: |
++        1. Start the server with the configuration above
++        2. Call `read_text_file` with `{"path": "/allowed/dir/link"}`
++        3. ...
++    validations:
++      required: true
++
++  - type: textarea
++    id: expected
++    attributes:
++      label: Expected behavior
++      description: What you expected to happen.
++    validations:
++      required: true
++
++  - type: textarea
++    id: actual
++    attributes:
++      label: Actual behavior
++      description: What happened instead.
++    validations:
++      required: true
++
++  - type: textarea
++    id: logs
++    attributes:
++      label: Logs or error output
++      description: >
++        The server's stderr, the client's MCP log, or the error the tool
++        returned. Redact tokens and secrets first.
++      render: text
++    validations:
++      required: false
++
++  - type: textarea
++    id: prompt
++    attributes:
++      label: Already prototyped a fix?
++      description: >
++        Please don't attach a diff or open a pull request. Share the **exact
++        prompt(s)** you used to produce the change, the behavior before and
++        after, and how you verified it. We reproduce it through our own
++        workflow so it lands with the right conventions, tests and coverage.
++    validations:
++      required: false
++
++  - type: checkboxes
++    id: acknowledgements
++    attributes:
++      label: Before you submit
++      options:
++        - label: I searched existing issues and this is not a duplicate.
++          required: true
++        - label: This is not a security vulnerability report (those go through the private advisory form).
++          required: true
+diff --git a/.github/ISSUE_TEMPLATE/2-feature_request.yml b/.github/ISSUE_TEMPLATE/2-feature_request.yml
+new file mode 100644
+index 0000000000..1780141df0
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/2-feature_request.yml
+@@ -0,0 +1,134 @@
++# Feature request form (GitHub issue forms schema).
++#
++# Asks for the server and a problem statement first, since the servers are
++# reference implementations and a feature is judged by what it demonstrates
++# about the protocol (CONTRIBUTING.md, "What we act on"). The server dropdown is
++# how triage picks the `server-<name>` scope label; `labels:` below is static.
++# `enhancement` is the type label and `v2` the version label: this repository
++# has no v1 line, so every issue is a v2 issue (AGENTS.md).
++#
++# GitHub serves issue forms from the default branch (`main`), so a change here
++# goes live at the next milestone merge from `v2/main`, not when it merges.
++name: Feature request
++description: Suggest an improvement to one of the reference servers
++labels: ["enhancement", "v2"]
++body:
++  - type: markdown
++    attributes:
++      value: |
++        Thanks for suggesting an improvement.
++
++        **Maintainers do the implementation here**: this repository accepts
++        **issues, not pull requests**
++        ([`CONTRIBUTING.md`](https://github.com/modelcontextprotocol/servers/blob/main/CONTRIBUTING.md)).
++        That makes a sharply stated **problem** the most valuable thing you can
++        give us. It is what we design against, and it survives after a specific
++        solution turns out not to fit.
++
++        These servers are **reference implementations**. We favor changes that
++        show how a part of the protocol is meant to be used (Resources, Prompts
++        and Roots as well as Tools) and are selective about other new features.
++
++        > **New servers are not accepted here.** To publish or list a server,
++        > use the [MCP Server Registry](https://github.com/modelcontextprotocol/registry).
++
++  - type: dropdown
++    id: server
++    attributes:
++      label: Which server?
++      options:
++        - everything (@modelcontextprotocol/server-everything)
++        - filesystem (@modelcontextprotocol/server-filesystem)
++        - memory (@modelcontextprotocol/server-memory)
++        - sequentialthinking (@modelcontextprotocol/server-sequential-thinking)
++        - fetch (mcp-server-fetch)
++        - git (mcp-server-git)
++        - time (mcp-server-time)
++        - More than one, or the repository itself
++    validations:
++      required: true
++
++  - type: dropdown
++    id: spec-era
++    attributes:
++      label: Protocol era
++      description: >
++        Which revision of the MCP specification the request concerns. Modern is
++        2026-07-28, the stateless revision; legacy is 2025-11-25 or earlier.
++      options:
++        - Modern (2026-07-28)
++        - Legacy (2025-11-25 or earlier)
++        - Both, or not era-specific
++        - Not sure
++    validations:
++      required: true
++
++  - type: input
++    id: client
++    attributes:
++      label: MCP client
++      description: The client you use the server with, if it matters to the request.
++      placeholder: "Claude Desktop, MCP Inspector, a custom SDK client"
++    validations:
++      required: false
++
++  - type: textarea
++    id: problem
++    attributes:
++      label: The problem
++      description: >
++        What are you trying to do, and what makes it hard or impossible today?
++        Describe the situation, not the feature, including how often you hit it
++        and what you do instead right now.
++    validations:
++      required: true
++
++  - type: textarea
++    id: solution
++    attributes:
++      label: Solution you have in mind (optional)
++      description: >
++        If you have a concrete idea, describe it here. It's fine to leave this
++        blank; the problem above is the part we need.
++    validations:
++      required: false
++
++  - type: textarea
++    id: protocol
++    attributes:
++      label: Which MCP feature does it demonstrate? (optional)
++      description: >
++        If the change would show off a part of the protocol (a resource
++        template, a prompt, Roots, elicitation, and so on), say which, with a
++        link to the specification section if you have one.
++    validations:
++      required: false
++
++  - type: textarea
++    id: alternatives
++    attributes:
++      label: Alternatives or workarounds you have tried
++    validations:
++      required: false
++
++  - type: textarea
++    id: prompt
++    attributes:
++      label: Already built it locally?
++      description: >
++        Please don't attach a diff or open a pull request. Share the **exact
++        prompt(s)** you used, the result, and how you verified it. We reproduce
++        the work through our own workflow so it lands with the right
++        conventions, tests and coverage.
++    validations:
++      required: false
++
++  - type: checkboxes
++    id: acknowledgements
++    attributes:
++      label: Before you submit
++      options:
++        - label: I searched existing issues and this is not a duplicate.
++          required: true
++        - label: This is a request for one of the servers in this repository, not a new server, the MCP specification or an SDK.
++          required: true
+diff --git a/.github/ISSUE_TEMPLATE/config.yml b/.github/ISSUE_TEMPLATE/config.yml
+new file mode 100644
+index 0000000000..e05ce1099f
+--- /dev/null
++++ b/.github/ISSUE_TEMPLATE/config.yml
+@@ -0,0 +1,58 @@
++# Issue chooser configuration (GitHub issue template config schema).
++#
++# Blank issues are disabled so every report lands in a form: the bug form
++# requires the facts triage needs first (server, version, transport, protocol
++# era, client), and the feature form requires the server and a problem
++# statement.
++#
++# Security reports are deliberately a *contact link* rather than a form: a form
++# would still open a public issue, which is exactly what a vulnerability report
++# must not do. The link leaves the issue flow and opens the private advisory
++# form; private vulnerability reporting is enabled on this repository.
++#
++# New servers and server listings are also contact links, to the MCP Server
++# Registry, because this repository accepts neither (CONTRIBUTING.md).
++#
++# GitHub reads this file from the default branch (`main`), so a change here
++# goes live at the next milestone merge from `v2/main`, not when it merges.
++blank_issues_enabled: false
++contact_links:
++  - name: "🔒 Security vulnerability: report privately"
++    url: https://github.com/modelcontextprotocol/servers/security/advisories/new
++    about: >
++      Never report a vulnerability in a public issue. Private vulnerability
++      reporting is enabled on this repository, and this link opens the advisory
++      form. A vulnerability in an MCP SDK goes to that SDK's repository instead.
++
++  - name: "📦 New server, or listing a server: use the MCP Server Registry"
++    url: https://github.com/modelcontextprotocol/registry
++    about: >
++      This repository does not accept new server implementations or server
++      listings. Publish your server to the Registry to make it discoverable;
++      browse published servers at https://registry.modelcontextprotocol.io/.
++
++  - name: '🤝 Contribution policy: why there is no "New pull request"'
++    url: https://github.com/modelcontextprotocol/servers/blob/main/CONTRIBUTING.md
++    about: >
++      This repository accepts issues, not pull requests; maintainers do the
++      implementation. If you already built a change locally, open an issue and
++      share the prompt you used rather than a diff.
++
++  - name: "📐 MCP specification: protocol questions and proposals"
++    url: https://github.com/modelcontextprotocol/modelcontextprotocol/issues
++    about: >
++      If the behavior you're reporting is defined by the protocol rather than by
++      one of these servers, file it against the specification repository.
++
++  - name: "🧰 MCP SDKs: TypeScript and Python"
++    url: https://github.com/modelcontextprotocol
++    about: >
++      The servers are built on the TypeScript and Python SDKs. If a bug
++      reproduces against the SDK directly, outside these servers, file it in
++      that SDK's repository.
++
++  - name: "💬 Questions and community"
++    url: https://modelcontextprotocol.io/community/communication
++    about: >
++      Usage questions and discussion: the MCP Contributor Discord and the other
++      community channels, and how each is used.
+diff --git a/.github/pull_request_template.md b/.github/pull_request_template.md
+index dd93c47980..84ccc325fd 100644
+--- a/.github/pull_request_template.md
++++ b/.github/pull_request_template.md
+@@ -1,36 +1,76 @@
+-<!-- Provide a brief description of your changes -->
++<!--
++  ⚠️ Before you open this pull request, please read our contribution policy.
+ 
+-## Description
++  We accept ISSUES, NOT PULL REQUESTS from anyone but the repository
++  maintainers, organization members with write access included.
++
++  Design and implementation are done by the maintainers through a
++  prompt-driven workflow (see AGENTS.md). Outside pull requests are closed,
++  not merged: a diff written outside that workflow has to be reverse-engineered
++  to fit our conventions, tests and gates, so it's faster for us to re-derive
++  the change from your intent.
++
++  If you've found a bug or want a feature:
++    → Open an issue instead, using the Bug report or Feature request form.
++
++  If you've already built the change locally:
++    → Open an issue and share the PROMPT(S) you used to generate it, not a
++      diff. We'll reproduce it through our own workflow.
++
++  If you want to list or add a server:
++    → Publish it to the MCP Server Registry instead
++      (https://github.com/modelcontextprotocol/registry).
+ 
+-## Publishing Your Server
++  Full policy: ../CONTRIBUTING.md (relative to this template; the file lives
++  at the repository root, on whatever branch you're reading).
+ 
+-**Note: We are no longer accepting PRs to add servers to the README.** Instead, please publish your server to the [MCP Server Registry](https://github.com/modelcontextprotocol/registry) to make it discoverable to the MCP ecosystem.
++  Maintainers: delete this comment and the banner below, keep the first line
++  as `Closes #<ISSUE_NUMBER>`, and fill in the sections.
++-->
+ 
+-To publish your server, follow the [quickstart guide](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx). You can browse published servers at [https://registry.modelcontextprotocol.io/](https://registry.modelcontextprotocol.io/).
++> **Heads up:** this repository accepts **issues, not pull requests**, from
++> anyone but the repository maintainers. Please read
++> [`CONTRIBUTING.md`](../CONTRIBUTING.md) before continuing. If you're not a
++> maintainer, open an issue (and share the prompt you used, if you've already
++> built the change) rather than this PR. To make a server discoverable, publish
++> it to the [MCP Server Registry](https://github.com/modelcontextprotocol/registry).
++
++Closes #<ISSUE_NUMBER>
++
++## Description
+ 
+ ## Server Details
++
+ <!-- If modifying an existing server, provide details -->
+-- Server: <!-- e.g., filesystem, github -->
++
++- Server: <!-- e.g., filesystem, git -->
+ - Changes to: <!-- e.g., tools, resources, prompts -->
+ 
+ ## Motivation and Context
++
+ <!-- Why is this change needed? What problem does it solve? -->
+ 
+ ## How Has This Been Tested?
++
+ <!-- Have you tested this with an LLM client? Which scenarios were tested? -->
+ 
+ ## Breaking Changes
++
+ <!-- Will users need to update their MCP client configurations? -->
+ 
+ ## Types of changes
++
+ <!-- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
++
+ - [ ] Bug fix (non-breaking change which fixes an issue)
+ - [ ] New feature (non-breaking change which adds functionality)
+ - [ ] Breaking change (fix or feature that would cause existing functionality to change)
+ - [ ] Documentation update
+ 
+ ## Checklist
++
+ <!-- Go over all the following points, and put an `x` in all the boxes that apply. -->
++
+ - [ ] I have read the [MCP Protocol Documentation](https://modelcontextprotocol.io)
+ - [ ] My changes follows MCP security best practices
+ - [ ] I have updated the server's README accordingly
+@@ -41,4 +81,5 @@ To publish your server, follow the [quickstart guide](https://github.com/modelco
+ - [ ] I have documented all environment variables and configuration options
+ 
+ ## Additional context
++
+ <!-- Add any other context, implementation notes, or design decisions -->
+diff --git a/AGENTS.md b/AGENTS.md
+index a5c5a1212d..c433b645c2 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -43,11 +43,13 @@ servers/
+ │   └── time/                 Py  mcp-server-time                                  PyPI  Time and timezone conversion
+ ├── .claude/skills/            On-demand procedures (see the Skills index above)
+ ├── scripts/                  Release tooling (release.py)
+-├── docs/                     Design documents
++├── docs/                     Design documents; contribution-model.md holds the outside-PR backlog plan
+ ├── .github/workflows/        typescript.yml, python.yml (per-package CI), release.yml (dispatch-only publish),
+ │                             claude.yml (@claude mentions), readme-pr-check.yml
++├── .github/ISSUE_TEMPLATE/   Bug and feature issue forms; config.yml routes security and new servers away
++├── .github/pull_request_template.md   The "issues, not PRs" banner and the maintainers' PR checklist
+ ├── RELEASING.md              How publishing works and how to recover a failed publish
+-└── CONTRIBUTING.md           What contributions are accepted
++└── CONTRIBUTING.md           The contribution policy: issues, not PRs; what is accepted
+ ```
+ 
+ The four TypeScript servers are **npm workspaces** of the root `package.json`.
+@@ -154,8 +156,19 @@ members with write access included, files a detailed issue instead: the problem,
+ how to reproduce it, the expected behavior, and, if a fix was prototyped, the
+ prompt that produced it rather than a diff. An agent working for someone who is
+ not a maintainer produces that issue, not a PR. The maintainers decided this on
+-#4861; where `CONTRIBUTING.md` or the PR template still describe the older open
+-PR flow, this rule governs.
++#4861. `CONTRIBUTING.md`, the PR template's banner and the issue forms in
++`.github/ISSUE_TEMPLATE/` all say so; a change to the policy changes all of them
++together.
++
++- **An outside PR is closed, not reviewed or merged**, with a pointer to the
++  issue flow. If it holds a fix worth keeping, file an issue for it first and
++  credit the PR's author there. How the open backlog of outside PRs is worked,
++  and the comment to close them with, is in
++  [`docs/contribution-model.md`](./docs/contribution-model.md).
++- **Issue forms are served from the default branch** (`main`), so a change under
++  `.github/ISSUE_TEMPLATE/` goes live at the next milestone merge, not when its
++  PR merges to `v2/main`. The server dropdown in each form does not label the
++  issue; triage applies the `server-<name>` scope label from it.
+ 
+ **Every PR references an issue.** The PR body's first line is
+ `Closes #<ISSUE_NUMBER>`. A PR with no linked issue has no board card, so the
+diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
+index 4afe671ea8..d2df5baeed 100644
+--- a/CONTRIBUTING.md
++++ b/CONTRIBUTING.md
+@@ -1,42 +1,158 @@
+ # Contributing to MCP Servers
+ 
+-Thanks for your interest in contributing! Here's how you can help make this repo better.
+-
+-We accept changes through [the standard GitHub flow model](https://docs.github.com/en/get-started/using-github/github-flow).
+-
+-## Server Listings
+-
+-The README no longer contains a list of third-party MCP servers — that list has been retired in favor of the [MCP Server Registry](https://github.com/modelcontextprotocol/registry). To make your server discoverable, follow the [quickstart guide](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx) to publish it there.
+-
+-You can browse published servers at [https://registry.modelcontextprotocol.io/](https://registry.modelcontextprotocol.io/).
+-
+-## Server Implementations
+-
+-We welcome:
+-- **Bug fixes** — Help us squash those pesky bugs.
+-- **Usability improvements** — Making servers easier to use for humans and agents.
+-- **Enhancements that demonstrate MCP protocol features** — We encourage contributions that help reference servers better illustrate underutilized aspects of the MCP protocol beyond just Tools, such as Resources, Prompts, or Roots. For example, adding Roots support to filesystem-server helps showcase this important but lesser-known feature.
++Thank you for your interest in improving the MCP reference servers. Contributors
++are genuinely valued, and this document explains how to get your input into a
++form the maintainers can act on quickly and consistently.
++
++## TL;DR
++
++**We accept issues, not pull requests.** Design and implementation are done by
++the repository maintainers. If you've already built a fix or feature locally,
++share **the prompt you used** to produce it, not the source code. This applies
++to everyone outside the repository maintainers, including organization members
++who happen to have write access to this repository.
++
++## Why this policy exists
++
++The reference servers are developed with an AI-assisted, prompt-driven workflow
++built around shared conventions and strict gates (see [`AGENTS.md`](./AGENTS.md)):
++seven independently published packages in two languages, each with its own
++tests, type checks, lint and release steps, all tracked on one project board.
++
++A diff written outside that workflow has to be reverse-engineered to fit those
++conventions, tests and gates, and it is often faster to re-derive the change than
++to adapt the patch. Many outside pull requests also race each other for the same
++bug. A well-formed issue captures your **intent**, and the **prompt** behind a
++local change lets us reproduce the work inside our own workflow, with the quality
++bar already built in.
++
++This policy is about efficiency, not gatekeeping. Your bug reports, ideas and
++prompts directly shape what gets built.
++
++## Who opens pull requests
++
++Pull requests against this repository are opened by the **repository
++maintainers** only. That includes organization members with write access: being
++able to push a branch here is not the same as being asked to. The constraint is
++the workflow described above, not permissions.
++
++If you're not a repository maintainer, open a **detailed issue** instead and a
++maintainer will pick it up. A pull request from anyone else is closed with a
++pointer back to this document; if it held a fix worth keeping, a maintainer files
++an issue for it first, so the work is not lost.
++
++**Every pull request references an issue**, including the maintainers' own. Work
++is tracked on the project board through issues, so a PR without one is invisible
++to the board. That is why a well-formed issue is the useful contribution here,
++and why writing one is never wasted effort.
++
++## How to report a bug or request a feature
++
++Open a well-formed issue. [**New issue**](https://github.com/modelcontextprotocol/servers/issues/new/choose)
++offers a **Bug report** and a **Feature request** form, and both start by asking
++which server the issue is about. The bug form also asks for the server version,
++how you ran it, the transport, the protocol era your client speaks and the client
++you used, because those are the facts triage needs first.
++
++GitHub serves the issue chooser from the repository's **default branch**
++(`main`), and development happens on `v2/main`, which reaches `main` at milestone
++releases. So the forms appear in the chooser from the first milestone release
++that contains them; until then, open a blank issue and give the same details.
++
++The chooser also links to the private security-advisory form and to the MCP
++Server Registry. **Never report a security vulnerability in a public issue**; use
++[the private advisory form](https://github.com/modelcontextprotocol/servers/security/advisories/new)
++instead.
++
++### What we act on
++
++The servers here are **reference implementations**, meant to show how each part
++of the protocol is used, not general-purpose products. Issues are most likely to
++be picked up when they ask for:
++
++- **Bug fixes.**
++- **Usability improvements**: making the servers easier to use for humans and
++  agents.
++- **Enhancements that demonstrate MCP protocol features.** We especially want the
++  reference servers to illustrate underused parts of the protocol beyond Tools,
++  such as Resources, Prompts or Roots. For example, adding Roots support to the
++  filesystem server showcases an important but lesser-known feature.
+ 
+ We're more selective about:
+-- **Other new features** — Especially if they're not crucial to the server's core purpose or are highly opinionated. The existing servers are reference servers meant to inspire the community. If you need specific features, we encourage you to build enhanced versions and publish them to the [MCP Server Registry](https://github.com/modelcontextprotocol/registry)! We think a diverse ecosystem of servers is beneficial for everyone.
+-
+-We don't accept:
+-- **New server implementations** — We encourage you to publish them to the [MCP Server Registry](https://github.com/modelcontextprotocol/registry) instead.
+ 
+-## Testing
++- **Other new features**, especially ones that are not central to a server's
++  purpose or are highly opinionated. If you need a specific feature, we encourage
++  you to build an enhanced version and publish it to the
++  [MCP Server Registry](https://github.com/modelcontextprotocol/registry). A
++  diverse ecosystem of servers is good for everyone.
++- **Wholly new documentation**, especially if it is not vendor neutral (for
++  example, how to run a particular server with a particular client).
++  Improvements to existing documentation are welcome, though we generally prefer
++  fixing the rough edge to documenting it.
+ 
+-When adding or configuring tests for servers implemented in TypeScript, use **vitest** as the test framework. Vitest provides better ESM support, faster test execution, and a more modern testing experience.
+-
+-Before pushing a change to a TypeScript server, run `npm run format` at the repository root, then `npm run validate`. Each server's `validate` runs its format check, lint (ESLint, where a warning fails like an error), typecheck, build and tests; the root one runs every server's plus the repo-wide guards. `npm run validate -w src/<server>` checks a single server. `npm test` in a server is the fast test run and `npm run coverage` the instrumented one.
+-
+-## Documentation
+-
+-Improvements to existing documentation is welcome - although generally we'd prefer ergonomic improvements than documenting pain points if possible!
+-
+-We're more selective about adding wholly new documentation, especially in ways that aren't vendor neutral (e.g. how to run a particular server with a particular client).
+-
+-## Community
+-
+-[Learn how the MCP community communicates](https://modelcontextprotocol.io/community/communication).
++We don't accept:
+ 
+-Thank you for helping make MCP servers better for everyone!
+\ No newline at end of file
++- **New server implementations.** Publish them to the
++  [MCP Server Registry](https://github.com/modelcontextprotocol/registry)
++  instead.
++- **Server listings.** The README's list of third-party servers has been retired
++  in favor of the Registry. To make your server discoverable, follow the
++  Registry's [quickstart guide](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx).
++  You can browse published servers at
++  [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io/).
++
++## If you've already fixed it locally
++
++Please don't send a diff or open a pull request. Instead, open an issue that
++includes:
++
++- **The prompt(s) you used** to generate the change: the exact text, so we can
++  reproduce it through our own workflow.
++- **The behavior before and after** your change.
++- **How you verified it**: the steps you ran, the tests you added, what you
++  observed, and the MCP client you tried it with.
++
++We'll reproduce the change through our workflow so it lands with the right
++conventions, tests and coverage.
++
++## What makes a good issue
++
++A great issue gives us everything we need to act without a round-trip:
++
++- **The server** it concerns (`everything`, `filesystem`, `memory`,
++  `sequentialthinking`, `fetch`, `git` or `time`), and its version.
++- **A clear reproduction or use case**: exact steps to reproduce a bug, or a
++  concrete description of the problem a feature would solve.
++- **Expected and actual behavior**: what you expected, and what you saw instead.
++- **The client and environment**: the MCP client and its version, the protocol
++  era it speaks, the transport, how you ran the server (`npx`, `uvx`, Docker, from
++  source), your OS, and the relevant configuration with secrets redacted.
++- **The exact prompt text**, if you generated a local change.
++
++If you're unsure how to scope something, open the issue anyway and say so. We'll
++help shape it.
++
++## Want to work on the servers with us?
++
++The issues-only policy is about how **unsolicited patches** are handled; it is not
++a closed door. If you'd like to contribute at a deeper level, in general or in a
++specific area, we'd like to hear from you. See
++[how the MCP community communicates](https://modelcontextprotocol.io/community/communication)
++for the Contributor Discord, the community calls, and how each channel is used.
++From there we can scope a piece of work with you and supervise it through our
++workflow.
++
++All participation is governed by the [Code of Conduct](./CODE_OF_CONDUCT.md).
++
++## For maintainers
++
++The rules for maintainers and the agents working for them are in
++[`AGENTS.md`](./AGENTS.md), and the procedures are in the skills it indexes. Before
++pushing a change to a TypeScript server, run `npm run format` at the repository
++root, then `npm run validate`. Each server's `validate` runs its format check,
++lint (ESLint, where a warning fails like an error), typecheck, build and tests;
++the root one runs every server's plus the repo-wide guards.
++`npm run validate -w src/<server>` checks a single server. For a Python server,
++run `npm run validate:py`, or the per-server `uv` commands in `AGENTS.md`.
++
++Thank you for helping make the MCP servers better for everyone!
+diff --git a/docs/contribution-model.md b/docs/contribution-model.md
+new file mode 100644
+index 0000000000..b55493c975
+--- /dev/null
++++ b/docs/contribution-model.md
+@@ -0,0 +1,201 @@
++# Contribution model: issues, not pull requests
++
++This document records the repository's contribution model and the plan for the
++open backlog of outside pull requests it leaves behind. The policy itself is
++stated for contributors in [`CONTRIBUTING.md`](../CONTRIBUTING.md) and for agents
++in [`AGENTS.md`](../AGENTS.md) (Contributing); this document does not restate it
++beyond what the plan needs. The plan was written for
++[#4869](https://github.com/modelcontextprotocol/servers/issues/4869) (Part 9 of
++the agentic software factory, tracker
++[#4858](https://github.com/modelcontextprotocol/servers/issues/4858)) and is
++carried out by
++[#4868](https://github.com/modelcontextprotocol/servers/issues/4868), the
++`issue-triage` skill and its first triage pass.
++
++## The decision
++
++The maintainers decided on PR #4861 (recorded on #4869 and in
++[`docs/agent-guidance-inception.md`](./agent-guidance-inception.md) §10) that
++**outside pull requests are turned off, as in the MCP Inspector.** Anyone who is
++not a repository maintainer, organization members with write access included,
++files a detailed issue: the problem, a reproduction, the expected behavior, and,
++if they prototyped a fix, the prompt they used rather than a diff. The
++maintainers open every PR, and every PR closes an issue.
++
++Where the policy is stated:
++
++| Where                                       | What it says                                                                                                                                            |
++| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
++| `CONTRIBUTING.md`                           | The policy, why it exists, what issues are acted on, and what makes a good issue                                                                        |
++| `AGENTS.md`, Contributing                   | The rule an agent follows, and the pointer to this plan                                                                                                 |
++| `.github/pull_request_template.md`          | The "issues, not PRs" banner every new PR opens with                                                                                                    |
++| `.github/ISSUE_TEMPLATE/`                   | Bug and feature forms (server dropdown, protocol era, client); `config.yml` disables blank issues and routes security reports and new servers elsewhere |
++| `src/fetch/README.md`, `src/time/README.md` | Their Contributing sections, which are published to PyPI                                                                                                |
++
++⚠️ **GitHub serves the issue forms and `config.yml` from the default branch**
++(`main`). Development happens on `v2/main`, so the forms go live at the first
++milestone merge that contains them. Until then the chooser offers a blank issue,
++and the close comments below point at the policy on `v2/main`, where it already
++applies.
++
++## The backlog at the time of writing
++
++A snapshot of the open PRs on 2026-09-29, classified by author and by the files
++each PR touches. The classes are heuristic and the numbers will have moved;
++#4868 re-snapshots and re-classifies before acting.
++
++| Class                                                                                      | Open PRs | With a linked issue |
++| ------------------------------------------------------------------------------------------ | -------: | ------------------: |
++| Dependabot                                                                                 |        4 |                   0 |
++| Maintainer-authored                                                                        |        9 |                   3 |
++| Listing only (touches only `README.md` / `ADDITIONAL.md`)                                  |       24 |                   2 |
++| New server (adds a directory under `src/` that is not one of the seven servers)            |        9 |                   1 |
++| Server change (touches one or more of the seven servers)                                   |      255 |                 126 |
++| Repository-level (CI workflows, root `package.json`, scripts, translations, no-op renames) |       18 |                   6 |
++| **Total**                                                                                  |  **319** |             **138** |
++
++So **306 outside PRs** fall under the plan. By server, the most-touched are
++`filesystem`, `git` and `fetch`, the servers with real reach (local disk, git,
++outbound requests). Several outside PRs often race each other for the same bug.
++
++## The plan
++
++The guiding rule: **no fix worth keeping is lost, and no outside PR stays open.**
++Harvesting happens before closing, so a PR is closed only once whatever is worth
++doing in it is tracked by an issue.
++
++### Not touched by the sweep
++
++- **Dependabot PRs.** They are the temporary exception in `AGENTS.md` and are
++  retired by
++  [#4874](https://github.com/modelcontextprotocol/servers/issues/4874), which
++  replaces them with issue-filing sweeps.
++- **Maintainer-authored PRs.** The policy does not close them. Their authors
++  decide, one by one, whether each is retargeted at `v2/main` with an issue to
++  close (as every PR must be) or closed. At the time of writing seven of the nine
++  still target `main`; the sweep lists them for the maintainers and does nothing
++  else with them.
++- **An outside PR that an open issue already names as the thing to decide**, such
++  as #3260 under #4860 (interface-diff CI). That issue owns its fate; the sweep
++  leaves it open and says so in its report.
++
++### 1. Snapshot and classify
++
++List every open PR, with a limit that has headroom, and check that the count
++matches the repository's total, as the `board-ops` whole-board dump does; a
++truncated list is a silent partial sweep. Write the snapshot and the working
++manifest **outside the repository** (a `mktemp -d` directory), like every other
++bulk dump.
++
++Classify each outside PR into exactly one of these, by reading it, not only by
++its paths:
++
++| Class                          | Recognized by                                                                                                                   | Harvest?                                    |
++| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
++| **Listing**                    | Adds or edits a server entry in `README.md` or `ADDITIONAL.md`                                                                  | No. Close with the Registry comment         |
++| **New server**                 | Adds a server implementation, in or outside `src/`                                                                              | No. Close with the Registry comment         |
++| **No-op or spam**              | No effective change, a rename to the same name, unrelated or generated content                                                  | No. Close with the general comment          |
++| **Duplicate**                  | Races another open PR, or an existing issue, for the same fix                                                                   | Once per group, through its best member     |
++| **Security fix**               | Fixes a vulnerability: path traversal, symlink or Roots escape, SSRF, injection, a vulnerable dependency                        | See [Security fixes](#security-fixes)       |
++| **Fix or enhancement to keep** | A bug fix, or an in-scope enhancement (`CONTRIBUTING.md`, "What we act on"), to one of the seven servers or the repo            | Yes, unless an open issue already covers it |
++| **Out of scope**               | A feature `CONTRIBUTING.md` is selective about and a maintainer would not take, or a fix for behavior already gone on `v2/main` | No. Close with the general comment          |
++
++**The manifest (PR, class, the issue it will point at) is reviewed by a
++maintainer before anything is closed.** Closing about three hundred PRs is not
++reversible in any practical sense, and the manifest is where a wrong class is
++cheap to fix.
++
++### 2. Harvest
++
++For each PR marked for harvest:
++
++- **If an open issue already covers the change** (the PR's linked issues first,
++  then a search of open and closed issues), file nothing. The issue is the
++  pointer in the close comment. Add the PR to that issue as a prototype in the
++  same comment that credits its author, so the work is findable from the issue.
++- **Otherwise file one issue**, following `issue-create` for the labels (`v2`,
++  exactly one type label, the server's `server-<name>` scope label where one
++  applies) and the board card, with one difference: **board it as `Incoming`,
++  with no milestone.** Harvesting preserves a fix; it does not approve it. The
++  issue then goes through triage's approval pass like any other inflow.
++  The issue states the problem in its own words (not "see the PR"), links the PR
++  as a prototype, and credits its author.
++- **A duplicate group** gets one issue, linking every PR in the group.
++
++### Security fixes
++
++A PR that fixes a vulnerability is public already, but the vulnerability may
++also sit in the private advisory backlog. Before filing anything public, check
++that backlog for a matching advisory. If one matches, link the PR from the
++advisory and track the fix there, following the `security-advisory` flow that
++[#4870](https://github.com/modelcontextprotocol/servers/issues/4870) adds;
++don't file a public issue that re-describes an unpublished advisory. If none
++matches, harvest it like any other fix, and include the security impact in the
++issue so triage can score it.
++
++### 3. Close
++
++Close each outside PR with the comment for its class, naming the harvest issue
++where there is one. Pace the closes (a pause of a few seconds between them, in
++batches) to stay under GitHub's secondary rate limit on content creation, and
++stop on the first failed call rather than carrying on blind.
++
++Closing a PR does not delete it: its branch, diff and discussion stay readable,
++and the harvest issue links it.
++
++**The general comment** (every class except listings and new servers):
++
++> Thank you for this pull request. This repository now accepts **issues, not
++> pull requests**, from anyone but its maintainers: design and implementation
++> are done by the maintainers through a prompt-driven workflow, so outside PRs
++> are closed rather than reviewed. The policy is in
++> [`CONTRIBUTING.md`](https://github.com/modelcontextprotocol/servers/blob/v2/main/CONTRIBUTING.md).
++>
++> This change is tracked in #NNNN, which links back to this PR and
++> credits you. _(Or, where nothing was harvested:)_ If you'd like this change
++> considered, please open an issue describing the problem, how to reproduce it
++> and the expected behavior, and, if you prototyped the fix, share the prompt you
++> used rather than a diff.
++
++**The Registry comment** (listings and new servers):
++
++> Thank you for this pull request. This repository does not accept new server
++> implementations or server listings, and it now accepts **issues, not pull
++> requests**, from anyone but its maintainers
++> ([`CONTRIBUTING.md`](https://github.com/modelcontextprotocol/servers/blob/v2/main/CONTRIBUTING.md)).
++> To make your server discoverable, publish it to the
++> [MCP Server Registry](https://github.com/modelcontextprotocol/registry) by
++> following its
++> [quickstart guide](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx).
++
++`issue-triage` keeps these as its canned responses, so the sweep and later
++triage passes answer each class the same way.
++
++### 4. Verify
++
++The pass is complete when:
++
++- every open PR is maintainer-authored, a Dependabot PR, or named in the report
++  as left open by an issue that owns it;
++- every closed PR marked for harvest points, in its close comment, at an open or
++  closed issue that links back to it;
++- every harvest issue carries `v2`, one type label and its scope label, and sits
++  in `Incoming` with no milestone.
++
++The report lists the counts per class, the harvest issues filed, and the
++maintainer-authored PRs still targeting `main`.
++
++## New outside PRs after the sweep
++
++Nothing in this change stops new outside PRs from being opened. Until a
++maintainer decides otherwise, each triage pass handles new ones by the same
++classes and comments. Two related pieces are separate decisions, not part of
++this plan:
++
++- **`readme-pr-check.yml`** still invites README-only PRs to continue with
++  `/i-promise-this-is-not-a-new-server`, which no longer matches the policy.
++  #4868 folds its behavior into `issue-triage` and changes or retires the
++  workflow.
++- **Automatic closing** of outside PRs (a workflow, as maintainer PR #4528
++  proposes for new-server PRs, or a repository setting where GitHub offers one)
++  is a maintainer decision about repository settings and workflows.
+diff --git a/src/fetch/README.md b/src/fetch/README.md
+index 7e2869983f..a0208ee698 100644
+--- a/src/fetch/README.md
++++ b/src/fetch/README.md
+@@ -233,12 +233,12 @@ npx @modelcontextprotocol/inspector uv run mcp-server-fetch
+ 
+ ## Contributing
+ 
+-We encourage contributions to help expand and improve mcp-server-fetch. Whether you want to add new tools, enhance existing functionality, or improve documentation, your input is valuable.
++We encourage contributions to help improve mcp-server-fetch. Bug reports, ideas for new tools, enhancements to existing functionality, and documentation improvements are all valuable.
+ 
+ For examples of other MCP servers and implementation patterns, see:
+ https://github.com/modelcontextprotocol/servers
+ 
+-Pull requests are welcome! Feel free to contribute new ideas, bug fixes, or enhancements to make mcp-server-fetch even more powerful and useful.
++Contributions arrive as **issues, not pull requests**: the repository maintainers do the implementation. Open an issue with the [bug report or feature request form](https://github.com/modelcontextprotocol/servers/issues/new/choose), and if you have already prototyped a change, share the prompt you used rather than a diff. See [CONTRIBUTING.md](https://github.com/modelcontextprotocol/servers/blob/main/CONTRIBUTING.md) for the full policy.
+ 
+ ## License
+ 
+diff --git a/src/time/README.md b/src/time/README.md
+index 9a2c1c42fd..b3e49e05ba 100644
+--- a/src/time/README.md
++++ b/src/time/README.md
+@@ -285,12 +285,12 @@ docker build -t mcp/time .
+ 
+ ## Contributing
+ 
+-We encourage contributions to help expand and improve mcp-server-time. Whether you want to add new time-related tools, enhance existing functionality, or improve documentation, your input is valuable.
++We encourage contributions to help improve mcp-server-time. Bug reports, ideas for new time-related tools, enhancements to existing functionality, and documentation improvements are all valuable.
+ 
+ For examples of other MCP servers and implementation patterns, see:
+ https://github.com/modelcontextprotocol/servers
+ 
+-Pull requests are welcome! Feel free to contribute new ideas, bug fixes, or enhancements to make mcp-server-time even more powerful and useful.
++Contributions arrive as **issues, not pull requests**: the repository maintainers do the implementation. Open an issue with the [bug report or feature request form](https://github.com/modelcontextprotocol/servers/issues/new/choose), and if you have already prototyped a change, share the prompt you used rather than a diff. See [CONTRIBUTING.md](https://github.com/modelcontextprotocol/servers/blob/main/CONTRIBUTING.md) for the full policy.
+ 
+ ## License
+ 

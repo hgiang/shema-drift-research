@@ -1,0 +1,22 @@
+From 6ad8af71303a57f8b965a0ae68a6c81b1ffaec16 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 13 Dec 2025 15:44:17 -0500
+Subject: [PATCH] Updated doc in get-resource-reference.ts
+
+---
+ src/everything/tools/get-resource-reference.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/everything/tools/get-resource-reference.ts b/src/everything/tools/get-resource-reference.ts
+index 6fa7e2df6d..ede976b116 100644
+--- a/src/everything/tools/get-resource-reference.ts
++++ b/src/everything/tools/get-resource-reference.ts
+@@ -42,7 +42,7 @@ const config = {
+  * 1. Validates the `resourceType` argument to ensure it matches a supported type.
+  * 2. Validates the `resourceId` argument to ensure it is a finite positive integer.
+  * 3. Constructs a URI for the resource based on its type (text or blob).
+- * 4. Retrieves the resource and returns it in a structured response object.
++ * 4. Retrieves the resource and returns it in a content block.
+  *
+  * @param {McpServer} server - The server instance where the tool is registered.
+  */

@@ -1,0 +1,62 @@
+From c6daef707a0cde816c6b0e0574c9883190d6f8eb Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 15 Dec 2025 19:37:56 -0500
+Subject: [PATCH] Get roots unconditionally when syncRoots is called
+
+* In server/roots.ts
+  - in syncRoots, if roots are supported fetch them
+
+* In get-roots-list.ts,
+  - Don't import and inspect current roots map, just call syncRoots to get the list.
+---
+ src/everything/server/roots.ts         |  4 ++--
+ src/everything/tools/get-roots-list.ts | 15 +++------------
+ 2 files changed, 5 insertions(+), 14 deletions(-)
+
+diff --git a/src/everything/server/roots.ts b/src/everything/server/roots.ts
+index 30671b1766..05a6f90ff3 100644
+--- a/src/everything/server/roots.ts
++++ b/src/everything/server/roots.ts
+@@ -27,8 +27,8 @@ export const syncRoots = async (server: McpServer, sessionId?: string) => {
+   const clientCapabilities = server.server.getClientCapabilities() || {};
+   const clientSupportsRoots: boolean = clientCapabilities.roots !== undefined;
+ 
+-  // If roots have not been fetched for this client, fetch them
+-  if (clientSupportsRoots && !roots.has(sessionId)) {
++  // Fetch the roots list for this client
++  if (clientSupportsRoots) {
+     // Function to request the updated roots list from the client
+     const requestRoots = async () => {
+       try {
+diff --git a/src/everything/tools/get-roots-list.ts b/src/everything/tools/get-roots-list.ts
+index 0d8fe9c555..243690700b 100644
+--- a/src/everything/tools/get-roots-list.ts
++++ b/src/everything/tools/get-roots-list.ts
+@@ -1,6 +1,6 @@
+ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+ import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+-import { roots, syncRoots } from "../server/roots.js";
++import { syncRoots } from "../server/roots.js";
+ 
+ // Tool configuration
+ const name = "get-roots-list";
+@@ -39,17 +39,8 @@ export const registerGetRootsListTool = (server: McpServer) => {
+       name,
+       config,
+       async (args, extra): Promise<CallToolResult> => {
+-        // Check if the roots list is already cached for this client
+-        const rootsCached = roots?.has(extra.sessionId);
+-
+-        // Fetch the current roots list from the client if need be
+-        const currentRoots = rootsCached
+-          ? roots.get(extra.sessionId)
+-          : await syncRoots(server, extra.sessionId);
+-
+-        // If roots had to be fetched, store them in the cache
+-        if (currentRoots && !rootsCached)
+-          roots.set(extra.sessionId, currentRoots);
++        // Get the current rootsFetch the current roots list from the client if need be
++        const currentRoots =  await syncRoots(server, extra.sessionId);
+ 
+         // Respond if client supports roots but doesn't have any configured
+         if (

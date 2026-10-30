@@ -1,0 +1,22 @@
+{
+ "github": {
+  "n_entries_read": 220,
+  "n_digests": 37,
+  "n_candidates": 49
+ },
+ "mcp": {
+  "n_entries_read": 314,
+  "n_digests": 41,
+  "n_candidates": 196
+ },
+ "slack": {
+  "n_entries_read": 156,
+  "n_digests": 54,
+  "n_candidates": 100
+ },
+ "stripe": {
+  "n_entries_read": 60,
+  "n_digests": 29,
+  "n_candidates": 165
+ }
+}

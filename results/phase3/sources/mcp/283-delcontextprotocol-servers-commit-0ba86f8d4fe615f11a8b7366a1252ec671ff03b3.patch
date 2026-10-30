@@ -1,0 +1,22 @@
+From 0ba86f8d4fe615f11a8b7366a1252ec671ff03b3 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 13 Dec 2025 15:48:13 -0500
+Subject: [PATCH] Updated doc in echo.ts
+
+---
+ src/everything/tools/echo.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/everything/tools/echo.ts b/src/everything/tools/echo.ts
+index c7fe3eff3a..24a961f72b 100644
+--- a/src/everything/tools/echo.ts
++++ b/src/everything/tools/echo.ts
+@@ -21,7 +21,7 @@ const config = {
+  * The registered tool validates input arguments using the EchoSchema and
+  * returns a response that echoes the message provided in the arguments.
+  *
+- * @param {McpServer} server - The server instance where the Echo Tool will be registered.
++ * @param {McpServer} server - The server instance where the tool will be registered.
+  * @returns {void}
+  */
+ export const registerEchoTool = (server: McpServer) => {

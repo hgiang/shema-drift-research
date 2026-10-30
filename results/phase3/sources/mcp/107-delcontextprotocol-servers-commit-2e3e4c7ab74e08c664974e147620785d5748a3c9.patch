@@ -1,0 +1,44 @@
+From 2e3e4c7ab74e08c664974e147620785d5748a3c9 Mon Sep 17 00:00:00 2001
+From: Ola Hungerford <olahungerford@gmail.com>
+Date: Tue, 1 Sep 2026 20:01:29 -0700
+Subject: [PATCH] ci: run readme-pr-check on pull_request_target so fork PRs
+ can be labeled (#4739)
+
+Observed on #4714 and #4726: addLabels returned 403 "Resource not
+accessible by integration" because pull_request gives fork PRs a
+read-only token. The job only calls the GitHub API and never checks
+out PR code, so pull_request_target is safe here.
+
+
+Claude-Session: https://claude.ai/code/session_01CK8vvB229h6orvkokG8YxU
+
+Co-authored-by: Claude Fable 5 <noreply@anthropic.com>
+---
+ .github/workflows/readme-pr-check.yml | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/readme-pr-check.yml b/.github/workflows/readme-pr-check.yml
+index 66cb3a31e6..ec5a0a2944 100644
+--- a/.github/workflows/readme-pr-check.yml
++++ b/.github/workflows/readme-pr-check.yml
+@@ -1,7 +1,10 @@
+ name: README PR Check
+ 
+ on:
+-  pull_request:
++  # pull_request_target, not pull_request: fork PRs get a read-only token under
++  # pull_request, so the label and comment calls fail with 403. This job only
++  # calls the API and never checks out PR code, so the write token is safe.
++  pull_request_target:
+     types: [opened]
+     paths:
+       - 'README.md'
+@@ -10,7 +13,7 @@ on:
+ 
+ jobs:
+   check-readme-only:
+-    if: github.event_name == 'pull_request'
++    if: github.event_name == 'pull_request_target'
+     runs-on: ubuntu-latest
+     permissions:
+       contents: read

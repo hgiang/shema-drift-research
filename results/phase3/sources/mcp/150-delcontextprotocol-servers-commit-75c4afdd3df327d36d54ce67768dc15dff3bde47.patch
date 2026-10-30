@@ -1,0 +1,83 @@
+From 75c4afdd3df327d36d54ce67768dc15dff3bde47 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:37:17 -0400
+Subject: [PATCH] fix(skills): pr-flow gate lists verify:skills:cli; bodies via
+ file
+
+The gate table omitted verify:skills:cli, which CI's Root guards job
+runs on every push, so a skill change could pass the documented local
+gate and fail CI. It is now a row for anything under .claude/skills/.
+
+The PR-create and PR-comment examples passed Markdown bodies inline in
+double quotes, where backticks run as command substitutions. Both now
+use --body-file with a quoted heredoc, and the thread-reply example
+notes the same hazard. The ruff format fix names --frozen and the
+directory it runs in.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/pr-flow/SKILL.md | 29 +++++++++++++++++++++++------
+ 1 file changed, 23 insertions(+), 6 deletions(-)
+
+diff --git a/.claude/skills/pr-flow/SKILL.md b/.claude/skills/pr-flow/SKILL.md
+index f9f8a4ce60..18d3b423e2 100644
+--- a/.claude/skills/pr-flow/SKILL.md
++++ b/.claude/skills/pr-flow/SKILL.md
+@@ -119,10 +119,12 @@ pushing:
+ | Anything (always) | `npm run validate:guards` (CI's "Root guards" job: root format and lint, the coverage guards, `verify:skills`, the script tests) |
+ | A TypeScript server | `npm run validate -w src/<server>` (format check, lint, typecheck, build, test) |
+ | A Python server | `npm run validate:py -- <server>` (locked sync, ruff, ruff format, pyright, pytest, build) |
++| Anything under `.claude/skills/` | `npm run verify:skills:cli` (the pinned `claude plugin validate` that CI's "Root guards" job also runs; `validate:guards` only runs the in-repo `verify:skills`) |
+ | A skill's description, or a new skill | `npm run skills:eval` for the **whole** suite (spends model calls; not in CI). See `AGENTS.md` **Maintaining the skills** |
+ 
+ Verify by exit code, not by grepping the output. Formatting failures are fixed
+-with `npm run format` (TypeScript) or `uv run ruff format .` (Python).
++with `npm run format` at the root (TypeScript), or `uv run --frozen ruff format .`
++in the server's directory (Python).
+ 
+ ## 5. Client evidence
+ 
+@@ -154,12 +156,20 @@ Put the evidence in the PR body under **How Has This Been Tested?**.
+ Base **`v2/main`** (or the lower branch, when stacked). **Never `main`.** Label
+ it `v2`. The body's **first line is `Closes #<N>`**.
+ 
++Write the body to a file and pass it with `--body-file`. A body passed inline
++in double quotes goes through the shell, so every backtick in its Markdown runs
++as a command substitution and `$VAR` expands. Keep the file outside the
++worktree, where `git add -A` cannot pick it up.
++
+ ```sh
+-gh pr create --repo modelcontextprotocol/servers \
+-  --base v2/main --label v2 \
+-  --title "<title>" --body "Closes #<N>
++BODY=$(mktemp)
++cat > "$BODY" <<'EOF'
++Closes #<N>
+ 
+-<what changed and why, then the template's sections, with the evidence>"
++<what changed and why, then the template's sections, with the evidence>
++EOF
++gh pr create --repo modelcontextprotocol/servers \
++  --base v2/main --label v2 --title "<title>" --body-file "$BODY"
+ ```
+ 
+ ⚠️ Closing keywords only link and auto-close for PRs that target the default
+@@ -276,9 +286,16 @@ worth doing on its own. Implementing a suggestion differently is fine.
+   to the thread it answers.
+ 
+   ```sh
+-  gh pr comment <PR> --repo modelcontextprotocol/servers --body "Copilot round <k>: …"
++  # Quoted heredoc, for the same reason as the PR body in step 6: Markdown
++  # backticks inside a double-quoted --body run as commands.
++  gh pr comment <PR> --repo modelcontextprotocol/servers --body-file - <<'EOF'
++  Copilot round <k>: …
++  EOF
+   ```
+ 
++  Per-thread replies (`-f body=…` above) need the same care: single-quote
++  the body, or read it from a file with `-F body=@<file>`.
++
+ - ⚠️ **Read the "Suppressed comments" block in the review body.** Those findings
+   have no comment id, so no thread to reply into. The PR-level summary is the
+   only place to answer them.

@@ -1,0 +1,2213 @@
+From 4b07e9cbfb3bb074029935099947d420fdcc36fe Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 28 Sep 2026 23:32:44 -0400
+Subject: [PATCH] fix: resolve the findings the root ESLint config reports
+
+The type-aware root config reports 175 findings across the four TS servers
+and 4 in the root tooling; each is fixed rather than suppressed: explicit
+types for every any/Function in the tests (via SDK types and a small
+typed helper module in everything's __tests__), unused imports and
+variables removed, caught errors given a cause, empty catches explained,
+floating promises held or voided with a reason, and filesystem's tools
+now publish their named zod schemas' shapes instead of hand-copied
+duplicates (identical fields, so the input schemas are unchanged).
+
+Refs #4864
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ src/everything/__tests__/helpers.ts           |  59 +++
+ src/everything/__tests__/prompts.test.ts      |  51 ++-
+ .../__tests__/registrations.test.ts           |  24 +-
+ src/everything/__tests__/resources.test.ts    |  57 +--
+ src/everything/__tests__/server.test.ts       |   2 +-
+ src/everything/__tests__/tools.test.ts        | 388 ++++++++++--------
+ src/everything/resources/files.ts             |   4 +-
+ src/everything/resources/subscriptions.ts     |   6 +-
+ src/everything/resources/templates.ts         |   2 +-
+ src/everything/server/logging.ts              |   6 +-
+ src/everything/tools/get-env.ts               |   2 +-
+ src/everything/tools/get-tiny-image.ts        |   2 +-
+ src/everything/tools/gzip-file-as-resource.ts |   7 +-
+ src/filesystem/__tests__/lib.test.ts          | 123 +++---
+ .../__tests__/path-validation.test.ts         |  39 +-
+ src/filesystem/__tests__/roots-utils.test.ts  |   1 -
+ .../__tests__/structured-content.test.ts      |   1 -
+ src/filesystem/index.ts                       |  79 +---
+ src/filesystem/lib.ts                         |  20 +-
+ src/memory/__tests__/atomic-save.test.ts      |   2 +-
+ src/memory/__tests__/knowledge-graph.test.ts  |   9 +-
+ src/memory/index.ts                           |  10 +-
+ src/sequentialthinking/__tests__/lib.test.ts  |   2 +-
+ src/sequentialthinking/lib.ts                 |   4 +-
+ 24 files changed, 512 insertions(+), 388 deletions(-)
+ create mode 100644 src/everything/__tests__/helpers.ts
+
+diff --git a/src/everything/__tests__/helpers.ts b/src/everything/__tests__/helpers.ts
+new file mode 100644
+index 0000000000..77f3759076
+--- /dev/null
++++ b/src/everything/__tests__/helpers.ts
+@@ -0,0 +1,59 @@
++/**
++ * Shared typing helpers for the everything-server unit tests.
++ *
++ * The tests capture the handlers a register* function passes to a mocked
++ * McpServer and invoke them directly. These types describe exactly what the
++ * tests call them with — a plain argument object and a partial request
++ * `extra` — so the captured handlers are typed without `any` or `Function`.
++ * `contentOfType` narrows a content block to one member of the SDK's
++ * `ContentBlock` union, failing loudly when the block is some other kind.
++ */
++import type { RequestHandlerExtra } from "@modelcontextprotocol/sdk/shared/protocol.js";
++import type {
++  CallToolResult,
++  ContentBlock,
++  GetPromptResult,
++  ReadResourceResult,
++  ServerNotification,
++  ServerRequest,
++} from "@modelcontextprotocol/sdk/types.js";
++
++/** The request context a tool/prompt/resource handler receives. */
++export type HandlerExtra = RequestHandlerExtra<
++  ServerRequest,
++  ServerNotification
++>;
++
++/** A captured tool handler, as the tests invoke it. */
++export type ToolHandler = (
++  args: Record<string, unknown>,
++  extra?: Partial<HandlerExtra>,
++) => Promise<CallToolResult>;
++
++/** A captured prompt handler, as the tests invoke it (the prompts are sync). */
++export type PromptHandler = (args?: Record<string, string>) => GetPromptResult;
++
++/** A captured resource read handler, as the tests invoke it. */
++export type ResourceHandler = (
++  uri: URL,
++  extra?: Partial<HandlerExtra>,
++) => Promise<ReadResourceResult>;
++
++/**
++ * Narrow a content block to the member of the `ContentBlock` union whose
++ * `type` is `type`, throwing if the block is missing or of another kind.
++ */
++export function contentOfType<T extends ContentBlock["type"]>(
++  block: ContentBlock | undefined,
++  type: T,
++): Extract<ContentBlock, { type: T }> {
++  if (block?.type !== type) {
++    throw new Error(`expected ${type} content, got ${block?.type}`);
++  }
++  return block as Extract<ContentBlock, { type: T }>;
++}
++
++/** The text of a content block that must be a text block. */
++export function textOf(block: ContentBlock | undefined): string {
++  return contentOfType(block, "text").text;
++}
+diff --git a/src/everything/__tests__/prompts.test.ts b/src/everything/__tests__/prompts.test.ts
+index bc2c854e75..453673a08d 100644
+--- a/src/everything/__tests__/prompts.test.ts
++++ b/src/everything/__tests__/prompts.test.ts
+@@ -4,17 +4,22 @@ import { registerSimplePrompt } from "../prompts/simple.js";
+ import { registerArgumentsPrompt } from "../prompts/args.js";
+ import { registerPromptWithCompletions } from "../prompts/completions.js";
+ import { registerEmbeddedResourcePrompt } from "../prompts/resource.js";
++import { contentOfType, textOf, type PromptHandler } from "./helpers.js";
+ 
+ // Helper to capture registered prompt handlers
+ function createMockServer() {
+-  const handlers: Map<string, Function> = new Map();
+-  const configs: Map<string, any> = new Map();
++  const handlers: Map<string, PromptHandler> = new Map();
++  const configs: Map<string, unknown> = new Map();
+ 
+   const mockServer = {
+-    registerPrompt: vi.fn((name: string, config: any, handler: Function) => {
+-      handlers.set(name, handler);
+-      configs.set(name, config);
+-    }),
++    registerPrompt: vi.fn(
++      (name: string, config: unknown, handler: PromptHandler) => {
++        handlers.set(name, handler);
++        configs.set(name, config);
++      },
++    ),
++    // Partial mock: the prompt registrars only call registerPrompt, and
++    // McpServer is a class whose private members no object literal can satisfy.
+   } as unknown as McpServer;
+ 
+   return { mockServer, handlers, configs };
+@@ -51,7 +56,7 @@ describe("Prompts", () => {
+       const handler = handlers.get("args-prompt")!;
+       const result = handler({ city: "San Francisco" });
+ 
+-      expect(result.messages[0].content.text).toBe(
++      expect(textOf(result.messages[0].content)).toBe(
+         "What's weather in San Francisco?",
+       );
+     });
+@@ -63,7 +68,7 @@ describe("Prompts", () => {
+       const handler = handlers.get("args-prompt")!;
+       const result = handler({ city: "San Francisco", state: "California" });
+ 
+-      expect(result.messages[0].content.text).toBe(
++      expect(textOf(result.messages[0].content)).toBe(
+         "What's weather in San Francisco, California?",
+       );
+     });
+@@ -75,10 +80,10 @@ describe("Prompts", () => {
+       const handler = handlers.get("args-prompt")!;
+       const result = handler({ city: "New York" });
+ 
+-      expect(result.messages[0].content.text).toBe(
++      expect(textOf(result.messages[0].content)).toBe(
+         "What's weather in New York?",
+       );
+-      expect(result.messages[0].content.text).not.toContain(",");
++      expect(textOf(result.messages[0].content)).not.toContain(",");
+       expect(result.messages[0].role).toBe("user");
+       expect(result.messages[0].content.type).toBe("text");
+     });
+@@ -92,7 +97,7 @@ describe("Prompts", () => {
+       const handler = handlers.get("completable-prompt")!;
+       const result = handler({ department: "Engineering", name: "Alice" });
+ 
+-      expect(result.messages[0].content.text).toBe(
++      expect(textOf(result.messages[0].content)).toBe(
+         "Please promote Alice to the head of the Engineering team.",
+       );
+     });
+@@ -104,16 +109,18 @@ describe("Prompts", () => {
+       const handler = handlers.get("completable-prompt")!;
+ 
+       const salesResult = handler({ department: "Sales", name: "David" });
+-      expect(salesResult.messages[0].content.text).toContain("Sales");
+-      expect(salesResult.messages[0].content.text).toContain("David");
++      expect(textOf(salesResult.messages[0].content)).toContain("Sales");
++      expect(textOf(salesResult.messages[0].content)).toContain("David");
+       expect(salesResult.messages[0].role).toBe("user");
+ 
+       const marketingResult = handler({
+         department: "Marketing",
+         name: "Grace",
+       });
+-      expect(marketingResult.messages[0].content.text).toContain("Marketing");
+-      expect(marketingResult.messages[0].content.text).toContain("Grace");
++      expect(textOf(marketingResult.messages[0].content)).toContain(
++        "Marketing",
++      );
++      expect(textOf(marketingResult.messages[0].content)).toContain("Grace");
+     });
+   });
+ 
+@@ -126,10 +133,12 @@ describe("Prompts", () => {
+       const result = handler({ resourceType: "Text", resourceId: "1" });
+ 
+       expect(result.messages).toHaveLength(2);
+-      expect(result.messages[0].content.text).toContain("Text");
+-      expect(result.messages[0].content.text).toContain("1");
++      expect(textOf(result.messages[0].content)).toContain("Text");
++      expect(textOf(result.messages[0].content)).toContain("1");
+       expect(result.messages[1].content.type).toBe("resource");
+-      expect(result.messages[1].content.resource.uri).toContain("text/1");
++      expect(
++        contentOfType(result.messages[1].content, "resource").resource.uri,
++      ).toContain("text/1");
+     });
+ 
+     it("should return blob resource reference", () => {
+@@ -139,8 +148,10 @@ describe("Prompts", () => {
+       const handler = handlers.get("resource-prompt")!;
+       const result = handler({ resourceType: "Blob", resourceId: "5" });
+ 
+-      expect(result.messages[0].content.text).toContain("Blob");
+-      expect(result.messages[1].content.resource.uri).toContain("blob/5");
++      expect(textOf(result.messages[0].content)).toContain("Blob");
++      expect(
++        contentOfType(result.messages[1].content, "resource").resource.uri,
++      ).toContain("blob/5");
+     });
+ 
+     it("should reject invalid resource type", () => {
+diff --git a/src/everything/__tests__/registrations.test.ts b/src/everything/__tests__/registrations.test.ts
+index bdee34c9eb..4aef580b61 100644
+--- a/src/everything/__tests__/registrations.test.ts
++++ b/src/everything/__tests__/registrations.test.ts
+@@ -28,9 +28,9 @@ describe("Registration Index Files", () => {
+       expect(mockServer.registerTool).toHaveBeenCalledTimes(12);
+ 
+       // Verify specific tools are registered
+-      const registeredTools = (mockServer.registerTool as any).mock.calls.map(
+-        (call: any[]) => call[0],
+-      );
++      const registeredTools = vi
++        .mocked(mockServer.registerTool)
++        .mock.calls.map((call) => call[0]);
+       expect(registeredTools).toContain("echo");
+       expect(registeredTools).toContain("get-sum");
+       expect(registeredTools).toContain("get-env");
+@@ -72,9 +72,9 @@ describe("Registration Index Files", () => {
+       // so they are not included in this registerTool count.
+       expect(mockServerWithCapabilities.registerTool).toHaveBeenCalledTimes(4);
+ 
+-      const registeredTools = (
+-        mockServerWithCapabilities.registerTool as any
+-      ).mock.calls.map((call: any[]) => call[0]);
++      const registeredTools = vi
++        .mocked(mockServerWithCapabilities.registerTool)
++        .mock.calls.map((call) => call[0]);
+       expect(registeredTools).toContain("get-roots-list");
+       expect(registeredTools).toContain("trigger-elicitation-request");
+       expect(registeredTools).toContain("trigger-url-elicitation");
+@@ -118,9 +118,9 @@ describe("Registration Index Files", () => {
+       // Should register 4 prompts
+       expect(mockServer.registerPrompt).toHaveBeenCalledTimes(4);
+ 
+-      const registeredPrompts = (
+-        mockServer.registerPrompt as any
+-      ).mock.calls.map((call: any[]) => call[0]);
++      const registeredPrompts = vi
++        .mocked(mockServer.registerPrompt)
++        .mock.calls.map((call) => call[0]);
+       expect(registeredPrompts).toContain("simple-prompt");
+       expect(registeredPrompts).toContain("args-prompt");
+       expect(registeredPrompts).toContain("completable-prompt");
+@@ -137,9 +137,9 @@ describe("Registration Index Files", () => {
+ 
+       // Should register at least the 2 resource templates (text and blob) plus file resources
+       expect(mockServer.registerResource).toHaveBeenCalled();
+-      const registeredResources = (
+-        mockServer.registerResource as any
+-      ).mock.calls.map((call: any[]) => call[0]);
++      const registeredResources = vi
++        .mocked(mockServer.registerResource)
++        .mock.calls.map((call) => call[0]);
+       expect(registeredResources).toContain("Dynamic Text Resource");
+       expect(registeredResources).toContain("Dynamic Blob Resource");
+     });
+diff --git a/src/everything/__tests__/resources.test.ts b/src/everything/__tests__/resources.test.ts
+index 2625d92c5a..5b0a987932 100644
+--- a/src/everything/__tests__/resources.test.ts
++++ b/src/everything/__tests__/resources.test.ts
+@@ -28,6 +28,7 @@ import {
+   stopSimulatedResourceUpdates,
+   removeSubscriber,
+ } from "../resources/subscriptions.js";
++import type { ResourceHandler } from "./helpers.js";
+ 
+ describe("Resource Templates", () => {
+   describe("Constants", () => {
+@@ -116,32 +117,26 @@ describe("Resource Templates", () => {
+       // The completer is a zod schema wrapped with completable
+       expect(resourceTypeCompleter).toBeDefined();
+       // It should have the zod parse method
+-      expect(typeof (resourceTypeCompleter as any).parse).toBe("function");
++      expect(typeof resourceTypeCompleter.parse).toBe("function");
+     });
+ 
+     it("should validate string resource types", () => {
+       // Test that valid strings pass validation
+-      expect(() => (resourceTypeCompleter as any).parse("Text")).not.toThrow();
+-      expect(() => (resourceTypeCompleter as any).parse("Blob")).not.toThrow();
++      expect(() => resourceTypeCompleter.parse("Text")).not.toThrow();
++      expect(() => resourceTypeCompleter.parse("Blob")).not.toThrow();
+     });
+   });
+ 
+   describe("resourceIdForPromptCompleter", () => {
+     it("should be defined as a completable schema", () => {
+       expect(resourceIdForPromptCompleter).toBeDefined();
+-      expect(typeof (resourceIdForPromptCompleter as any).parse).toBe(
+-        "function",
+-      );
++      expect(typeof resourceIdForPromptCompleter.parse).toBe("function");
+     });
+ 
+     it("should validate string IDs", () => {
+       // Test that valid strings pass validation
+-      expect(() =>
+-        (resourceIdForPromptCompleter as any).parse("1"),
+-      ).not.toThrow();
+-      expect(() =>
+-        (resourceIdForPromptCompleter as any).parse("100"),
+-      ).not.toThrow();
++      expect(() => resourceIdForPromptCompleter.parse("1")).not.toThrow();
++      expect(() => resourceIdForPromptCompleter.parse("100")).not.toThrow();
+     });
+   });
+ 
+@@ -162,15 +157,15 @@ describe("Resource Templates", () => {
+ 
+   describe("registerResourceTemplates", () => {
+     it("should register text and blob resource templates", () => {
+-      const registeredResources: any[] = [];
+-
+       const mockServer = {
+-        registerResource: vi.fn((...args) => {
+-          registeredResources.push(args);
+-        }),
++        registerResource: vi.fn(),
++        // Partial mock: registerResourceTemplates only calls registerResource,
++        // and McpServer's private members rule out a structural literal.
+       } as unknown as McpServer;
+ 
+       registerResourceTemplates(mockServer);
++      const registeredResources = vi.mocked(mockServer.registerResource).mock
++        .calls;
+ 
+       expect(mockServer.registerResource).toHaveBeenCalledTimes(2);
+ 
+@@ -179,7 +174,7 @@ describe("Resource Templates", () => {
+         r[0].includes("Text"),
+       );
+       expect(textRegistration).toBeDefined();
+-      expect(textRegistration[1]).toBeInstanceOf(ResourceTemplate);
++      expect(textRegistration?.[1]).toBeInstanceOf(ResourceTemplate);
+ 
+       // Check blob resource registration
+       const blobRegistration = registeredResources.find((r) =>
+@@ -210,11 +205,8 @@ describe("Session Resources", () => {
+ 
+   describe("registerSessionResource", () => {
+     it("should register text resource and return resource link", () => {
+-      const registrations: any[] = [];
+       const mockServer = {
+-        registerResource: vi.fn((...args) => {
+-          registrations.push(args);
+-        }),
++        registerResource: vi.fn(),
+       } as unknown as McpServer;
+ 
+       const resource = {
+@@ -270,11 +262,18 @@ describe("Session Resources", () => {
+     });
+ 
+     it("should return resource handler that provides correct content", async () => {
+-      let capturedHandler: Function | null = null;
++      let capturedHandler: ResourceHandler | null = null;
+       const mockServer = {
+-        registerResource: vi.fn((_name, _uri, _config, handler) => {
+-          capturedHandler = handler;
+-        }),
++        registerResource: vi.fn(
++          (
++            _name: string,
++            _uri: string,
++            _config: unknown,
++            handler: ResourceHandler,
++          ) => {
++            capturedHandler = handler;
++          },
++        ),
+       } as unknown as McpServer;
+ 
+       const resource = {
+@@ -294,8 +293,10 @@ describe("Session Resources", () => {
+ 
+       const handlerResult = await capturedHandler!(new URL(resource.uri));
+       expect(handlerResult.contents).toHaveLength(1);
+-      expect(handlerResult.contents[0].text).toBe("Test content here");
+-      expect(handlerResult.contents[0].mimeType).toBe("text/plain");
++      expect(handlerResult.contents[0]).toMatchObject({
++        text: "Test content here",
++        mimeType: "text/plain",
++      });
+     });
+   });
+ });
+diff --git a/src/everything/__tests__/server.test.ts b/src/everything/__tests__/server.test.ts
+index c7010a0627..a698bfa5c8 100644
+--- a/src/everything/__tests__/server.test.ts
++++ b/src/everything/__tests__/server.test.ts
+@@ -1,4 +1,4 @@
+-import { describe, it, expect, vi } from "vitest";
++import { describe, it, expect } from "vitest";
+ import { createServer } from "../server/index.js";
+ 
+ describe("Server Factory", () => {
+diff --git a/src/everything/__tests__/tools.test.ts b/src/everything/__tests__/tools.test.ts
+index ed1ce6748a..aedfb6ca19 100644
+--- a/src/everything/__tests__/tools.test.ts
++++ b/src/everything/__tests__/tools.test.ts
+@@ -1,5 +1,6 @@
+ import { describe, it, expect, vi, beforeEach } from "vitest";
+ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
++import { UrlElicitationRequiredError } from "@modelcontextprotocol/sdk/types.js";
+ import { registerEchoTool, EchoSchema } from "../tools/echo.js";
+ import { registerGetSumTool } from "../tools/get-sum.js";
+ import { registerGetEnvTool } from "../tools/get-env.js";
+@@ -23,17 +24,20 @@ import {
+ import { registerGetRootsListTool } from "../tools/get-roots-list.js";
+ import { registerGZipFileAsResourceTool } from "../tools/gzip-file-as-resource.js";
+ import { registerSimulateResearchQueryTool } from "../tools/simulate-research-query.js";
++import { contentOfType, textOf, type ToolHandler } from "./helpers.js";
+ 
+ // Helper to capture registered tool handlers
+ function createMockServer() {
+-  const handlers: Map<string, Function> = new Map();
+-  const configs: Map<string, any> = new Map();
++  const handlers: Map<string, ToolHandler> = new Map();
++  const configs: Map<string, unknown> = new Map();
+ 
+   const mockServer = {
+-    registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-      handlers.set(name, handler);
+-      configs.set(name, config);
+-    }),
++    registerTool: vi.fn(
++      (name: string, config: unknown, handler: ToolHandler) => {
++        handlers.set(name, handler);
++        configs.set(name, config);
++      },
++    ),
+     server: {
+       getClientCapabilities: vi.fn(() => ({})),
+       notification: vi.fn(),
+@@ -45,6 +49,37 @@ function createMockServer() {
+   return { mockServer, handlers, configs };
+ }
+ 
++/**
++ * A mock server for the gzip tool, whose registerTool mock is typed so the
++ * captured handler can be read back from its recorded calls.
++ */
++function createGzipMockServer() {
++  const registerTool =
++    vi.fn<(name: string, config: unknown, handler: ToolHandler) => void>();
++  const mockServer = {
++    registerTool,
++    registerResource: vi.fn(),
++    // Partial mock: the gzip registrar only calls registerTool and (from the
++    // handler) registerResource; McpServer's private members rule out a
++    // structural literal.
++  } as unknown as McpServer;
++  return { mockServer, registerTool };
++}
++
++/** Narrow a caught value to the SDK's URL-elicitation-required error. */
++function asUrlElicitationError(error: unknown): UrlElicitationRequiredError {
++  if (!(error instanceof UrlElicitationRequiredError)) throw error;
++  return error;
++}
++
++/** The task-handler object simulate-research-query registers. */
++interface TaskHandlers {
++  createTask: (
++    args: Record<string, unknown>,
++    extra: Record<string, unknown>,
++  ) => Promise<unknown>;
++}
++
+ describe("Tools", () => {
+   describe("echo", () => {
+     it("should echo back the message", async () => {
+@@ -170,7 +205,7 @@ describe("Tools", () => {
+       expect(result.content).toHaveLength(1);
+       expect(result.content[0].type).toBe("text");
+ 
+-      const envJson = JSON.parse(result.content[0].text);
++      const envJson = JSON.parse(textOf(result.content[0]));
+       expect(envJson.TEST_VAR_EVERYTHING).toBe("test_value");
+ 
+       delete process.env.TEST_VAR_EVERYTHING;
+@@ -183,7 +218,7 @@ describe("Tools", () => {
+       const handler = handlers.get("get-env")!;
+       const result = await handler({});
+ 
+-      expect(() => JSON.parse(result.content[0].text)).not.toThrow();
++      expect(() => JSON.parse(textOf(result.content[0]))).not.toThrow();
+     });
+   });
+ 
+@@ -218,8 +253,8 @@ describe("Tools", () => {
+       const handler = handlers.get("get-tiny-image")!;
+       const result = await handler({});
+ 
+-      const imageContent = result.content[1];
+-      expect(imageContent.type).toBe("image");
++      expect(result.content[1].type).toBe("image");
++      const imageContent = contentOfType(result.content[1], "image");
+       expect(imageContent.mimeType).toBe("image/png");
+       // Verify it's valid base64
+       expect(() => Buffer.from(imageContent.data, "base64")).not.toThrow();
+@@ -240,7 +275,7 @@ describe("Tools", () => {
+         humidity: 82,
+       });
+       expect(result.content[0].type).toBe("text");
+-      expect(JSON.parse(result.content[0].text)).toEqual(
++      expect(JSON.parse(textOf(result.content[0]))).toEqual(
+         result.structuredContent,
+       );
+     });
+@@ -286,7 +321,7 @@ describe("Tools", () => {
+       });
+ 
+       expect(result.content).toHaveLength(1);
+-      expect(result.content[0].text).toBe("Error: Operation failed");
++      expect(textOf(result.content[0])).toBe("Error: Operation failed");
+       expect(result.content[0].annotations).toEqual({
+         priority: 1.0,
+         audience: ["user", "assistant"],
+@@ -303,9 +338,11 @@ describe("Tools", () => {
+         includeImage: false,
+       });
+ 
+-      expect(result.content[0].text).toBe("Operation completed successfully");
+-      expect(result.content[0].annotations.priority).toBe(0.7);
+-      expect(result.content[0].annotations.audience).toEqual(["user"]);
++      expect(textOf(result.content[0])).toBe(
++        "Operation completed successfully",
++      );
++      expect(result.content[0].annotations?.priority).toBe(0.7);
++      expect(result.content[0].annotations?.audience).toEqual(["user"]);
+     });
+ 
+     it("should return debug message with low priority", async () => {
+@@ -318,9 +355,9 @@ describe("Tools", () => {
+         includeImage: false,
+       });
+ 
+-      expect(result.content[0].text).toContain("Debug:");
+-      expect(result.content[0].annotations.priority).toBe(0.3);
+-      expect(result.content[0].annotations.audience).toEqual(["assistant"]);
++      expect(textOf(result.content[0])).toContain("Debug:");
++      expect(result.content[0].annotations?.priority).toBe(0.3);
++      expect(result.content[0].annotations?.audience).toEqual(["assistant"]);
+     });
+ 
+     it("should include annotated image when requested", async () => {
+@@ -354,11 +391,11 @@ describe("Tools", () => {
+         { _meta: {}, requestId: "test-123" },
+       );
+ 
+-      expect(result.content[0].text).toContain(
++      expect(textOf(result.content[0])).toContain(
+         "Long running operation completed",
+       );
+-      expect(result.content[0].text).toContain("Duration: 0.1 seconds");
+-      expect(result.content[0].text).toContain("Steps: 2");
++      expect(textOf(result.content[0])).toContain("Duration: 0.1 seconds");
++      expect(textOf(result.content[0])).toContain("Steps: 2");
+     }, 10000);
+ 
+     it("should send progress notifications when progressToken provided", async () => {
+@@ -399,13 +436,17 @@ describe("Tools", () => {
+       // 1 intro text + 3 resource links
+       expect(result.content).toHaveLength(4);
+       expect(result.content[0].type).toBe("text");
+-      expect(result.content[0].text).toContain("3 resource links");
++      expect(textOf(result.content[0])).toContain("3 resource links");
+ 
+       // Check resource links
+       for (let i = 1; i < 4; i++) {
+         expect(result.content[i].type).toBe("resource_link");
+-        expect(result.content[i].uri).toBeDefined();
+-        expect(result.content[i].name).toBeDefined();
++        expect(
++          contentOfType(result.content[i], "resource_link").uri,
++        ).toBeDefined();
++        expect(
++          contentOfType(result.content[i], "resource_link").name,
++        ).toBeDefined();
+       }
+     });
+ 
+@@ -417,10 +458,18 @@ describe("Tools", () => {
+       const result = await handler({ count: 4 });
+ 
+       // Odd IDs (1, 3) are blob, even IDs (2, 4) are text
+-      expect(result.content[1].name).toContain("Blob");
+-      expect(result.content[2].name).toContain("Text");
+-      expect(result.content[3].name).toContain("Blob");
+-      expect(result.content[4].name).toContain("Text");
++      expect(contentOfType(result.content[1], "resource_link").name).toContain(
++        "Blob",
++      );
++      expect(contentOfType(result.content[2], "resource_link").name).toContain(
++        "Text",
++      );
++      expect(contentOfType(result.content[3], "resource_link").name).toContain(
++        "Blob",
++      );
++      expect(contentOfType(result.content[4], "resource_link").name).toContain(
++        "Text",
++      );
+     });
+ 
+     it("should use default count of 3", async () => {
+@@ -444,10 +493,12 @@ describe("Tools", () => {
+       const result = await handler({ resourceType: "Text", resourceId: 1 });
+ 
+       expect(result.content).toHaveLength(3);
+-      expect(result.content[0].text).toContain("Resource 1");
++      expect(textOf(result.content[0])).toContain("Resource 1");
+       expect(result.content[1].type).toBe("resource");
+-      expect(result.content[1].resource.uri).toContain("text/1");
+-      expect(result.content[2].text).toContain("URI");
++      expect(
++        contentOfType(result.content[1], "resource").resource.uri,
++      ).toContain("text/1");
++      expect(textOf(result.content[2])).toContain("URI");
+     });
+ 
+     it("should return blob resource reference", async () => {
+@@ -457,7 +508,9 @@ describe("Tools", () => {
+       const handler = handlers.get("get-resource-reference")!;
+       const result = await handler({ resourceType: "Blob", resourceId: 5 });
+ 
+-      expect(result.content[1].resource.uri).toContain("blob/5");
++      expect(
++        contentOfType(result.content[1], "resource").resource.uri,
++      ).toContain("blob/5");
+     });
+ 
+     it("should reject invalid resource type", async () => {
+@@ -495,8 +548,8 @@ describe("Tools", () => {
+       const handler = handlers.get("toggle-simulated-logging")!;
+       const result = await handler({}, { sessionId: "test-session-1" });
+ 
+-      expect(result.content[0].text).toContain("Started");
+-      expect(result.content[0].text).toContain("test-session-1");
++      expect(textOf(result.content[0])).toContain("Started");
++      expect(textOf(result.content[0])).toContain("test-session-1");
+     });
+ 
+     it("should stop logging when already active", async () => {
+@@ -511,8 +564,8 @@ describe("Tools", () => {
+       // Second call stops logging
+       const result = await handler({}, { sessionId: "test-session-2" });
+ 
+-      expect(result.content[0].text).toContain("Stopped");
+-      expect(result.content[0].text).toContain("test-session-2");
++      expect(textOf(result.content[0])).toContain("Stopped");
++      expect(textOf(result.content[0])).toContain("test-session-2");
+     });
+ 
+     it("should handle undefined sessionId", async () => {
+@@ -522,7 +575,7 @@ describe("Tools", () => {
+       const handler = handlers.get("toggle-simulated-logging")!;
+       const result = await handler({}, {});
+ 
+-      expect(result.content[0].text).toContain("Started");
++      expect(textOf(result.content[0])).toContain("Started");
+     });
+   });
+ 
+@@ -534,8 +587,8 @@ describe("Tools", () => {
+       const handler = handlers.get("toggle-subscriber-updates")!;
+       const result = await handler({}, { sessionId: "sub-session-1" });
+ 
+-      expect(result.content[0].text).toContain("Started");
+-      expect(result.content[0].text).toContain("sub-session-1");
++      expect(textOf(result.content[0])).toContain("Started");
++      expect(textOf(result.content[0])).toContain("sub-session-1");
+     });
+ 
+     it("should stop updates when already active", async () => {
+@@ -550,8 +603,8 @@ describe("Tools", () => {
+       // Second call stops updates
+       const result = await handler({}, { sessionId: "sub-session-2" });
+ 
+-      expect(result.content[0].text).toContain("Stopped");
+-      expect(result.content[0].text).toContain("sub-session-2");
++      expect(textOf(result.content[0])).toContain("Stopped");
++      expect(textOf(result.content[0])).toContain("sub-session-2");
+     });
+   });
+ 
+@@ -565,11 +618,13 @@ describe("Tools", () => {
+     });
+ 
+     it("should register when client supports sampling", () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ sampling: {} })),
+         },
+@@ -588,16 +643,18 @@ describe("Tools", () => {
+     });
+ 
+     it("should send sampling request and return result", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({
+         model: "test-model",
+         content: { type: "text", text: "LLM response" },
+       });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ sampling: {} })),
+         },
+@@ -620,7 +677,7 @@ describe("Tools", () => {
+         }),
+         expect.anything(),
+       );
+-      expect(result.content[0].text).toContain("LLM sampling result");
++      expect(textOf(result.content[0])).toContain("LLM sampling result");
+     });
+   });
+ 
+@@ -633,11 +690,13 @@ describe("Tools", () => {
+     });
+ 
+     it("should register when client supports elicitation", () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: {} })),
+         },
+@@ -656,7 +715,7 @@ describe("Tools", () => {
+     });
+ 
+     it("should handle accept action with user content", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({
+         action: "accept",
+         content: {
+@@ -667,9 +726,11 @@ describe("Tools", () => {
+       });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: {} })),
+         },
+@@ -680,21 +741,23 @@ describe("Tools", () => {
+       const handler = handlers.get("trigger-elicitation-request")!;
+       const result = await handler({}, { sendRequest: mockSendRequest });
+ 
+-      expect(result.content[0].text).toContain("✅");
+-      expect(result.content[0].text).toContain("provided");
+-      expect(result.content[1].text).toContain("John Doe");
++      expect(textOf(result.content[0])).toContain("✅");
++      expect(textOf(result.content[0])).toContain("provided");
++      expect(textOf(result.content[1])).toContain("John Doe");
+     });
+ 
+     it("should handle decline action", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({
+         action: "decline",
+       });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: {} })),
+         },
+@@ -705,20 +768,22 @@ describe("Tools", () => {
+       const handler = handlers.get("trigger-elicitation-request")!;
+       const result = await handler({}, { sendRequest: mockSendRequest });
+ 
+-      expect(result.content[0].text).toContain("❌");
+-      expect(result.content[0].text).toContain("declined");
++      expect(textOf(result.content[0])).toContain("❌");
++      expect(textOf(result.content[0])).toContain("declined");
+     });
+ 
+     it("should handle cancel action", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({
+         action: "cancel",
+       });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: {} })),
+         },
+@@ -729,8 +794,8 @@ describe("Tools", () => {
+       const handler = handlers.get("trigger-elicitation-request")!;
+       const result = await handler({}, { sendRequest: mockSendRequest });
+ 
+-      expect(result.content[0].text).toContain("⚠️");
+-      expect(result.content[0].text).toContain("cancelled");
++      expect(textOf(result.content[0])).toContain("⚠️");
++      expect(textOf(result.content[0])).toContain("cancelled");
+     });
+   });
+ 
+@@ -742,11 +807,13 @@ describe("Tools", () => {
+     });
+ 
+     it("should not register when client does not support URL elicitation", () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: { form: {} } })),
+         },
+@@ -758,11 +825,13 @@ describe("Tools", () => {
+     });
+ 
+     it("should register when client supports URL elicitation", () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
+         },
+@@ -781,15 +850,17 @@ describe("Tools", () => {
+     });
+ 
+     it("should send URL-mode elicitation request when errorPath is false", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({
+         action: "accept",
+       });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
+         },
+@@ -822,7 +893,7 @@ describe("Tools", () => {
+         expect.anything(),
+       );
+ 
+-      expect(result.content[0].text).toContain(
++      expect(textOf(result.content[0])).toContain(
+         "✅ User completed the URL elicitation flow.",
+       );
+     });
+@@ -854,15 +925,17 @@ describe("Tools", () => {
+     });
+ 
+     it("should default the elicitationId to a random UUID when omitted", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({
+         action: "accept",
+       });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
+         },
+@@ -887,13 +960,15 @@ describe("Tools", () => {
+     });
+ 
+     it("should report a declined URL elicitation", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({ action: "decline" });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
+         },
+@@ -912,19 +987,21 @@ describe("Tools", () => {
+         { sendRequest: mockSendRequest },
+       );
+ 
+-      expect(result.content[0].text).toContain(
++      expect(textOf(result.content[0])).toContain(
+         "❌ User declined to open the URL",
+       );
+     });
+ 
+     it("should report a cancelled URL elicitation", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({ action: "cancel" });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
+         },
+@@ -943,17 +1020,19 @@ describe("Tools", () => {
+         { sendRequest: mockSendRequest },
+       );
+ 
+-      expect(result.content[0].text).toContain(
++      expect(textOf(result.content[0])).toContain(
+         "⚠️ User cancelled the URL elicitation",
+       );
+     });
+ 
+     it("should throw MCP error -32042 with a prerequisite elicitation pointing at a different URL when errorPath is true", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
+         },
+@@ -975,9 +1054,10 @@ describe("Tools", () => {
+           },
+           {},
+         );
+-      } catch (error: any) {
+-        expect(error.code).toBe(-32042);
+-        const prerequisite = error.data.elicitations[0];
++      } catch (error) {
++        const urlError = asUrlElicitationError(error);
++        expect(urlError.code).toBe(-32042);
++        const prerequisite = urlError.elicitations[0];
+         expect(prerequisite.mode).toBe("url");
+         // The prerequisite must NOT reuse the failing URL, otherwise the client
+         // would complete it, retry, hit the same error, and loop forever.
+@@ -989,13 +1069,15 @@ describe("Tools", () => {
+     });
+ 
+     it("should ignore errorPath and take the request path when the same call is retried after the prerequisite", async () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockSendRequest = vi.fn().mockResolvedValue({ action: "accept" });
+ 
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ elicitation: { url: {} } })),
+         },
+@@ -1020,9 +1102,10 @@ describe("Tools", () => {
+       try {
+         await handler(args, extra);
+         throw new Error("expected first call to throw");
+-      } catch (error: any) {
+-        expect(error.code).toBe(-32042);
+-        prerequisiteUrl = error.data.elicitations[0].url;
++      } catch (error) {
++        const urlError = asUrlElicitationError(error);
++        expect(urlError.code).toBe(-32042);
++        prerequisiteUrl = urlError.elicitations[0].url;
+         expect(prerequisiteUrl).toBe("https://modelcontextprotocol.io");
+         expect(mockSendRequest).not.toHaveBeenCalled();
+       }
+@@ -1042,7 +1125,7 @@ describe("Tools", () => {
+         expect.anything(),
+         expect.anything(),
+       );
+-      expect(result.content[0].text).toContain(
++      expect(textOf(result.content[0])).toContain(
+         "✅ User completed the URL elicitation flow.",
+       );
+     });
+@@ -1057,11 +1140,13 @@ describe("Tools", () => {
+     });
+ 
+     it("should register when client supports roots", () => {
+-      const handlers: Map<string, Function> = new Map();
++      const handlers: Map<string, ToolHandler> = new Map();
+       const mockServer = {
+-        registerTool: vi.fn((name: string, config: any, handler: Function) => {
+-          handlers.set(name, handler);
+-        }),
++        registerTool: vi.fn(
++          (name: string, _config: unknown, handler: ToolHandler) => {
++            handlers.set(name, handler);
++          },
++        ),
+         server: {
+           getClientCapabilities: vi.fn(() => ({ roots: {} })),
+         },
+@@ -1082,12 +1167,12 @@ describe("Tools", () => {
+ 
+   describe("simulate-research-query", () => {
+     function createMockServerWithTasks() {
+-      const taskHandlers: Record<string, any> = {};
++      const taskHandlers: Partial<TaskHandlers> = {};
+       const mockServer = {
+         experimental: {
+           tasks: {
+             registerToolTask: vi.fn(
+-              (_name: string, _config: any, handler: any) => {
++              (_name: string, _config: unknown, handler: TaskHandlers) => {
+                 Object.assign(taskHandlers, handler);
+               },
+             ),
+@@ -1127,7 +1212,7 @@ describe("Tools", () => {
+         content: { interpretation: "technical" },
+       });
+ 
+-      await taskHandlers.createTask(
++      await taskHandlers.createTask!(
+         { topic: "python", ambiguous: true },
+         { taskStore: mockTaskStore, sendRequest: mockSendRequest },
+       );
+@@ -1151,7 +1236,7 @@ describe("Tools", () => {
+       const mockTaskStore = createMockTaskStore("task-def");
+       const mockSendRequest = vi.fn();
+ 
+-      await taskHandlers.createTask(
++      await taskHandlers.createTask!(
+         { topic: "python", ambiguous: false },
+         { taskStore: mockTaskStore, sendRequest: mockSendRequest },
+       );
+@@ -1170,84 +1255,57 @@ describe("Tools", () => {
+ 
+   describe("gzip-file-as-resource", () => {
+     it("should compress data URI and return resource link", async () => {
+-      const registeredResources: any[] = [];
+-      const mockServer = {
+-        registerTool: vi.fn(),
+-        registerResource: vi.fn((...args) => {
+-          registeredResources.push(args);
+-        }),
+-      } as unknown as McpServer;
++      const { mockServer, registerTool } = createGzipMockServer();
+ 
+       // Get the handler
+-      let handler: Function | null = null;
+-      (mockServer.registerTool as any).mockImplementation(
+-        (name: string, config: any, h: Function) => {
+-          handler = h;
+-        },
+-      );
+-
+       registerGZipFileAsResourceTool(mockServer);
++      const handler = registerTool.mock.calls[0][2];
+ 
+       // Create a data URI with test content
+       const testContent = "Hello, World!";
+       const dataUri = `data:text/plain;base64,${Buffer.from(testContent).toString("base64")}`;
+ 
+-      const result = await handler!({
++      const result = await handler({
+         name: "test.txt.gz",
+         data: dataUri,
+         outputType: "resourceLink",
+       });
+ 
+       expect(result.content[0].type).toBe("resource_link");
+-      expect(result.content[0].uri).toContain("test.txt.gz");
++      expect(contentOfType(result.content[0], "resource_link").uri).toContain(
++        "test.txt.gz",
++      );
+     });
+ 
+     it("should return resource directly when outputType is resource", async () => {
+-      const mockServer = {
+-        registerTool: vi.fn(),
+-        registerResource: vi.fn(),
+-      } as unknown as McpServer;
+-
+-      let handler: Function | null = null;
+-      (mockServer.registerTool as any).mockImplementation(
+-        (name: string, config: any, h: Function) => {
+-          handler = h;
+-        },
+-      );
++      const { mockServer, registerTool } = createGzipMockServer();
+ 
+       registerGZipFileAsResourceTool(mockServer);
++      const handler = registerTool.mock.calls[0][2];
+ 
+       const testContent = "Test content for compression";
+       const dataUri = `data:text/plain;base64,${Buffer.from(testContent).toString("base64")}`;
+ 
+-      const result = await handler!({
++      const result = await handler({
+         name: "output.gz",
+         data: dataUri,
+         outputType: "resource",
+       });
+ 
+       expect(result.content[0].type).toBe("resource");
+-      expect(result.content[0].resource.mimeType).toBe("application/gzip");
+-      expect(result.content[0].resource.blob).toBeDefined();
++      const { resource } = contentOfType(result.content[0], "resource");
++      expect(resource.mimeType).toBe("application/gzip");
++      expect("blob" in resource ? resource.blob : undefined).toBeDefined();
+     });
+ 
+     it("should reject unsupported URL protocols", async () => {
+-      const mockServer = {
+-        registerTool: vi.fn(),
+-        registerResource: vi.fn(),
+-      } as unknown as McpServer;
+-
+-      let handler: Function | null = null;
+-      (mockServer.registerTool as any).mockImplementation(
+-        (name: string, config: any, h: Function) => {
+-          handler = h;
+-        },
+-      );
++      const { mockServer, registerTool } = createGzipMockServer();
+ 
+       registerGZipFileAsResourceTool(mockServer);
++      const handler = registerTool.mock.calls[0][2];
+ 
+       await expect(
+-        handler!({
++        handler({
+           name: "test.gz",
+           data: "ftp://example.com/file.txt",
+           outputType: "resource",
+diff --git a/src/everything/resources/files.ts b/src/everything/resources/files.ts
+index 96fe0ba673..abd6dac7f8 100644
+--- a/src/everything/resources/files.ts
++++ b/src/everything/resources/files.ts
+@@ -18,10 +18,10 @@ export const registerFileResources = (server: McpServer) => {
+   const __filename = fileURLToPath(import.meta.url);
+   const __dirname = dirname(__filename);
+   const docsDir = join(__dirname, "..", "docs");
+-  let entries: string[] = [];
++  let entries: string[];
+   try {
+     entries = readdirSync(docsDir);
+-  } catch (e) {
++  } catch {
+     // If docs/ folder is missing or unreadable, just skip registration
+     return;
+   }
+diff --git a/src/everything/resources/subscriptions.ts b/src/everything/resources/subscriptions.ts
+index 53654e285a..62a1f5f7fe 100644
+--- a/src/everything/resources/subscriptions.ts
++++ b/src/everything/resources/subscriptions.ts
+@@ -138,8 +138,10 @@ export const beginSimulatedResourceUpdates = (
+   sessionId: string | undefined,
+ ) => {
+   if (!subsUpdateIntervals.has(sessionId)) {
+-    // Send once immediately
+-    sendSimulatedResourceUpdates(server, sessionId);
++    // Send once immediately. Fire-and-forget: this function is synchronous by
++    // contract (its callers start a background simulation), exactly like the
++    // interval callback below, so the caller cannot hold the promise.
++    void sendSimulatedResourceUpdates(server, sessionId);
+ 
+     // Set the interval to send later resource update notifications to this client
+     subsUpdateIntervals.set(
+diff --git a/src/everything/resources/templates.ts b/src/everything/resources/templates.ts
+index 9c8da9c0c4..fe3602d52e 100644
+--- a/src/everything/resources/templates.ts
++++ b/src/everything/resources/templates.ts
+@@ -141,7 +141,7 @@ export const blobResourceUri = (resourceId: number) =>
+  * @throws {Error} If the resourceId is not a finite positive integer.
+  */
+ const parseResourceId = (uri: URL, variables: Record<string, unknown>) => {
+-  const idxStr = String((variables as any).resourceId ?? "");
++  const idxStr = String(variables.resourceId ?? "");
+   const idx = Number(idxStr);
+   if (Number.isFinite(idx) && Number.isInteger(idx) && idx > 0) {
+     return idx;
+diff --git a/src/everything/server/logging.ts b/src/everything/server/logging.ts
+index da259fafa3..0a0437e738 100644
+--- a/src/everything/server/logging.ts
++++ b/src/everything/server/logging.ts
+@@ -52,8 +52,10 @@ export const beginSimulatedLogging = (
+ 
+   // Set the interval to send later logging messages to this client
+   if (!logsUpdateIntervals.has(sessionId)) {
+-    // Send once immediately
+-    sendSimulatedLoggingMessage(sessionId);
++    // Send once immediately. Fire-and-forget: this function is synchronous by
++    // contract (it starts a background simulation), exactly like the interval
++    // callback below, so the caller cannot hold the promise.
++    void sendSimulatedLoggingMessage(sessionId);
+ 
+     // Send a randomly-leveled log message every 5 seconds
+     logsUpdateIntervals.set(
+diff --git a/src/everything/tools/get-env.ts b/src/everything/tools/get-env.ts
+index 55eabfaa97..cd67ab6720 100644
+--- a/src/everything/tools/get-env.ts
++++ b/src/everything/tools/get-env.ts
+@@ -26,7 +26,7 @@ const config = {
+  * @returns {void}
+  */
+ export const registerGetEnvTool = (server: McpServer) => {
+-  server.registerTool(name, config, async (args): Promise<CallToolResult> => {
++  server.registerTool(name, config, async (): Promise<CallToolResult> => {
+     return {
+       content: [
+         {
+diff --git a/src/everything/tools/get-tiny-image.ts b/src/everything/tools/get-tiny-image.ts
+index c38c3c698b..f0f2cf517e 100644
+--- a/src/everything/tools/get-tiny-image.ts
++++ b/src/everything/tools/get-tiny-image.ts
+@@ -31,7 +31,7 @@ const config = {
+  * @param server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetTinyImageTool = (server: McpServer) => {
+-  server.registerTool(name, config, async (args): Promise<CallToolResult> => {
++  server.registerTool(name, config, async (): Promise<CallToolResult> => {
+     return {
+       content: [
+         {
+diff --git a/src/everything/tools/gzip-file-as-resource.ts b/src/everything/tools/gzip-file-as-resource.ts
+index bd24f9e274..82ba258430 100644
+--- a/src/everything/tools/gzip-file-as-resource.ts
++++ b/src/everything/tools/gzip-file-as-resource.ts
+@@ -162,6 +162,7 @@ function validateDataURI(dataUri: string): URL {
+       `Error processing file ${dataUri}: ${
+         error instanceof Error ? error.message : String(error)
+       }`,
++      { cause: error },
+     );
+   }
+   return url;
+@@ -223,7 +224,11 @@ async function fetchSafely(
+         totalSize += value.length;
+ 
+         if (totalSize > maxBytes) {
+-          reader.cancel();
++          // Not awaited: cancel() adopts the source's promise and may never
++          // settle, and we are about to throw anyway. Swallow its rejection so
++          // it cannot surface as an unhandled one; the thrown size error is
++          // the failure this path reports.
++          reader.cancel().catch(() => {});
+           throw new Error(`Response from ${url} exceeds ${maxBytes} bytes`);
+         }
+ 
+diff --git a/src/filesystem/__tests__/lib.test.ts b/src/filesystem/__tests__/lib.test.ts
+index 4b7f505336..a70d88bd4b 100644
+--- a/src/filesystem/__tests__/lib.test.ts
++++ b/src/filesystem/__tests__/lib.test.ts
+@@ -1,7 +1,15 @@
+-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+-import fs from "fs/promises";
++import {
++  describe,
++  it,
++  expect,
++  beforeEach,
++  afterEach,
++  vi,
++  type Mock,
++} from "vitest";
++import fs, { type FileHandle } from "fs/promises";
++import type { Dirent, PathLike, Stats } from "fs";
+ import path from "path";
+-import os from "os";
+ import {
+   // Pure utility functions
+   formatSize,
+@@ -25,7 +33,28 @@ import {
+ 
+ // Mock fs module
+ vi.mock("fs/promises");
+-const mockFs = fs as any;
++const mockFs = vi.mocked(fs);
++// fs.readdir is overloaded and vi.mocked types the mock against its last
++// (Buffer) overload; the code under test calls the withFileTypes overload.
++const mockReaddir = vi.mocked(
++  fs.readdir as (
++    path: PathLike,
++    options: { withFileTypes: true },
++  ) => Promise<Dirent[]>,
++);
++
++interface MockFileHandle {
++  read: Mock;
++  close: Mock;
++}
++
++function asFileHandle(handle: MockFileHandle): FileHandle {
++  // Double cast is safe here: tailFile/headFile only ever call read() and
++  // close() on the handle, which this test double provides; FileHandle's
++  // overloaded read() signatures cannot be matched by a vi.fn() mock, so no
++  // single cast or structural type relates the two.
++  return handle as unknown as FileHandle;
++}
+ 
+ function createMockFileHandle(content: Buffer) {
+   return {
+@@ -214,14 +243,8 @@ describe("Lib Functions", () => {
+         ).rejects.toThrow("Windows-style path received on a POSIX host");
+       });
+ 
+-      // Use Windows-compatible paths for testing
+-      const allowedDirs =
+-        process.platform === "win32"
+-          ? ["C:\\Users\\test", "C:\\temp"]
+-          : ["/home/user", "/tmp"];
+-
+       beforeEach(() => {
+-        mockFs.realpath.mockImplementation(async (path: any) =>
++        mockFs.realpath.mockImplementation(async (path: PathLike) =>
+           path.toString(),
+         );
+       });
+@@ -311,7 +334,7 @@ describe("Lib Functions", () => {
+         // Mock process.cwd to return a directory outside allowed directories
+         const disallowedCwd =
+           process.platform === "win32" ? "C:\\Windows\\System32" : "/root";
+-        (process as any).cwd = vi.fn(() => disallowedCwd);
++        process.cwd = vi.fn(() => disallowedCwd);
+ 
+         try {
+           const result = await validatePath(relativePath);
+@@ -345,7 +368,7 @@ describe("Lib Functions", () => {
+           mode: 0o644,
+         };
+ 
+-        mockFs.stat.mockResolvedValueOnce(mockStats as any);
++        mockFs.stat.mockResolvedValueOnce(mockStats as Stats);
+ 
+         const result = await getFileStats("/test/file.txt");
+ 
+@@ -371,7 +394,7 @@ describe("Lib Functions", () => {
+           mode: 0o755,
+         };
+ 
+-        mockFs.stat.mockResolvedValueOnce(mockStats as any);
++        mockFs.stat.mockResolvedValueOnce(mockStats as Stats);
+ 
+         const result = await getFileStats("/test/dir");
+ 
+@@ -420,7 +443,7 @@ describe("Lib Functions", () => {
+           Object.assign(new Error("EEXIST"), { code: "EEXIST" }),
+         );
+         // stat returns executable permissions
+-        mockFs.stat.mockResolvedValueOnce({ mode: 0o100755 });
++        mockFs.stat.mockResolvedValueOnce({ mode: 0o100755 } as Stats);
+         // Second writeFile (to temp) succeeds
+         mockFs.writeFile.mockResolvedValueOnce(undefined);
+         mockFs.rename.mockResolvedValueOnce(undefined);
+@@ -436,7 +459,7 @@ describe("Lib Functions", () => {
+         mockFs.writeFile.mockRejectedValueOnce(
+           Object.assign(new Error("EEXIST"), { code: "EEXIST" }),
+         );
+-        mockFs.stat.mockResolvedValueOnce({ mode: 0o100755 });
++        mockFs.stat.mockResolvedValueOnce({ mode: 0o100755 } as Stats);
+         mockFs.writeFile.mockResolvedValueOnce(undefined);
+         mockFs.rename.mockResolvedValueOnce(undefined);
+         mockFs.chmod.mockRejectedValueOnce(
+@@ -468,7 +491,7 @@ describe("Lib Functions", () => {
+ 
+       it("fails without overwriting when the destination already exists", async () => {
+         // lstat resolving means the destination is occupied.
+-        mockFs.lstat.mockResolvedValueOnce({} as any);
++        mockFs.lstat.mockResolvedValueOnce({} as Stats);
+ 
+         await expect(
+           moveFile("/test/source.txt", "/test/dest.txt"),
+@@ -482,7 +505,7 @@ describe("Lib Functions", () => {
+   describe("Search & Filtering Functions", () => {
+     describe("searchFilesWithValidation", () => {
+       beforeEach(() => {
+-        mockFs.realpath.mockImplementation(async (path: any) =>
++        mockFs.realpath.mockImplementation(async (path: PathLike) =>
+           path.toString(),
+         );
+       });
+@@ -494,7 +517,7 @@ describe("Lib Functions", () => {
+           { name: "node_modules", isDirectory: () => true },
+         ];
+ 
+-        mockFs.readdir.mockResolvedValueOnce(mockEntries as any);
++        mockReaddir.mockResolvedValueOnce(mockEntries as Dirent[]);
+ 
+         const testDir =
+           process.platform === "win32" ? "C:\\allowed\\dir" : "/allowed/dir";
+@@ -502,7 +525,7 @@ describe("Lib Functions", () => {
+           process.platform === "win32" ? ["C:\\allowed"] : ["/allowed"];
+ 
+         // Mock realpath to return the same path for validation to pass
+-        mockFs.realpath.mockImplementation(async (inputPath: any) => {
++        mockFs.realpath.mockImplementation(async (inputPath: PathLike) => {
+           const pathStr = inputPath.toString();
+           // Return the path as-is for validation
+           return pathStr;
+@@ -528,10 +551,10 @@ describe("Lib Functions", () => {
+           { name: "invalid_file.txt", isDirectory: () => false },
+         ];
+ 
+-        mockFs.readdir.mockResolvedValueOnce(mockEntries as any);
++        mockReaddir.mockResolvedValueOnce(mockEntries as Dirent[]);
+ 
+         // Mock validatePath to throw error for invalid_file.txt
+-        mockFs.realpath.mockImplementation(async (path: any) => {
++        mockFs.realpath.mockImplementation(async (path: PathLike) => {
+           if (path.toString().includes("invalid_file.txt")) {
+             throw new Error("Access denied");
+           }
+@@ -565,7 +588,7 @@ describe("Lib Functions", () => {
+           { name: "important_test.js", isDirectory: () => false },
+         ];
+ 
+-        mockFs.readdir.mockResolvedValueOnce(mockEntries as any);
++        mockReaddir.mockResolvedValueOnce(mockEntries as Dirent[]);
+ 
+         const testDir =
+           process.platform === "win32" ? "C:\\allowed\\dir" : "/allowed/dir";
+@@ -596,7 +619,7 @@ describe("Lib Functions", () => {
+       beforeEach(() => {
+         mockFs.readFile.mockResolvedValue("line1\nline2\nline3\n");
+         mockFs.writeFile.mockResolvedValue(undefined);
+-        mockFs.stat.mockResolvedValue({ mode: 0o100644 });
++        mockFs.stat.mockResolvedValue({ mode: 0o100644 } as Stats);
+         mockFs.chmod.mockResolvedValue(undefined);
+       });
+ 
+@@ -690,7 +713,7 @@ describe("Lib Functions", () => {
+       });
+ 
+       it("preserves file permissions after applying edits", async () => {
+-        mockFs.stat.mockResolvedValue({ mode: 0o100755 });
++        mockFs.stat.mockResolvedValue({ mode: 0o100755 } as Stats);
+         const edits = [{ oldText: "line2", newText: "modified line2" }];
+ 
+         mockFs.rename.mockResolvedValueOnce(undefined);
+@@ -795,7 +818,7 @@ describe("Lib Functions", () => {
+ 
+     describe("tailFile", () => {
+       it("handles empty files", async () => {
+-        mockFs.stat.mockResolvedValue({ size: 0 } as any);
++        mockFs.stat.mockResolvedValue({ size: 0 } as Stats);
+ 
+         const result = await tailFile("/test/empty.txt", 5);
+ 
+@@ -804,18 +827,18 @@ describe("Lib Functions", () => {
+       });
+ 
+       it("calls stat to check file size", async () => {
+-        mockFs.stat.mockResolvedValue({ size: 100 } as any);
++        mockFs.stat.mockResolvedValue({ size: 100 } as Stats);
+ 
+         // Mock file handle with proper typing
+         const mockFileHandle = {
+           read: vi.fn(),
+           close: vi.fn(),
+-        } as any;
++        };
+ 
+         mockFileHandle.read.mockResolvedValue({ bytesRead: 0 });
+         mockFileHandle.close.mockResolvedValue(undefined);
+ 
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+         await tailFile("/test/file.txt", 2);
+ 
+@@ -824,12 +847,12 @@ describe("Lib Functions", () => {
+       });
+ 
+       it("handles files with content and returns last lines", async () => {
+-        mockFs.stat.mockResolvedValue({ size: 50 } as any);
++        mockFs.stat.mockResolvedValue({ size: 50 } as Stats);
+ 
+         const mockFileHandle = {
+           read: vi.fn(),
+           close: vi.fn(),
+-        } as any;
++        };
+ 
+         // Simulate reading file content in chunks
+         mockFileHandle.read
+@@ -840,9 +863,9 @@ describe("Lib Functions", () => {
+           .mockResolvedValueOnce({ bytesRead: 0 });
+         mockFileHandle.close.mockResolvedValue(undefined);
+ 
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+-        const result = await tailFile("/test/file.txt", 2);
++        await tailFile("/test/file.txt", 2);
+ 
+         expect(mockFileHandle.close).toHaveBeenCalled();
+       });
+@@ -856,8 +879,8 @@ describe("Lib Functions", () => {
+         ]);
+         const mockFileHandle = createMockFileHandle(content);
+ 
+-        mockFs.stat.mockResolvedValue({ size: content.length } as any);
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.stat.mockResolvedValue({ size: content.length } as Stats);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+         const result = await tailFile("/test/file.txt", 2);
+ 
+@@ -865,17 +888,17 @@ describe("Lib Functions", () => {
+       });
+ 
+       it("handles read errors gracefully", async () => {
+-        mockFs.stat.mockResolvedValue({ size: 100 } as any);
++        mockFs.stat.mockResolvedValue({ size: 100 } as Stats);
+ 
+         const mockFileHandle = {
+           read: vi.fn(),
+           close: vi.fn(),
+-        } as any;
++        };
+ 
+         mockFileHandle.read.mockResolvedValue({ bytesRead: 0 });
+         mockFileHandle.close.mockResolvedValue(undefined);
+ 
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+         await tailFile("/test/file.txt", 5);
+ 
+@@ -889,12 +912,12 @@ describe("Lib Functions", () => {
+         const mockFileHandle = {
+           read: vi.fn(),
+           close: vi.fn(),
+-        } as any;
++        };
+ 
+         mockFileHandle.read.mockResolvedValue({ bytesRead: 0 });
+         mockFileHandle.close.mockResolvedValue(undefined);
+ 
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+         await headFile("/test/file.txt", 2);
+ 
+@@ -905,7 +928,7 @@ describe("Lib Functions", () => {
+         const mockFileHandle = {
+           read: vi.fn(),
+           close: vi.fn(),
+-        } as any;
++        };
+ 
+         // Simulate reading file content with newlines
+         mockFileHandle.read
+@@ -916,9 +939,9 @@ describe("Lib Functions", () => {
+           .mockResolvedValueOnce({ bytesRead: 0 });
+         mockFileHandle.close.mockResolvedValue(undefined);
+ 
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+-        const result = await headFile("/test/file.txt", 2);
++        await headFile("/test/file.txt", 2);
+ 
+         expect(mockFileHandle.close).toHaveBeenCalled();
+       });
+@@ -930,7 +953,7 @@ describe("Lib Functions", () => {
+         ]);
+         const mockFileHandle = createMockFileHandle(content);
+ 
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+         const result = await headFile("/test/file.txt", 1);
+ 
+@@ -941,7 +964,7 @@ describe("Lib Functions", () => {
+         const mockFileHandle = {
+           read: vi.fn(),
+           close: vi.fn(),
+-        } as any;
++        };
+ 
+         // Simulate reading file content without final newline
+         mockFileHandle.read
+@@ -952,9 +975,9 @@ describe("Lib Functions", () => {
+           .mockResolvedValueOnce({ bytesRead: 0 });
+         mockFileHandle.close.mockResolvedValue(undefined);
+ 
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+-        const result = await headFile("/test/file.txt", 5);
++        await headFile("/test/file.txt", 5);
+ 
+         expect(mockFileHandle.close).toHaveBeenCalled();
+       });
+@@ -963,7 +986,7 @@ describe("Lib Functions", () => {
+         const mockFileHandle = {
+           read: vi.fn(),
+           close: vi.fn(),
+-        } as any;
++        };
+ 
+         // Simulate reading exactly the requested number of lines
+         mockFileHandle.read
+@@ -974,9 +997,9 @@ describe("Lib Functions", () => {
+           .mockResolvedValueOnce({ bytesRead: 0 });
+         mockFileHandle.close.mockResolvedValue(undefined);
+ 
+-        mockFs.open.mockResolvedValue(mockFileHandle);
++        mockFs.open.mockResolvedValue(asFileHandle(mockFileHandle));
+ 
+-        const result = await headFile("/test/file.txt", 2);
++        await headFile("/test/file.txt", 2);
+ 
+         expect(mockFileHandle.close).toHaveBeenCalled();
+       });
+diff --git a/src/filesystem/__tests__/path-validation.test.ts b/src/filesystem/__tests__/path-validation.test.ts
+index a4098c4db1..f148c9cd7f 100644
+--- a/src/filesystem/__tests__/path-validation.test.ts
++++ b/src/filesystem/__tests__/path-validation.test.ts
+@@ -280,14 +280,20 @@ describe("Path Validation", () => {
+ 
+     it("handles null and undefined inputs gracefully", () => {
+       const allowed = ["/home/user/project"];
++      // `as never` deliberately defeats the parameter types: this test
++      // exercises the runtime guard against callers that bypass TypeScript.
+ 
+       // Should return false, not crash
+-      expect(isPathWithinAllowedDirectories(null as any, allowed)).toBe(false);
+-      expect(isPathWithinAllowedDirectories(undefined as any, allowed)).toBe(
++      expect(isPathWithinAllowedDirectories(null as never, allowed)).toBe(
+         false,
+       );
+-      expect(isPathWithinAllowedDirectories("/path", null as any)).toBe(false);
+-      expect(isPathWithinAllowedDirectories("/path", undefined as any)).toBe(
++      expect(isPathWithinAllowedDirectories(undefined as never, allowed)).toBe(
++        false,
++      );
++      expect(isPathWithinAllowedDirectories("/path", null as never)).toBe(
++        false,
++      );
++      expect(isPathWithinAllowedDirectories("/path", undefined as never)).toBe(
+         false,
+       );
+     });
+@@ -637,21 +643,25 @@ describe("Path Validation", () => {
+   describe("Edge Cases", () => {
+     it("rejects non-string inputs safely", () => {
+       const allowed = ["/home/user/project"];
++      // `as never` deliberately defeats the parameter types: this test
++      // exercises the runtime guard against callers that bypass TypeScript.
+ 
+-      expect(isPathWithinAllowedDirectories(123 as any, allowed)).toBe(false);
+-      expect(isPathWithinAllowedDirectories({} as any, allowed)).toBe(false);
+-      expect(isPathWithinAllowedDirectories([] as any, allowed)).toBe(false);
+-      expect(isPathWithinAllowedDirectories(null as any, allowed)).toBe(false);
+-      expect(isPathWithinAllowedDirectories(undefined as any, allowed)).toBe(
++      expect(isPathWithinAllowedDirectories(123 as never, allowed)).toBe(false);
++      expect(isPathWithinAllowedDirectories({} as never, allowed)).toBe(false);
++      expect(isPathWithinAllowedDirectories([] as never, allowed)).toBe(false);
++      expect(isPathWithinAllowedDirectories(null as never, allowed)).toBe(
++        false,
++      );
++      expect(isPathWithinAllowedDirectories(undefined as never, allowed)).toBe(
+         false,
+       );
+ 
+       // Non-string in allowed directories
+       expect(
+-        isPathWithinAllowedDirectories("/home/user/project", [123 as any]),
++        isPathWithinAllowedDirectories("/home/user/project", [123 as never]),
+       ).toBe(false);
+       expect(
+-        isPathWithinAllowedDirectories("/home/user/project", [{} as any]),
++        isPathWithinAllowedDirectories("/home/user/project", [{} as never]),
+       ).toBe(false);
+     });
+ 
+@@ -766,7 +776,7 @@ describe("Path Validation", () => {
+ 
+         // Symlink target should be outside allowed directory
+         expect(isPathWithinAllowedDirectories(realPath, allowed)).toBe(false);
+-      } catch (error) {
++      } catch {
+         // Skip if no symlink permissions
+       }
+     });
+@@ -1067,8 +1077,6 @@ describe("Path Validation", () => {
+         return;
+       }
+ 
+-      const allowed = [allowedDir];
+-
+       await fs.symlink(targetFile, testPath);
+ 
+       await expect(fs.open(testPath, "wx")).rejects.toThrow(/EEXIST/);
+@@ -1187,7 +1195,6 @@ describe("Path Validation", () => {
+     });
+ 
+     it("should allow overwrites to legitimate files within allowed directories", async () => {
+-      const allowed = [allowedDir];
+       const legitFile = path.join(allowedDir, "legit-file.txt");
+ 
+       // Create a legitimate file
+@@ -1214,7 +1221,6 @@ describe("Path Validation", () => {
+         return;
+       }
+ 
+-      const allowed = [allowedDir];
+       const targetFile = path.join(allowedDir, "target.txt");
+       const symlinkPath = path.join(allowedDir, "symlink.txt");
+ 
+@@ -1322,7 +1328,6 @@ describe("Path Validation", () => {
+         return;
+       }
+ 
+-      const allowed = [allowedDir];
+       const tempFile = path.join(allowedDir, "temp.txt");
+       const targetSymlink = path.join(allowedDir, "target-symlink.txt");
+       const forbiddenTarget = path.join(forbiddenDir, "forbidden-target.txt");
+diff --git a/src/filesystem/__tests__/roots-utils.test.ts b/src/filesystem/__tests__/roots-utils.test.ts
+index 35bb46e358..c72a36c85f 100644
+--- a/src/filesystem/__tests__/roots-utils.test.ts
++++ b/src/filesystem/__tests__/roots-utils.test.ts
+@@ -9,7 +9,6 @@ import {
+ } from "fs";
+ import { tmpdir } from "os";
+ import { join } from "path";
+-import type { Root } from "@modelcontextprotocol/sdk/types.js";
+ 
+ describe("getValidRootDirectories", () => {
+   let testDir1: string;
+diff --git a/src/filesystem/__tests__/structured-content.test.ts b/src/filesystem/__tests__/structured-content.test.ts
+index 69926bcc98..6008ce1c61 100644
+--- a/src/filesystem/__tests__/structured-content.test.ts
++++ b/src/filesystem/__tests__/structured-content.test.ts
+@@ -4,7 +4,6 @@ import * as path from "path";
+ import * as os from "os";
+ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+-import { spawn } from "child_process";
+ import { fileURLToPath } from "url";
+ 
+ /**
+diff --git a/src/filesystem/index.ts b/src/filesystem/index.ts
+index 786b52be50..bafcb96d88 100644
+--- a/src/filesystem/index.ts
++++ b/src/filesystem/index.ts
+@@ -64,7 +64,7 @@ let allowedDirectories = (
+           return [normalizedOriginal, normalizedResolved];
+         }
+         return [normalizedResolved];
+-      } catch (error) {
++      } catch {
+         // If we can't resolve (doesn't exist), use the normalized absolute path
+         // This allows configuring allowed dirs that will be created later
+         return [normalizedOriginal];
+@@ -83,7 +83,7 @@ for (const dir of allowedDirectories) {
+     } else {
+       console.error(`Warning: ${dir} is not a directory, skipping`);
+     }
+-  } catch (error) {
++  } catch {
+     console.error(`Warning: Cannot access directory ${dir}, skipping`);
+   }
+ }
+@@ -119,7 +119,7 @@ const ReadMediaFileArgsSchema = z.object({
+ const ReadMultipleFilesArgsSchema = z.object({
+   paths: z
+     .array(z.string())
+-    .min(1, "At least one file path must be provided")
++    .min(1)
+     .describe(
+       "Array of file paths to read. Each path must be a string pointing to a valid file within allowed directories.",
+     ),
+@@ -284,9 +284,7 @@ server.registerTool(
+       "Read a file and return it as a base64-encoded content block with its MIME type. " +
+       "Image and audio files are returned as image/audio content; any other file type is " +
+       "returned as an embedded resource. Only works within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-    },
++    inputSchema: ReadMediaFileArgsSchema.shape,
+     outputSchema: {
+       content: z.array(
+         z.union([
+@@ -361,14 +359,7 @@ server.registerTool(
+       "or compare multiple files. Each file's content is returned with its " +
+       "path as a reference. Failed reads for individual files won't stop " +
+       "the entire operation. Only works within allowed directories.",
+-    inputSchema: {
+-      paths: z
+-        .array(z.string())
+-        .min(1)
+-        .describe(
+-          "Array of file paths to read. Each path must be a string pointing to a valid file within allowed directories.",
+-        ),
+-    },
++    inputSchema: ReadMultipleFilesArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: { readOnlyHint: true, openWorldHint: false },
+   },
+@@ -402,10 +393,7 @@ server.registerTool(
+       "Create a new file or completely overwrite an existing file with new content. " +
+       "Use with caution as it will overwrite existing files without warning. " +
+       "Handles text content with proper encoding. Only works within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-      content: z.string(),
+-    },
++    inputSchema: WriteFileArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: {
+       readOnlyHint: false,
+@@ -433,21 +421,7 @@ server.registerTool(
+       "Make line-based edits to a text file. Each edit replaces exact line sequences " +
+       "with new content. Returns a git-style diff showing the changes made. " +
+       "Only works within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-      edits: z.array(
+-        z.object({
+-          oldText: z
+-            .string()
+-            .describe("Text to search for - must match exactly"),
+-          newText: z.string().describe("Text to replace with"),
+-        }),
+-      ),
+-      dryRun: z
+-        .boolean()
+-        .default(false)
+-        .describe("Preview changes using git-style diff format"),
+-    },
++    inputSchema: EditFileArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: {
+       readOnlyHint: false,
+@@ -475,9 +449,7 @@ server.registerTool(
+       "nested directories in one operation. If the directory already exists, " +
+       "this operation will succeed silently. Perfect for setting up directory " +
+       "structures for projects or ensuring required paths exist. Only works within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-    },
++    inputSchema: CreateDirectoryArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: {
+       readOnlyHint: false,
+@@ -506,9 +478,7 @@ server.registerTool(
+       "Results clearly distinguish between files and directories with [FILE] and [DIR] " +
+       "prefixes. This tool is essential for understanding directory structure and " +
+       "finding specific files within a directory. Only works within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-    },
++    inputSchema: ListDirectoryArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: { readOnlyHint: true, openWorldHint: false },
+   },
+@@ -536,14 +506,7 @@ server.registerTool(
+       "Results clearly distinguish between files and directories with [FILE] and [DIR] " +
+       "prefixes. This tool is useful for understanding directory structure and " +
+       "finding specific files within a directory. Only works within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-      sortBy: z
+-        .enum(["name", "size"])
+-        .optional()
+-        .default("name")
+-        .describe("Sort entries by name or size"),
+-    },
++    inputSchema: ListDirectoryWithSizesArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: { readOnlyHint: true, openWorldHint: false },
+   },
+@@ -563,7 +526,7 @@ server.registerTool(
+             size: stats.size,
+             mtime: stats.mtime,
+           };
+-        } catch (error) {
++        } catch {
+           return {
+             name: entry.name,
+             isDirectory: entry.isDirectory(),
+@@ -623,10 +586,7 @@ server.registerTool(
+       "Each entry includes 'name', 'type' (file/directory), and 'children' for directories. " +
+       "Files have no children array, while directories always have a children array (which may be empty). " +
+       "The output is formatted with 2-space indentation for readability. Only works within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-      excludePatterns: z.array(z.string()).optional().default([]),
+-    },
++    inputSchema: DirectoryTreeArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: { readOnlyHint: true, openWorldHint: false },
+   },
+@@ -700,10 +660,7 @@ server.registerTool(
+       "and rename them in a single operation. If the destination exists, the " +
+       "operation will fail. Works across different directories and can be used " +
+       "for simple renaming within the same directory. Both source and destination must be within allowed directories.",
+-    inputSchema: {
+-      source: z.string(),
+-      destination: z.string(),
+-    },
++    inputSchema: MoveFileArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: {
+       readOnlyHint: false,
+@@ -735,11 +692,7 @@ server.registerTool(
+       "Use pattern like '*.ext' to match files in current directory, and '**/*.ext' to match files in all subdirectories. " +
+       "Returns full paths to all matching items. Great for finding files when you don't know their exact location. " +
+       "Only searches within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-      pattern: z.string(),
+-      excludePatterns: z.array(z.string()).optional().default([]),
+-    },
++    inputSchema: SearchFilesArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: { readOnlyHint: true, openWorldHint: false },
+   },
+@@ -768,9 +721,7 @@ server.registerTool(
+       "information including size, creation time, last modified time, permissions, " +
+       "and type. This tool is perfect for understanding file characteristics " +
+       "without reading the actual content. Only works within allowed directories.",
+-    inputSchema: {
+-      path: z.string(),
+-    },
++    inputSchema: GetFileInfoArgsSchema.shape,
+     outputSchema: { content: z.string() },
+     annotations: { readOnlyHint: true, openWorldHint: false },
+   },
+diff --git a/src/filesystem/lib.ts b/src/filesystem/lib.ts
+index 4aa9302bc3..c760651ffa 100644
+--- a/src/filesystem/lib.ts
++++ b/src/filesystem/lib.ts
+@@ -1,9 +1,8 @@
+ import fs from "fs/promises";
+ import path from "path";
+-import os from "os";
+ import { randomBytes } from "crypto";
+ import { StringDecoder } from "string_decoder";
+-import { diffLines, createTwoFilesPatch } from "diff";
++import { createTwoFilesPatch } from "diff";
+ import { minimatch } from "minimatch";
+ import { normalizePath, expandHome } from "./path-utils.js";
+ import { isPathWithinAllowedDirectories } from "./path-validation.js";
+@@ -214,6 +213,7 @@ export async function validatePath(requestedPath: string): Promise<string> {
+         if ((resolutionError as NodeJS.ErrnoException).code === "ENOENT") {
+           throw new Error(
+             `Parent directory does not exist: ${path.dirname(absolute)}`,
++            { cause: resolutionError },
+           );
+         }
+         throw resolutionError;
+@@ -265,7 +265,9 @@ export async function writeFileContent(
+       } catch (renameError) {
+         try {
+           await fs.unlink(tempPath);
+-        } catch {}
++        } catch {
++          // Best-effort cleanup; the rename error below is the one to report.
++        }
+         throw renameError;
+       }
+       // Restore original permission bits since the atomic rename replaces the
+@@ -274,7 +276,9 @@ export async function writeFileContent(
+       // failure must not fail the write, which has already succeeded.
+       try {
+         await fs.chmod(filePath, origStats.mode & 0o777);
+-      } catch {}
++      } catch {
++        // Deliberately ignored: the write already succeeded (see above).
++      }
+     } else {
+       throw error;
+     }
+@@ -398,7 +402,9 @@ export async function applyFileEdits(
+     } catch (error) {
+       try {
+         await fs.unlink(tempPath);
+-      } catch {}
++      } catch {
++        // Best-effort cleanup; the write error below is the one to report.
++      }
+       throw error;
+     }
+     // Restore original permission bits since the atomic rename replaces the
+@@ -407,7 +413,9 @@ export async function applyFileEdits(
+     // failure must not fail the write, which has already succeeded.
+     try {
+       await fs.chmod(filePath, origStats.mode & 0o777);
+-    } catch {}
++    } catch {
++      // Deliberately ignored: the write already succeeded (see above).
++    }
+   }
+ 
+   return formattedDiff;
+diff --git a/src/memory/__tests__/atomic-save.test.ts b/src/memory/__tests__/atomic-save.test.ts
+index 3e6a25626a..288ff9dd2a 100644
+--- a/src/memory/__tests__/atomic-save.test.ts
++++ b/src/memory/__tests__/atomic-save.test.ts
+@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+ import { promises as fs } from "fs";
+ import path from "path";
+ import os from "os";
+-import { KnowledgeGraphManager, Entity } from "../index.js";
++import { KnowledgeGraphManager } from "../index.js";
+ 
+ /**
+  * Regression tests for durable persistence of the knowledge graph.
+diff --git a/src/memory/__tests__/knowledge-graph.test.ts b/src/memory/__tests__/knowledge-graph.test.ts
+index 143e571cd3..b579709244 100644
+--- a/src/memory/__tests__/knowledge-graph.test.ts
++++ b/src/memory/__tests__/knowledge-graph.test.ts
+@@ -2,12 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
+ import { promises as fs } from "fs";
+ import path from "path";
+ import { fileURLToPath } from "url";
+-import {
+-  KnowledgeGraphManager,
+-  Entity,
+-  Relation,
+-  KnowledgeGraph,
+-} from "../index.js";
++import { KnowledgeGraphManager, Entity, Relation } from "../index.js";
+ 
+ describe("KnowledgeGraphManager", () => {
+   let manager: KnowledgeGraphManager;
+@@ -26,7 +21,7 @@ describe("KnowledgeGraphManager", () => {
+     // Clean up test file
+     try {
+       await fs.unlink(testFilePath);
+-    } catch (error) {
++    } catch (_error) {
+       // Ignore errors if file doesn't exist
+     }
+   });
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index aeecb91905..6eb6cec7c3 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -172,7 +172,7 @@ export class KnowledgeGraphManager {
+       if (
+         error instanceof Error &&
+         "code" in error &&
+-        (error as any).code === "ENOENT"
++        error.code === "ENOENT"
+       ) {
+         return { entities: [], relations: [] };
+       }
+@@ -452,7 +452,13 @@ const resourceSubscribers = new Set<string>();
+ // client has not subscribed.
+ function notifyGraphUpdated() {
+   if (resourceSubscribers.has(RESOURCE_URI)) {
+-    server.server.sendResourceUpdated({ uri: RESOURCE_URI });
++    // Fire-and-forget: the tool result must not wait on (or fail because of)
++    // the notification, so a delivery failure is logged rather than thrown.
++    server.server
++      .sendResourceUpdated({ uri: RESOURCE_URI })
++      .catch((error: unknown) => {
++        console.error("Failed to send resource updated notification:", error);
++      });
+   }
+ }
+ 
+diff --git a/src/sequentialthinking/__tests__/lib.test.ts b/src/sequentialthinking/__tests__/lib.test.ts
+index b4fdaaca57..c97fc289a7 100644
+--- a/src/sequentialthinking/__tests__/lib.test.ts
++++ b/src/sequentialthinking/__tests__/lib.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+-import { SequentialThinkingServer, ThoughtData } from "../lib.js";
++import { SequentialThinkingServer } from "../lib.js";
+ 
+ // Mock chalk to avoid ESM issues
+ vi.mock("chalk", () => {
+diff --git a/src/sequentialthinking/lib.ts b/src/sequentialthinking/lib.ts
+index 0673e3c3c3..9b0a819f37 100644
+--- a/src/sequentialthinking/lib.ts
++++ b/src/sequentialthinking/lib.ts
+@@ -33,8 +33,8 @@ export class SequentialThinkingServer {
+       branchId,
+     } = thoughtData;
+ 
+-    let prefix = "";
+-    let context = "";
++    let prefix: string;
++    let context: string;
+ 
+     if (isRevision) {
+       prefix = chalk.yellow("🔄 Revision");

@@ -1,0 +1,441 @@
+From c743a10da082e76fc85d6aff06b0bd99feec8049 Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Mon, 12 Jan 2026 07:34:18 -0700
+Subject: [PATCH 1/3] feat(everything): add tool-level annotations to
+ get-annotated-message
+
+Add readOnlyHint, destructiveHint, idempotentHint, and openWorldHint
+annotations to the tool config. Update docs to reflect that this tool
+now demonstrates both tool-level and content annotations.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+---
+ src/everything/docs/structure.md              | 2 +-
+ src/everything/tools/get-annotated-message.ts | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/everything/docs/structure.md b/src/everything/docs/structure.md
+index 6bcedcd425..9716e0cd47 100644
+--- a/src/everything/docs/structure.md
++++ b/src/everything/docs/structure.md
+@@ -129,7 +129,7 @@ src/everything
+ - `echo.ts`
+   - Registers an `echo` tool that takes a message and returns `Echo: {message}`.
+ - `get-annotated-message.ts`
+-  - Registers an `annotated-message` tool which demonstrates annotated content items by emitting a primary `text` message with `annotations` that vary by `messageType` (`"error" | "success" | "debug"`), and optionally includes an annotated `image` (tiny PNG) when `includeImage` is true.
++  - Registers an `annotated-message` tool which demonstrates both tool-level annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) and content annotations. Emits a primary `text` message with content `annotations` (`priority`, `audience`) that vary by `messageType` (`"error" | "success" | "debug"`), and optionally includes an annotated `image` (tiny PNG) when `includeImage` is true.
+ - `get-env.ts`
+   - Registers a `get-env` tool that returns the current process environment variables as formatted JSON text; useful for debugging configuration.
+ - `get-resource-links.ts`
+diff --git a/src/everything/tools/get-annotated-message.ts b/src/everything/tools/get-annotated-message.ts
+index ead0660e8f..5de72b029a 100644
+--- a/src/everything/tools/get-annotated-message.ts
++++ b/src/everything/tools/get-annotated-message.ts
+@@ -21,6 +21,12 @@ const config = {
+   description:
+     "Demonstrates how annotations can be used to provide metadata about content.",
+   inputSchema: GetAnnotatedMessageSchema,
++  annotations: {
++    readOnlyHint: true,       // This tool only returns data, no side effects
++    destructiveHint: false,   // Does not delete or modify anything
++    idempotentHint: true,     // Same input always produces same output
++    openWorldHint: false,     // Does not interact with external systems
++  },
+ };
+ 
+ /**
+
+From baf99300a2c70c9fe07cb3a45d60ab98cb95136f Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Fri, 6 Feb 2026 05:35:51 -0700
+Subject: [PATCH 2/3] Add tool annotations to all Everything server tools
+
+Previously only get-annotated-message had ToolAnnotations. Now all 18
+tools explicitly declare readOnlyHint, destructiveHint, idempotentHint,
+and openWorldHint so the server serves as a complete reference for
+developers implementing tool annotations per the MCP spec.
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+---
+ src/everything/tools/echo.ts                              | 6 ++++++
+ src/everything/tools/get-env.ts                           | 6 ++++++
+ src/everything/tools/get-resource-links.ts                | 6 ++++++
+ src/everything/tools/get-resource-reference.ts            | 6 ++++++
+ src/everything/tools/get-roots-list.ts                    | 6 ++++++
+ src/everything/tools/get-structured-content.ts            | 6 ++++++
+ src/everything/tools/get-sum.ts                           | 6 ++++++
+ src/everything/tools/get-tiny-image.ts                    | 6 ++++++
+ src/everything/tools/gzip-file-as-resource.ts             | 6 ++++++
+ src/everything/tools/simulate-research-query.ts           | 6 ++++++
+ src/everything/tools/toggle-simulated-logging.ts          | 6 ++++++
+ src/everything/tools/toggle-subscriber-updates.ts         | 6 ++++++
+ src/everything/tools/trigger-elicitation-request-async.ts | 6 ++++++
+ src/everything/tools/trigger-elicitation-request.ts       | 6 ++++++
+ src/everything/tools/trigger-long-running-operation.ts    | 6 ++++++
+ src/everything/tools/trigger-sampling-request-async.ts    | 6 ++++++
+ src/everything/tools/trigger-sampling-request.ts          | 6 ++++++
+ 17 files changed, 102 insertions(+)
+
+diff --git a/src/everything/tools/echo.ts b/src/everything/tools/echo.ts
+index 204a2fb49b..0658e83195 100644
+--- a/src/everything/tools/echo.ts
++++ b/src/everything/tools/echo.ts
+@@ -13,6 +13,12 @@ const config = {
+   title: "Echo Tool",
+   description: "Echoes back the input string",
+   inputSchema: EchoSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-env.ts b/src/everything/tools/get-env.ts
+index 0adbf5a14d..55eabfaa97 100644
+--- a/src/everything/tools/get-env.ts
++++ b/src/everything/tools/get-env.ts
+@@ -8,6 +8,12 @@ const config = {
+   description:
+     "Returns all environment variables, helpful for debugging MCP server configuration",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-resource-links.ts b/src/everything/tools/get-resource-links.ts
+index b1fc627e20..7684cb64a5 100644
+--- a/src/everything/tools/get-resource-links.ts
++++ b/src/everything/tools/get-resource-links.ts
+@@ -25,6 +25,12 @@ const config = {
+   description:
+     "Returns up to ten resource links that reference different types of resources",
+   inputSchema: GetResourceLinksSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-resource-reference.ts b/src/everything/tools/get-resource-reference.ts
+index d3dc5d3ecb..5806365868 100644
+--- a/src/everything/tools/get-resource-reference.ts
++++ b/src/everything/tools/get-resource-reference.ts
+@@ -28,6 +28,12 @@ const config = {
+   title: "Get Resource Reference Tool",
+   description: "Returns a resource reference that can be used by MCP clients",
+   inputSchema: GetResourceReferenceSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-roots-list.ts b/src/everything/tools/get-roots-list.ts
+index 62363da26a..a8778e4c01 100644
+--- a/src/everything/tools/get-roots-list.ts
++++ b/src/everything/tools/get-roots-list.ts
+@@ -9,6 +9,12 @@ const config = {
+   description:
+     "Lists the current MCP roots provided by the client. Demonstrates the roots protocol capability even though this server doesn't access files.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-structured-content.ts b/src/everything/tools/get-structured-content.ts
+index 83c98c0ab6..f9bde5c9e4 100644
+--- a/src/everything/tools/get-structured-content.ts
++++ b/src/everything/tools/get-structured-content.ts
+@@ -27,6 +27,12 @@ const config = {
+     "Returns structured content along with an output schema for client data validation",
+   inputSchema: GetStructuredContentInputSchema,
+   outputSchema: GetStructuredContentOutputSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-sum.ts b/src/everything/tools/get-sum.ts
+index 522043c88f..470293bf6f 100644
+--- a/src/everything/tools/get-sum.ts
++++ b/src/everything/tools/get-sum.ts
+@@ -14,6 +14,12 @@ const config = {
+   title: "Get Sum Tool",
+   description: "Returns the sum of two numbers",
+   inputSchema: GetSumSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-tiny-image.ts b/src/everything/tools/get-tiny-image.ts
+index 720707d0ce..c38c3c698b 100644
+--- a/src/everything/tools/get-tiny-image.ts
++++ b/src/everything/tools/get-tiny-image.ts
+@@ -11,6 +11,12 @@ const config = {
+   title: "Get Tiny Image Tool",
+   description: "Returns a tiny MCP logo image.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/gzip-file-as-resource.ts b/src/everything/tools/gzip-file-as-resource.ts
+index 608fcf4a0d..b651520400 100644
+--- a/src/everything/tools/gzip-file-as-resource.ts
++++ b/src/everything/tools/gzip-file-as-resource.ts
+@@ -48,6 +48,12 @@ const config = {
+   description:
+     "Compresses a single file using gzip compression. Depending upon the selected output type, returns either the compressed data as a gzipped resource or a resource link, allowing it to be downloaded in a subsequent request during the current session.",
+   inputSchema: GZipFileAsResourceSchema,
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: true,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/simulate-research-query.ts b/src/everything/tools/simulate-research-query.ts
+index 8b485ca2ba..c96c740c4e 100644
+--- a/src/everything/tools/simulate-research-query.ts
++++ b/src/everything/tools/simulate-research-query.ts
+@@ -255,6 +255,12 @@ export const registerSimulateResearchQueryTool = (server: McpServer) => {
+         "If 'ambiguous' is true and client supports elicitation, sends an elicitation request for clarification.",
+       inputSchema: SimulateResearchQuerySchema,
+       execution: { taskSupport: "required" },
++      annotations: {
++        readOnlyHint: false,
++        destructiveHint: false,
++        idempotentHint: false,
++        openWorldHint: false,
++      },
+     },
+     {
+       /**
+diff --git a/src/everything/tools/toggle-simulated-logging.ts b/src/everything/tools/toggle-simulated-logging.ts
+index 4941ed77d0..eb9a4b1e25 100644
+--- a/src/everything/tools/toggle-simulated-logging.ts
++++ b/src/everything/tools/toggle-simulated-logging.ts
+@@ -11,6 +11,12 @@ const config = {
+   title: "Toggle Simulated Logging",
+   description: "Toggles simulated, random-leveled logging on or off.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: false,
++  },
+ };
+ 
+ // Track enabled clients by session id
+diff --git a/src/everything/tools/toggle-subscriber-updates.ts b/src/everything/tools/toggle-subscriber-updates.ts
+index 03b949e232..759ec20e51 100644
+--- a/src/everything/tools/toggle-subscriber-updates.ts
++++ b/src/everything/tools/toggle-subscriber-updates.ts
+@@ -11,6 +11,12 @@ const config = {
+   title: "Toggle Subscriber Updates",
+   description: "Toggles simulated resource subscription updates on or off.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: false,
++  },
+ };
+ 
+ // Track enabled clients by session id
+diff --git a/src/everything/tools/trigger-elicitation-request-async.ts b/src/everything/tools/trigger-elicitation-request-async.ts
+index 6cf6f3e581..786d38feb0 100644
+--- a/src/everything/tools/trigger-elicitation-request-async.ts
++++ b/src/everything/tools/trigger-elicitation-request-async.ts
+@@ -11,6 +11,12 @@ const config = {
+     "Demonstrates bidirectional MCP tasks where the server sends an elicitation request and " +
+     "the client handles user input asynchronously, allowing the server to poll for completion.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: false,
++  },
+ };
+ 
+ // Poll interval in milliseconds
+diff --git a/src/everything/tools/trigger-elicitation-request.ts b/src/everything/tools/trigger-elicitation-request.ts
+index 4de7993e9a..ca4742141e 100644
+--- a/src/everything/tools/trigger-elicitation-request.ts
++++ b/src/everything/tools/trigger-elicitation-request.ts
+@@ -10,6 +10,12 @@ const config = {
+   title: "Trigger Elicitation Request Tool",
+   description: "Trigger a Request from the Server for User Elicitation",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/trigger-long-running-operation.ts b/src/everything/tools/trigger-long-running-operation.ts
+index 8af45ce60b..95415e88e2 100644
+--- a/src/everything/tools/trigger-long-running-operation.ts
++++ b/src/everything/tools/trigger-long-running-operation.ts
+@@ -17,6 +17,12 @@ const config = {
+   title: "Trigger Long Running Operation Tool",
+   description: "Demonstrates a long running operation with progress updates.",
+   inputSchema: TriggerLongRunningOperationSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/trigger-sampling-request-async.ts b/src/everything/tools/trigger-sampling-request-async.ts
+index 2e9fad96bc..f58dd84d10 100644
+--- a/src/everything/tools/trigger-sampling-request-async.ts
++++ b/src/everything/tools/trigger-sampling-request-async.ts
+@@ -23,6 +23,12 @@ const config = {
+     "Demonstrates bidirectional MCP tasks where the server sends a request and the client " +
+     "executes it asynchronously, allowing the server to poll for progress and results.",
+   inputSchema: TriggerSamplingRequestAsyncSchema,
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: true,
++  },
+ };
+ 
+ // Poll interval in milliseconds
+diff --git a/src/everything/tools/trigger-sampling-request.ts b/src/everything/tools/trigger-sampling-request.ts
+index 5785f5210f..fd9b5375c4 100644
+--- a/src/everything/tools/trigger-sampling-request.ts
++++ b/src/everything/tools/trigger-sampling-request.ts
+@@ -21,6 +21,12 @@ const config = {
+   title: "Trigger Sampling Request Tool",
+   description: "Trigger a Request from the Server for LLM Sampling",
+   inputSchema: TriggerSamplingRequestSchema,
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: true,
++  },
+ };
+ 
+ /**
+
+From 106216491eebe0969baebfac88126253b6f7d191 Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Sat, 7 Feb 2026 17:32:16 -0700
+Subject: [PATCH 3/3] Update structure.md to reflect all tool annotations and
+ new tools
+
+- Update get-annotated-message description: all tools now have
+  tool-level annotations, not just this one
+- Add missing tool entries: simulate-research-query,
+  trigger-elicitation-request-async, trigger-sampling-request-async
+- Add these tools to the file tree listing
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+---
+ src/everything/docs/structure.md | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/src/everything/docs/structure.md b/src/everything/docs/structure.md
+index 9716e0cd47..40ab1ab862 100644
+--- a/src/everything/docs/structure.md
++++ b/src/everything/docs/structure.md
+@@ -48,11 +48,14 @@ src/everything
+      │   ├── get-sum.ts
+      │   ├── get-tiny-image.ts
+      │   ├── gzip-file-as-resource.ts
++     │   ├── simulate-research-query.ts
+      │   ├── toggle-simulated-logging.ts
+      │   ├── toggle-subscriber-updates.ts
+      │   ├── trigger-elicitation-request.ts
++     │   ├── trigger-elicitation-request-async.ts
+      │   ├── trigger-long-running-operation.ts
+-     │   └── trigger-sampling-request.ts
++     │   ├── trigger-sampling-request.ts
++     │   └── trigger-sampling-request-async.ts
+      └── transports
+          ├── sse.ts
+          ├── stdio.ts
+@@ -129,7 +132,7 @@ src/everything
+ - `echo.ts`
+   - Registers an `echo` tool that takes a message and returns `Echo: {message}`.
+ - `get-annotated-message.ts`
+-  - Registers an `annotated-message` tool which demonstrates both tool-level annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) and content annotations. Emits a primary `text` message with content `annotations` (`priority`, `audience`) that vary by `messageType` (`"error" | "success" | "debug"`), and optionally includes an annotated `image` (tiny PNG) when `includeImage` is true.
++  - Registers a `get-annotated-message` tool which demonstrates content-level annotations. Emits a primary `text` message with content `annotations` (`priority`, `audience`) that vary by `messageType` (`"error" | "success" | "debug"`), and optionally includes an annotated `image` (tiny PNG) when `includeImage` is true. All tools in this server include tool-level annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`).
+ - `get-env.ts`
+   - Registers a `get-env` tool that returns the current process environment variables as formatted JSON text; useful for debugging configuration.
+ - `get-resource-links.ts`
+@@ -147,18 +150,24 @@ src/everything
+     - `GZIP_MAX_FETCH_SIZE` (bytes, default 10 MiB)
+     - `GZIP_MAX_FETCH_TIME_MILLIS` (ms, default 30000)
+     - `GZIP_ALLOWED_DOMAINS` (comma-separated allowlist; empty means all domains allowed)
++- `simulate-research-query.ts`
++  - Registers a `simulate-research-query` task-based tool that demonstrates the MCP Tasks feature (SEP-1686). Simulates a multi-stage research operation with progress updates. If the query is marked as ambiguous and the client supports elicitation, it pauses mid-execution to request clarification via `elicitation/create`. Uses `server.experimental.tasks.registerToolTask()` with `execution: { taskSupport: "required" }`.
+ - `trigger-elicitation-request.ts`
+   - Registers a `trigger-elicitation-request` tool that sends an `elicitation/create` request to the client/LLM and returns the elicitation result.
++- `trigger-elicitation-request-async.ts`
++  - Registers a `trigger-elicitation-request-async` tool that demonstrates bidirectional MCP tasks for elicitation. Sends an elicitation request with task metadata, then polls the client's `tasks/get` endpoint for completion status before fetching the final result.
+ - `trigger-sampling-request.ts`
+   - Registers a `trigger-sampling-request` tool that sends a `sampling/createMessage` request to the client/LLM and returns the sampling result.
++- `trigger-sampling-request-async.ts`
++  - Registers a `trigger-sampling-request-async` tool that demonstrates bidirectional MCP tasks for sampling. Sends a sampling request with task metadata, then polls the client's `tasks/get` endpoint for completion status before fetching the final result.
+ - `get-structured-content.ts`
+   - Registers a `get-structured-content` tool that demonstrates structuredContent block responses.
+ - `get-sum.ts`
+-  - Registers an `get-sum` tool with a Zod input schema that sums two numbers `a` and `b` and returns the result.
++  - Registers a `get-sum` tool with a Zod input schema that sums two numbers `a` and `b` and returns the result.
+ - `get-tiny-image.ts`
+   - Registers a `get-tiny-image` tool, which returns a tiny PNG MCP logo as an `image` content item, along with surrounding descriptive `text` items.
+ - `trigger-long-running-operation.ts`
+-  - Registers a `long-running-operation` tool that simulates a long-running task over a specified `duration` (seconds) and number of `steps`; emits `notifications/progress` updates when the client supplies a `progressToken`.
++  - Registers a `trigger-long-running-operation` tool that simulates a long-running task over a specified `duration` (seconds) and number of `steps`; emits `notifications/progress` updates when the client supplies a `progressToken`.
+ - `toggle-simulated-logging.ts`
+   - Registers a `toggle-simulated-logging` tool, which starts or stops simulated logging for the invoking session.
+ - `toggle-subscriber-updates.ts`

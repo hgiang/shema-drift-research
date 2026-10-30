@@ -1,0 +1,46 @@
+From c743a10da082e76fc85d6aff06b0bd99feec8049 Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Mon, 12 Jan 2026 07:34:18 -0700
+Subject: [PATCH] feat(everything): add tool-level annotations to
+ get-annotated-message
+
+Add readOnlyHint, destructiveHint, idempotentHint, and openWorldHint
+annotations to the tool config. Update docs to reflect that this tool
+now demonstrates both tool-level and content annotations.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+---
+ src/everything/docs/structure.md              | 2 +-
+ src/everything/tools/get-annotated-message.ts | 6 ++++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/everything/docs/structure.md b/src/everything/docs/structure.md
+index 6bcedcd425..9716e0cd47 100644
+--- a/src/everything/docs/structure.md
++++ b/src/everything/docs/structure.md
+@@ -129,7 +129,7 @@ src/everything
+ - `echo.ts`
+   - Registers an `echo` tool that takes a message and returns `Echo: {message}`.
+ - `get-annotated-message.ts`
+-  - Registers an `annotated-message` tool which demonstrates annotated content items by emitting a primary `text` message with `annotations` that vary by `messageType` (`"error" | "success" | "debug"`), and optionally includes an annotated `image` (tiny PNG) when `includeImage` is true.
++  - Registers an `annotated-message` tool which demonstrates both tool-level annotations (`readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint`) and content annotations. Emits a primary `text` message with content `annotations` (`priority`, `audience`) that vary by `messageType` (`"error" | "success" | "debug"`), and optionally includes an annotated `image` (tiny PNG) when `includeImage` is true.
+ - `get-env.ts`
+   - Registers a `get-env` tool that returns the current process environment variables as formatted JSON text; useful for debugging configuration.
+ - `get-resource-links.ts`
+diff --git a/src/everything/tools/get-annotated-message.ts b/src/everything/tools/get-annotated-message.ts
+index ead0660e8f..5de72b029a 100644
+--- a/src/everything/tools/get-annotated-message.ts
++++ b/src/everything/tools/get-annotated-message.ts
+@@ -21,6 +21,12 @@ const config = {
+   description:
+     "Demonstrates how annotations can be used to provide metadata about content.",
+   inputSchema: GetAnnotatedMessageSchema,
++  annotations: {
++    readOnlyHint: true,       // This tool only returns data, no side effects
++    destructiveHint: false,   // Does not delete or modify anything
++    idempotentHint: true,     // Same input always produces same output
++    openWorldHint: false,     // Does not interact with external systems
++  },
+ };
+ 
+ /**

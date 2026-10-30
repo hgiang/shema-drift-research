@@ -1,0 +1,22 @@
+From 5150a953094623be26f13b345efc09932ef099ee Mon Sep 17 00:00:00 2001
+From: Nipun Negi <100460166+nipunnegi2@users.noreply.github.com>
+Date: Tue, 24 Mar 2026 12:03:31 +0530
+Subject: [PATCH] Fix typo in usage instructions for VS Code
+
+---
+ src/everything/README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/everything/README.md b/src/everything/README.md
+index 8109e4449f..f468a0567c 100644
+--- a/src/everything/README.md
++++ b/src/everything/README.md
+@@ -33,7 +33,7 @@ Add to your `claude_desktop_config.json`:
+ 
+ ## Usage with VS Code
+ 
+-For quick installation, use of of the one-click install buttons below...
++For quick installation, use one of the one-click install buttons below...
+ 
+ [![Install with NPX in VS Code](https://img.shields.io/badge/VS_Code-NPM-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=everything&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40modelcontextprotocol%2Fserver-everything%22%5D%7D) [![Install with NPX in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-NPM-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=everything&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40modelcontextprotocol%2Fserver-everything%22%5D%7D&quality=insiders)
+ 

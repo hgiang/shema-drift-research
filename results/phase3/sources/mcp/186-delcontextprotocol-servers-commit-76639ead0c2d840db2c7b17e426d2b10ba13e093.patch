@@ -1,0 +1,269 @@
+From 3bcfedd8e40212a1fd6e4bd3ab5abf459257f83b Mon Sep 17 00:00:00 2001
+From: "dependabot[bot]" <49699333+dependabot[bot]@users.noreply.github.com>
+Date: Wed, 29 Jul 2026 22:05:20 +0000
+Subject: [PATCH] chore(deps): bump the uv group across 3 directories with 4
+ updates
+
+Bumps the uv group with 3 updates in the /src/git directory: [gitpython](https://github.com/gitpython-developers/GitPython), [mcp](https://github.com/modelcontextprotocol/python-sdk) and [pydantic-settings](https://github.com/pydantic/pydantic-settings).
+Bumps the uv group with 2 updates in the /src/time directory: [mcp](https://github.com/modelcontextprotocol/python-sdk) and [pydantic-settings](https://github.com/pydantic/pydantic-settings).
+Bumps the uv group with 2 updates in the /src/fetch directory: [mcp](https://github.com/modelcontextprotocol/python-sdk) and [soupsieve](https://github.com/facelessuser/soupsieve).
+
+
+Updates `gitpython` from 3.1.50 to 3.1.54
+- [Release notes](https://github.com/gitpython-developers/GitPython/releases)
+- [Changelog](https://github.com/gitpython-developers/GitPython/blob/main/CHANGES)
+- [Commits](https://github.com/gitpython-developers/GitPython/compare/3.1.50...3.1.54)
+
+Updates `mcp` from 1.23.0 to 1.28.1
+- [Release notes](https://github.com/modelcontextprotocol/python-sdk/releases)
+- [Changelog](https://github.com/modelcontextprotocol/python-sdk/blob/main/RELEASE.md)
+- [Commits](https://github.com/modelcontextprotocol/python-sdk/compare/v1.23.0...v1.28.1)
+
+Updates `pydantic-settings` from 2.12.0 to 2.14.2
+- [Release notes](https://github.com/pydantic/pydantic-settings/releases)
+- [Commits](https://github.com/pydantic/pydantic-settings/compare/v2.12.0...v2.14.2)
+
+Updates `mcp` from 1.25.0 to 1.28.1
+- [Release notes](https://github.com/modelcontextprotocol/python-sdk/releases)
+- [Changelog](https://github.com/modelcontextprotocol/python-sdk/blob/main/RELEASE.md)
+- [Commits](https://github.com/modelcontextprotocol/python-sdk/compare/v1.23.0...v1.28.1)
+
+Updates `pydantic-settings` from 2.12.0 to 2.14.2
+- [Release notes](https://github.com/pydantic/pydantic-settings/releases)
+- [Commits](https://github.com/pydantic/pydantic-settings/compare/v2.12.0...v2.14.2)
+
+Updates `mcp` from 1.23.0 to 1.28.1
+- [Release notes](https://github.com/modelcontextprotocol/python-sdk/releases)
+- [Changelog](https://github.com/modelcontextprotocol/python-sdk/blob/main/RELEASE.md)
+- [Commits](https://github.com/modelcontextprotocol/python-sdk/compare/v1.23.0...v1.28.1)
+
+Updates `soupsieve` from 2.6 to 2.8.4
+- [Release notes](https://github.com/facelessuser/soupsieve/releases)
+- [Commits](https://github.com/facelessuser/soupsieve/compare/2.6...2.8.4)
+
+---
+updated-dependencies:
+- dependency-name: gitpython
+  dependency-version: 3.1.54
+  dependency-type: direct:production
+  dependency-group: uv
+- dependency-name: mcp
+  dependency-version: 1.28.1
+  dependency-type: direct:production
+  dependency-group: uv
+- dependency-name: pydantic-settings
+  dependency-version: 2.14.2
+  dependency-type: indirect
+  dependency-group: uv
+- dependency-name: mcp
+  dependency-version: 1.28.1
+  dependency-type: direct:production
+  dependency-group: uv
+- dependency-name: pydantic-settings
+  dependency-version: 2.14.2
+  dependency-type: indirect
+  dependency-group: uv
+- dependency-name: mcp
+  dependency-version: 1.28.1
+  dependency-type: direct:production
+  dependency-group: uv
+- dependency-name: soupsieve
+  dependency-version: 2.8.4
+  dependency-type: indirect
+  dependency-group: uv
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+---
+ src/fetch/uv.lock | 18 ++++++++++++------
+ src/git/uv.lock   | 24 +++++++++++++++---------
+ src/time/uv.lock  | 18 ++++++++++++------
+ 3 files changed, 39 insertions(+), 21 deletions(-)
+
+diff --git a/src/fetch/uv.lock b/src/fetch/uv.lock
+index ea9b0567e2..d79e776d42 100644
+--- a/src/fetch/uv.lock
++++ b/src/fetch/uv.lock
+@@ -1,6 +1,12 @@
+ version = 1
+ revision = 3
+ requires-python = ">=3.10"
++resolution-markers = [
++    "python_full_version >= '3.14' and sys_platform == 'win32'",
++    "python_full_version >= '3.14' and sys_platform != 'win32'",
++    "python_full_version < '3.14' and sys_platform == 'win32'",
++    "python_full_version < '3.14' and sys_platform != 'win32'",
++]
+ 
+ [[package]]
+ name = "annotated-types"
+@@ -533,7 +539,7 @@ wheels = [
+ 
+ [[package]]
+ name = "mcp"
+-version = "1.23.0"
++version = "1.28.1"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "anyio" },
+@@ -551,9 +557,9 @@ dependencies = [
+     { name = "typing-inspection" },
+     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/25/1a/9c8a5362e3448d585081d6c7aa95898a64e0ac59d3e26169ae6c3ca5feaf/mcp-1.23.0.tar.gz", hash = "sha256:84e0c29316d0a8cf0affd196fd000487ac512aa3f771b63b2ea864e22961772b", size = 596506, upload-time = "2025-12-02T13:40:02.558Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/6e/77/9450b8f251a13affb6281997d0523c4615f8a8b35d0b21ff30db3a5aac9d/mcp-1.28.1.tar.gz", hash = "sha256:d51e36a5f5644faea4f85ea649bfffa6bc6c26770d42798ad6a3de3d2ba69683", size = 638501, upload-time = "2026-06-26T12:57:29.093Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/7b/b2/28739ce409f98159c0121eab56e69ad71546c4f34ac8b42e58c03f57dccc/mcp-1.23.0-py3-none-any.whl", hash = "sha256:5a645cf111ed329f4619f2629a3f15d9aabd7adc2ea09d600d31467b51ecb64f", size = 231427, upload-time = "2025-12-02T13:40:00.738Z" },
++    { url = "https://files.pythonhosted.org/packages/e2/5e/d118fce19f87a2e7d8101c35c8ae0ec289098a4df0ff244cec23e415aca0/mcp-1.28.1-py3-none-any.whl", hash = "sha256:2726bca5e7193f61c5dde8b12500a6de2d9acf6d1a1c0be9e8c2e706437991df", size = 222620, upload-time = "2026-06-26T12:57:27.218Z" },
+ ]
+ 
+ [[package]]
+@@ -1179,11 +1185,11 @@ wheels = [
+ 
+ [[package]]
+ name = "soupsieve"
+-version = "2.6"
++version = "2.8.4"
+ source = { registry = "https://pypi.org/simple" }
+-sdist = { url = "https://files.pythonhosted.org/packages/d7/ce/fbaeed4f9fb8b2daa961f90591662df6a86c1abf25c548329a86920aedfb/soupsieve-2.6.tar.gz", hash = "sha256:e2e68417777af359ec65daac1057404a3c8a5455bb8abc36f1a9866ab1a51abb", size = 101569, upload-time = "2024-08-13T13:39:12.166Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/47/2c/0a5f6f8ee0d5589e48c7640213ed5175d52cf540a06725b628cc1a45d6ce/soupsieve-2.8.4.tar.gz", hash = "sha256:e121fd02e975c695e4e9e8774a5ee35d74714b59307868dcc5319ad2d9e3328e", size = 121110, upload-time = "2026-05-24T13:55:57.154Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/d1/c2/fe97d779f3ef3b15f05c94a2f1e3d21732574ed441687474db9d342a7315/soupsieve-2.6-py3-none-any.whl", hash = "sha256:e72c4ff06e4fb6e4b5a9f0f55fe6e81514581fca1515028625d0f299c602ccc9", size = 36186, upload-time = "2024-08-13T13:39:10.986Z" },
++    { url = "https://files.pythonhosted.org/packages/5e/f5/0c41cb68dcae6b7de4fac4188a3a9589e21fb31df21ea3a2e888db95e6c9/soupsieve-2.8.4-py3-none-any.whl", hash = "sha256:e7e6b0769c8f51ed59acab6e994b00621096cfb1c640a7509295987388fbaf65", size = 37304, upload-time = "2026-05-24T13:55:55.406Z" },
+ ]
+ 
+ [[package]]
+diff --git a/src/git/uv.lock b/src/git/uv.lock
+index a838e3d10d..517aa8756d 100644
+--- a/src/git/uv.lock
++++ b/src/git/uv.lock
+@@ -1,6 +1,12 @@
+ version = 1
+ revision = 3
+ requires-python = ">=3.10"
++resolution-markers = [
++    "python_full_version >= '3.14' and sys_platform == 'win32'",
++    "python_full_version >= '3.14' and sys_platform != 'win32'",
++    "python_full_version < '3.14' and sys_platform == 'win32'",
++    "python_full_version < '3.14' and sys_platform != 'win32'",
++]
+ 
+ [[package]]
+ name = "annotated-types"
+@@ -227,14 +233,14 @@ wheels = [
+ 
+ [[package]]
+ name = "gitpython"
+-version = "3.1.50"
++version = "3.1.54"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "gitdb" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/33/f6/354ae6491228b5eb40e10d89c4d13c651fe1cf7556e35ebdded50cff57ce/gitpython-3.1.50.tar.gz", hash = "sha256:80da2d12504d52e1f998772dc5baf6e553f8d2fcfe1fcc226c9d9a2ee3372dcc", size = 219798, upload-time = "2026-05-06T04:01:26.571Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/5e/d5/3da0b92033887033f4c27f2dd109a303c4ca62813c7b3bb2511edb4777de/gitpython-3.1.54.tar.gz", hash = "sha256:53f2085e24a2cda300eed7c3fc5f1559ae289634b725e98acaf4791940247aa0", size = 225076, upload-time = "2026-07-22T04:08:51.403Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/20/7a/1c6e3562dfd8950adbb11ffbc65d21e7c89d01a6e4f137fa981056de25c5/gitpython-3.1.50-py3-none-any.whl", hash = "sha256:d352abe2908d07355014abdd21ddf798c2a961469239afec4962e9da884858f9", size = 212507, upload-time = "2026-05-06T04:01:23.799Z" },
++    { url = "https://files.pythonhosted.org/packages/d1/b9/876f442a28df5c068ca69b0122d5c35e65fd2d2fa9992ea5cb5944ea00a6/gitpython-3.1.54-py3-none-any.whl", hash = "sha256:b90d7b3d9bc0238681d24369130826f0dcdb0ceaa45db67cf1d4ffa4c302dedf", size = 216575, upload-time = "2026-07-22T04:08:50.05Z" },
+ ]
+ 
+ [[package]]
+@@ -331,7 +337,7 @@ wheels = [
+ 
+ [[package]]
+ name = "mcp"
+-version = "1.23.0"
++version = "1.28.1"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "anyio" },
+@@ -349,9 +355,9 @@ dependencies = [
+     { name = "typing-inspection" },
+     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/25/1a/9c8a5362e3448d585081d6c7aa95898a64e0ac59d3e26169ae6c3ca5feaf/mcp-1.23.0.tar.gz", hash = "sha256:84e0c29316d0a8cf0affd196fd000487ac512aa3f771b63b2ea864e22961772b", size = 596506, upload-time = "2025-12-02T13:40:02.558Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/6e/77/9450b8f251a13affb6281997d0523c4615f8a8b35d0b21ff30db3a5aac9d/mcp-1.28.1.tar.gz", hash = "sha256:d51e36a5f5644faea4f85ea649bfffa6bc6c26770d42798ad6a3de3d2ba69683", size = 638501, upload-time = "2026-06-26T12:57:29.093Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/7b/b2/28739ce409f98159c0121eab56e69ad71546c4f34ac8b42e58c03f57dccc/mcp-1.23.0-py3-none-any.whl", hash = "sha256:5a645cf111ed329f4619f2629a3f15d9aabd7adc2ea09d600d31467b51ecb64f", size = 231427, upload-time = "2025-12-02T13:40:00.738Z" },
++    { url = "https://files.pythonhosted.org/packages/e2/5e/d118fce19f87a2e7d8101c35c8ae0ec289098a4df0ff244cec23e415aca0/mcp-1.28.1-py3-none-any.whl", hash = "sha256:2726bca5e7193f61c5dde8b12500a6de2d9acf6d1a1c0be9e8c2e706437991df", size = 222620, upload-time = "2026-06-26T12:57:27.218Z" },
+ ]
+ 
+ [[package]]
+@@ -558,16 +564,16 @@ wheels = [
+ 
+ [[package]]
+ name = "pydantic-settings"
+-version = "2.12.0"
++version = "2.14.2"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "pydantic" },
+     { name = "python-dotenv" },
+     { name = "typing-inspection" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/43/4b/ac7e0aae12027748076d72a8764ff1c9d82ca75a7a52622e67ed3f765c54/pydantic_settings-2.12.0.tar.gz", hash = "sha256:005538ef951e3c2a68e1c08b292b5f2e71490def8589d4221b95dab00dafcfd0", size = 194184, upload-time = "2025-11-10T14:25:47.013Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/5c/b5/8f48e906c3e0205276e8bd8cb7512217a87b2685304d64be27cad5b3019f/pydantic_settings-2.14.2.tar.gz", hash = "sha256:c19dd64b19097f1de80184f0cc7b0272a13ae6e170cbf240a3e27e381ed14a5f", size = 237700, upload-time = "2026-06-19T13:44:56.324Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/c1/60/5d4751ba3f4a40a6891f24eec885f51afd78d208498268c734e256fb13c4/pydantic_settings-2.12.0-py3-none-any.whl", hash = "sha256:fddb9fd99a5b18da837b29710391e945b1e30c135477f484084ee513adb93809", size = 51880, upload-time = "2025-11-10T14:25:45.546Z" },
++    { url = "https://files.pythonhosted.org/packages/77/c1/6e422f34e569cf8e18df68d1939c81c099d2b61e4f7d9621c8a77560799c/pydantic_settings-2.14.2-py3-none-any.whl", hash = "sha256:a20c97b37910b6550d5ea50fbcc2d4187defe58cd57070b73863d069419c9440", size = 61715, upload-time = "2026-06-19T13:44:55.02Z" },
+ ]
+ 
+ [[package]]
+diff --git a/src/time/uv.lock b/src/time/uv.lock
+index e77b3c3820..072d962fd6 100644
+--- a/src/time/uv.lock
++++ b/src/time/uv.lock
+@@ -1,6 +1,12 @@
+ version = 1
+ revision = 3
+ requires-python = ">=3.10"
++resolution-markers = [
++    "python_full_version >= '3.14' and sys_platform == 'win32'",
++    "python_full_version >= '3.14' and sys_platform != 'win32'",
++    "python_full_version < '3.14' and sys_platform == 'win32'",
++    "python_full_version < '3.14' and sys_platform != 'win32'",
++]
+ 
+ [[package]]
+ name = "annotated-types"
+@@ -318,7 +324,7 @@ wheels = [
+ 
+ [[package]]
+ name = "mcp"
+-version = "1.25.0"
++version = "1.28.1"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "anyio" },
+@@ -336,9 +342,9 @@ dependencies = [
+     { name = "typing-inspection" },
+     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/d5/2d/649d80a0ecf6a1f82632ca44bec21c0461a9d9fc8934d38cb5b319f2db5e/mcp-1.25.0.tar.gz", hash = "sha256:56310361ebf0364e2d438e5b45f7668cbb124e158bb358333cd06e49e83a6802", size = 605387, upload-time = "2025-12-19T10:19:56.985Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/6e/77/9450b8f251a13affb6281997d0523c4615f8a8b35d0b21ff30db3a5aac9d/mcp-1.28.1.tar.gz", hash = "sha256:d51e36a5f5644faea4f85ea649bfffa6bc6c26770d42798ad6a3de3d2ba69683", size = 638501, upload-time = "2026-06-26T12:57:29.093Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/e2/fc/6dc7659c2ae5ddf280477011f4213a74f806862856b796ef08f028e664bf/mcp-1.25.0-py3-none-any.whl", hash = "sha256:b37c38144a666add0862614cc79ec276e97d72aa8ca26d622818d4e278b9721a", size = 233076, upload-time = "2025-12-19T10:19:55.416Z" },
++    { url = "https://files.pythonhosted.org/packages/e2/5e/d118fce19f87a2e7d8101c35c8ae0ec289098a4df0ff244cec23e415aca0/mcp-1.28.1-py3-none-any.whl", hash = "sha256:2726bca5e7193f61c5dde8b12500a6de2d9acf6d1a1c0be9e8c2e706437991df", size = 222620, upload-time = "2026-06-26T12:57:27.218Z" },
+ ]
+ 
+ [[package]]
+@@ -547,16 +553,16 @@ wheels = [
+ 
+ [[package]]
+ name = "pydantic-settings"
+-version = "2.12.0"
++version = "2.14.2"
+ source = { registry = "https://pypi.org/simple" }
+ dependencies = [
+     { name = "pydantic" },
+     { name = "python-dotenv" },
+     { name = "typing-inspection" },
+ ]
+-sdist = { url = "https://files.pythonhosted.org/packages/43/4b/ac7e0aae12027748076d72a8764ff1c9d82ca75a7a52622e67ed3f765c54/pydantic_settings-2.12.0.tar.gz", hash = "sha256:005538ef951e3c2a68e1c08b292b5f2e71490def8589d4221b95dab00dafcfd0", size = 194184, upload-time = "2025-11-10T14:25:47.013Z" }
++sdist = { url = "https://files.pythonhosted.org/packages/5c/b5/8f48e906c3e0205276e8bd8cb7512217a87b2685304d64be27cad5b3019f/pydantic_settings-2.14.2.tar.gz", hash = "sha256:c19dd64b19097f1de80184f0cc7b0272a13ae6e170cbf240a3e27e381ed14a5f", size = 237700, upload-time = "2026-06-19T13:44:56.324Z" }
+ wheels = [
+-    { url = "https://files.pythonhosted.org/packages/c1/60/5d4751ba3f4a40a6891f24eec885f51afd78d208498268c734e256fb13c4/pydantic_settings-2.12.0-py3-none-any.whl", hash = "sha256:fddb9fd99a5b18da837b29710391e945b1e30c135477f484084ee513adb93809", size = 51880, upload-time = "2025-11-10T14:25:45.546Z" },
++    { url = "https://files.pythonhosted.org/packages/77/c1/6e422f34e569cf8e18df68d1939c81c099d2b61e4f7d9621c8a77560799c/pydantic_settings-2.14.2-py3-none-any.whl", hash = "sha256:a20c97b37910b6550d5ea50fbcc2d4187defe58cd57070b73863d069419c9440", size = 61715, upload-time = "2026-06-19T13:44:55.02Z" },
+ ]
+ 
+ [[package]]

@@ -1,0 +1,46 @@
+From d8cff7f016604a1edc6c362e00f3f5203fdba6c6 Mon Sep 17 00:00:00 2001
+From: "dependabot[bot]" <49699333+dependabot[bot]@users.noreply.github.com>
+Date: Wed, 29 Jul 2026 22:07:16 +0000
+Subject: [PATCH] chore(deps): bump @hono/node-server
+
+Bumps the npm_and_yarn group with 1 update in the / directory: [@hono/node-server](https://github.com/honojs/node-server).
+
+
+Updates `@hono/node-server` from 1.19.14 to 2.0.12
+- [Release notes](https://github.com/honojs/node-server/releases)
+- [Commits](https://github.com/honojs/node-server/compare/v1.19.14...v2.0.12)
+
+---
+updated-dependencies:
+- dependency-name: "@hono/node-server"
+  dependency-version: 2.0.12
+  dependency-type: indirect
+  dependency-group: npm_and_yarn
+...
+
+Signed-off-by: dependabot[bot] <support@github.com>
+---
+ package-lock.json | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/package-lock.json b/package-lock.json
+index 0aab4daec8..1845571736 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -113,12 +113,12 @@
+       }
+     },
+     "node_modules/@hono/node-server": {
+-      "version": "1.19.14",
+-      "resolved": "https://registry.npmjs.org/@hono/node-server/-/node-server-1.19.14.tgz",
+-      "integrity": "sha512-GwtvgtXxnWsucXvbQXkRgqksiH2Qed37H9xHZocE5sA3N8O8O8/8FA3uclQXxXVzc9XBZuEOMK7+r02FmSpHtw==",
++      "version": "2.0.12",
++      "resolved": "https://registry.npmjs.org/@hono/node-server/-/node-server-2.0.12.tgz",
++      "integrity": "sha512-eWpQYr67tqJLeaSUl0Q+TquuYfUdTibpOJlUMV2FfUP7+KqCC5TufnwnlXL6mobZBJbGAYRd7ZvEBDCbLInjhg==",
+       "license": "MIT",
+       "engines": {
+-        "node": ">=18.14.1"
++        "node": ">=20"
+       },
+       "peerDependencies": {
+         "hono": "^4"

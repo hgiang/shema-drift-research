@@ -1,0 +1,72 @@
+From ae1e7a5500172f336c22facb0d7c317f416e10d0 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Fri, 23 Jan 2026 13:35:32 -0500
+Subject: [PATCH] Fix #3234 - "Everything Server crashes when multiple clients
+ reconnect"
+
+* In index.ts
+  - added a variable to hold the initialize timeout
+  - store the timeout in the oninitialized handler
+  - clear the timeout in the cleanup callback
+
+* In roots.ts
+  - In the catch block of syncRoots, log the error to the console via .error rather than attempting to send to the client because the most probable case here is that we don't have a connection.
+---
+ src/everything/server/index.ts |  5 ++++-
+ src/everything/server/roots.ts | 13 ++++---------
+ 2 files changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/src/everything/server/index.ts b/src/everything/server/index.ts
+index 7ee3eed9a8..f1459cc812 100644
+--- a/src/everything/server/index.ts
++++ b/src/everything/server/index.ts
+@@ -40,6 +40,8 @@ export const createServer: () => ServerFactoryResponse = () => {
+   const taskStore = new InMemoryTaskStore();
+   const taskMessageQueue = new InMemoryTaskMessageQueue();
+ 
++  let initializeTimeout: NodeJS.Timeout | null = null;
++
+   // Create the server
+   const server = new McpServer(
+     {
+@@ -98,7 +100,7 @@ export const createServer: () => ServerFactoryResponse = () => {
+     // This is delayed until after the `notifications/initialized` handler finishes,
+     // otherwise, the request gets lost.
+     const sessionId = server.server.transport?.sessionId;
+-    setTimeout(() => syncRoots(server, sessionId), 350);
++    initializeTimeout = setTimeout(() => syncRoots(server, sessionId), 350);
+   };
+ 
+   // Return the ServerFactoryResponse
+@@ -110,6 +112,7 @@ export const createServer: () => ServerFactoryResponse = () => {
+       stopSimulatedResourceUpdates(sessionId);
+       // Clean up task store timers
+       taskStore.cleanup();
++      if (initializeTimeout) clearTimeout(initializeTimeout);
+     },
+   } satisfies ServerFactoryResponse;
+ };
+diff --git a/src/everything/server/roots.ts b/src/everything/server/roots.ts
+index 999fda137d..34b12b21ce 100644
+--- a/src/everything/server/roots.ts
++++ b/src/everything/server/roots.ts
+@@ -63,15 +63,10 @@ export const syncRoots = async (server: McpServer, sessionId?: string) => {
+           );
+         }
+       } catch (error) {
+-        await server.sendLoggingMessage(
+-          {
+-            level: "error",
+-            logger: "everything-server",
+-            data: `Failed to request roots from client: ${
+-              error instanceof Error ? error.message : String(error)
+-            }`,
+-          },
+-          sessionId
++        console.error(
++          `Failed to request roots from client ${sessionId}: ${
++            error instanceof Error ? error.message : String(error)
++          }`
+         );
+       }
+     };

@@ -1,0 +1,57 @@
+From c87680122e76c9249a3d7ae5641a4190becfcefd Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:58:29 -0400
+Subject: [PATCH] docs: state the private fork's exact lowercase name
+
+GitHub names an advisory's temporary private fork
+servers-ghsa-xxxx-yyyy-zzzz, all lowercase; `servers-<ghsa-id>` invited
+substituting the uppercase GHSA id. Give the exact form and point at
+`.private_fork.full_name`.
+
+Refs #4870
+
+Signed-off-by: cliffhall <cliff@futurescale.com>
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+---
+ .claude/skills/security-advisory/SKILL.md | 5 +++--
+ AGENTS.md                                 | 4 ++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/.claude/skills/security-advisory/SKILL.md b/.claude/skills/security-advisory/SKILL.md
+index 7aedda3ac5..74af6ee841 100644
+--- a/.claude/skills/security-advisory/SKILL.md
++++ b/.claude/skills/security-advisory/SKILL.md
+@@ -217,7 +217,8 @@ reporter is manual, and the thread cannot be read back with `gh`.
+ ### 4. The private fork
+ 
+ An accepted advisory is fixed in a **private fork** GitHub creates for it: a
+-private repository named `servers-<ghsa-id>` in the org.
++private repository named `servers-ghsa-xxxx-yyyy-zzzz` (the id in lowercase) in
++the org; read the exact name from `.private_fork.full_name`.
+ 
+ ⚠️ **Read `private_fork` FIRST. The POST is not a probe; it CREATES one.**
+ Calling it to "check whether a fork exists" makes one, which then needs
+@@ -324,7 +325,7 @@ issues and two cards.
+ | States | `triage` → `draft` (accepted) → `published`; or `closed` |
+ | Accepted? | `submission.accepted` on the advisory object, alongside `state` |
+ | Listing | `GET repos/{owner}/{repo}/security-advisories`, 30 per page, so always `--paginate` |
+-| Private fork | `POST …/security-advisories/{ghsa_id}/forks` → `202`, a private repo `servers-<ghsa-id>` in the org |
++| Private fork | `POST …/security-advisories/{ghsa_id}/forks` → `202`, a private repo `servers-ghsa-xxxx-yyyy-zzzz` (lowercase) in the org; exact name in `.private_fork.full_name` |
+ | Fork idempotency | Read `.private_fork` first; the POST creates, it does not probe |
+ | Fork deletion | Needs the `delete_repo` OAuth scope, which a default `gh` token lacks |
+ | Comments | **No API at all**, REST or GraphQL; UI-only |
+diff --git a/AGENTS.md b/AGENTS.md
+index 309ffb2f3e..ed27b4a29f 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -185,8 +185,8 @@ holds for a maintainer's own one-line fix as much as for a feature.
+   change that replaces them with issue-filing sweeps lands and removes this
+   exception.
+ - **Exception: a security advisory's fix, in its private fork.** A PR in the
+-  advisory's temporary private fork (`servers-<ghsa-id>`) links no public
+-  issue, carries no labels, and is tracked by the advisory's `[GHSA-…]` draft
++  advisory's temporary private fork (`servers-ghsa-xxxx-yyyy-zzzz`) links no
++  public issue, carries no labels, and is tracked by the advisory's `[GHSA-…]` draft
+   card rather than an issue's card, because each of those would disclose the
+   vulnerability before a fix ships. For the same reason the work-start rules
+   on assigning an issue and naming the branch `v2/<type>/<ISSUE_NUMBER>-<slug>`

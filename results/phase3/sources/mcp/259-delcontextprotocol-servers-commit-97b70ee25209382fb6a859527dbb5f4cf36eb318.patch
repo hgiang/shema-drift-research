@@ -1,0 +1,295 @@
+From 97b70ee25209382fb6a859527dbb5f4cf36eb318 Mon Sep 17 00:00:00 2001
+From: Bryan Thompson <bthompson@anthropic.com>
+Date: Mon, 6 Jul 2026 12:15:03 -0500
+Subject: [PATCH] fix(filesystem): return valid MCP content type from
+ read_media_file (#4029) (#4479)
+
+* fix(filesystem): return valid MCP content type from read_media_file (#4029)
+
+read_media_file returned a content block with type: "blob" for non-image/
+non-audio files. "blob" is not a valid MCP content type (the union is
+text | image | audio | resource_link | resource), so a strict client rejects
+the result on schema validation.
+
+Map the MIME type to a valid block: image/* -> image, audio/* -> audio, and
+any other file type -> an embedded resource (the spec-correct carrier for
+arbitrary bytes) with a pathToFileURL-encoded uri. Widen the tool's
+outputSchema to the matching union and drop the now-unnecessary
+`as unknown as CallToolResult` cast so tsc enforces the returned shape.
+
+Tests cover the image, audio, and resource content types, verify the base64
+blob round-trips to the original bytes, and assert the resource uri is
+percent-encoded (space + non-ASCII) rather than a raw file:// concatenation.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+* test(filesystem): assert structuredContent mirrors content in read_media_file tests
+
+The SDK validates content and structuredContent independently against the
+outputSchema union, so a refactor that lets the two drift apart (e.g. a
+stale image block in structuredContent while content carries the resource)
+stays schema-valid and every test stays green. Mirror-equality assertions
+on all four callTool cases close that gap (mutation-verified: a schema-valid
+drifted structuredContent fails exactly these four assertions).
+
+Also drops a vacuous .not.toBe('blob') assertion that could never add
+signal, noting where the real "never blob" guard actually lives (the SDK
+client's CallToolResultSchema rejection, upstream of any local assertion).
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+
+---------
+
+Co-authored-by: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ src/filesystem/README.md                      |   6 +-
+ .../__tests__/structured-content.test.ts      | 123 ++++++++++++++++++
+ src/filesystem/index.ts                       |  50 ++++---
+ 3 files changed, 161 insertions(+), 18 deletions(-)
+
+diff --git a/src/filesystem/README.md b/src/filesystem/README.md
+index 76cabd0cce..219f39b9be 100644
+--- a/src/filesystem/README.md
++++ b/src/filesystem/README.md
+@@ -78,10 +78,12 @@ The server's directory access control follows this flow:
+   - Cannot specify both `head` and `tail` simultaneously
+ 
+ - **read_media_file**
+-  - Read an image or audio file
++  - Read a file and return it as a base64-encoded content block with its MIME type
+   - Inputs:
+     - `path` (string)
+-  - Streams the file and returns base64 data with the corresponding MIME type
++  - Streams the file and returns base64 data with the corresponding MIME type. Image and
++    audio files are returned as `image`/`audio` content; any other file type is returned as
++    an embedded `resource` (a valid MCP content block for arbitrary binary data)
+ 
+ - **read_multiple_files**
+   - Read multiple files simultaneously
+diff --git a/src/filesystem/__tests__/structured-content.test.ts b/src/filesystem/__tests__/structured-content.test.ts
+index 4b8f92b0a3..4605b72a8f 100644
+--- a/src/filesystem/__tests__/structured-content.test.ts
++++ b/src/filesystem/__tests__/structured-content.test.ts
+@@ -5,6 +5,7 @@ import * as os from 'os';
+ import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+ import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+ import { spawn } from 'child_process';
++import { fileURLToPath } from 'url';
+ 
+ /**
+  * Integration tests to verify that tool handlers return structuredContent
+@@ -155,4 +156,126 @@ describe('structuredContent schema compliance', () => {
+       expect(Array.isArray(structuredContent.content)).toBe(false);
+     });
+   });
++
++  // read_media_file must return a VALID MCP content block. Previously it emitted
++  // type: "blob" for non-image/audio files, which is not in the MCP content-block
++  // union (text | image | audio | resource_link | resource) and a strict client
++  // rejects on schema validation. See issue #4029.
++  describe('read_media_file (issue #4029)', () => {
++    // Image/audio inputs already returned valid content types before #4029 (only the
++    // non-media fallback was the invalid "blob"), so these two cases are "still-works"
++    // coverage — they round-trip the bytes to catch an encoding regression on the media
++    // paths. The resource + café cases below are the actual #4029 regression guards
++    // (they fail against the pre-fix "blob" build).
++    it('returns type "image" for image files, round-tripping the bytes', async () => {
++      const pngBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
++      const pngPath = path.join(testDir, 'pixel.png');
++      // Contents aren't validated by the tool (MIME is by extension), so arbitrary bytes are fine.
++      await fs.writeFile(pngPath, pngBytes);
++
++      const result = await client.callTool({
++        name: 'read_media_file',
++        arguments: { path: pngPath }
++      });
++
++      const content = result.content as Array<{ type: string; data?: string; mimeType?: string }>;
++      expect(Array.isArray(content)).toBe(true);
++      expect(content).toHaveLength(1);
++      expect(content[0].type).toBe('image');
++      expect(content[0].mimeType).toBe('image/png');
++      expect(Buffer.from(content[0].data!, 'base64').equals(pngBytes)).toBe(true);
++      // structuredContent must MIRROR content. The SDK validates each field independently
++      // against the outputSchema union (either arm is valid for either field), so schema
++      // validation alone cannot catch the two drifting apart — only this equality can.
++      expect(result.structuredContent).toEqual({ content });
++    });
++
++    it('returns type "audio" for audio files, round-tripping the bytes', async () => {
++      const mp3Bytes = Buffer.from([0x49, 0x44, 0x33, 0x04]);
++      const mp3Path = path.join(testDir, 'clip.mp3');
++      await fs.writeFile(mp3Path, mp3Bytes);
++
++      const result = await client.callTool({
++        name: 'read_media_file',
++        arguments: { path: mp3Path }
++      });
++
++      const content = result.content as Array<{ type: string; data?: string; mimeType?: string }>;
++      expect(content[0].type).toBe('audio');
++      expect(content[0].mimeType).toBe('audio/mpeg');
++      expect(Buffer.from(content[0].data!, 'base64').equals(mp3Bytes)).toBe(true);
++      expect(result.structuredContent).toEqual({ content }); // must mirror content (see image case)
++    });
++
++    it('returns an embedded resource (never "blob") for non-media binaries, round-tripping the bytes', async () => {
++      const binBytes = Buffer.from([0x00, 0x01, 0x02, 0x03, 0xff, 0xfe]);
++      const binPath = path.join(testDir, 'data.bin');
++      await fs.writeFile(binPath, binBytes);
++
++      const result = await client.callTool({
++        name: 'read_media_file',
++        arguments: { path: binPath }
++      });
++
++      const content = result.content as Array<{
++        type: string;
++        resource?: { uri: string; mimeType: string; blob: string };
++      }>;
++      expect(content).toHaveLength(1);
++      // ("never blob" is enforced upstream of any assertion here: the SDK client's
++      // CallToolResultSchema parse rejects a blob block before content is even inspected,
++      // failing the callTool above — which is exactly how this test fails pre-fix.)
++      expect(content[0].type).toBe('resource');
++      expect(content[0].resource).toBeDefined();
++      expect(content[0].resource!.uri.startsWith('file://')).toBe(true);
++      // Decode the uri back to a path and confirm it is the file actually read — guards a
++      // refactor that builds the uri from the wrong variable while still emitting a
++      // well-formed file:// string. (realpath handles the /tmp -> /private/tmp macOS alias.)
++      expect(fileURLToPath(content[0].resource!.uri)).toBe(await fs.realpath(binPath));
++      expect(content[0].resource!.mimeType).toBe('application/octet-stream');
++      // The base64 blob must round-trip to the original bytes (data integrity, not just a valid
++      // shape) — this also subsumes a non-empty check.
++      expect(Buffer.from(content[0].resource!.blob, 'base64').equals(binBytes)).toBe(true);
++      expect(result.structuredContent).toEqual({ content }); // must mirror content (see image case)
++    });
++
++    it('percent-encodes spaces and non-ASCII chars in the resource uri (pathToFileURL, not a raw file:// concatenation)', async () => {
++      const fancyPath = path.join(testDir, 'my café.bin');
++      await fs.writeFile(fancyPath, Buffer.from([0x10, 0x20, 0x30]));
++
++      const result = await client.callTool({
++        name: 'read_media_file',
++        arguments: { path: fancyPath }
++      });
++
++      const content = result.content as Array<{ type: string; resource?: { uri: string } }>;
++      expect(content[0].type).toBe('resource');
++      const uri = content[0].resource!.uri;
++      // pathToFileURL percent-encodes the space (%20) and the non-ASCII "é" (%C3%A9 for NFC,
++      // or the base "e" + %CC%81 for the NFD form some filesystems store); a raw
++      // `file://${validPath}` (as in PR #4044) would leave both literal.
++      expect(uri).toContain('%20');
++      expect(uri).not.toContain(' ');
++      // The non-ASCII "é" must be percent-encoded: %C3%A9 (NFC) or base-"e" + %CC%81 (the NFD
++      // form some filesystems decompose to). This regex — not a `.not.toContain('é')`, which is
++      // vacuous on an NFD runner where the precomposed char never appears — is the load-bearing
++      // assertion that distinguishes pathToFileURL from a raw `file://${path}` concatenation.
++      expect(uri).toMatch(/%C3%A9|%CC%81/);
++      expect(result.structuredContent).toEqual({ content }); // must mirror content (see image case)
++    });
++
++    it('advertises the widened outputSchema union via tools/list (both branches serialize)', async () => {
++      const { tools } = await client.listTools();
++      const tool = tools.find((t) => t.name === 'read_media_file');
++      expect(tool).toBeDefined();
++      // The union outputSchema must serialize to JSON Schema — a DIFFERENT SDK path
++      // (toJsonSchemaCompat / tools-list) than the callTool structuredContent validation the
++      // other cases exercise — with BOTH branches present. Guards a nested-union-in-array
++      // serialization quirk that could drop the resource arm from the advertised schema.
++      const schemaStr = JSON.stringify(tool!.outputSchema);
++      expect(schemaStr).toMatch(/resource/);
++      expect(schemaStr).toMatch(/image/);
++      expect(schemaStr).toMatch(/audio/);
++    });
++  });
+ });
+diff --git a/src/filesystem/index.ts b/src/filesystem/index.ts
+index 7b67e63e58..25ccfc7c36 100644
+--- a/src/filesystem/index.ts
++++ b/src/filesystem/index.ts
+@@ -3,13 +3,13 @@
+ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+ import {
+-  CallToolResult,
+   RootsListChangedNotificationSchema,
+   type Root,
+ } from "@modelcontextprotocol/sdk/types.js";
+ import fs from "fs/promises";
+ import { createReadStream } from "fs";
+ import path from "path";
++import { pathToFileURL } from "url";
+ import { z } from "zod";
+ import { minimatch } from "minimatch";
+ import { normalizePath, expandHome } from './path-utils.js';
+@@ -250,17 +250,29 @@ server.registerTool(
+   {
+     title: "Read Media File",
+     description:
+-      "Read an image or audio file. Returns the base64 encoded data and MIME type. " +
+-      "Only works within allowed directories.",
++      "Read a file and return it as a base64-encoded content block with its MIME type. " +
++      "Image and audio files are returned as image/audio content; any other file type is " +
++      "returned as an embedded resource. Only works within allowed directories.",
+     inputSchema: {
+       path: z.string()
+     },
+     outputSchema: {
+-      content: z.array(z.object({
+-        type: z.enum(["image", "audio", "blob"]),
+-        data: z.string(),
+-        mimeType: z.string()
+-      }))
++      content: z.array(z.union([
++        z.object({
++          type: z.enum(["image", "audio"]),
++          data: z.string(),
++          mimeType: z.string()
++        }),
++        z.object({
++          type: z.literal("resource"),
++          resource: z.object({
++            uri: z.string(),
++            // Optional, matching the SDK's BlobResourceContents shape (the handler always sets it).
++            mimeType: z.string().optional(),
++            blob: z.string()
++          })
++        })
++      ]))
+     },
+     annotations: { readOnlyHint: true }
+   },
+@@ -283,17 +295,23 @@ server.registerTool(
+     const mimeType = mimeTypes[extension] || "application/octet-stream";
+     const data = await readFileAsBase64Stream(validPath);
+ 
+-    const type = mimeType.startsWith("image/")
+-      ? "image"
+-      : mimeType.startsWith("audio/")
+-        ? "audio"
+-        // Fallback for other binary types, not officially supported by the spec but has been used for some time
+-        : "blob";
+-    const contentItem = { type: type as 'image' | 'audio' | 'blob', data, mimeType };
++    // Map the MIME type to a valid MCP content block. The spec only allows
++    // text, image, audio, resource_link, and resource — so non-image/audio
++    // binaries are returned as an embedded resource (NOT type:"blob", which the
++    // SDK content-block union rejects on schema validation).
++    const contentItem =
++      mimeType.startsWith("image/")
++        ? { type: "image" as const, data, mimeType }
++        : mimeType.startsWith("audio/")
++          ? { type: "audio" as const, data, mimeType }
++          : {
++              type: "resource" as const,
++              resource: { uri: pathToFileURL(validPath).href, mimeType, blob: data }
++            };
+     return {
+       content: [contentItem],
+       structuredContent: { content: [contentItem] }
+-    } as unknown as CallToolResult;
++    };
+   }
+ );
+ 

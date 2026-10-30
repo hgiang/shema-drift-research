@@ -1,0 +1,506 @@
+From 2201958ff69021db605e37406ce76e08ccbf92c0 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 28 Sep 2026 23:17:04 -0400
+Subject: [PATCH] ci(python): one validate chain per server, a root
+ validate:py, ruff in CI
+
+scripts/validate-py.mjs runs uv sync --locked, ruff check, ruff format
+--check, pyright, pytest and uv build in each Python server (discovered
+by pyproject.toml). npm run validate:py runs it for every server; the
+python.yml test job runs it per matrix package, so CI now fails on a
+ruff lint or format finding.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .github/workflows/python.yml |  37 ++++---
+ package.json                 |   3 +-
+ scripts/validate-py.mjs      | 200 ++++++++++++++++++++++++++++++++++
+ scripts/validate-py.test.mjs | 201 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 423 insertions(+), 18 deletions(-)
+ create mode 100644 scripts/validate-py.mjs
+ create mode 100644 scripts/validate-py.test.mjs
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index be171393e5..813a44dbd1 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -25,6 +25,19 @@ jobs:
+           PACKAGES=$(find . -name pyproject.toml -exec dirname {} \; | sed 's/^\.\///' | jq -R -s -c 'split("\n")[:-1]')
+           echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
+ 
++  script-tests:
++    name: Test the Python gate script
++    runs-on: ubuntu-latest
++    steps:
++      - uses: actions/checkout@v6
++
++      - uses: actions/setup-node@v7
++        with:
++          node-version: 22
++
++      - name: Run node --test
++        run: node --test scripts/validate-py.test.mjs
++
+   test:
+     needs: [detect-packages]
+     strategy:
+@@ -43,24 +56,14 @@ jobs:
+         with:
+           python-version-file: "src/${{ matrix.package }}/.python-version"
+ 
+-      - name: Install dependencies
+-        working-directory: src/${{ matrix.package }}
+-        run: uv sync --frozen --all-extras --dev
++      - uses: actions/setup-node@v7
++        with:
++          node-version: 22
+ 
+-      - name: Check if tests exist
+-        id: check-tests
+-        working-directory: src/${{ matrix.package }}
+-        run: |
+-          if [ -d "tests" ] || [ -d "test" ] || grep -q "pytest" pyproject.toml; then
+-            echo "has-tests=true" >> $GITHUB_OUTPUT
+-          else
+-            echo "has-tests=false" >> $GITHUB_OUTPUT
+-          fi
+-
+-      - name: Run tests
+-        if: steps.check-tests.outputs.has-tests == 'true'
+-        working-directory: src/${{ matrix.package }}
+-        run: uv run pytest
++      # The same per-server chain `npm run validate:py` runs locally: locked
++      # sync, ruff check, ruff format --check, pyright, pytest, uv build.
++      - name: Validate
++        run: node scripts/validate-py.mjs ${{ matrix.package }}
+ 
+   build:
+     needs: [detect-packages, test]
+diff --git a/package.json b/package.json
+index ab0b8c8800..675aa52bb9 100644
+--- a/package.json
++++ b/package.json
+@@ -16,7 +16,8 @@
+     "build": "npm run build --workspaces",
+     "watch": "npm run watch --workspaces",
+     "publish-all": "npm publish --workspaces --access public",
+-    "link-all": "npm link --workspaces"
++    "link-all": "npm link --workspaces",
++    "validate:py": "node scripts/validate-py.mjs"
+   },
+   "dependencies": {
+     "@modelcontextprotocol/server-everything": "*",
+diff --git a/scripts/validate-py.mjs b/scripts/validate-py.mjs
+new file mode 100644
+index 0000000000..fa002e72f4
+--- /dev/null
++++ b/scripts/validate-py.mjs
+@@ -0,0 +1,200 @@
++#!/usr/bin/env node
++/**
++ * The Python gate: one `validate` chain per Python server, and one command
++ * that runs it for every server (#4865).
++ *
++ *   node scripts/validate-py.mjs            # every server under src/ with a pyproject.toml
++ *   node scripts/validate-py.mjs fetch git  # just the named ones
++ *   npm run validate:py                     # the root entry point (all servers)
++ *
++ * Each server runs the same chain, in its own directory, through `uv` (never
++ * pip): a locked sync, `ruff check`, `ruff format --check`, `pyright`,
++ * `pytest`, then `uv build`. It is the Python counterpart of the TypeScript
++ * `validate` (format check, lint, typecheck, test, build).
++ *
++ * Why a Node script rather than a `uv run` chain in each pyproject: Python has
++ * no script runner in `pyproject.toml`, and a root npm script chaining three
++ * `cd … && … &&` strings would stop at the first failing server. This runs the
++ * chain fail-fast *within* a server — a later step is meaningless once the
++ * lockfile or the lint is red — but carries on to the next server, so one run
++ * reports every server's verdict. CI calls the same script with one server per
++ * matrix leg, so the local command and CI cannot drift.
++ *
++ * Servers are discovered, not listed: a new Python server is gated the moment
++ * it lands with a `pyproject.toml`, rather than silently falling outside a
++ * hardcoded table.
++ *
++ * `--locked` on the sync fails when `uv.lock` no longer matches
++ * `pyproject.toml` (the same check CI's build job makes); every later `uv run`
++ * then uses `--frozen`, so no step can re-resolve the environment it is
++ * checking.
++ */
++import { spawnSync } from "node:child_process";
++import { existsSync, readdirSync } from "node:fs";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++
++/** The chain every Python server runs, in order. */
++export const STEPS = [
++  { name: "sync", argv: ["uv", "sync", "--locked", "--all-extras", "--dev"] },
++  { name: "ruff check", argv: ["uv", "run", "--frozen", "ruff", "check", "."] },
++  {
++    name: "ruff format --check",
++    argv: ["uv", "run", "--frozen", "ruff", "format", "--check", "."],
++  },
++  { name: "pyright", argv: ["uv", "run", "--frozen", "pyright"] },
++  { name: "pytest", argv: ["uv", "run", "--frozen", "pytest"] },
++  { name: "build", argv: ["uv", "build"] },
++];
++
++/**
++ * Every directory directly under `srcDir` that holds a `pyproject.toml`,
++ * sorted so the run order is stable.
++ * @param {string} srcDir
++ * @returns {string[]}
++ */
++export function discoverServers(srcDir) {
++  return readdirSync(srcDir, { withFileTypes: true })
++    .filter(
++      (entry) =>
++        entry.isDirectory() &&
++        existsSync(path.join(srcDir, entry.name, "pyproject.toml"))
++    )
++    .map((entry) => entry.name)
++    .sort();
++}
++
++/**
++ * Resolve the servers to validate from the CLI arguments. No arguments means
++ * every discovered server; a name that is not a Python server is an error,
++ * never a silent skip.
++ * @param {string[]} args
++ * @param {string[]} available
++ * @returns {{ servers: string[] } | { error: string }}
++ */
++export function selectServers(args, available) {
++  if (available.length === 0) {
++    return { error: "no Python servers found (no src/*/pyproject.toml)" };
++  }
++  if (args.length === 0) return { servers: available };
++  const unknown = args.filter((name) => !available.includes(name));
++  if (unknown.length > 0) {
++    return {
++      error: `not a Python server: ${unknown.join(
++        ", "
++      )} (known: ${available.join(", ")})`,
++    };
++  }
++  return { servers: args };
++}
++
++/**
++ * Run one command and report whether it succeeded.
++ * @param {string[]} argv
++ * @param {string} cwd
++ * @returns {{ ok: boolean, detail?: string }}
++ */
++export function runCommand(argv, cwd) {
++  const [cmd, ...rest] = argv;
++  const result = spawnSync(cmd, rest, { cwd, stdio: "inherit" });
++  if (result.error) {
++    const code = /** @type {NodeJS.ErrnoException} */ (result.error).code;
++    return {
++      ok: false,
++      detail:
++        code === "ENOENT"
++          ? `${cmd} not found on PATH (install uv: https://docs.astral.sh/uv/)`
++          : result.error.message,
++    };
++  }
++  if (result.status !== 0) {
++    return {
++      ok: false,
++      detail:
++        result.status === null
++          ? `killed by ${result.signal}`
++          : `exit ${result.status}`,
++    };
++  }
++  return { ok: true };
++}
++
++/**
++ * Validate each server: its chain stops at the first failing step, and the
++ * run moves on to the next server either way.
++ * @param {{
++ *   servers: string[],
++ *   srcDir: string,
++ *   steps?: typeof STEPS,
++ *   run?: (argv: string[], cwd: string) => { ok: boolean, detail?: string },
++ *   log?: (line: string) => void,
++ * }} options
++ * @returns {{ server: string, failedStep?: string, detail?: string }[]}
++ */
++export function validateServers({
++  servers,
++  srcDir,
++  steps = STEPS,
++  run = runCommand,
++  log = console.log,
++}) {
++  const results = [];
++  for (const server of servers) {
++    const cwd = path.join(srcDir, server);
++    let failure;
++    for (const step of steps) {
++      log(`\n[validate:py] ${server}: ${step.name}`);
++      const outcome = run(step.argv, cwd);
++      if (!outcome.ok) {
++        failure = { failedStep: step.name, detail: outcome.detail };
++        break;
++      }
++    }
++    results.push({ server, ...failure });
++  }
++  return results;
++}
++
++/**
++ * One line per server, and the process exit code the results imply.
++ * @param {{ server: string, failedStep?: string, detail?: string }[]} results
++ * @returns {{ lines: string[], exitCode: number }}
++ */
++export function summarize(results) {
++  const lines = results.map((r) =>
++    r.failedStep === undefined
++      ? `  PASS  ${r.server}`
++      : `  FAIL  ${r.server} — ${r.failedStep}${
++          r.detail ? ` (${r.detail})` : ""
++        }`
++  );
++  const exitCode = results.some((r) => r.failedStep !== undefined) ? 1 : 0;
++  return { lines, exitCode };
++}
++
++function main() {
++  const repoRoot = path.resolve(
++    path.dirname(fileURLToPath(import.meta.url)),
++    ".."
++  );
++  const srcDir = path.join(repoRoot, "src");
++  const selection = selectServers(
++    process.argv.slice(2),
++    discoverServers(srcDir)
++  );
++  if ("error" in selection) {
++    console.error(`[validate:py] ${selection.error}`);
++    return 2;
++  }
++  const results = validateServers({ servers: selection.servers, srcDir });
++  const { lines, exitCode } = summarize(results);
++  console.log(["\n[validate:py] summary", ...lines].join("\n"));
++  return exitCode;
++}
++
++if (
++  process.argv[1] &&
++  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
++) {
++  process.exitCode = main();
++}
+diff --git a/scripts/validate-py.test.mjs b/scripts/validate-py.test.mjs
+new file mode 100644
+index 0000000000..27a2f7321b
+--- /dev/null
++++ b/scripts/validate-py.test.mjs
+@@ -0,0 +1,201 @@
++/**
++ * Unit tests for scripts/validate-py.mjs (#4865). Run with
++ * `node --test scripts/validate-py.test.mjs` — no dependencies, and no `uv`
++ * needed: the chain's runner is injected, and `runCommand` is exercised
++ * against `node` itself.
++ */
++import assert from "node:assert/strict";
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import path from "node:path";
++import { after, describe, it } from "node:test";
++
++import {
++  STEPS,
++  discoverServers,
++  runCommand,
++  selectServers,
++  summarize,
++  validateServers,
++} from "./validate-py.mjs";
++
++const scratch = mkdtempSync(path.join(tmpdir(), "validate-py-"));
++after(() => rmSync(scratch, { recursive: true, force: true }));
++
++describe("STEPS", () => {
++  it("runs every gate the issue names, through uv, in order", () => {
++    assert.deepEqual(
++      STEPS.map((s) => s.name),
++      [
++        "sync",
++        "ruff check",
++        "ruff format --check",
++        "pyright",
++        "pytest",
++        "build",
++      ]
++    );
++    for (const step of STEPS) assert.equal(step.argv[0], "uv");
++  });
++
++  it("syncs --locked and runs every tool --frozen", () => {
++    assert.ok(STEPS[0].argv.includes("--locked"));
++    for (const step of STEPS.filter((s) => s.argv[1] === "run")) {
++      assert.equal(step.argv[2], "--frozen", step.name);
++    }
++  });
++});
++
++describe("discoverServers", () => {
++  it("finds only directories holding a pyproject.toml, sorted", () => {
++    const src = path.join(scratch, "src");
++    for (const name of ["time", "fetch", "everything", "git"]) {
++      mkdirSync(path.join(src, name), { recursive: true });
++    }
++    for (const name of ["time", "fetch", "git"]) {
++      writeFileSync(path.join(src, name, "pyproject.toml"), "");
++    }
++    writeFileSync(path.join(src, "everything", "package.json"), "{}");
++    writeFileSync(path.join(src, "pyproject.toml"), ""); // a file, not a server
++    assert.deepEqual(discoverServers(src), ["fetch", "git", "time"]);
++  });
++});
++
++describe("selectServers", () => {
++  const available = ["fetch", "git", "time"];
++
++  it("defaults to every server", () => {
++    assert.deepEqual(selectServers([], available), { servers: available });
++  });
++
++  it("keeps the named servers", () => {
++    assert.deepEqual(selectServers(["git"], available), { servers: ["git"] });
++  });
++
++  it("rejects a name that is not a Python server", () => {
++    const result = selectServers(["git", "memory"], available);
++    assert.ok("error" in result);
++    assert.match(result.error, /not a Python server: memory/);
++  });
++
++  it("fails when there is nothing to validate", () => {
++    assert.ok("error" in selectServers([], []));
++  });
++});
++
++describe("validateServers", () => {
++  const steps = [
++    { name: "a", argv: ["uv", "a"] },
++    { name: "b", argv: ["uv", "b"] },
++    { name: "c", argv: ["uv", "c"] },
++  ];
++
++  it("stops a server at its first failure and moves on to the next", () => {
++    const calls = [];
++    const run = (argv, cwd) => {
++      calls.push(`${path.basename(cwd)}:${argv[1]}`);
++      return path.basename(cwd) === "git" && argv[1] === "b"
++        ? { ok: false, detail: "exit 1" }
++        : { ok: true };
++    };
++    const results = validateServers({
++      servers: ["git", "time"],
++      srcDir: "/repo/src",
++      steps,
++      run,
++      log: () => {},
++    });
++    assert.deepEqual(calls, ["git:a", "git:b", "time:a", "time:b", "time:c"]);
++    assert.deepEqual(results, [
++      { server: "git", failedStep: "b", detail: "exit 1" },
++      { server: "time" },
++    ]);
++  });
++
++  it("runs each step in the server's own directory", () => {
++    const cwds = new Set();
++    validateServers({
++      servers: ["fetch"],
++      srcDir: "/repo/src",
++      steps,
++      run: (_argv, cwd) => {
++        cwds.add(cwd);
++        return { ok: true };
++      },
++      log: () => {},
++    });
++    assert.deepEqual([...cwds], [path.join("/repo/src", "fetch")]);
++  });
++
++  it("logs each step with its server", () => {
++    const lines = [];
++    validateServers({
++      servers: ["fetch"],
++      srcDir: "/repo/src",
++      steps: steps.slice(0, 1),
++      run: () => ({ ok: true }),
++      log: (line) => lines.push(line),
++    });
++    assert.deepEqual(lines, ["\n[validate:py] fetch: a"]);
++  });
++});
++
++describe("summarize", () => {
++  it("passes when every server passed", () => {
++    assert.deepEqual(summarize([{ server: "git" }]), {
++      lines: ["  PASS  git"],
++      exitCode: 0,
++    });
++  });
++
++  it("fails when any server failed, naming the step", () => {
++    const { lines, exitCode } = summarize([
++      { server: "fetch" },
++      { server: "git", failedStep: "pyright", detail: "exit 1" },
++      { server: "time", failedStep: "sync" },
++    ]);
++    assert.equal(exitCode, 1);
++    assert.deepEqual(lines, [
++      "  PASS  fetch",
++      "  FAIL  git — pyright (exit 1)",
++      "  FAIL  time — sync",
++    ]);
++  });
++});
++
++describe("runCommand", () => {
++  it("succeeds on exit 0", () => {
++    assert.deepEqual(runCommand([process.execPath, "-e", ""], scratch), {
++      ok: true,
++    });
++  });
++
++  it("reports a non-zero exit", () => {
++    assert.deepEqual(
++      runCommand([process.execPath, "-e", "process.exit(3)"], scratch),
++      { ok: false, detail: "exit 3" }
++    );
++  });
++
++  it("reports a signal", () => {
++    const result = runCommand(
++      [process.execPath, "-e", "process.kill(process.pid, 'SIGTERM')"],
++      scratch
++    );
++    assert.deepEqual(result, { ok: false, detail: "killed by SIGTERM" });
++  });
++
++  it("explains a missing executable", () => {
++    const result = runCommand(["validate-py-no-such-binary"], scratch);
++    assert.equal(result.ok, false);
++    assert.match(result.detail, /not found on PATH/);
++  });
++
++  it("reports any other spawn error verbatim", () => {
++    const notExecutable = path.join(scratch, "not-executable");
++    writeFileSync(notExecutable, "", { mode: 0o644 });
++    const result = runCommand([notExecutable], scratch);
++    assert.equal(result.ok, false);
++    assert.match(result.detail, /EACCES/);
++  });
++});

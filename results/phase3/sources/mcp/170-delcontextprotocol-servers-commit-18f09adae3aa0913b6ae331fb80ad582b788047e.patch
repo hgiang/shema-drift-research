@@ -1,0 +1,24 @@
+From 18f09adae3aa0913b6ae331fb80ad582b788047e Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:47:52 -0400
+Subject: [PATCH] docs(releasing): note per-registry guard placement precisely
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ RELEASING.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/RELEASING.md b/RELEASING.md
+index d0138e1536..f2125f7396 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -15,7 +15,7 @@ A release run:
+ 
+ 1. **Detects changed packages** since the last release tag — a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed (READMEs ship inside the published artifacts).
+ 2. **Stamps versions and pushes the release tag** — versions are date-based (CalVer, e.g. `2026.7.4`).
+-3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → double-publish guard → **run the package's tests** (plus `pyright` for Python) → build → publish. The guard differs by registry: the npm job aborts if the version already exists; the PyPI action skips files already uploaded (`skip-existing`).
++3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → double-publish guard → **run the package's tests** (plus `pyright` for Python) → build → publish. The guard differs by registry: the npm job aborts before tests if the version already exists; for PyPI the skip happens at the publish step itself (`skip-existing` on the upload action).
+ 4. **Creates the GitHub release** with generated notes.
+ 
+ ## When a publish fails

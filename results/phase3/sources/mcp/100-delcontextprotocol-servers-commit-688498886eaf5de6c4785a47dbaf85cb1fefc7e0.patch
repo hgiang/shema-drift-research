@@ -1,0 +1,33 @@
+From 688498886eaf5de6c4785a47dbaf85cb1fefc7e0 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 28 Sep 2026 23:41:59 -0400
+Subject: [PATCH] ci: install at the root so each leg has the root toolchain
+
+Run from a workspace directory, npm ci installs only that workspace's
+dependencies, so the root Prettier and ESLint were missing (exit 127).
+
+Refs #4864
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .github/workflows/typescript.yml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index 02adf6919e..da218ddcf2 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -74,8 +74,11 @@ jobs:
+           node-version: 22
+           cache: npm
+ 
++      # At the repo root, not in the package: run from a workspace directory,
++      # `npm ci` installs only that workspace's dependencies, and the gate's
++      # tools (Prettier, ESLint) are root devDependencies shared by every
++      # package.
+       - name: Install dependencies
+-        working-directory: src/${{ matrix.package }}
+         run: npm ci
+ 
+       - name: Validate package

@@ -1,0 +1,320 @@
+From baf99300a2c70c9fe07cb3a45d60ab98cb95136f Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Fri, 6 Feb 2026 05:35:51 -0700
+Subject: [PATCH] Add tool annotations to all Everything server tools
+
+Previously only get-annotated-message had ToolAnnotations. Now all 18
+tools explicitly declare readOnlyHint, destructiveHint, idempotentHint,
+and openWorldHint so the server serves as a complete reference for
+developers implementing tool annotations per the MCP spec.
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+---
+ src/everything/tools/echo.ts                              | 6 ++++++
+ src/everything/tools/get-env.ts                           | 6 ++++++
+ src/everything/tools/get-resource-links.ts                | 6 ++++++
+ src/everything/tools/get-resource-reference.ts            | 6 ++++++
+ src/everything/tools/get-roots-list.ts                    | 6 ++++++
+ src/everything/tools/get-structured-content.ts            | 6 ++++++
+ src/everything/tools/get-sum.ts                           | 6 ++++++
+ src/everything/tools/get-tiny-image.ts                    | 6 ++++++
+ src/everything/tools/gzip-file-as-resource.ts             | 6 ++++++
+ src/everything/tools/simulate-research-query.ts           | 6 ++++++
+ src/everything/tools/toggle-simulated-logging.ts          | 6 ++++++
+ src/everything/tools/toggle-subscriber-updates.ts         | 6 ++++++
+ src/everything/tools/trigger-elicitation-request-async.ts | 6 ++++++
+ src/everything/tools/trigger-elicitation-request.ts       | 6 ++++++
+ src/everything/tools/trigger-long-running-operation.ts    | 6 ++++++
+ src/everything/tools/trigger-sampling-request-async.ts    | 6 ++++++
+ src/everything/tools/trigger-sampling-request.ts          | 6 ++++++
+ 17 files changed, 102 insertions(+)
+
+diff --git a/src/everything/tools/echo.ts b/src/everything/tools/echo.ts
+index 204a2fb49b..0658e83195 100644
+--- a/src/everything/tools/echo.ts
++++ b/src/everything/tools/echo.ts
+@@ -13,6 +13,12 @@ const config = {
+   title: "Echo Tool",
+   description: "Echoes back the input string",
+   inputSchema: EchoSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-env.ts b/src/everything/tools/get-env.ts
+index 0adbf5a14d..55eabfaa97 100644
+--- a/src/everything/tools/get-env.ts
++++ b/src/everything/tools/get-env.ts
+@@ -8,6 +8,12 @@ const config = {
+   description:
+     "Returns all environment variables, helpful for debugging MCP server configuration",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-resource-links.ts b/src/everything/tools/get-resource-links.ts
+index b1fc627e20..7684cb64a5 100644
+--- a/src/everything/tools/get-resource-links.ts
++++ b/src/everything/tools/get-resource-links.ts
+@@ -25,6 +25,12 @@ const config = {
+   description:
+     "Returns up to ten resource links that reference different types of resources",
+   inputSchema: GetResourceLinksSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-resource-reference.ts b/src/everything/tools/get-resource-reference.ts
+index d3dc5d3ecb..5806365868 100644
+--- a/src/everything/tools/get-resource-reference.ts
++++ b/src/everything/tools/get-resource-reference.ts
+@@ -28,6 +28,12 @@ const config = {
+   title: "Get Resource Reference Tool",
+   description: "Returns a resource reference that can be used by MCP clients",
+   inputSchema: GetResourceReferenceSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-roots-list.ts b/src/everything/tools/get-roots-list.ts
+index 62363da26a..a8778e4c01 100644
+--- a/src/everything/tools/get-roots-list.ts
++++ b/src/everything/tools/get-roots-list.ts
+@@ -9,6 +9,12 @@ const config = {
+   description:
+     "Lists the current MCP roots provided by the client. Demonstrates the roots protocol capability even though this server doesn't access files.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-structured-content.ts b/src/everything/tools/get-structured-content.ts
+index 83c98c0ab6..f9bde5c9e4 100644
+--- a/src/everything/tools/get-structured-content.ts
++++ b/src/everything/tools/get-structured-content.ts
+@@ -27,6 +27,12 @@ const config = {
+     "Returns structured content along with an output schema for client data validation",
+   inputSchema: GetStructuredContentInputSchema,
+   outputSchema: GetStructuredContentOutputSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-sum.ts b/src/everything/tools/get-sum.ts
+index 522043c88f..470293bf6f 100644
+--- a/src/everything/tools/get-sum.ts
++++ b/src/everything/tools/get-sum.ts
+@@ -14,6 +14,12 @@ const config = {
+   title: "Get Sum Tool",
+   description: "Returns the sum of two numbers",
+   inputSchema: GetSumSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/get-tiny-image.ts b/src/everything/tools/get-tiny-image.ts
+index 720707d0ce..c38c3c698b 100644
+--- a/src/everything/tools/get-tiny-image.ts
++++ b/src/everything/tools/get-tiny-image.ts
+@@ -11,6 +11,12 @@ const config = {
+   title: "Get Tiny Image Tool",
+   description: "Returns a tiny MCP logo image.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/gzip-file-as-resource.ts b/src/everything/tools/gzip-file-as-resource.ts
+index 608fcf4a0d..b651520400 100644
+--- a/src/everything/tools/gzip-file-as-resource.ts
++++ b/src/everything/tools/gzip-file-as-resource.ts
+@@ -48,6 +48,12 @@ const config = {
+   description:
+     "Compresses a single file using gzip compression. Depending upon the selected output type, returns either the compressed data as a gzipped resource or a resource link, allowing it to be downloaded in a subsequent request during the current session.",
+   inputSchema: GZipFileAsResourceSchema,
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: true,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/simulate-research-query.ts b/src/everything/tools/simulate-research-query.ts
+index 8b485ca2ba..c96c740c4e 100644
+--- a/src/everything/tools/simulate-research-query.ts
++++ b/src/everything/tools/simulate-research-query.ts
+@@ -255,6 +255,12 @@ export const registerSimulateResearchQueryTool = (server: McpServer) => {
+         "If 'ambiguous' is true and client supports elicitation, sends an elicitation request for clarification.",
+       inputSchema: SimulateResearchQuerySchema,
+       execution: { taskSupport: "required" },
++      annotations: {
++        readOnlyHint: false,
++        destructiveHint: false,
++        idempotentHint: false,
++        openWorldHint: false,
++      },
+     },
+     {
+       /**
+diff --git a/src/everything/tools/toggle-simulated-logging.ts b/src/everything/tools/toggle-simulated-logging.ts
+index 4941ed77d0..eb9a4b1e25 100644
+--- a/src/everything/tools/toggle-simulated-logging.ts
++++ b/src/everything/tools/toggle-simulated-logging.ts
+@@ -11,6 +11,12 @@ const config = {
+   title: "Toggle Simulated Logging",
+   description: "Toggles simulated, random-leveled logging on or off.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: false,
++  },
+ };
+ 
+ // Track enabled clients by session id
+diff --git a/src/everything/tools/toggle-subscriber-updates.ts b/src/everything/tools/toggle-subscriber-updates.ts
+index 03b949e232..759ec20e51 100644
+--- a/src/everything/tools/toggle-subscriber-updates.ts
++++ b/src/everything/tools/toggle-subscriber-updates.ts
+@@ -11,6 +11,12 @@ const config = {
+   title: "Toggle Subscriber Updates",
+   description: "Toggles simulated resource subscription updates on or off.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: false,
++  },
+ };
+ 
+ // Track enabled clients by session id
+diff --git a/src/everything/tools/trigger-elicitation-request-async.ts b/src/everything/tools/trigger-elicitation-request-async.ts
+index 6cf6f3e581..786d38feb0 100644
+--- a/src/everything/tools/trigger-elicitation-request-async.ts
++++ b/src/everything/tools/trigger-elicitation-request-async.ts
+@@ -11,6 +11,12 @@ const config = {
+     "Demonstrates bidirectional MCP tasks where the server sends an elicitation request and " +
+     "the client handles user input asynchronously, allowing the server to poll for completion.",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: false,
++  },
+ };
+ 
+ // Poll interval in milliseconds
+diff --git a/src/everything/tools/trigger-elicitation-request.ts b/src/everything/tools/trigger-elicitation-request.ts
+index 4de7993e9a..ca4742141e 100644
+--- a/src/everything/tools/trigger-elicitation-request.ts
++++ b/src/everything/tools/trigger-elicitation-request.ts
+@@ -10,6 +10,12 @@ const config = {
+   title: "Trigger Elicitation Request Tool",
+   description: "Trigger a Request from the Server for User Elicitation",
+   inputSchema: {},
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/trigger-long-running-operation.ts b/src/everything/tools/trigger-long-running-operation.ts
+index 8af45ce60b..95415e88e2 100644
+--- a/src/everything/tools/trigger-long-running-operation.ts
++++ b/src/everything/tools/trigger-long-running-operation.ts
+@@ -17,6 +17,12 @@ const config = {
+   title: "Trigger Long Running Operation Tool",
+   description: "Demonstrates a long running operation with progress updates.",
+   inputSchema: TriggerLongRunningOperationSchema,
++  annotations: {
++    readOnlyHint: true,
++    destructiveHint: false,
++    idempotentHint: true,
++    openWorldHint: false,
++  },
+ };
+ 
+ /**
+diff --git a/src/everything/tools/trigger-sampling-request-async.ts b/src/everything/tools/trigger-sampling-request-async.ts
+index 2e9fad96bc..f58dd84d10 100644
+--- a/src/everything/tools/trigger-sampling-request-async.ts
++++ b/src/everything/tools/trigger-sampling-request-async.ts
+@@ -23,6 +23,12 @@ const config = {
+     "Demonstrates bidirectional MCP tasks where the server sends a request and the client " +
+     "executes it asynchronously, allowing the server to poll for progress and results.",
+   inputSchema: TriggerSamplingRequestAsyncSchema,
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: true,
++  },
+ };
+ 
+ // Poll interval in milliseconds
+diff --git a/src/everything/tools/trigger-sampling-request.ts b/src/everything/tools/trigger-sampling-request.ts
+index 5785f5210f..fd9b5375c4 100644
+--- a/src/everything/tools/trigger-sampling-request.ts
++++ b/src/everything/tools/trigger-sampling-request.ts
+@@ -21,6 +21,12 @@ const config = {
+   title: "Trigger Sampling Request Tool",
+   description: "Trigger a Request from the Server for LLM Sampling",
+   inputSchema: TriggerSamplingRequestSchema,
++  annotations: {
++    readOnlyHint: false,
++    destructiveHint: false,
++    idempotentHint: false,
++    openWorldHint: true,
++  },
+ };
+ 
+ /**

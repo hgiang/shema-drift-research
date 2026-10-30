@@ -1,0 +1,40 @@
+From 1ae217d74d2dabd231448bbaee6eabd3fae3247a Mon Sep 17 00:00:00 2001
+From: tomonacci <tomonacci@users.noreply.github.com>
+Date: Mon, 5 Jan 2026 13:42:10 -0500
+Subject: [PATCH] Remove only trailing slashes (#3183)
+
+---
+ src/filesystem/__tests__/path-utils.test.ts | 6 ++++++
+ src/filesystem/path-utils.ts                | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/filesystem/__tests__/path-utils.test.ts b/src/filesystem/__tests__/path-utils.test.ts
+index 868d8f08af..5530cba1c3 100644
+--- a/src/filesystem/__tests__/path-utils.test.ts
++++ b/src/filesystem/__tests__/path-utils.test.ts
+@@ -70,6 +70,12 @@ describe('Path Utilities', () => {
+         .toBe('/home/user/some path');
+       expect(normalizePath('"/usr/local/some app/"'))
+         .toBe('/usr/local/some app');
++      expect(normalizePath('/usr/local//bin/app///'))
++        .toBe('/usr/local/bin/app');
++      expect(normalizePath('/'))
++        .toBe('/');
++      expect(normalizePath('///'))
++        .toBe('/');
+     });
+ 
+     it('removes surrounding quotes', () => {
+diff --git a/src/filesystem/path-utils.ts b/src/filesystem/path-utils.ts
+index c897b9d2c7..50910b995b 100644
+--- a/src/filesystem/path-utils.ts
++++ b/src/filesystem/path-utils.ts
+@@ -55,7 +55,7 @@ export function normalizePath(p: string): string {
+   if (isUnixPath) {
+     // For Unix paths, just normalize without converting to Windows format
+     // Replace double slashes with single slashes and remove trailing slashes
+-    return p.replace(/\/+/g, '/').replace(/\/+$/, '');
++    return p.replace(/\/+/g, '/').replace(/(?<!^)\/$/, '');
+   }
+ 
+   // Convert Unix-style Windows paths (/c/, /d/) to Windows format if on Windows

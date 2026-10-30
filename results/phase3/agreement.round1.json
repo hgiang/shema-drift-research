@@ -1,0 +1,208 @@
+{
+ "unit_sets": {
+  "n_a": 31,
+  "n_b": 26,
+  "n_both": 21,
+  "n_only_a": 10,
+  "n_only_b": 5,
+  "jaccard": 0.5833,
+  "agreed": [
+   [
+    "mcp:304",
+    "branchFromThought"
+   ],
+   [
+    "mcp:304",
+    "isRevision"
+   ],
+   [
+    "mcp:304",
+    "needsMoreThoughts"
+   ],
+   [
+    "mcp:304",
+    "revisesThought"
+   ],
+   [
+    "slack:026",
+    "thread_ts"
+   ],
+   [
+    "slack:097",
+    "auth"
+   ],
+   [
+    "slack:109",
+    "thread_ts"
+   ],
+   [
+    "slack:116",
+    "--workspace"
+   ],
+   [
+    "slack:130",
+    "channel_ids"
+   ],
+   [
+    "slack:147",
+    "limit"
+   ],
+   [
+    "slack:155",
+    "user_ids"
+   ],
+   [
+    "stripe:005",
+    "payment_method_types"
+   ],
+   [
+    "stripe:011",
+    "outcome"
+   ],
+   [
+    "stripe:013",
+    "meter"
+   ],
+   [
+    "stripe:015",
+    "allow_redisplay"
+   ],
+   [
+    "stripe:015",
+    "customer_consent_collected"
+   ],
+   [
+    "stripe:028",
+    "monthly_anchor"
+   ],
+   [
+    "stripe:028",
+    "weekly_anchor"
+   ],
+   [
+    "stripe:039",
+    "metadata"
+   ],
+   [
+    "stripe:043",
+    "action_groups"
+   ],
+   [
+    "stripe:051",
+    "payment_settings.payment_method_types"
+   ]
+  ],
+  "only_a": [
+   [
+    "slack:094",
+    "rows"
+   ],
+   [
+    "stripe:008",
+    "payments.settlement_timing.delay_days_override"
+   ],
+   [
+    "stripe:013",
+    "Invoice#create_preview.schedule_details.phases[].billing_thresholds"
+   ],
+   [
+    "stripe:013",
+    "Invoice#create_preview.schedule_details.phases[].items[].billing_thresholds"
+   ],
+   [
+    "stripe:013",
+    "Plan#create.aggregate_usage"
+   ],
+   [
+    "stripe:013",
+    "Price#create.recurring.aggregate_usage"
+   ],
+   [
+    "stripe:022",
+    "Checkout.Session#create.payment_method_options.pix.setup_future_usage"
+   ],
+   [
+    "stripe:022",
+    "PaymentIntent#confirm.payment_method_options.pix.setup_future_usage"
+   ],
+   [
+    "stripe:022",
+    "PaymentIntent#create.payment_method_options.pix.setup_future_usage"
+   ],
+   [
+    "stripe:022",
+    "PaymentIntent#update.payment_method_options.pix.setup_future_usage"
+   ]
+  ],
+  "only_b": [
+   [
+    "stripe:006",
+    "evidence.enhanced_evidence.visa_compliance.fee_acknowledged"
+   ],
+   [
+    "stripe:008",
+    "delay_days_override"
+   ],
+   [
+    "stripe:013",
+    "aggregate_usage"
+   ],
+   [
+    "stripe:013",
+    "billing_thresholds"
+   ],
+   [
+    "stripe:022",
+    "payment_method_options.pix.setup_future_usage"
+   ]
+  ]
+ },
+ "label": {
+  "n": 21,
+  "n_agree": 19,
+  "rate": 0.9048,
+  "kappa": 0.8688,
+  "disagreements": [
+   {
+    "digest_id": "stripe:015",
+    "parameter": "customer_consent_collected",
+    "a": "compound",
+    "b": "other"
+   },
+   {
+    "digest_id": "stripe:039",
+    "parameter": "metadata",
+    "a": "other",
+    "b": "required"
+   }
+  ]
+ },
+ "agent_visible": {
+  "n": 21,
+  "n_agree": 18,
+  "rate": 0.8571,
+  "kappa": 0.7766,
+  "disagreements": [
+   {
+    "digest_id": "slack:026",
+    "parameter": "thread_ts",
+    "a": true,
+    "b": false
+   },
+   {
+    "digest_id": "slack:130",
+    "parameter": "channel_ids",
+    "a": true,
+    "b": null
+   },
+   {
+    "digest_id": "stripe:015",
+    "parameter": "customer_consent_collected",
+    "a": true,
+    "b": null
+   }
+  ]
+ },
+ "threshold": 0.9,
+ "passes": true
+}

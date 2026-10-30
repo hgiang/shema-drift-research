@@ -1,0 +1,66 @@
+From c7d60d635abcad61fc0cf0bb3f0ca8d83bcd2eec Mon Sep 17 00:00:00 2001
+From: Paul Carleton <paulc@anthropic.com>
+Date: Thu, 18 Dec 2025 16:25:49 +0000
+Subject: [PATCH] fix: use --frozen instead of --locked in release workflow
+ (#3140)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+* fix: regenerate uv.lock after version bump in release script
+
+When the release script bumps the version in pyproject.toml, it needs
+to also regenerate the uv.lock file. Otherwise the lockfile becomes
+out of sync and `uv sync --locked` fails in CI with:
+"The lockfile at uv.lock needs to be updated"
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+* fix: use --frozen instead of --locked in release workflow
+
+The release script bumps the version in pyproject.toml, which causes
+the lockfile to be out of sync (uv includes the package's own version
+in the lockfile). Using --frozen skips the lockfile freshness check
+while still using pinned dependency versions.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
+---------
+
+Co-authored-by: Claude <noreply@anthropic.com>
+---
+ .github/workflows/release.yml | 2 +-
+ scripts/release.py            | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index 20c9f83e70..ba42d7b809 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -132,7 +132,7 @@ jobs:
+ 
+       - name: Install dependencies
+         working-directory: src/${{ matrix.package }}
+-        run: uv sync --locked --all-extras --dev
++        run: uv sync --frozen --all-extras --dev
+ 
+       - name: Run pyright
+         working-directory: src/${{ matrix.package }}
+diff --git a/scripts/release.py b/scripts/release.py
+index 05d76c0a63..e4ce1274c3 100755
+--- a/scripts/release.py
++++ b/scripts/release.py
+@@ -97,6 +97,9 @@ def update_version(self, version: Version):
+         with open(self.path / "pyproject.toml", "w") as f:
+             f.write(tomlkit.dumps(data))
+ 
++        # Regenerate uv.lock to match the updated pyproject.toml
++        subprocess.run(["uv", "lock"], cwd=self.path, check=True)
++
+ 
+ def has_changes(path: Path, git_hash: GitHash) -> bool:
+     """Check if any files changed between current state and git hash"""

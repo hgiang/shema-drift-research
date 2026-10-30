@@ -1,0 +1,57 @@
+From a660ac3420995793e216811f19ee9d05fc2e1f04 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:42:22 -0400
+Subject: [PATCH] fix: exempt advisory fixes from issue assignment and branch
+ naming
+
+The private-fork exception still left AGENTS.md's work-start rules in
+force: assign the issue and name the branch v2/<type>/<N>-<slug>. An
+advisory fix has no issue, and a descriptive slug would disclose the
+vulnerability. Exempt it from both and require an opaque
+v2/fix/<ghsa-id> branch; the skill's step 4 says the same.
+
+Refs #4870
+
+Signed-off-by: cliffhall <cliff@futurescale.com>
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+---
+ .claude/skills/security-advisory/SKILL.md | 7 +++++--
+ AGENTS.md                                 | 7 +++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/.claude/skills/security-advisory/SKILL.md b/.claude/skills/security-advisory/SKILL.md
+index 6165404ad8..515c1f6174 100644
+--- a/.claude/skills/security-advisory/SKILL.md
++++ b/.claude/skills/security-advisory/SKILL.md
+@@ -229,8 +229,11 @@ reason for the read-first rule.
+ 
+ Fix and review inside the fork. The fix follows the rules in `AGENTS.md` like
+ any other change: a regression test that fails before the fix, and the checks
+-under **Before pushing** for the server it touches. **The fork's PR targets
+-`v2/main`**, never `main`: check its base before anyone merges it.
++under **Before pushing** for the server it touches. Name the branch
++`v2/fix/<ghsa-id>` (lowercase, **no descriptive slug**, since a branch name
++outlives the fork once merged), and keep commit messages equally opaque until
++publication. **The fork's PR targets `v2/main`**, never `main`: check its base
++before anyone merges it.
+ 
+ ⚠️ **Move the card as the work moves.** `In Progress` when the fix is started,
+ `In Review` when the fork's PR is open. The fork is invisible to everyone not on
+diff --git a/AGENTS.md b/AGENTS.md
+index 4edef942df..309ffb2f3e 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -188,8 +188,11 @@ holds for a maintainer's own one-line fix as much as for a feature.
+   advisory's temporary private fork (`servers-<ghsa-id>`) links no public
+   issue, carries no labels, and is tracked by the advisory's `[GHSA-…]` draft
+   card rather than an issue's card, because each of those would disclose the
+-  vulnerability before a fix ships. It still targets `v2/main`, and it is
+-  reviewed inside the fork. The flow is the `security-advisory` skill.
++  vulnerability before a fix ships. For the same reason the work-start rules
++  on assigning an issue and naming the branch `v2/<type>/<ISSUE_NUMBER>-<slug>`
++  do not apply: its branch is `v2/fix/<ghsa-id>`, with **no descriptive
++  slug**. It still targets `v2/main`, and it is reviewed inside the fork. The
++  flow is the `security-advisory` skill.
+ 
+ No other PR is exempt.
+ 

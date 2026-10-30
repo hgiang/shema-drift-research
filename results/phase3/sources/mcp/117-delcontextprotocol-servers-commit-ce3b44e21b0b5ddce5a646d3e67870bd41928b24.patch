@@ -1,0 +1,22 @@
+From 6abf04eef15b6f73985215a515e2d55cd5c06056 Mon Sep 17 00:00:00 2001
+From: Aditya Singh <adisin650@gmail.com>
+Date: Sun, 24 May 2026 12:57:04 -0700
+Subject: [PATCH] Fix grammar in time server get_current_time tool description
+
+---
+ src/time/src/mcp_server_time/server.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/time/src/mcp_server_time/server.py b/src/time/src/mcp_server_time/server.py
+index 83e97af333..2cb0926134 100644
+--- a/src/time/src/mcp_server_time/server.py
++++ b/src/time/src/mcp_server_time/server.py
+@@ -131,7 +131,7 @@ async def list_tools() -> list[Tool]:
+         return [
+             Tool(
+                 name=TimeTools.GET_CURRENT_TIME.value,
+-                description="Get current time in a specific timezones",
++                description="Get current time in a specific timezone",
+                 inputSchema={
+                     "type": "object",
+                     "properties": {

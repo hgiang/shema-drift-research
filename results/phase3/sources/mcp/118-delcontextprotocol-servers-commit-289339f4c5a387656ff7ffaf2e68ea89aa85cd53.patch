@@ -1,0 +1,1259 @@
+From b57eacaeda52a96453ead72ece0e152c7c2ad1d8 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 00:34:54 -0400
+Subject: [PATCH 1/3] feat: board-ops and issue-create skills; remove the
+ empty-skills bootstrap
+
+Add the first two skills for #4858 Part 6, adapted from the MCP Inspector:
+
+- board-ops: gh recipes for the Servers V2 board (#43) only. The project
+  node id and the Status/Priority field ids live here and nowhere else;
+  option ids are resolved by name at run time instead of being tabled.
+  The option-deletion hazard, the snapshot and the recovery recipe are
+  copied verbatim, with only the board number and ids swapped.
+- issue-create: duplicate check across all states, v2 + exactly one type
+  label (now including chore) + a server-<name> scope label where one
+  server is concerned, the nearest-due open v2.x milestone, a Todo card
+  with a Priority via board-ops, and a read-back query that verifies it.
+- evals for both (five positives, two negatives each).
+
+AGENTS.md gains the two Skills index rows, the .claude/skills/ tree entry,
+chore in the type-label rule, and the "Maintaining the skills" section
+that verify-skills and docs/skill-authoring.md already link to.
+
+As the first skill-adding PR, remove #4863's EMPTY_SKILLS_BOOTSTRAP
+allowance and .claude/skills/.gitkeep: an empty skills directory is fatal
+again.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/.gitkeep                      |   0
+ .claude/skills/board-ops/SKILL.md            | 377 +++++++++++++++++++
+ .claude/skills/board-ops/evals/evals.json    |  30 ++
+ .claude/skills/issue-create/SKILL.md         | 180 +++++++++
+ .claude/skills/issue-create/evals/evals.json |  30 ++
+ AGENTS.md                                    |  57 ++-
+ scripts/verify-skills.main.test.mjs          |  48 +--
+ scripts/verify-skills.mjs                    |  59 +--
+ 8 files changed, 679 insertions(+), 102 deletions(-)
+ delete mode 100644 .claude/skills/.gitkeep
+ create mode 100644 .claude/skills/board-ops/SKILL.md
+ create mode 100644 .claude/skills/board-ops/evals/evals.json
+ create mode 100644 .claude/skills/issue-create/SKILL.md
+ create mode 100644 .claude/skills/issue-create/evals/evals.json
+
+diff --git a/.claude/skills/.gitkeep b/.claude/skills/.gitkeep
+deleted file mode 100644
+index e69de29bb2..0000000000
+diff --git a/.claude/skills/board-ops/SKILL.md b/.claude/skills/board-ops/SKILL.md
+new file mode 100644
+index 0000000000..fa96d48462
+--- /dev/null
++++ b/.claude/skills/board-ops/SKILL.md
+@@ -0,0 +1,377 @@
++---
++name: board-ops
++description: "gh recipes for the Servers V2 project board (#43): add an issue's card, move its Status, set or change its Priority, delete a card, and recover from a deleted single-select option. Use when moving a card between columns; when setting Status or Priority; when an option ID is rejected; before editing a board field's options; or when cards lost their Status or Priority."
++disable-model-invocation: false
++---
++
++# Board operations
++
++The rules about _what_ a card's Status and Priority should be live in
++[`AGENTS.md`](../../../AGENTS.md) under **Issue-driven work style**. This skill is
++the _mechanics_: the exact `gh` calls, the IDs, and the ways the board can be
++damaged.
++
++Related: `/issue-create` (the create flow, which boards a new issue through the
++add-card recipe below).
++
++**This file is the only place the board's IDs are written down.** Every other
++skill and document names a column or a field and points here. Two copies of an
++ID are worse than one, because the stale copy is indistinguishable from the live
++one.
++
++## The board
++
++| Board | Owner | Fields this workflow uses |
++| --- | --- | --- |
++| [Servers V2 (#43)](https://github.com/orgs/modelcontextprotocol/projects/43) | `modelcontextprotocol` | Status, Priority |
++
++There is one board. It is an **org** project, so every `gh project` command
++takes `--owner modelcontextprotocol`. The board is **private**: treat a dump of
++its items as private data (see the snapshot section below).
++
++**Only issues go on the board, never PRs, never draft cards.** A PR is tracked
++through the card of the issue it closes.
++
++## IDs
++
++The project node id and the field ids are stable:
++
++| Thing | ID |
++| --- | --- |
++| Project node ID | `PVT_kwDOCt2Azc4BcZgq` |
++| Status field ID | `PVTSSF_lADOCt2Azc4BcZgqzhXCpm0` |
++| Priority field ID | `PVTSSF_lADOCt2Azc4BcZgqzhjiM9M` |
++
++The **option** ids are **not** stable. They are regenerated whenever a
++single-select field's option list is edited (see the hazard below), so **this
++skill does not list them. Resolve an option id by its name, at run time,
++every time**:
++
++```sh
++# The board's fields, once per session. Refuses to go on from a failed call.
++FIELDS=$(gh project field-list 43 --owner modelcontextprotocol --format json) || FIELDS=
++# opt <Field> <Option name> → the option's current id, or nothing.
++opt() {
++  jq -r --arg f "$1" --arg o "$2" \
++    '.fields[] | select(.name == $f) | .options[] | select(.name == $o) | .id' \
++    <<<"$FIELDS"
++}
++
++STATUS_OPT=$(opt Status "Todo")
++PRIORITY_OPT=$(opt Priority "Medium")
++[ -n "$STATUS_OPT" ] && [ -n "$PRIORITY_OPT" ] \
++  || echo "option not found — check the name against the list below" >&2
++```
++
++The option **names** are what the workflow depends on:
++
++| Field | Options, in board order |
++| --- | --- |
++| Status | `Incoming`, `Todo`, `In Progress`, `In Review`, `Done` |
++| Priority | `Urgent`, `High`, `Medium`, `Low` |
++
++What each Status means:
++
++| Status | Means |
++| --- | --- |
++| Incoming | Arrived unboarded, awaiting review — **no milestone** |
++| Todo | Approved (a milestone was assigned) |
++| In Progress | Active work |
++| In Review | A PR is open |
++| Done | **Shipped** — a merged PR, or a parent whose last sub-issue closed |
++
++If a name above no longer resolves, list what the field actually holds rather
++than guessing:
++
++```sh
++# Swap "Status" for "Priority" to see the other field's options.
++gh project field-list 43 --owner modelcontextprotocol --format json \
++  | jq '.fields[] | select(.name=="Status") | .options'
++```
++
++A renamed option is a change to this table, made in the same change that
++renames it.
++
++## Finding a card without trusting `--limit`
++
++⚠️ **`gh project item-list --limit N` truncates silently.** Past `N` it returns
++the first `N` items with no error and no warning, so a `select` over the result
++matches nothing and a card that exists reads as missing. A limit is a guess
++about the board's size; don't make the recipes depend on it being right.
++
++- **An issue's card is looked up from the issue**, which is independent of board
++  size — see [Move an existing card](#move-an-existing-card).
++- **A whole-board dump** (the snapshot and the recovery dump below) genuinely
++  needs the full listing. Those recipes use a limit with headroom **and**
++  compare the result's `.items | length` against the `.totalCount` that
++  `item-list --format json` also returns, so a truncated listing fails loudly
++  instead of passing as complete. The check also catches a failed `gh` call,
++  whose empty output has neither key. Where a later step reads the dump from a
++  file, an incomplete dump is deleted, so that step fails on the missing file
++  rather than running on partial data.
++
++## Recipes
++
++Every recipe below assumes `FIELDS` and `opt` from [IDs](#ids) are defined in
++the same shell.
++
++### Add a card and set its fields
++
++```sh
++# Prints the item id (PVTI_…); capture it.
++ITEM_ID=$(gh project item-add 43 --owner modelcontextprotocol --url <issue-url> \
++  --format json --jq '.id') || ITEM_ID=
++STATUS_OPT=$(opt Status "Todo")       # an issue you filed through the create flow is approved by definition
++PRIORITY_OPT=$(opt Priority "Medium")
++
++if [ -n "$ITEM_ID" ] && [ -n "$STATUS_OPT" ] && [ -n "$PRIORITY_OPT" ]; then
++  gh project item-edit --project-id PVT_kwDOCt2Azc4BcZgq --id "$ITEM_ID" \
++    --field-id PVTSSF_lADOCt2Azc4BcZgqzhXCpm0 --single-select-option-id "$STATUS_OPT"
++  gh project item-edit --project-id PVT_kwDOCt2Azc4BcZgq --id "$ITEM_ID" \
++    --field-id PVTSSF_lADOCt2Azc4BcZgqzhjiM9M --single-select-option-id "$PRIORITY_OPT"
++else
++  echo "missing item or option id — nothing edited" >&2
++fi
++```
++
++Each `item-edit` sets **one** field, so setting both takes two calls; there is
++no combined form. `item-add` on an issue that already has a card returns the
++existing card's id rather than adding a second one.
++
++For an issue swept in at triage, the only difference is Status → **Incoming**
++and that you do **not** set a milestone.
++
++### Move an existing card
++
++Look the item id up **from the issue** rather than re-adding it. An issue's
++`projectItems` lists the cards it has on every board, so the lookup does not
++depend on how many items the board holds (see [Finding a card without trusting
++`--limit`](#finding-a-card-without-trusting---limit)). Select the card by the
++board's **node id**, not its number: project numbers are per-owner, and an issue
++can also sit on a user-owned project that happens to be numbered 43. Querying
++through the repository also means the issue number cannot match another repo's
++issue.
++
++The mutation runs only on a non-empty id: `item-edit --id ""` fails with an
++opaque node-resolution error rather than saying the card was not found. The
++`|| ITEM_ID=` matters too: on a GraphQL error (a number that is a PR, not an
++issue; a rate limit) `gh api` still prints the raw error JSON to stdout, which
++would otherwise land in `ITEM_ID` as a non-empty "id". `first:100` is the
++connection's maximum page; it counts the boards one issue is on, not the cards
++on a board, so it has no board-size exposure.
++
++```sh
++N=<ISSUE_NUMBER>
++ITEM_ID=$(gh api graphql -F n="$N" -f query='query($n:Int!){
++  repository(owner:"modelcontextprotocol",name:"servers"){issue(number:$n){
++    projectItems(first:100){nodes{id project{id}}}}}}' \
++  --jq '.data.repository.issue.projectItems.nodes[]
++        | select(.project.id=="PVT_kwDOCt2Azc4BcZgq") | .id') || ITEM_ID=
++[ -n "$ITEM_ID" ] || echo "#$N has no card on #43 (or the lookup failed)" >&2
++```
++
++Then edit it. For example, Status → In Review, when its PR opens:
++
++```sh
++STATUS_OPT=$(opt Status "In Review")
++if [ -n "$ITEM_ID" ] && [ -n "$STATUS_OPT" ]; then
++  gh project item-edit --project-id PVT_kwDOCt2Azc4BcZgq --id "$ITEM_ID" \
++    --field-id PVTSSF_lADOCt2Azc4BcZgqzhXCpm0 --single-select-option-id "$STATUS_OPT"
++else
++  echo "no ITEM_ID or option id — nothing edited" >&2
++fi
++```
++
++Setting Priority is the same call with `opt Priority "<level>"` and the Priority
++field id `PVTSSF_lADOCt2Azc4BcZgqzhjiM9M`.
++
++### Read a card back
++
++To confirm what a card holds, read it from the issue:
++
++```sh
++N=<ISSUE_NUMBER>
++gh api graphql -F n="$N" -f query='query($n:Int!){
++  repository(owner:"modelcontextprotocol",name:"servers"){issue(number:$n){
++    projectItems(first:100){nodes{project{id number}
++      fieldValues(first:20){nodes{... on ProjectV2ItemFieldSingleSelectValue{
++        name field{... on ProjectV2SingleSelectField{name}}}}}}}}}}' \
++  --jq '.data.repository.issue.projectItems.nodes[]
++        | select(.project.id=="PVT_kwDOCt2Azc4BcZgq")
++        | [.fieldValues.nodes[] | select(.field) | {(.field.name): .name}] | add'
++```
++
++### Delete a card
++
++**`Done` means the work shipped.** An issue closed as duplicate / won't fix /
++not planned / obsolete / superseded shipped nothing, so its card is **deleted**,
++not parked in Done:
++
++```sh
++# ITEM_ID from the issue-side LOOKUP block in "Move an existing card" above —
++# the lookup only, not the item-edit that follows it.
++if [ -n "$ITEM_ID" ]; then
++  gh project item-delete 43 --owner modelcontextprotocol --id "$ITEM_ID"
++else
++  echo "no ITEM_ID — nothing deleted" >&2
++fi
++```
++
++Deleting the card removes it from the board only. **The issue itself is
++untouched**: it keeps its labels and comments, and stays searchable and linkable
++forever. Nothing is lost; the board simply stops claiming the work was
++delivered. Done is read as the record of what a milestone actually delivered, so
++a duplicate sitting there makes that record wrong in a way nobody can detect
++later.
++
++The close **reason** is the machine-readable form of the same distinction.
++`gh issue close --reason` accepts only `completed` and `not planned`, so
++**`duplicate` must be set through the API**:
++
++```sh
++gh api repos/modelcontextprotocol/servers/issues/<N> -X PATCH \
++  -f state=closed -f state_reason=duplicate
++```
++
++(or "Mark as duplicate" in the web UI, which additionally records a
++duplicate-of link).
++
++## ⚠️ The option-deletion hazard
++
++This section and its two subsections are copied verbatim from the MCP
++Inspector's `board-ops`. Only the board number, the IDs, one cross-repo issue
++reference and one link to a skill this repo does not have were changed. The
++incidents they describe happened on the Inspector's board; the mechanism is
++GitHub's and applies to #43 unchanged. The option-id tables they mention are
++the Inspector's; here, option ids are resolved by name (see [IDs](#ids)), so
++there is no table to update, but any option id pasted into an issue, PR or
++script is invalidated all the same.
++
++**Never add, rename, or remove an option on a single-select board field (Status
++or Priority) with the `updateProjectV2Field` GraphQL mutation unless you pass
++every existing option's `id`.** That mutation does a **full replace** of the
++option list: resending options by name/color/description without their `id`s
++makes GitHub **delete all existing options and mint new ones**, which **orphans
++that field's value on every card on the board** *and* invalidates every option
++id in the tables above. This has happened once, on Status (~197 items
++reconstructed by inference).
++
++Safe alternatives, in order of preference:
++
++1. **Add or rename an option in the GitHub web UI** (Project → the field's
++   settings). This preserves the ids of untouched options.
++   ⚠️ **Deleting is different, in the UI as much as in the API**: removing an
++   option blanks that field's value on every card that held it, with no undo and
++   no warning that says so.
++2. If you must script it, first `gh api graphql` the current options **with their
++   `id`s**, then call `updateProjectV2Field` echoing back every existing option
++   **including its `id`**, appending only the new one.
++   `ProjectV2SingleSelectFieldOptionInput.id` is an optional `String`, so a mixed
++   list works. Verify afterward that no card lost its value — snapshot
++   `gh project item-list … --format json --limit 2000` before and after, check
++   each is complete the way the snapshot below does, and diff; don't just
++   spot-check. Send those dumps to `$BOARD_TMP` too, for the reason above.
++
++Both the `Incoming` Status option and the Urgent/High/Medium/Low Priority
++options were added this way (modelcontextprotocol/inspector#1891), with the
++before/after diff confirming all 264 cards kept their Status.
++
++`gh project item-add` and `gh project item-edit` are always safe — they set a
++card's value and never touch the field schema.
++
++### Always snapshot before touching a field's options
++
++One command, and it is the difference between a five-minute restore and
++reconstructing statuses by inference:
++
++⚠️ **Write it outside the repo.** The board is private, so a snapshot is a full
++dump of item IDs and every card's Status and Priority. Left in the working tree
++it is one `git add -A` away from being published in a PR (Copilot).
++
++```sh
++BOARD_TMP=$(mktemp -d)
++gh project item-list 43 --owner modelcontextprotocol --format json --limit 2000 \
++  > "$BOARD_TMP/board-snapshot.json"
++# A truncated snapshot cannot restore the cards it dropped — refuse to proceed on one.
++jq -e '(.items | length) == .totalCount' "$BOARD_TMP/board-snapshot.json" >/dev/null \
++  && echo "snapshot: $BOARD_TMP/board-snapshot.json" \
++  || { echo "SNAPSHOT INCOMPLETE — raise --limit and retake it before editing options" >&2
++       rm -f "$BOARD_TMP/board-snapshot.json"; false; }
++```
++
++Note the printed path; you need it to recover.
++
++### Recovering from a deleted option
++
++This has happened twice — once via the API (~197 items, reconstructed by
++inference) and once via the UI (the `Done` column, 247 items, restored from a
++snapshot in minutes). With a snapshot the recovery is mechanical.
++
++The recipe below is written for a deleted **Status** option. For a deleted
++**Priority** option it is the same three steps with two substitutions: read
++`.priority` instead of `.status` (`gh project item-list --format json` exposes
++each single-select field under its lowercased name, so both keys are present),
++and pass the Priority field id `PVTSSF_lADOCt2Azc4BcZgqzhjiM9M`.
++
++```sh
++# 0. Same temp dir the snapshot went to — keep every dump out of the worktree.
++BOARD_TMP=${BOARD_TMP:-$(mktemp -d)}
++
++# 1. Which cards lost their value, and what did they hold? lost-ids.json is
++#    kept ONLY when the dump is complete AND the snapshot reports what those cards
++#    held — step 3 refuses to run without it, so neither a truncated dump nor a
++#    missing snapshot can turn into a silent no-op or an unconfirmed re-apply.
++rm -f "$BOARD_TMP/lost-ids.json"
++gh project item-list 43 --owner modelcontextprotocol --format json --limit 2000 \
++  > "$BOARD_TMP/board-broken.json"
++if jq -e '(.items | length) == .totalCount' "$BOARD_TMP/board-broken.json" >/dev/null; then
++  jq -r '[.items[]|select(.status==null)|.id]' "$BOARD_TMP/board-broken.json" \
++    > "$BOARD_TMP/lost-ids.json" || rm -f "$BOARD_TMP/lost-ids.json"
++  jq -r --slurpfile L "$BOARD_TMP/lost-ids.json" '($L[0]) as $lost
++    | [.items[] | select(.id as $i | $lost|index($i)) | .status // "(none)"]
++    | group_by(.) | map({s:.[0],c:length}) | .[] | "was \(.s): \(.c)"' \
++    "$BOARD_TMP/board-snapshot.json" \
++    || { echo "no usable snapshot — cannot confirm what these cards held; not re-applying" >&2
++         rm -f "$BOARD_TMP/lost-ids.json"; }
++else
++  echo "board-broken.json INCOMPLETE — raise --limit and re-run step 1" >&2
++  rm -f "$BOARD_TMP/board-broken.json"
++fi
++
++# 2. Recreate the option, echoing every surviving option's id (see above).
++#    NOTE: the recreated option gets a NEW id — the deleted one never comes back.
++
++# 3. Re-apply it to the orphaned cards.
++if [ -s "$BOARD_TMP/lost-ids.json" ]; then
++  for id in $(jq -r '.[]' "$BOARD_TMP/lost-ids.json"); do
++    gh project item-edit --project-id PVT_kwDOCt2Azc4BcZgq --id "$id" \
++      --field-id PVTSSF_lADOCt2Azc4BcZgqzhXCpm0 --single-select-option-id <NEW_OPTION_ID>
++    sleep 0.4
++  done
++else
++  echo "no lost-ids.json — step 1 did not complete; nothing re-applied" >&2
++fi
++```
++
++Step 1's grouping is the safety check: confirm the orphaned set is exactly the
++cards that held the deleted option, so you don't overwrite a card someone
++legitimately moved in the meantime.
++
++Because the recreated option carries a **new id**, the tables above and every
++reference to it must be updated in the same change — `grep` the old id across
++the repo. The `Done` id has been `248a3910` and is now `259d6aab` for exactly
++this reason.
++
++## ⚠️ Two different "Priority" fields
++
++An issue page shows two fields named Priority, and they are unrelated. **Ours is
++the one under _Projects → Servers V2_.**
++
++| Where it appears | What it is | Ours? |
++| --- | --- | --- |
++| **Projects → Servers V2 → Priority** | The **project board** field on #43 (`PVTSSF_lADOCt2Azc4BcZgqzhjiM9M`) | ✅ Yes |
++| **Fields → Priority** (above _Projects_) | A GitHub **issue field**, `IFSS_kgDOAdAWeg`, defined at the **org** level and shared by every repo in it | ❌ No |
++
++Nothing syncs them, in either direction, and they will happily disagree.
++**Never delete the org-level field**: it belongs to the whole org. Don't set it
++either; a value there is a _reporter's_ opinion, not the board's Priority.
+diff --git a/.claude/skills/board-ops/evals/evals.json b/.claude/skills/board-ops/evals/evals.json
+new file mode 100644
+index 0000000000..2470491bb8
+--- /dev/null
++++ b/.claude/skills/board-ops/evals/evals.json
+@@ -0,0 +1,30 @@
++[
++  {
++    "prompt": "Move the board card for issue 4810 to In Review.",
++    "expect": "board-ops"
++  },
++  {
++    "prompt": "How do I set the Priority field on an issue's card on the Servers V2 board?",
++    "expect": "board-ops"
++  },
++  {
++    "prompt": "The project board rejected my Status option ID. How do I get the current one?",
++    "expect": "board-ops"
++  },
++  {
++    "prompt": "I'm about to add an option to one of the board's single-select fields. Should I do anything first?",
++    "expect": "board-ops"
++  },
++  {
++    "prompt": "Several cards lost their Status value after someone edited the field. How do I put it back?",
++    "expect": "board-ops"
++  },
++  {
++    "prompt": "Explain the difference between TCP and UDP.",
++    "expect": null
++  },
++  {
++    "prompt": "What year was the first Moon landing?",
++    "expect": null
++  }
++]
+diff --git a/.claude/skills/issue-create/SKILL.md b/.claude/skills/issue-create/SKILL.md
+new file mode 100644
+index 0000000000..de8b69e3d0
+--- /dev/null
++++ b/.claude/skills/issue-create/SKILL.md
+@@ -0,0 +1,180 @@
++---
++name: issue-create
++description: "Create a tracked issue in this repo end to end — duplicate check, v2 label, type label, server-scope label, milestone, board card, Status and Priority. Use when asked to file, create, open or raise an issue; when picking its labels or its milestone; when checking whether one already exists; or when work discovered mid-task needs an issue of its own."
++disable-model-invocation: false
++---
++
++# Creating an issue
++
++An issue **you** create is not "created" until every step below is done. A
++label is a repo tag, the milestone is a release bucket, and the board is a
++separate org project: `--label v2` does **not** add a board card, and adding a
++card does **not** set a Status or a Priority.
++
++| # | Step | Applies |
++| --- | --- | --- |
++| 1 | **`v2` label** | Always |
++| 2 | **Type label**: exactly one of `bug` / `enhancement` / `documentation` / `chore` / `question` | Always |
++| 3 | **Scope label**: `server-<name>` | Only when the issue concerns **one** server |
++| 4 | **Milestone** | Always |
++| 5 | **A card on the Servers V2 board (#43)** | Always |
++| 6 | **Status** on that card: `Todo` (or `In Progress` if you start now) | Always |
++| 7 | **Priority** on that card | Always |
++
++The rules behind each row are in [`AGENTS.md`](../../../AGENTS.md) under
++**Issue-driven work style**; this skill is the procedure.
++
++Set the labels and milestone at **create time**, never by backfilling: an
++unlabeled issue appears in no `v2`-filtered query, and an unmilestoned one drops
++out of release planning silently.
++
++**Never create a duplicate.** **Never create a draft card** (a board card with
++no issue number): every board item is a real GitHub issue.
++
++## 0. Check for an existing issue first
++
++Search **all** states, not just open. A closed issue is still a duplicate: it
++may have been completed, rejected, or filed and superseded, and refiling it
++loses that history. When one matches, the call is whether to reopen it or file
++genuinely new work; either way you need to have seen it.
++
++```sh
++gh issue list --repo modelcontextprotocol/servers --state all --limit 200 \
++  --search "<keywords>" --json number,title,state,stateReason,labels,milestone
++```
++
++This repository has thousands of issues, most from outside contributors, so
++search with two or three phrasings (the symptom, the tool or server name, the
++error text) before concluding there is none. Also check the board itself, where
++approved work already has a card:
++
++```sh
++gh project item-list 43 --owner modelcontextprotocol --format json --limit 2000 \
++  | jq -r '.items[] | "\(.content.number)\t\(.status)\t\(.title)"' | grep -i "<keyword>"
++```
++
++## 1. Pick the labels
++
++**`v2`.** Every issue created through this flow carries it. It marks work
++tracked by this workflow; there is no other version label in this repository.
++
++**Type.** Exactly one:
++
++| Type | Use for | Not for |
++| --- | --- | --- |
++| `bug` | Something is broken, wrong, or regressed against its intended behavior, including a server that reports something false about the protocol | A missing capability that was never built |
++| `enhancement` | A new capability, or extending an existing one: features, protocol-feature demonstrations, tracking issues | A cleanup with no behavior change |
++| `documentation` | Prose deliverables: READMEs, `docs/`, `AGENTS.md` rules, skills | Code that happens to need a doc update |
++| `chore` | Maintenance with no user-facing behavior change: dependencies, build and CI tooling, refactors, release plumbing | Anything a user of a server would notice |
++| `question` | An open question or discussion with no agreed deliverable yet | Work someone has already decided to do |
++
++**Don't force the binary.** `bug` and `enhancement` are the two most reached
++for, and pressing a docs task or a dependency pin into `enhancement` degrades it
++to "not a bug", at which point filtering by it stops telling you anything.
++
++**Scope.** When the issue concerns exactly one server, add its label:
++
++| Server directory | Scope label |
++| --- | --- |
++| `src/everything/` | `server-everything` |
++| `src/filesystem/` | `server-filesystem` |
++| `src/memory/` | `server-memory` |
++| `src/sequentialthinking/` | `server-sequentialthinking` |
++| `src/fetch/` | `server-fetch` |
++| `src/git/` | `server-git` |
++| `src/time/` | `server-time` |
++
++An issue about the repository as a whole (CI, root scripts, `AGENTS.md`,
++skills, release tooling) carries **no** scope label. An issue that really spans
++two or three servers takes each of their labels; one that spans them all is
++repository-wide and takes none.
++
++## 2. Pick the milestone
++
++If the user didn't name one, use the **current** milestone: the open `v2.x`
++milestone with the nearest due date.
++
++```sh
++gh api repos/modelcontextprotocol/servers/milestones --jq \
++  'map(select(.state=="open" and (.title|startswith("v2")))) | sort_by(.due_on == null, .due_on)
++   | .[] | "\(.title)\tdue \(.due_on // "none" | .[0:10])\topen=\(.open_issues)"'
++```
++
++The first line is the default. Milestones are **release** buckets, so pick by
++_when the work ships_, not by size. If a new issue plainly can't make the
++current milestone, say so and put it in the next one rather than leaving it
++blank. A sub-issue normally inherits its parent's milestone.
++
++## 3. Pick the Priority
++
++Priority is a board field (Urgent / High / Medium / Low), not a label. Pick it
++by impact and urgency, and say in one line why:
++
++| Priority | For |
++| --- | --- |
++| Urgent | A security problem, a broken release, or something blocking other work now |
++| High | A real defect users hit, or work other planned work depends on |
++| Medium | The default for planned work |
++| Low | Nice to have; nothing waits on it |
++
++A scored rubric replaces this table when the `issue-triage` skill lands (#4868).
++
++## 4. Create it
++
++```sh
++gh issue create --repo modelcontextprotocol/servers \
++  --title "<title>" \
++  --label v2 --label bug --label server-filesystem \
++  --milestone "<milestone from step 2>" \
++  --body "<body>"
++```
++
++Drop the `server-…` label for a repository-wide issue. `gh issue create` prints
++the new issue's URL; keep it for the next step.
++
++A good body states the problem, how to reproduce it (the server, its
++configuration, the client, the request), the expected behavior, and which spec
++era it concerns when that matters.
++
++## 5. Board it, in Todo, with its Priority
++
++Filing an issue for work you intend to happen **is** approving it, so it starts
++in **Todo** with its milestone already set, not in `Incoming`, which is the queue
++for issues nobody has evaluated yet. Work you are starting immediately goes
++straight to **In Progress**.
++
++Run the **add-card recipe in `/board-ops`** with the Status and the Priority
++from step 3. The project, field and option IDs live there and only there: an
++option ID is regenerated whenever its field's option list is edited, so a
++second copy here would go stale silently and break issue creation even after
++`board-ops` was fixed.
++
++## 6. Verify
++
++Read the issue back and confirm every row of the table at the top:
++
++```sh
++N=<ISSUE_NUMBER>
++gh api graphql -F n="$N" -f query='query($n:Int!){
++  repository(owner:"modelcontextprotocol",name:"servers"){issue(number:$n){
++    number title milestone{title} labels(first:20){nodes{name}}
++    projectItems(first:100){nodes{project{number}
++      fieldValues(first:20){nodes{... on ProjectV2ItemFieldSingleSelectValue{
++        name field{... on ProjectV2SingleSelectField{name}}}}}}}}}}' \
++  --jq '.data.repository.issue | {number, title, milestone: .milestone.title,
++        labels: [.labels.nodes[].name],
++        board: [.projectItems.nodes[] | select(.project.number==43)
++                | [.fieldValues.nodes[] | select(.field) | {(.field.name): .name}] | add]}'
++```
++
++The issue is created when `labels` holds `v2`, exactly one type and the scope
++label if one applies, `milestone` is set, and `board` holds exactly one entry
++with both a `Status` and a `Priority`.
++
++## Issues that arrive from elsewhere
++
++An issue opened through the GitHub UI, by an outside reporter or by a
++maintainer, arrives with **no `v2` label, no milestone and no card**. That is
++normal on arrival, not a defect to fix the moment it lands: it is not approved
++yet, so it enters the board in **Incoming**, unmilestoned, through triage (the
++`issue-triage` skill, #4868), never through this flow.
+diff --git a/.claude/skills/issue-create/evals/evals.json b/.claude/skills/issue-create/evals/evals.json
+new file mode 100644
+index 0000000000..3877b1b073
+--- /dev/null
++++ b/.claude/skills/issue-create/evals/evals.json
+@@ -0,0 +1,30 @@
++[
++  {
++    "prompt": "File an issue titled 'fetch server ignores robots.txt after a redirect' and set it up the way this repo wants.",
++    "expect": "issue-create"
++  },
++  {
++    "prompt": "Which milestone should a new issue go in, and how do I find the current one?",
++    "expect": "issue-create"
++  },
++  {
++    "prompt": "Before I file this, how do I check nobody has reported it already?",
++    "expect": "issue-create"
++  },
++  {
++    "prompt": "I found a bug in the git server while working on something else. How do I get it tracked in this repo?",
++    "expect": "issue-create"
++  },
++  {
++    "prompt": "Raise an issue for adding a Roots demonstration to the everything server.",
++    "expect": "issue-create"
++  },
++  {
++    "prompt": "What is the chemical symbol for potassium?",
++    "expect": null
++  },
++  {
++    "prompt": "Reverse this string: stressed",
++    "expect": null
++  }
++]
+diff --git a/AGENTS.md b/AGENTS.md
+index 94e1e80c91..a5c5a1212d 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -19,12 +19,15 @@ not in advance.
+ 
+ ## Skills index
+ 
+-| Skill | Covers | How it loads |
+-| ----- | ------ | ------------ |
++| Skill                                                  | Covers                                                                                                                                                  | How it loads                      |
++| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
++| [`board-ops`](.claude/skills/board-ops/SKILL.md)       | `gh project` recipes and the IDs for the Servers V2 board (#43); resolving option IDs by name; the option-deletion hazard and its recovery               | Model-invoked, or `/board-ops`    |
++| [`issue-create`](.claude/skills/issue-create/SKILL.md) | The create flow: duplicate check, `v2` + type + server-scope labels, milestone, board card, Status + Priority, and the query that verifies them          | Model-invoked, or `/issue-create` |
+ 
+-There are no skills in this repository yet. A PR that adds a skill under
+-`.claude/skills/<name>/SKILL.md` adds its row to this table in the same change,
+-and the table never lists a skill that does not exist.
++A PR that adds a skill under `.claude/skills/<name>/SKILL.md` adds its row to
++this table in the same change, and the table never lists a skill that does not
++exist. How skills are kept reachable is under
++[Maintaining the skills](#maintaining-the-skills).
+ 
+ ## Project structure
+ 
+@@ -38,6 +41,7 @@ servers/
+ │   ├── fetch/                Py  mcp-server-fetch                                 PyPI  Fetches web content and converts it for LLMs
+ │   ├── git/                  Py  mcp-server-git                                   PyPI  Git repository operations
+ │   └── time/                 Py  mcp-server-time                                  PyPI  Time and timezone conversion
++├── .claude/skills/            On-demand procedures (see the Skills index above)
+ ├── scripts/                  Release tooling (release.py)
+ ├── docs/                     Design documents
+ ├── .github/workflows/        typescript.yml, python.yml (per-package CI), release.yml (dispatch-only publish),
+@@ -186,9 +190,48 @@ the template's "How Has This Been Tested?" heading.
+   two copies of a command sequence or an ID are worse than one, because the stale
+   copy is indistinguishable from the live one.
+ 
++### Maintaining the skills
++
++Skills are conditional: a skill's body loads only when it is invoked, so a skill
++that stops being reachable loses behavior **silently**. Four rules keep that
++from happening. How to write a description that fires, and eval cases that
++measure it, is [`docs/skill-authoring.md`](./docs/skill-authoring.md).
++
++1. **`npm run verify:skills` must pass.** It runs inside `validate:guards`, and
++   CI runs it with `verify:skills:cli` (the authoritative `claude plugin
++   validate`, at a pinned CLI version) on every push and pull request. It parses
++   each `SKILL.md`'s frontmatter the way Claude Code does. Malformed YAML loads
++   the body with an _empty_ description, so `/name` still works while the skill
++   can never auto-fire; an unquoted `#` truncates the description silently.
++   **Quote any description containing `#` or `:`**, and keep the opening `---`
++   on the file's first line.
++2. **Every skill declares `disable-model-invocation` explicitly. Default it to
++   `false`.** Invoking a skill has no side effects (it loads instructions), and
++   work is usually asked for in prose, which a `true` skill can never answer. A
++   `true` skill also cannot be reached from another skill's body. Reserve `true`
++   for a procedure only ever started deliberately by name.
++3. **A model-invoked skill carries committed eval cases** at
++   `.claude/skills/<name>/evals/evals.json`: at least five positives and at
++   least one negative. `npm run skills:eval` runs them (it needs the `claude`
++   CLI, or `copilot` with `AGENT=copilot`, and spends real model calls, so it is
++   **not** in the gate). Run the **whole** suite when adding a skill or editing a
++   description, since a new skill can lower the trigger rate of the others, and
++   aim each case at what only the skill holds, never at something this file
++   already answers.
++4. **Keep the listing inside its budget.** Claude Code truncates the skill
++   listing when it overflows, dropping the least-invoked entries first.
++   `verify:skills` prints this repo's share against the budget in
++   `scripts/lib/skill-manifest.mjs` and fails when it is exceeded. Put the key
++   use case first in each description.
++
++A rule that must never drop out of context stays in this file: in a long
++session, auto-compaction can drop an older skill's body entirely.
++
+ ## Issue-driven work style
+ 
+-All work is driven by items on the Servers V2 board (#43).
++All work is driven by items on the Servers V2 board (#43). The _recipes_ for
++the flows below are in the `issue-create` and `board-ops` skills; the rules are
++here.
+ 
+ - **Before starting work, check the board for the relevant item.**
+ - **Every board item is a real GitHub issue.** No draft cards. Before creating an
+@@ -198,7 +241,7 @@ All work is driven by items on the Servers V2 board (#43).
+ - **Label every issue and every PR `v2`**, at create time. It marks work tracked
+   by this workflow.
+ - **Label every issue with exactly one type label**: `bug`, `enhancement`,
+-  `documentation` or `question`. A PR needs no type label; it is classified
++  `documentation`, `chore` or `question`. A PR needs no type label; it is classified
+   through the issue it closes.
+ - **Label an issue that concerns one server with its scope label**
+   (`server-everything`, `server-filesystem`, `server-memory`,
+diff --git a/scripts/verify-skills.main.test.mjs b/scripts/verify-skills.main.test.mjs
+index 916e9ada11..4f33d88d63 100644
+--- a/scripts/verify-skills.main.test.mjs
++++ b/scripts/verify-skills.main.test.mjs
+@@ -13,13 +13,10 @@ import { test } from "node:test";
+ import assert from "node:assert/strict";
+ import { spawnSync } from "node:child_process";
+ import {
+-  existsSync,
+   mkdirSync,
+   mkdtempSync,
+-  readdirSync,
+   readFileSync,
+   rmSync,
+-  statSync,
+   writeFileSync,
+ } from "node:fs";
+ import { tmpdir } from "node:os";
+@@ -30,8 +27,6 @@ import { MIN_POSITIVE_CASES } from "./lib/skill-manifest.mjs";
+ import {
+   checkWiring,
+   ciRunsUnconditionally,
+-  EMPTY_SKILLS_BOOTSTRAP,
+-  emptySkillsVerdict,
+   GUARDS_WORKFLOW,
+   runsCommand,
+   WIRING_ALLOWANCES,
+@@ -329,7 +324,7 @@ test("the repository as it stands is wired, under its declared allowances", () =
+ });
+ 
+ test("the real verifier passes on the repository as it stands", () => {
+-  // `main()` itself against the real tree — wiring, the bootstrap allowance and
++  // `main()` itself against the real tree — wiring, the non-empty skill set and
+   // every committed skill together, the way CI's root-guards job runs it.
+   const res = spawnSync(process.execPath, [SCRIPT], {
+     cwd: REPO_ROOT,
+@@ -340,10 +335,12 @@ test("the real verifier passes on the repository as it stands", () => {
+ 
+ // --- temporary allowances (#4863) ---------------------------------------------
+ //
+-// Two wiring links and the non-empty skills directory cannot hold on the day
+-// the harness lands. Each gets an allowance that excuses it only while the
+-// missing piece is missing, and turns into a failure the moment it arrives —
+-// so the later PR has to wire the link and delete the allowance.
++// Wiring links that could not hold on the day the harness landed. Each gets an
++// allowance that excuses it only while the missing piece is missing, and turns
++// into a failure the moment it arrives — so the later PR has to wire the link
++// and delete the allowance. (The empty-skills bootstrap allowance was the other
++// one; #4866 added the first skills and removed it, so an empty skills
++// directory is fatal again — see "fails an empty or missing directory".)
+ 
+ test("a wiring allowance excuses its link only while the pending script is absent", () => {
+   const unwired = {
+@@ -415,37 +412,6 @@ test("the CI link has no allowance", () => {
+   );
+ });
+ 
+-test("the empty-skills bootstrap allowance passes an empty set, with a note", () => {
+-  const v = emptySkillsVerdict(0, true);
+-  assert.equal(v.fatal, undefined);
+-  assert.equal(v.problem, undefined);
+-  assert.match(v.note, /bootstrap allowance/);
+-});
+-
+-test("without the allowance an empty set is still fatal", () => {
+-  assert.match(emptySkillsVerdict(0, false).fatal, /no skills found/);
+-  assert.deepEqual(emptySkillsVerdict(3, false), {});
+-});
+-
+-test("the bootstrap allowance goes stale once a skill exists", () => {
+-  assert.match(
+-    emptySkillsVerdict(1, true).problem,
+-    /EMPTY_SKILLS_BOOTSTRAP allowance is stale/,
+-  );
+-});
+-
+-test("the bootstrap allowance is only declared while the skill set is empty", () => {
+-  // The live half: the committed flag and the committed tree agree. Whichever
+-  // PR adds the first skill must flip it, and this is the test that says so.
+-  const dir = path.join(REPO_ROOT, ".claude", "skills");
+-  const hasSkills =
+-    existsSync(dir) &&
+-    readdirSync(dir).some(
+-      (n) => !n.startsWith(".") && statSync(path.join(dir, n)).isDirectory(),
+-    );
+-  assert.equal(EMPTY_SKILLS_BOOTSTRAP, !hasSkills);
+-});
+-
+ test("checkWiring is not satisfied by a mention outside an executable step", () => {
+   // A raw substring match would pass on any of these while CI ran nothing —
+   // including on a step whose NAME describes the check it no longer performs,
+diff --git a/scripts/verify-skills.mjs b/scripts/verify-skills.mjs
+index eb49b152b3..7810ddb31a 100644
+--- a/scripts/verify-skills.mjs
++++ b/scripts/verify-skills.mjs
+@@ -283,50 +283,6 @@ export function checkWiring(rootScripts, workflowText, allowances = []) {
+   return problems;
+ }
+ 
+-/**
+- * TEMPORARY bootstrap allowance for an empty `.claude/skills/` (#4863).
+- *
+- * The guard's "no skills found" failure is kept: in steady state an empty
+- * skills directory means the skill set was deleted, and that must fail loudly.
+- * But the harness lands before any skill does, so for now an empty directory
+- * passes with a notice instead.
+- *
+- * **The first PR that adds a skill removes this** — whichever of #4866, #4867,
+- * #4870, #4871 or #4872 lands first. It cannot be forgotten: once a skill
+- * exists while this is still `true`, `emptySkillsVerdict` fails the guard as a
+- * stale allowance.
+- */
+-export const EMPTY_SKILLS_BOOTSTRAP = true;
+-
+-/**
+- * Decide what an (un)populated skills directory means.
+- *
+- * @param {number} count Skill directories found.
+- * @param {boolean} allowEmpty Whether the bootstrap allowance applies.
+- * @returns {{ fatal?: string, problem?: string, note?: string }}
+- *   `fatal` stops the run at once, `problem` joins the failure list, `note` is
+- *   printed and the run continues.
+- */
+-export function emptySkillsVerdict(count, allowEmpty) {
+-  if (count === 0) {
+-    return allowEmpty
+-      ? {
+-          note:
+-            "verify:skills — no skills yet; passing under the temporary bootstrap allowance " +
+-            "(EMPTY_SKILLS_BOOTSTRAP). The first skill-adding PR removes it.",
+-        }
+-      : { fatal: "verify:skills — no skills found; the skill set is gone." };
+-  }
+-  if (allowEmpty) {
+-    return {
+-      problem:
+-        "a skill now exists, so the temporary EMPTY_SKILLS_BOOTSTRAP allowance is stale. " +
+-        "Set it to false (and delete it) in scripts/verify-skills.mjs, and remove .claude/skills/.gitkeep.",
+-    };
+-  }
+-  return {};
+-}
+-
+ function main(argv = process.argv.slice(2)) {
+   // An explicit directory is the seam the fixture tests drive; without it this
+   // guard could only ever be exercised against the repo's own (green) skills,
+@@ -358,18 +314,13 @@ function main(argv = process.argv.slice(2)) {
+   }
+ 
+   const dirs = skillDirs(SKILLS_DIR);
+-  // The bootstrap allowance is for the real repo only: a fixture run keeps the
+-  // steady-state "no skills found" failure, which is what its test pins.
+-  const verdict = emptySkillsVerdict(
+-    dirs.length,
+-    !override && EMPTY_SKILLS_BOOTSTRAP,
+-  );
+-  if (verdict.fatal) {
+-    console.error(verdict.fatal);
++  // An empty skills directory means the skill set was deleted, and that must
++  // fail loudly. (#4863 excused it with a temporary bootstrap allowance until
++  // the first skill landed; #4866 added the first skills and removed it.)
++  if (dirs.length === 0) {
++    console.error("verify:skills — no skills found; the skill set is gone.");
+     process.exit(1);
+   }
+-  if (verdict.problem) failures.push(verdict.problem);
+-  if (verdict.note) console.log(verdict.note);
+ 
+   const parsed = [];
+   const evalFiles = [];
+
+From 8970850285b4eca8bdc2d57598946dc3e1f0f5aa Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 00:44:57 -0400
+Subject: [PATCH 2/3] fix: safer board recovery and card edits; owner-checked
+ verify query
+
+Address Copilot's first review round on #4899:
+
+- board-ops recovery step 1 now joins the broken dump to the snapshot
+  and restores only cards that held the deleted option, listing any
+  other blank card instead of overwriting it.
+- The add-card recipe chains its two item-edits so a failed Status edit
+  stops before Priority and reports; the recovery loop stops on a failed
+  edit.
+- Drop the Inspector's historical Done option ids from the recovery
+  note; this skill holds no option ids.
+- issue-create's verify query matches the board's owner as well as its
+  number, since project numbers are only unique per owner.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/board-ops/SKILL.md    | 70 +++++++++++++++++-----------
+ .claude/skills/issue-create/SKILL.md |  8 ++--
+ 2 files changed, 49 insertions(+), 29 deletions(-)
+
+diff --git a/.claude/skills/board-ops/SKILL.md b/.claude/skills/board-ops/SKILL.md
+index fa96d48462..8d359855a4 100644
+--- a/.claude/skills/board-ops/SKILL.md
++++ b/.claude/skills/board-ops/SKILL.md
+@@ -125,10 +125,12 @@ STATUS_OPT=$(opt Status "Todo")       # an issue you filed through the create fl
+ PRIORITY_OPT=$(opt Priority "Medium")
+ 
+ if [ -n "$ITEM_ID" ] && [ -n "$STATUS_OPT" ] && [ -n "$PRIORITY_OPT" ]; then
++  # Chained: a failed Status edit stops before Priority, and the failure shows.
+   gh project item-edit --project-id PVT_kwDOCt2Azc4BcZgq --id "$ITEM_ID" \
+-    --field-id PVTSSF_lADOCt2Azc4BcZgqzhXCpm0 --single-select-option-id "$STATUS_OPT"
+-  gh project item-edit --project-id PVT_kwDOCt2Azc4BcZgq --id "$ITEM_ID" \
+-    --field-id PVTSSF_lADOCt2Azc4BcZgqzhjiM9M --single-select-option-id "$PRIORITY_OPT"
++    --field-id PVTSSF_lADOCt2Azc4BcZgqzhXCpm0 --single-select-option-id "$STATUS_OPT" \
++  && gh project item-edit --project-id PVT_kwDOCt2Azc4BcZgq --id "$ITEM_ID" \
++    --field-id PVTSSF_lADOCt2Azc4BcZgqzhjiM9M --single-select-option-id "$PRIORITY_OPT" \
++  || echo "item-edit FAILED — card $ITEM_ID may be half set; read it back" >&2
+ else
+   echo "missing item or option id — nothing edited" >&2
+ fi
+@@ -240,7 +242,10 @@ duplicate-of link).
+ 
+ This section and its two subsections are copied verbatim from the MCP
+ Inspector's `board-ops`. Only the board number, the IDs, one cross-repo issue
+-reference and one link to a skill this repo does not have were changed. The
++reference and one link to a skill this repo does not have were changed, plus
++two fixes to the recovery recipe from this repo's review: step 1 restores only
++cards that held the deleted option, and step 3 stops on a failed edit. The
++closing paragraph also no longer quotes the Inspector's option ids. The
+ incidents they describe happened on the Inspector's board; the mechanism is
+ GitHub's and applies to #43 unchanged. The option-id tables they mention are
+ the Inspector's; here, option ids are resolved by name (see [IDs](#ids)), so
+@@ -317,25 +322,36 @@ and pass the Priority field id `PVTSSF_lADOCt2Azc4BcZgqzhjiM9M`.
+ # 0. Same temp dir the snapshot went to — keep every dump out of the worktree.
+ BOARD_TMP=${BOARD_TMP:-$(mktemp -d)}
+ 
+-# 1. Which cards lost their value, and what did they hold? lost-ids.json is
+-#    kept ONLY when the dump is complete AND the snapshot reports what those cards
+-#    held — step 3 refuses to run without it, so neither a truncated dump nor a
+-#    missing snapshot can turn into a silent no-op or an unconfirmed re-apply.
++# 1. Which cards lost their value? lost-ids.json holds ONLY the cards that are
++#    blank now AND held the deleted option in the snapshot, and it is written
++#    only when both dumps are complete. A card that was already blank, or that
++#    someone cleared by hand, is listed and left alone. Step 3 refuses to run
++#    without the file, so neither a truncated dump nor a missing snapshot can
++#    turn into a silent no-op or an unconfirmed re-apply.
++DELETED="<name of the deleted option>"   # e.g. Done
+ rm -f "$BOARD_TMP/lost-ids.json"
+ gh project item-list 43 --owner modelcontextprotocol --format json --limit 2000 \
+   > "$BOARD_TMP/board-broken.json"
+-if jq -e '(.items | length) == .totalCount' "$BOARD_TMP/board-broken.json" >/dev/null; then
+-  jq -r '[.items[]|select(.status==null)|.id]' "$BOARD_TMP/board-broken.json" \
+-    > "$BOARD_TMP/lost-ids.json" || rm -f "$BOARD_TMP/lost-ids.json"
+-  jq -r --slurpfile L "$BOARD_TMP/lost-ids.json" '($L[0]) as $lost
+-    | [.items[] | select(.id as $i | $lost|index($i)) | .status // "(none)"]
+-    | group_by(.) | map({s:.[0],c:length}) | .[] | "was \(.s): \(.c)"' \
+-    "$BOARD_TMP/board-snapshot.json" \
+-    || { echo "no usable snapshot — cannot confirm what these cards held; not re-applying" >&2
+-         rm -f "$BOARD_TMP/lost-ids.json"; }
+-else
++if ! jq -e '(.items | length) == .totalCount' "$BOARD_TMP/board-broken.json" >/dev/null; then
+   echo "board-broken.json INCOMPLETE — raise --limit and re-run step 1" >&2
+   rm -f "$BOARD_TMP/board-broken.json"
++elif ! jq -e '(.items | length) == .totalCount' "$BOARD_TMP/board-snapshot.json" >/dev/null; then
++  echo "no usable snapshot — cannot confirm what these cards held; not re-applying" >&2
++else
++  jq -n --slurpfile B "$BOARD_TMP/board-broken.json" \
++        --slurpfile S "$BOARD_TMP/board-snapshot.json" --arg d "$DELETED" '
++    ($S[0].items | map({key: .id, value: .status}) | from_entries) as $was
++    | [$B[0].items[] | select(.status == null) | .id] as $blank
++    | {lost:  [$blank[] | select($was[.] == $d)],
++       other: [$blank[] | select($was[.] != $d) | {id: ., was: ($was[.] // "(none)")}]}' \
++    > "$BOARD_TMP/blank.json" || rm -f "$BOARD_TMP/blank.json"
++  if [ -s "$BOARD_TMP/blank.json" ]; then
++    jq -r --arg d "$DELETED" '"to restore to \($d): \(.lost | length)",
++      "blank but NOT restored: \(.other | length)", (.other[] | "  \(.id) was \(.was)")' \
++      "$BOARD_TMP/blank.json"
++    jq '.lost' "$BOARD_TMP/blank.json" > "$BOARD_TMP/lost-ids.json" \
++      || rm -f "$BOARD_TMP/lost-ids.json"
++  fi
+ fi
+ 
+ # 2. Recreate the option, echoing every surviving option's id (see above).
+@@ -345,7 +361,8 @@ fi
+ if [ -s "$BOARD_TMP/lost-ids.json" ]; then
+   for id in $(jq -r '.[]' "$BOARD_TMP/lost-ids.json"); do
+     gh project item-edit --project-id PVT_kwDOCt2Azc4BcZgq --id "$id" \
+-      --field-id PVTSSF_lADOCt2Azc4BcZgqzhXCpm0 --single-select-option-id <NEW_OPTION_ID>
++      --field-id PVTSSF_lADOCt2Azc4BcZgqzhXCpm0 --single-select-option-id <NEW_OPTION_ID> \
++      || { echo "item-edit failed on $id — stopping; re-run step 1 to see what is left" >&2; break; }
+     sleep 0.4
+   done
+ else
+@@ -353,14 +370,15 @@ else
+ fi
+ ```
+ 
+-Step 1's grouping is the safety check: confirm the orphaned set is exactly the
+-cards that held the deleted option, so you don't overwrite a card someone
+-legitimately moved in the meantime.
++Step 1's join is the safety check: only a card that held the deleted option in
++the snapshot is re-applied, so you don't overwrite a card that was already blank
++or that someone legitimately cleared in the meantime. Read its "NOT restored"
++list before running step 3.
+ 
+-Because the recreated option carries a **new id**, the tables above and every
+-reference to it must be updated in the same change — `grep` the old id across
+-the repo. The `Done` id has been `248a3910` and is now `259d6aab` for exactly
+-this reason.
++Because the recreated option carries a **new id**, every reference to the old
++id must be updated in the same change — `grep` the old id across the repo. This
++skill resolves option ids by name and so holds none, but a script, issue or PR
++that pasted one does.
+ 
+ ## ⚠️ Two different "Priority" fields
+ 
+diff --git a/.claude/skills/issue-create/SKILL.md b/.claude/skills/issue-create/SKILL.md
+index de8b69e3d0..6e26b818dc 100644
+--- a/.claude/skills/issue-create/SKILL.md
++++ b/.claude/skills/issue-create/SKILL.md
+@@ -158,18 +158,20 @@ N=<ISSUE_NUMBER>
+ gh api graphql -F n="$N" -f query='query($n:Int!){
+   repository(owner:"modelcontextprotocol",name:"servers"){issue(number:$n){
+     number title milestone{title} labels(first:20){nodes{name}}
+-    projectItems(first:100){nodes{project{number}
++    projectItems(first:100){nodes{project{number owner{... on Organization{login}}}
+       fieldValues(first:20){nodes{... on ProjectV2ItemFieldSingleSelectValue{
+         name field{... on ProjectV2SingleSelectField{name}}}}}}}}}}' \
+   --jq '.data.repository.issue | {number, title, milestone: .milestone.title,
+         labels: [.labels.nodes[].name],
+-        board: [.projectItems.nodes[] | select(.project.number==43)
++        board: [.projectItems.nodes[]
++                | select(.project.number==43 and .project.owner.login=="modelcontextprotocol")
+                 | [.fieldValues.nodes[] | select(.field) | {(.field.name): .name}] | add]}'
+ ```
+ 
+ The issue is created when `labels` holds `v2`, exactly one type and the scope
+ label if one applies, `milestone` is set, and `board` holds exactly one entry
+-with both a `Status` and a `Priority`.
++with both a `Status` and a `Priority`. The filter matches the board's owner as
++well as its number, because project numbers are only unique per owner.
+ 
+ ## Issues that arrive from elsewhere
+ 
+
+From 9b734b920bd3f93b5f2cfd8cffcf86bd9bf3b02c Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 00:58:05 -0400
+Subject: [PATCH 3/3] fix: resolve options before item-add; measure the
+ board-ops hand-off
+
+Address the four "previously missed" findings in Copilot's second
+review round on #4899:
+
+- board-ops add-card resolves both option ids before item-add, so a
+  failed lookup or a renamed option never leaves a card with no Status
+  or Priority.
+- issue-create's board duplicate check refuses an incomplete listing
+  (length vs totalCount), as board-ops requires of whole-board dumps.
+- issue-create's create command takes the type and scope labels as
+  placeholders from step 1 instead of a hard-coded bug/server-filesystem.
+- issue-create now points at board-ops imperatively, at the top and at
+  step 5, and board-ops carries an issue-create -> board-ops chain case
+  (100% at RUNS=5; the whole suite stays at 14/14 first-move cases).
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/board-ops/SKILL.md         | 13 ++++++++----
+ .claude/skills/board-ops/evals/evals.json |  4 ++++
+ .claude/skills/issue-create/SKILL.md      | 24 ++++++++++++++++-------
+ 3 files changed, 30 insertions(+), 11 deletions(-)
+
+diff --git a/.claude/skills/board-ops/SKILL.md b/.claude/skills/board-ops/SKILL.md
+index 8d359855a4..a28905c09c 100644
+--- a/.claude/skills/board-ops/SKILL.md
++++ b/.claude/skills/board-ops/SKILL.md
+@@ -118,11 +118,16 @@ the same shell.
+ ### Add a card and set its fields
+ 
+ ```sh
+-# Prints the item id (PVTI_…); capture it.
+-ITEM_ID=$(gh project item-add 43 --owner modelcontextprotocol --url <issue-url> \
+-  --format json --jq '.id') || ITEM_ID=
++# Resolve both options FIRST, so a failed field lookup or a renamed option
++# never leaves a card on the board with no Status or Priority.
+ STATUS_OPT=$(opt Status "Todo")       # an issue you filed through the create flow is approved by definition
+ PRIORITY_OPT=$(opt Priority "Medium")
++ITEM_ID=
++if [ -n "$STATUS_OPT" ] && [ -n "$PRIORITY_OPT" ]; then
++  # Prints the item id (PVTI_…); capture it.
++  ITEM_ID=$(gh project item-add 43 --owner modelcontextprotocol --url <issue-url> \
++    --format json --jq '.id') || ITEM_ID=
++fi
+ 
+ if [ -n "$ITEM_ID" ] && [ -n "$STATUS_OPT" ] && [ -n "$PRIORITY_OPT" ]; then
+   # Chained: a failed Status edit stops before Priority, and the failure shows.
+@@ -132,7 +137,7 @@ if [ -n "$ITEM_ID" ] && [ -n "$STATUS_OPT" ] && [ -n "$PRIORITY_OPT" ]; then
+     --field-id PVTSSF_lADOCt2Azc4BcZgqzhjiM9M --single-select-option-id "$PRIORITY_OPT" \
+   || echo "item-edit FAILED — card $ITEM_ID may be half set; read it back" >&2
+ else
+-  echo "missing item or option id — nothing edited" >&2
++  echo "missing option id (nothing added) or item-add failed — nothing edited" >&2
+ fi
+ ```
+ 
+diff --git a/.claude/skills/board-ops/evals/evals.json b/.claude/skills/board-ops/evals/evals.json
+index 2470491bb8..117186c55b 100644
+--- a/.claude/skills/board-ops/evals/evals.json
++++ b/.claude/skills/board-ops/evals/evals.json
+@@ -19,6 +19,10 @@
+     "prompt": "Several cards lost their Status value after someone edited the field. How do I put it back?",
+     "expect": "board-ops"
+   },
++  {
++    "prompt": "Write out every command I need to run to file an issue, start to finish, for: the time server returns the wrong UTC offset for Australia/Lord_Howe during daylight saving. I'll run them myself.",
++    "chain": ["issue-create", "board-ops"]
++  },
+   {
+     "prompt": "Explain the difference between TCP and UDP.",
+     "expect": null
+diff --git a/.claude/skills/issue-create/SKILL.md b/.claude/skills/issue-create/SKILL.md
+index 6e26b818dc..229532736f 100644
+--- a/.claude/skills/issue-create/SKILL.md
++++ b/.claude/skills/issue-create/SKILL.md
+@@ -22,7 +22,9 @@ card does **not** set a Status or a Priority.
+ | 7 | **Priority** on that card | Always |
+ 
+ The rules behind each row are in [`AGENTS.md`](../../../AGENTS.md) under
+-**Issue-driven work style**; this skill is the procedure.
++**Issue-driven work style**; this skill is the procedure. Rows 5–7 need the
++board's IDs, which only the `board-ops` skill holds, so **load `board-ops`
++before step 5**; it is step 5's first action.
+ 
+ Set the labels and milestone at **create time**, never by backfilling: an
+ unlabeled issue appears in no `v2`-filtered query, and an unmilestoned one drops
+@@ -49,8 +51,14 @@ error text) before concluding there is none. Also check the board itself, where
+ approved work already has a card:
+ 
+ ```sh
+-gh project item-list 43 --owner modelcontextprotocol --format json --limit 2000 \
+-  | jq -r '.items[] | "\(.content.number)\t\(.status)\t\(.title)"' | grep -i "<keyword>"
++BOARD=$(gh project item-list 43 --owner modelcontextprotocol --format json --limit 2000)
++# --limit truncates silently: trust the listing only when it is complete.
++if jq -e '(.items | length) == .totalCount' <<<"$BOARD" >/dev/null; then
++  jq -r '.items[] | "\(.content.number)\t\(.status)\t\(.title)"' <<<"$BOARD" \
++    | grep -i "<keyword>"
++else
++  echo "board listing incomplete or failed — raise --limit; not concluding anything" >&2
++fi
+ ```
+ 
+ ## 1. Pick the labels
+@@ -124,12 +132,13 @@ A scored rubric replaces this table when the `issue-triage` skill lands (#4868).
+ ```sh
+ gh issue create --repo modelcontextprotocol/servers \
+   --title "<title>" \
+-  --label v2 --label bug --label server-filesystem \
++  --label v2 --label "<type from step 1>" --label "<server-name from step 1>" \
+   --milestone "<milestone from step 2>" \
+   --body "<body>"
+ ```
+ 
+-Drop the `server-…` label for a repository-wide issue. `gh issue create` prints
++Drop the `server-…` label for a repository-wide issue, and repeat it for each
++server when an issue spans a few. `gh issue create` prints
+ the new issue's URL; keep it for the next step.
+ 
+ A good body states the problem, how to reproduce it (the server, its
+@@ -143,8 +152,9 @@ in **Todo** with its milestone already set, not in `Incoming`, which is the queu
+ for issues nobody has evaluated yet. Work you are starting immediately goes
+ straight to **In Progress**.
+ 
+-Run the **add-card recipe in `/board-ops`** with the Status and the Priority
+-from step 3. The project, field and option IDs live there and only there: an
++**Load the `board-ops` skill now** and run its add-card recipe with the Status
++and the Priority from step 3. This file cannot board the issue on its own: the
++project, field and option IDs live in `board-ops` and only there. An
+ option ID is regenerated whenever its field's option list is edited, so a
+ second copy here would go stale silently and break issue creation even after
+ `board-ops` was fixed.

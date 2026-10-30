@@ -1,0 +1,141 @@
+From 649af5856e8fc4b8598ceb1e75cc31215a9e0e90 Mon Sep 17 00:00:00 2001
+From: Amey Pawar <138877912+ameyypawar@users.noreply.github.com>
+Date: Thu, 3 Sep 2026 06:45:44 +0530
+Subject: [PATCH] fix(memory): expand leading ~ in MEMORY_FILE_PATH to the home
+ directory (#4447)
+
+* fix(memory): expand leading ~ in MEMORY_FILE_PATH to the home directory
+
+MCP clients pass MEMORY_FILE_PATH from JSON config, where no shell
+expands a leading "~". Because path.isAbsolute("~/memory.jsonl") is
+false, the value was joined onto the package directory, so the server
+persisted to a literal "~" folder inside the install instead of the
+user's intended location.
+
+Add an expandHome() helper that mirrors the one already used by the
+filesystem server (src/filesystem/path-utils.ts) and apply it in
+ensureMemoryFilePath() before the existing absolute/relative resolution.
+Absolute paths, relative paths, and a "~" not at the start are
+unaffected. Adds unit tests for expandHome plus an end-to-end test
+through ensureMemoryFilePath.
+
+Addresses #1600
+
+* test(memory): use a literal ~/ path in the tilde expansion test
+
+path.join('~', ...) produces a backslash on Windows, which expandHome does
+not match, so the test failed there.
+
+---------
+
+Co-authored-by: olaservo <olahungerford@gmail.com>
+---
+ src/memory/__tests__/file-path.test.ts | 38 +++++++++++++++++++++++++-
+ src/memory/index.ts                    | 23 +++++++++++++---
+ 2 files changed, 56 insertions(+), 5 deletions(-)
+
+diff --git a/src/memory/__tests__/file-path.test.ts b/src/memory/__tests__/file-path.test.ts
+index d1a16e4600..fe5fdeb0db 100644
+--- a/src/memory/__tests__/file-path.test.ts
++++ b/src/memory/__tests__/file-path.test.ts
+@@ -1,8 +1,9 @@
+ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+ import { promises as fs } from 'fs';
+ import path from 'path';
++import os from 'os';
+ import { fileURLToPath } from 'url';
+-import { ensureMemoryFilePath, defaultMemoryPath } from '../index.js';
++import { ensureMemoryFilePath, defaultMemoryPath, expandHome } from '../index.js';
+ 
+ describe('ensureMemoryFilePath', () => {
+   const testDir = path.dirname(fileURLToPath(import.meta.url));
+@@ -72,6 +73,15 @@ describe('ensureMemoryFilePath', () => {
+         expect(path.isAbsolute(result)).toBe(true);
+       }
+     });
++
++    it('should expand a leading "~/" to the home directory', async () => {
++      process.env.MEMORY_FILE_PATH = '~/custom-memory.jsonl';
++
++      const result = await ensureMemoryFilePath();
++
++      expect(result).toBe(path.join(os.homedir(), 'custom-memory.jsonl'));
++      expect(path.isAbsolute(result)).toBe(true);
++    });
+   });
+ 
+   describe('without MEMORY_FILE_PATH environment variable', () => {
+@@ -154,3 +164,29 @@ describe('ensureMemoryFilePath', () => {
+     });
+   });
+ });
++
++describe('expandHome', () => {
++  it('expands a bare "~" to the home directory', () => {
++    expect(expandHome('~')).toBe(os.homedir());
++  });
++
++  it('expands a leading "~/" to the home directory', () => {
++    expect(expandHome('~/notes/memory.jsonl')).toBe(
++      path.join(os.homedir(), 'notes/memory.jsonl')
++    );
++  });
++
++  it('leaves a "~" not followed by a separator unchanged', () => {
++    expect(expandHome('~backup.jsonl')).toBe('~backup.jsonl');
++  });
++
++  it('leaves absolute paths unchanged', () => {
++    expect(expandHome('/var/data/memory.jsonl')).toBe('/var/data/memory.jsonl');
++  });
++
++  it('leaves relative paths unchanged', () => {
++    expect(expandHome(path.join('data', 'memory.jsonl'))).toBe(
++      path.join('data', 'memory.jsonl')
++    );
++  });
++});
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index eb6560d21a..82fe3845ec 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -6,6 +6,7 @@ import { SubscribeRequestSchema, UnsubscribeRequestSchema } from "@modelcontextp
+ import { z } from "zod";
+ import { promises as fs } from 'fs';
+ import path from 'path';
++import os from 'os';
+ import { randomBytes } from 'crypto';
+ import { fileURLToPath } from 'url';
+ import { SERVER_VERSION } from './version.js';
+@@ -13,13 +14,27 @@ import { SERVER_VERSION } from './version.js';
+ // Define memory file path using environment variable with fallback
+ export const defaultMemoryPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'memory.jsonl');
+ 
++// Expand a leading "~" to the user's home directory. MCP clients pass
++// MEMORY_FILE_PATH from JSON config, where no shell performs tilde expansion,
++// so an unexpanded "~" would otherwise be treated as a relative path and
++// joined onto the package directory. Mirrors the helper of the same name in
++// the filesystem server (src/filesystem/path-utils.ts).
++export function expandHome(filepath: string): string {
++  if (filepath.startsWith('~/') || filepath === '~') {
++    return path.join(os.homedir(), filepath.slice(1));
++  }
++  return filepath;
++}
++
+ // Handle backward compatibility: migrate memory.json to memory.jsonl if needed
+ export async function ensureMemoryFilePath(): Promise<string> {
+   if (process.env.MEMORY_FILE_PATH) {
+-    // Custom path provided, use it as-is (with absolute path resolution)
+-    return path.isAbsolute(process.env.MEMORY_FILE_PATH)
+-      ? process.env.MEMORY_FILE_PATH
+-      : path.join(path.dirname(fileURLToPath(import.meta.url)), process.env.MEMORY_FILE_PATH);
++    // Custom path provided. Expand a leading "~" first, then resolve relative
++    // paths against the package directory (absolute paths are used as-is).
++    const customPath = expandHome(process.env.MEMORY_FILE_PATH);
++    return path.isAbsolute(customPath)
++      ? customPath
++      : path.join(path.dirname(fileURLToPath(import.meta.url)), customPath);
+   }
+   
+   // No custom path set, check for backward compatibility migration

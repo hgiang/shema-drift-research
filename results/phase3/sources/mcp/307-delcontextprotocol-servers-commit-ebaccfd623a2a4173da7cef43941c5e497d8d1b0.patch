@@ -1,0 +1,119 @@
+From ebaccfd623a2a4173da7cef43941c5e497d8d1b0 Mon Sep 17 00:00:00 2001
+From: Trent Apple <trentapple@users.noreply.github.com>
+Date: Sun, 30 Aug 2026 15:07:02 -0500
+Subject: [PATCH] fix: Containers - Bind Mounts - Security and Compatibility
+ (Docker / Podman / SELinux) for Fetch, Git, and Time Servers (#2205)
+
+* Update Dockerfile for fetch
+
+Initial patch for podman and SELinux contexts.
+
+* Update Dockerfile for time
+
+podman and SELinux
+
+* Update Dockerfile
+
+* Also include app user / group (securely) such that the build succeeds
+
+* Container app user optional add (#1)
+
+* Update Dockerfile git
+
+* Update Dockerfile fetch
+
+* Update Dockerfile time
+
+* Update Dockerfile
+
+* Update Dockerfile
+
+* Update Dockerfile
+
+---------
+
+Co-authored-by: Ola Hungerford <olahungerford@gmail.com>
+---
+ src/fetch/Dockerfile | 7 +++++--
+ src/git/Dockerfile   | 7 +++++--
+ src/time/Dockerfile  | 7 +++++--
+ 3 files changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/src/fetch/Dockerfile b/src/fetch/Dockerfile
+index e81610cb7f..d2a4504931 100644
+--- a/src/fetch/Dockerfile
++++ b/src/fetch/Dockerfile
+@@ -11,9 +11,8 @@ ENV UV_COMPILE_BYTECODE=1
+ ENV UV_LINK_MODE=copy
+ 
+ # Install the project's dependencies using the lockfile and settings
++COPY uv.lock pyproject.toml ./
+ RUN --mount=type=cache,target=/root/.cache/uv \
+-    --mount=type=bind,source=uv.lock,target=uv.lock \
+-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+     uv sync --locked --no-install-project --no-dev --no-editable
+ 
+ # Then, add the rest of the project source code and install it
+@@ -27,6 +26,10 @@ FROM python:3.12-slim-bookworm
+ WORKDIR /app
+  
+ COPY --from=uv /root/.local /root/.local
++
++RUN if ! id -u app >/dev/null 2>&1; then \
++      useradd -rUM -s /usr/sbin/nologin app; \
++    fi
+ COPY --from=uv --chown=app:app /app/.venv /app/.venv
+ 
+ # Place executables in the environment at the front of the path
+diff --git a/src/git/Dockerfile b/src/git/Dockerfile
+index 6b53886aa3..4af41612c7 100644
+--- a/src/git/Dockerfile
++++ b/src/git/Dockerfile
+@@ -11,9 +11,8 @@ ENV UV_COMPILE_BYTECODE=1
+ ENV UV_LINK_MODE=copy
+ 
+ # Install the project's dependencies using the lockfile and settings
++COPY uv.lock pyproject.toml ./
+ RUN --mount=type=cache,target=/root/.cache/uv \
+-    --mount=type=bind,source=uv.lock,target=uv.lock \
+-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+     uv sync --locked --no-install-project --no-dev --no-editable
+ 
+ # Then, add the rest of the project source code and install it
+@@ -30,6 +29,10 @@ RUN apt-get update && apt-get install -y git git-lfs && rm -rf /var/lib/apt/list
+ WORKDIR /app
+  
+ COPY --from=uv /root/.local /root/.local
++
++RUN if ! id -u app >/dev/null 2>&1; then \
++      useradd -rUM -s /usr/sbin/nologin app; \
++    fi
+ COPY --from=uv --chown=app:app /app/.venv /app/.venv
+ 
+ # Place executables in the environment at the front of the path
+diff --git a/src/time/Dockerfile b/src/time/Dockerfile
+index ac5f752ee5..c92873277d 100644
+--- a/src/time/Dockerfile
++++ b/src/time/Dockerfile
+@@ -11,9 +11,8 @@ ENV UV_COMPILE_BYTECODE=1
+ ENV UV_LINK_MODE=copy
+ 
+ # Install the project's dependencies using the lockfile and settings
++COPY uv.lock pyproject.toml ./
+ RUN --mount=type=cache,target=/root/.cache/uv \
+-    --mount=type=bind,source=uv.lock,target=uv.lock \
+-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+     uv sync --locked --no-install-project --no-dev --no-editable
+ 
+ # Then, add the rest of the project source code and install it
+@@ -27,6 +26,10 @@ FROM python:3.12-slim-bookworm
+ WORKDIR /app
+  
+ COPY --from=uv /root/.local /root/.local
++
++RUN if ! id -u app >/dev/null 2>&1; then \
++      useradd -rUM -s /usr/sbin/nologin app; \
++    fi
+ COPY --from=uv --chown=app:app /app/.venv /app/.venv
+ 
+ # Place executables in the environment at the front of the path

@@ -1,0 +1,52 @@
+From 5850690363a1dd85a6efa205cf654787d91f8239 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 18:44:47 -0400
+Subject: [PATCH] ci: don't cancel in-progress CI runs on main
+
+Per-ref cancellation is for superseded branch amend-pushes; on main,
+every merge keeps its own CI run so failures stay attributable to a
+specific commit.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/python.yml     | 5 +++--
+ .github/workflows/typescript.yml | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index 76bdc106fb..0c6f0910fa 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -4,10 +4,11 @@ on:
+   push:
+   pull_request:
+ 
+-# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes)
++# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes),
++# except on main, where every merge keeps its own CI run
+ concurrency:
+   group: ${{ github.workflow }}-${{ github.ref }}
+-  cancel-in-progress: true
++  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+ 
+ jobs:
+   detect-packages:
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index e56ddd90f0..8d1b81e6c2 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -4,10 +4,11 @@ on:
+   push:
+   pull_request:
+ 
+-# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes)
++# Superseded runs on the same ref are cancelled (e.g. rapid amend-pushes),
++# except on main, where every merge keeps its own CI run
+ concurrency:
+   group: ${{ github.workflow }}-${{ github.ref }}
+-  cancel-in-progress: true
++  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+ 
+ jobs:
+   detect-packages:

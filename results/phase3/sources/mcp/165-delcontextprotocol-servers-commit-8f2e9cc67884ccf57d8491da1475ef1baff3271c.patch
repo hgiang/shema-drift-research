@@ -1,0 +1,121 @@
+From 8f2e9cc67884ccf57d8491da1475ef1baff3271c Mon Sep 17 00:00:00 2001
+From: wingding12 <williamding12@gmail.com>
+Date: Mon, 26 Jan 2026 18:28:49 -0500
+Subject: [PATCH] fix(filesystem): resolve symlinked allowed directories to
+ both forms
+
+On macOS, /tmp is a symlink to /private/tmp. When users specify /tmp
+as an allowed directory, the server was resolving it to /private/tmp
+during startup but then rejecting paths like /tmp/file.txt because
+they dont start with /private/tmp.
+
+This fix stores BOTH the original normalized path AND the resolved
+path in allowedDirectories, so users can access files through either
+form. For example, with /tmp as allowed directory, both /tmp/file.txt
+and /private/tmp/file.txt will now be accepted.
+
+Fixes #3253
+---
+ .../__tests__/path-validation.test.ts         | 47 +++++++++++++++++++
+ src/filesystem/index.ts                       | 18 +++++--
+ 2 files changed, 61 insertions(+), 4 deletions(-)
+
+diff --git a/src/filesystem/__tests__/path-validation.test.ts b/src/filesystem/__tests__/path-validation.test.ts
+index 098119ead0..81ad247ee2 100644
+--- a/src/filesystem/__tests__/path-validation.test.ts
++++ b/src/filesystem/__tests__/path-validation.test.ts
+@@ -564,6 +564,53 @@ describe('Path Validation', () => {
+       }
+     });
+ 
++    // Test for macOS /tmp -> /private/tmp symlink issue (GitHub issue #3253)
++    // When allowed directories include BOTH original and resolved paths,
++    // paths through either form should be accepted
++    it('allows paths through both original and resolved symlink directories', async () => {
++      try {
++        // Setup: Create the actual target directory with content
++        const actualTargetDir = path.join(testDir, 'actual-target');
++        await fs.mkdir(actualTargetDir, { recursive: true });
++        const targetFile = path.join(actualTargetDir, 'file.txt');
++        await fs.writeFile(targetFile, 'FILE_CONTENT');
++
++        // Setup: Create symlink directory that points to target (simulates /tmp -> /private/tmp)
++        const symlinkDir = path.join(testDir, 'symlink-dir');
++        await fs.symlink(actualTargetDir, symlinkDir);
++
++        // Get the resolved path
++        const resolvedDir = await fs.realpath(symlinkDir);
++
++        // THE FIX: Store BOTH original symlink path AND resolved path in allowed directories
++        // This is what the server should do during startup to fix issue #3253
++        const allowedDirsWithBoth = [symlinkDir, resolvedDir];
++
++        // Test 1: Path through original symlink should pass validation
++        // (e.g., user requests /tmp/file.txt when /tmp is in allowed dirs)
++        const fileViaSymlink = path.join(symlinkDir, 'file.txt');
++        expect(isPathWithinAllowedDirectories(fileViaSymlink, allowedDirsWithBoth)).toBe(true);
++
++        // Test 2: Path through resolved directory should also pass validation
++        // (e.g., user requests /private/tmp/file.txt)
++        const fileViaResolved = path.join(resolvedDir, 'file.txt');
++        expect(isPathWithinAllowedDirectories(fileViaResolved, allowedDirsWithBoth)).toBe(true);
++
++        // Test 3: The resolved path of the symlink file should also pass
++        const resolvedFile = await fs.realpath(fileViaSymlink);
++        expect(isPathWithinAllowedDirectories(resolvedFile, allowedDirsWithBoth)).toBe(true);
++
++        // Verify both paths point to the same actual file
++        expect(resolvedFile).toBe(await fs.realpath(fileViaResolved));
++
++      } catch (error) {
++        // Skip if no symlink permissions on the system
++        if ((error as NodeJS.ErrnoException).code !== 'EPERM') {
++          throw error;
++        }
++      }
++    });
++
+     it('resolves nested symlink chains completely', async () => {
+       try {
+         // Setup: Create target file in forbidden area
+diff --git a/src/filesystem/index.ts b/src/filesystem/index.ts
+index 48a599fae1..676fd68943 100644
+--- a/src/filesystem/index.ts
++++ b/src/filesystem/index.ts
+@@ -39,22 +39,32 @@ if (args.length === 0) {
+ }
+ 
+ // Store allowed directories in normalized and resolved form
+-let allowedDirectories = await Promise.all(
++// We store BOTH the original path AND the resolved path to handle symlinks correctly
++// This fixes the macOS /tmp -> /private/tmp symlink issue where users specify /tmp
++// but the resolved path is /private/tmp
++let allowedDirectories = (await Promise.all(
+   args.map(async (dir) => {
+     const expanded = expandHome(dir);
+     const absolute = path.resolve(expanded);
++    const normalizedOriginal = normalizePath(absolute);
+     try {
+       // Security: Resolve symlinks in allowed directories during startup
+       // This ensures we know the real paths and can validate against them later
+       const resolved = await fs.realpath(absolute);
+-      return normalizePath(resolved);
++      const normalizedResolved = normalizePath(resolved);
++      // Return both original and resolved paths if they differ
++      // This allows matching against either /tmp or /private/tmp on macOS
++      if (normalizedOriginal !== normalizedResolved) {
++        return [normalizedOriginal, normalizedResolved];
++      }
++      return [normalizedResolved];
+     } catch (error) {
+       // If we can't resolve (doesn't exist), use the normalized absolute path
+       // This allows configuring allowed dirs that will be created later
+-      return normalizePath(absolute);
++      return [normalizedOriginal];
+     }
+   })
+-);
++)).flat();
+ 
+ // Validate that all directories exist and are accessible
+ await Promise.all(allowedDirectories.map(async (dir) => {

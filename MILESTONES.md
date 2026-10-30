@@ -673,6 +673,36 @@ site and film still show the September analysis; they are rebuilt in Phase 4.
   Code committed with the pilot: `entry_text.py`, `drift_rules.py`, `code_changes.py`,
   57 Phase-3 tests, 96% coverage. Spend unchanged at $19.69.
 
+- 2026-10-30 Blind coding, round 1 (Task 3/4, $0.287 for coder B). 161 digests over the full
+  locked draw (Slack 156 entries, MCP 314, GitHub 220, Stripe 60; 510 candidate spans).
+  Coder A (Codex, gpt-6-sol, read-only sandbox, empty directory) returned 31 distinct units;
+  coder B (Claude Sonnet 5.5, `anthropic` pinned, temperature 0) returned 26. Neither saw a
+  prediction. No parse problem in either pass. **Label agreement 19/21 = 0.905, kappa 0.869,
+  above the locked 0.90**; `agent_visible` 0.857; unit-set Jaccard 0.583, 21 agreed units.
+  Pilot check before the full run: both coders independently rejected all 12 GitHub digests
+  in the first two batches, and reading them by hand confirms they were right — the crude
+  filter had proposed a lockfile name, three plan names, two alert severities, new audit-log
+  fields and a desktop menu item, none of them a request parameter.
+  **Three defects, all found before any prevalence number was quoted.**
+  (1) *The unit key is ambiguous.* Most of the unit-set disagreement is not disagreement.
+  Codex names a parameter by its path (`Plan#create.aggregate_usage`,
+  `payments.settlement_timing.delay_days_override`) and Sonnet by its bare name
+  (`aggregate_usage`, `delay_days_override`); on `stripe:022` Codex returned one unit per
+  endpoint and Sonnet one for the parameter. They found the same changes. Jaccard 0.583
+  therefore understates agreement and the corpus undercounts.
+  (2) *GitHub's own schema-change page was archived but never coded.* The Task-2 run log said
+  Task 3 would code `docs.github.com/en/rest/about-the-rest-api/breaking-changes` directly;
+  it does not, because `_entry_paths` walks only the drawn entries and that page is an index.
+  It is a real source: 12 candidate spans, including "Remove deprecated `permission` property
+  from request when a team is created". GitHub contributed 0 agreed units without it.
+  (3) *Three of four sources are nearly exhausted and yield almost nothing.* Agreed units by
+  source: Stripe 10 (from 60 entries), Slack 7 (from all 156), MCP 4 (from all 314), GitHub 0
+  (from 220). Changes of the kind SchemaDrift models are rare in a product changelog; Slack's
+  is mostly CLI releases and Block Kit, MCP's commits are mostly refactors, GitHub's blog is
+  mostly product announcements. Only Stripe has material left in the window (723 entries).
+  Round-1 answers are kept verbatim as `coder_*_answers.round1.jsonl` and are not analysed.
+  Fixed by Phase 3 amendment 2, below, before round 2. Spend $19.975.
+
 ## Phase 3 pre-registration — LOCKED 2026-10-30
 
 Written before any page is fetched and before any Phase-3 model call. Execution plan: `phase3/PLAN.md`.
@@ -829,6 +859,46 @@ set, so adjudication cannot move a predicted share.
 
 **Spend.** Coder A is free of this budget; coder B is the only cost, projected ≤ $2, run under
 `--cap` like every other OpenRouter call. Everything else in Phase 3 stays as locked.
+
+## Phase 3 amendment 2 — 2026-10-30, after blind coding round 1, before round 2
+
+Fixes the three defects round 1 exposed (run log above). **No definition changes**: the
+window, the unit of analysis, the inclusion and exclusion rules, the seven labels, the
+`agent_visible` rule, the draw, the per-source cap of 60 units, the reliability threshold and
+P17–P21 all stand exactly as locked. What changes is how two coders' units are matched, which
+pages are coded, and how far the draw is followed.
+
+**1. Matching, not naming.** Coders may name a parameter by its path or by its bare name; the
+lock's unit key is (source, entry, endpoint/tool, parameter) and does not say which spelling
+to use. Units from the two coders are therefore matched on
+`(digest_id, parameter's last dotted segment, lowercased)`, and units that collapse to the
+same key **within** one coder are merged into one unit. The coders' answers are not edited;
+only the comparison changes. The coding guide is unchanged, so round 1 and round 2 differ in
+what is coded, never in what a coder was told.
+
+**2. GitHub's breaking-changes page is coded.** `docs.github.com/en/rest/about-the-rest-api/
+breaking-changes` is GitHub's own list of REST schema changes and was already named in the
+Task-2 run log as a page Task 3 would code. The digest builder now also reads a source's
+archived index pages when the source declares them codeable; for GitHub that is this page, and
+only this page (the blog sitemap and the API commit listings are enumerations, not entries).
+
+**3. The draw is followed further where material remains.** The lock says a source is coded
+"until that source reaches 60 qualifying units **or its entries run out**". Slack, MCP and
+GitHub have run out at 156, 314 and 220 entries with 7, 4 and 0 agreed units. Stripe has 723
+entries left in the window, so its draw continues, in the same `SEED_P3` order, until it
+reaches the 60-unit cap or 400 entries are read, whichever comes first.
+
+**4. Both passes are re-run from scratch.** Adding digests moves the batch boundaries, so the
+round-1 answers cannot be reused batch by batch. They are kept verbatim as
+`coder_<name>_answers.round1.jsonl`, are **not** analysed, and round 2 is a clean pass by both
+coders over the final digest set. Projected cost of coder B in round 2: ≤ $1.
+
+**Reported with the results, whatever they come to.** The corpus will be Stripe-weighted
+because three of the four sources have no more material of this kind, not because the cap
+failed. Prevalence is reported per source and pooled, the pooled figure is labelled
+source-weighted, and the per-source counts are printed next to it so a reader can see that
+the pooled number is mostly Stripe. If a predicted share's CI is too wide to decide at this
+corpus size, the prediction is reported undecided rather than argued either way.
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified

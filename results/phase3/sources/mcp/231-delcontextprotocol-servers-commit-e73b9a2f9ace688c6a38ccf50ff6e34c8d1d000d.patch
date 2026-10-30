@@ -1,0 +1,28 @@
+From e73b9a2f9ace688c6a38ccf50ff6e34c8d1d000d Mon Sep 17 00:00:00 2001
+From: Koichi ITO <koic.ito@gmail.com>
+Date: Sat, 24 Jan 2026 13:15:29 +0900
+Subject: [PATCH] Enable Dependabot
+
+Follow-up to https://github.com/modelcontextprotocol/servers/pull/3233.
+
+Configure Dependabot to automatically detect updates to the actions used in
+GitHub Actions (e.g., `actions/checkout`) and create pull requests for them.
+
+Based on experience, checking for updates on a weekly interval should work well.
+---
+ .github/dependabot.yml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+ create mode 100644 .github/dependabot.yml
+
+diff --git a/.github/dependabot.yml b/.github/dependabot.yml
+new file mode 100644
+index 0000000000..b18fd29357
+--- /dev/null
++++ b/.github/dependabot.yml
+@@ -0,0 +1,6 @@
++version: 2
++updates:
++  - package-ecosystem: 'github-actions'
++    directory: '/'
++    schedule:
++      interval: 'weekly'

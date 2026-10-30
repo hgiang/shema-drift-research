@@ -1,0 +1,98 @@
+From a72e93e5030241a8f717604765170b8c9f4da728 Mon Sep 17 00:00:00 2001
+From: Bao <nnqbao@gmail.com>
+Date: Thu, 2 Jul 2026 06:39:31 +0700
+Subject: [PATCH] docs: link Python packages to source
+
+---
+ src/fetch/README.md      | 2 ++
+ src/fetch/pyproject.toml | 4 ++++
+ src/git/README.md        | 2 ++
+ src/git/pyproject.toml   | 4 ++++
+ src/time/README.md       | 2 ++
+ src/time/pyproject.toml  | 4 ++++
+ 6 files changed, 18 insertions(+)
+
+diff --git a/src/fetch/README.md b/src/fetch/README.md
+index 2c3e048927..ed6d2262f4 100644
+--- a/src/fetch/README.md
++++ b/src/fetch/README.md
+@@ -4,6 +4,8 @@
+ 
+ A Model Context Protocol server that provides web content fetching capabilities. This server enables LLMs to retrieve and process content from web pages, converting HTML to markdown for easier consumption.
+ 
++Source: https://github.com/modelcontextprotocol/servers/tree/main/src/fetch
++
+ > [!CAUTION]
+ > This server can access local/internal IP addresses and may represent a security risk. Exercise caution when using this MCP server to ensure this does not expose any sensitive data.
+ 
+diff --git a/src/fetch/pyproject.toml b/src/fetch/pyproject.toml
+index e2d0d38d0c..84735f278a 100644
+--- a/src/fetch/pyproject.toml
++++ b/src/fetch/pyproject.toml
+@@ -25,6 +25,10 @@ dependencies = [
+     "requests>=2.32.3",
+ ]
+ 
++[project.urls]
++Repository = "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch"
++Issues = "https://github.com/modelcontextprotocol/servers/issues"
++
+ [project.scripts]
+ mcp-server-fetch = "mcp_server_fetch:main"
+ 
+diff --git a/src/git/README.md b/src/git/README.md
+index c9ec3140be..a252a4a7ba 100644
+--- a/src/git/README.md
++++ b/src/git/README.md
+@@ -6,6 +6,8 @@
+ 
+ A Model Context Protocol server for Git repository interaction and automation. This server provides tools to read, search, and manipulate Git repositories via Large Language Models.
+ 
++Source: https://github.com/modelcontextprotocol/servers/tree/main/src/git
++
+ Please note that mcp-server-git is currently in early development. The functionality and available tools are subject to change and expansion as we continue to develop and improve the server.
+ 
+ ### Tools
+diff --git a/src/git/pyproject.toml b/src/git/pyproject.toml
+index ea46b1cfb2..c5113ae7d4 100644
+--- a/src/git/pyproject.toml
++++ b/src/git/pyproject.toml
+@@ -22,6 +22,10 @@ dependencies = [
+     "pydantic>=2.0.0",
+ ]
+ 
++[project.urls]
++Repository = "https://github.com/modelcontextprotocol/servers/tree/main/src/git"
++Issues = "https://github.com/modelcontextprotocol/servers/issues"
++
+ [project.scripts]
+ mcp-server-git = "mcp_server_git:main"
+ 
+diff --git a/src/time/README.md b/src/time/README.md
+index 51107f51de..9adbe19483 100644
+--- a/src/time/README.md
++++ b/src/time/README.md
+@@ -4,6 +4,8 @@
+ 
+ A Model Context Protocol server that provides time and timezone conversion capabilities. This server enables LLMs to get current time information and perform timezone conversions using IANA timezone names, with automatic system timezone detection.
+ 
++Source: https://github.com/modelcontextprotocol/servers/tree/main/src/time
++
+ ### Available Tools
+ 
+ - `get_current_time` - Get current time in a specific timezone or system timezone.
+diff --git a/src/time/pyproject.toml b/src/time/pyproject.toml
+index b498a07b4a..f9be050452 100644
+--- a/src/time/pyproject.toml
++++ b/src/time/pyproject.toml
+@@ -23,6 +23,10 @@ dependencies = [
+     "tzlocal>=5.3.1",
+ ]
+ 
++[project.urls]
++Repository = "https://github.com/modelcontextprotocol/servers/tree/main/src/time"
++Issues = "https://github.com/modelcontextprotocol/servers/issues"
++
+ [project.scripts]
+ mcp-server-time = "mcp_server_time:main"
+ 

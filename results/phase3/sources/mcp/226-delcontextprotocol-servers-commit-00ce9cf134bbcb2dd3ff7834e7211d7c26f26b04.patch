@@ -1,0 +1,51 @@
+From 00ce9cf134bbcb2dd3ff7834e7211d7c26f26b04 Mon Sep 17 00:00:00 2001
+From: Krish Garg <kgarg@chapman.edu>
+Date: Fri, 29 May 2026 21:27:03 -0700
+Subject: [PATCH] fix(filesystem): preserve literal dollar replacements (#4225)
+
+Co-authored-by: Ola Hungerford <olahungerford@gmail.com>
+---
+ src/filesystem/__tests__/lib.test.ts | 16 ++++++++++++++++
+ src/filesystem/lib.ts                |  2 +-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/src/filesystem/__tests__/lib.test.ts b/src/filesystem/__tests__/lib.test.ts
+index f7e585af22..e0ae61224f 100644
+--- a/src/filesystem/__tests__/lib.test.ts
++++ b/src/filesystem/__tests__/lib.test.ts
+@@ -440,6 +440,22 @@ describe('Lib Functions', () => {
+         );
+       });
+ 
++      it('treats dollar signs in replacement text literally', async () => {
++        const edits = [
++          { oldText: 'line2', newText: "price=$$; match=$&; before=$`; after=$'" }
++        ];
++
++        mockFs.rename.mockResolvedValueOnce(undefined);
++
++        await applyFileEdits('/test/file.txt', edits, false);
++
++        expect(mockFs.writeFile).toHaveBeenCalledWith(
++          expect.stringMatching(/\/test\/file\.txt\.[a-f0-9]+\.tmp$/),
++          "line1\nprice=$$; match=$&; before=$`; after=$'\nline3\n",
++          'utf-8'
++        );
++      });
++
+       it('handles dry run mode', async () => {
+         const edits = [
+           { oldText: 'line2', newText: 'modified line2' }
+diff --git a/src/filesystem/lib.ts b/src/filesystem/lib.ts
+index 17e4654cd5..ce4af9f38a 100644
+--- a/src/filesystem/lib.ts
++++ b/src/filesystem/lib.ts
+@@ -207,7 +207,7 @@ export async function applyFileEdits(
+ 
+     // If exact match exists, use it
+     if (modifiedContent.includes(normalizedOld)) {
+-      modifiedContent = modifiedContent.replace(normalizedOld, normalizedNew);
++      modifiedContent = modifiedContent.replace(normalizedOld, () => normalizedNew);
+       continue;
+     }
+ 

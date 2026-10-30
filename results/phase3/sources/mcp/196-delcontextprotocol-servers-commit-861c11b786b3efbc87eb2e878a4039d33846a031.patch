@@ -1,0 +1,66 @@
+From 7300631a5c5a5ae538a70462a37a309071d52e2b Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 10 Jan 2026 17:32:20 -0500
+Subject: [PATCH 1/2] In roots.ts, clientCapabilites.roots and response.roots
+ are optional.
+
+Fixes #2818
+---
+ src/everything/server/roots.ts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/everything/server/roots.ts b/src/everything/server/roots.ts
+index b3c413561a..f6ac1dfe81 100644
+--- a/src/everything/server/roots.ts
++++ b/src/everything/server/roots.ts
+@@ -30,7 +30,7 @@ export const roots: Map<string | undefined, Root[]> = new Map<
+  */
+ export const syncRoots = async (server: McpServer, sessionId?: string) => {
+   const clientCapabilities = server.server.getClientCapabilities() || {};
+-  const clientSupportsRoots: boolean = clientCapabilities.roots !== undefined;
++  const clientSupportsRoots: boolean = clientCapabilities?.roots !== undefined;
+ 
+   // Fetch the roots list for this client
+   if (clientSupportsRoots) {
+@@ -41,14 +41,14 @@ export const syncRoots = async (server: McpServer, sessionId?: string) => {
+         const response = await server.server.listRoots();
+         if (response && "roots" in response) {
+           // Store the roots list for this client
+-          roots.set(sessionId, response.roots);
++          roots.set(sessionId, response?.roots);
+ 
+           // Notify the client of roots received
+           await server.sendLoggingMessage(
+             {
+               level: "info",
+               logger: "everything-server",
+-              data: `Roots updated: ${response.roots.length} root(s) received from client`,
++              data: `Roots updated: ${response?.roots?.length} root(s) received from client`,
+             },
+             sessionId
+           );
+
+From 677f40a38f76f3983ebf54dda659543b15b23032 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 10 Jan 2026 17:40:58 -0500
+Subject: [PATCH 2/2] In roots.ts, clientCapabilites.roots and response.roots
+ are optional.
+
+Fixes #2818
+---
+ src/everything/server/roots.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/everything/server/roots.ts b/src/everything/server/roots.ts
+index f6ac1dfe81..999fda137d 100644
+--- a/src/everything/server/roots.ts
++++ b/src/everything/server/roots.ts
+@@ -41,7 +41,7 @@ export const syncRoots = async (server: McpServer, sessionId?: string) => {
+         const response = await server.server.listRoots();
+         if (response && "roots" in response) {
+           // Store the roots list for this client
+-          roots.set(sessionId, response?.roots);
++          roots.set(sessionId, response.roots);
+ 
+           // Notify the client of roots received
+           await server.sendLoggingMessage(

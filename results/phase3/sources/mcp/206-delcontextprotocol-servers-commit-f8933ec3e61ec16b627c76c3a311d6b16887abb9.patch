@@ -1,0 +1,193 @@
+From f8933ec3e61ec16b627c76c3a311d6b16887abb9 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Wed, 17 Dec 2025 17:44:17 -0500
+Subject: [PATCH] Sync roots at startup. This was deferred to list_roots tool
+ is used, but I'm putting it back.
+
+The syncRoots call should be idempotent, requesting roots if they haven't been yet for the session, but always retuning the cached roots otherwise. That could be deferred but setting the handler for roots_list changed note should not.
+
+* In server/roots.ts
+  - only set the notification handler and call for initial roots list if the roots aren't already cached for this client.
+
+* In server/index.ts
+  - in the oninitialized handler
+    - get the sessionId from the transport
+    - set a 350ms timeout to call syncRoots with the server and sessionId
+      - this delay cause it to run after the `notifications/initialized` handler finishes, otherwise, the request gets lost.
+
+* All other changes attributable to prettier
+---
+ src/everything/server/index.ts                | 15 ++++++--
+ src/everything/server/roots.ts                | 34 ++++++++++++-------
+ src/everything/tools/get-roots-list.ts        |  2 +-
+ src/everything/tools/index.ts                 |  1 -
+ .../tools/trigger-elicitation-request.ts      | 16 ++++-----
+ 5 files changed, 44 insertions(+), 24 deletions(-)
+
+diff --git a/src/everything/server/index.ts b/src/everything/server/index.ts
+index 6293245c76..2471c6e8c1 100644
+--- a/src/everything/server/index.ts
++++ b/src/everything/server/index.ts
+@@ -7,6 +7,7 @@ import { registerConditionalTools, registerTools } from "../tools/index.js";
+ import { registerResources, readInstructions } from "../resources/index.js";
+ import { registerPrompts } from "../prompts/index.js";
+ import { stopSimulatedLogging } from "./logging.js";
++import { syncRoots } from "./roots.js";
+ 
+ // Server Factory response
+ export type ServerFactoryResponse = {
+@@ -68,8 +69,18 @@ export const createServer: () => ServerFactoryResponse = () => {
+   // Set resource subscription handlers
+   setSubscriptionHandlers(server);
+ 
+-  // Register conditional tools until client capabilities are known
+-  server.server.oninitialized = () => registerConditionalTools(server);
++  // Perform post-initialization operations
++  server.server.oninitialized = async () => {
++    // Register conditional tools now that client capabilities are known.
++    // This finishes before the `notifications/initialized` handler finishes.
++    registerConditionalTools(server);
++
++    // Sync roots if the client supports them.
++    // This is delayed until after the `notifications/initialized` handler finishes,
++    // otherwise, the request gets lost.
++    const sessionId = server.server.transport?.sessionId;
++    setTimeout(() => syncRoots(server, sessionId), 350);
++  };
+ 
+   // Return the ServerFactoryResponse
+   return {
+diff --git a/src/everything/server/roots.ts b/src/everything/server/roots.ts
+index 05a6f90ff3..e09f0601e3 100644
+--- a/src/everything/server/roots.ts
++++ b/src/everything/server/roots.ts
+@@ -11,11 +11,17 @@ export const roots: Map<string | undefined, Root[]> = new Map<
+ >();
+ 
+ /**
+- * Sync the root directories from the client by requesting and updating the roots list for
+- * the specified session.
++ * Get the latest the client roots list for the session.
+  *
+- * Also sets up a notification handler to listen for changes in the roots list, ensuring that
+- * updates are automatically fetched and handled in real-time.
++ * - Request and cache the roots list for the session if it has not been fetched before.
++ * - Return the cached roots list for the session if it exists.
++ *
++ * When requesting the roots list for a session, it also sets up a `roots/list_changed`
++ * notification handler. This ensures that updates are automatically fetched and handled
++ * in real-time.
++ *
++ * Therefore, calls to this function should only request roots from the client once per
++ * session, but the cache will always be up to date after that first call.
+  *
+  * @param {McpServer} server - An instance of the MCP server used to communicate with the client.
+  * @param {string} [sessionId] - An optional session id used to associate the roots list with a specific client session.
+@@ -23,7 +29,6 @@ export const roots: Map<string | undefined, Root[]> = new Map<
+  * @throws {Error} In case of a failure to request the roots from the client, an error log message is sent.
+  */
+ export const syncRoots = async (server: McpServer, sessionId?: string) => {
+-
+   const clientCapabilities = server.server.getClientCapabilities() || {};
+   const clientSupportsRoots: boolean = clientCapabilities.roots !== undefined;
+ 
+@@ -71,14 +76,19 @@ export const syncRoots = async (server: McpServer, sessionId?: string) => {
+       }
+     };
+ 
+-    // Set the list changed notification handler
+-    server.server.setNotificationHandler(
+-      RootsListChangedNotificationSchema,
+-      requestRoots
+-    );
++    // If the roots have not been synced for this client,
++    // set notification handler and request initial roots
++    if (!roots.has(sessionId)) {
++      // Set the list changed notification handler
++      server.server.setNotificationHandler(
++        RootsListChangedNotificationSchema,
++        requestRoots
++      );
+ 
+-    // Request initial roots list immediatelys
+-    await requestRoots();
++      // Request the initial roots list immediately
++      await requestRoots();
++      console.log(roots.get(sessionId));
++    }
+ 
+     // Return the roots list for this client
+     return roots.get(sessionId);
+diff --git a/src/everything/tools/get-roots-list.ts b/src/everything/tools/get-roots-list.ts
+index 243690700b..62363da26a 100644
+--- a/src/everything/tools/get-roots-list.ts
++++ b/src/everything/tools/get-roots-list.ts
+@@ -40,7 +40,7 @@ export const registerGetRootsListTool = (server: McpServer) => {
+       config,
+       async (args, extra): Promise<CallToolResult> => {
+         // Get the current rootsFetch the current roots list from the client if need be
+-        const currentRoots =  await syncRoots(server, extra.sessionId);
++        const currentRoots = await syncRoots(server, extra.sessionId);
+ 
+         // Respond if client supports roots but doesn't have any configured
+         if (
+diff --git a/src/everything/tools/index.ts b/src/everything/tools/index.ts
+index f1bab0fa22..d3bd2aaff7 100644
+--- a/src/everything/tools/index.ts
++++ b/src/everything/tools/index.ts
+@@ -39,7 +39,6 @@ export const registerTools = (server: McpServer) => {
+  * These must be registered conditionally, after initialization.
+  */
+ export const registerConditionalTools = (server: McpServer) => {
+-  console.log("Registering conditional tools...");
+   registerGetRootsListTool(server);
+   registerTriggerElicitationRequestTool(server);
+   registerTriggerSamplingRequestTool(server);
+diff --git a/src/everything/tools/trigger-elicitation-request.ts b/src/everything/tools/trigger-elicitation-request.ts
+index 260c805d18..6281c87d7f 100644
+--- a/src/everything/tools/trigger-elicitation-request.ts
++++ b/src/everything/tools/trigger-elicitation-request.ts
+@@ -131,9 +131,9 @@ export const registerTriggerElicitationRequestTool = (server: McpServer) => {
+                     title: "Titled Single Select Enum",
+                     description: "Choose your favorite hero",
+                     oneOf: [
+-                      {const: "hero-1", title: "Superman"},
+-                      {const: "hero-2", title: "Green Lantern"},
+-                      {const: "hero-3", title: "Wonder Woman"},
++                      { const: "hero-1", title: "Superman" },
++                      { const: "hero-2", title: "Green Lantern" },
++                      { const: "hero-3", title: "Wonder Woman" },
+                     ],
+                     default: "hero-1",
+                   },
+@@ -145,9 +145,9 @@ export const registerTriggerElicitationRequestTool = (server: McpServer) => {
+                     maxItems: 3,
+                     items: {
+                       anyOf: [
+-                        {const: "fish-1", title: "Tuna"},
+-                        {const: "fish-2", title: "Salmon"},
+-                        {const: "fish-3", title: "Trout"},
++                        { const: "fish-1", title: "Tuna" },
++                        { const: "fish-2", title: "Salmon" },
++                        { const: "fish-3", title: "Trout" },
+                       ],
+                     },
+                     default: ["fish-1"],
+@@ -166,7 +166,7 @@ export const registerTriggerElicitationRequestTool = (server: McpServer) => {
+             },
+           },
+           ElicitResultSchema,
+-          {timeout: 10 * 60 * 1000 /* 10 minutes */}
++          { timeout: 10 * 60 * 1000 /* 10 minutes */ }
+         );
+ 
+         // Handle different response actions
+@@ -220,7 +220,7 @@ export const registerTriggerElicitationRequestTool = (server: McpServer) => {
+           text: `\nRaw result: ${JSON.stringify(elicitationResult, null, 2)}`,
+         });
+ 
+-        return {content};
++        return { content };
+       }
+     );
+   }

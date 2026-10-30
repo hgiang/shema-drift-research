@@ -1,0 +1,113 @@
+From 781a93db14c430b9410d89910f42a65a3c9d0c72 Mon Sep 17 00:00:00 2001
+From: 1060996408 <jiaxuanzhang868@gmail.com>
+Date: Fri, 28 Aug 2026 10:17:27 +0800
+Subject: [PATCH] fix(everything): remove dead code in template URI validation
+ and subscription cleanup (#4104)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+resources/templates.ts:
+- `parseResourceId` had a guard that compared the URI against both
+  `textUriBase` and `blobUriBase` with `&&`. Those prefixes are mutually
+  exclusive, so the condition is always false and the branch is dead.
+  Drop it; the SDK's template-based routing already guarantees the URI
+  prefix is one of the two before the handler runs. The remaining
+  positive-integer check on `resourceId` is preserved.
+
+resources/subscriptions.ts:
+- `sendSimulatedResourceUpdates` had an `else` branch that called
+  `subscribers.delete(sessionId)` whenever the session wasn't in a URI's
+  subscriber set, with a comment claiming the session had disconnected.
+  That conclusion doesn't follow — a session not subscribed to URI A
+  can still be subscribed to URI B — and the delete is a no-op when
+  the element is absent anyway. Remove the branch.
+
+No behavioral change. Existing 95 / 95 tests in `__tests__` still pass.
+
+Co-authored-by: Jia Xuan <1060996408+jiaxuan@users.noreply.github.com>
+Co-authored-by: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+---
+ src/everything/resources/subscriptions.ts |  9 ++----
+ src/everything/resources/templates.ts     | 37 ++++++++++-------------
+ 2 files changed, 19 insertions(+), 27 deletions(-)
+
+diff --git a/src/everything/resources/subscriptions.ts b/src/everything/resources/subscriptions.ts
+index 2a5e57460f..854a8633a2 100644
+--- a/src/everything/resources/subscriptions.ts
++++ b/src/everything/resources/subscriptions.ts
+@@ -99,10 +99,9 @@ export const setSubscriptionHandlers = (server: McpServer) => {
+ /**
+  * Sends simulated resource update notifications to the subscribed client.
+  *
+- * This function iterates through all resource URIs stored in the subscriptions
+- * and checks if the specified session ID is subscribed to them. If so, it sends
+- * a notification through the provided server. If the session ID is no longer valid
+- * (disconnected), it removes the session ID from the list of subscribers.
++ * Iterates the URIs in `subscriptions` and emits a
++ * `notifications/resources/updated` notification for each URI the given
++ * sessionId is subscribed to.
+  *
+  * @param {McpServer} server - The server instance used to send notifications.
+  * @param {string | undefined} sessionId - The session ID of the client to check for subscriptions.
+@@ -122,8 +121,6 @@ const sendSimulatedResourceUpdates = async (
+         method: "notifications/resources/updated",
+         params: { uri },
+       });
+-    } else {
+-      subscribers.delete(sessionId); // subscriber has disconnected
+     }
+   }
+ };
+diff --git a/src/everything/resources/templates.ts b/src/everything/resources/templates.ts
+index 6d4903f74c..4530741c54 100644
+--- a/src/everything/resources/templates.ts
++++ b/src/everything/resources/templates.ts
+@@ -127,31 +127,26 @@ export const blobResourceUri = (resourceId: number) =>
+   new URL(`${blobUriBase}/${resourceId}`);
+ 
+ /**
+- * Parses the resource identifier from the provided URI and validates it
+- * against the given variables. Throws an error if the URI corresponds
+- * to an unknown resource or if the resource identifier is invalid.
++ * Parses the resource identifier from the provided variables and validates
++ * that it is a positive integer.
+  *
+- * @param {URL} uri - The URI of the resource to be parsed.
+- * @param {Record<string, unknown>} variables - A record containing context-specific variables that include the resourceId.
+- * @returns {number} The parsed and validated resource identifier as an integer.
+- * @throws {Error} Throws an error if the URI matches unsupported base URIs or if the resourceId is invalid.
++ * The SDK only routes URIs that match the registered template to the
++ * resource handler, so by the time we get here the URI prefix is already
++ * known to be one of `textUriBase` / `blobUriBase`. Only the resourceId
++ * variable still needs validating.
++ *
++ * @param {URL} uri - The URI of the resource (used in the error message).
++ * @param {Record<string, unknown>} variables - Context variables including resourceId.
++ * @returns {number} The parsed and validated resource identifier as a positive integer.
++ * @throws {Error} If the resourceId is not a finite positive integer.
+  */
+ const parseResourceId = (uri: URL, variables: Record<string, unknown>) => {
+-  const uriError = `Unknown resource: ${uri.toString()}`;
+-  if (
+-    uri.toString().startsWith(textUriBase) &&
+-    uri.toString().startsWith(blobUriBase)
+-  ) {
+-    throw new Error(uriError);
+-  } else {
+-    const idxStr = String((variables as any).resourceId ?? "");
+-    const idx = Number(idxStr);
+-    if (Number.isFinite(idx) && Number.isInteger(idx) && idx > 0) {
+-      return idx;
+-    } else {
+-      throw new Error(uriError);
+-    }
++  const idxStr = String((variables as any).resourceId ?? "");
++  const idx = Number(idxStr);
++  if (Number.isFinite(idx) && Number.isInteger(idx) && idx > 0) {
++    return idx;
+   }
++  throw new Error(`Unknown resource: ${uri.toString()}`);
+ };
+ 
+ /**

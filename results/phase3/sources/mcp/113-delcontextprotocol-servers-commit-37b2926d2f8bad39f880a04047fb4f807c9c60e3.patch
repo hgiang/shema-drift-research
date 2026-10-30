@@ -1,0 +1,42 @@
+From 37b2926d2f8bad39f880a04047fb4f807c9c60e3 Mon Sep 17 00:00:00 2001
+From: Adam Jones <adamj+git@anthropic.com>
+Date: Tue, 6 Jan 2026 14:38:04 +0000
+Subject: [PATCH] Fix YAML syntax error in readme-pr-check workflow
+
+The template literal body had no indentation, which broke YAML's
+block literal parsing. Use array.join('\n') instead.
+---
+ .github/workflows/readme-pr-check.yml | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/.github/workflows/readme-pr-check.yml b/.github/workflows/readme-pr-check.yml
+index 649316d7cf..eacb87c478 100644
+--- a/.github/workflows/readme-pr-check.yml
++++ b/.github/workflows/readme-pr-check.yml
+@@ -43,15 +43,17 @@ jobs:
+               owner,
+               repo,
+               issue_number: prNumber,
+-              body: `Thanks for your contribution!
+-
+-**We are no longer accepting PRs to add new servers to the README.** The server lists are deprecated and will eventually be removed entirely, replaced by the registry.
+-
+-👉 **To add a new MCP server:** Please publish it to the [MCP Server Registry](https://github.com/modelcontextprotocol/registry) instead. You can browse published servers at [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io/).
+-
+-👉 **If this PR updates or removes an existing entry:** We do still accept these changes. Please reply with \`/i-promise-this-is-not-a-new-server\` to continue.
+-
+-If this PR is adding a new server, please close it and submit to the registry instead.`
++              body: [
++                'Thanks for your contribution!',
++                '',
++                '**We are no longer accepting PRs to add new servers to the README.** The server lists are deprecated and will eventually be removed entirely, replaced by the registry.',
++                '',
++                '👉 **To add a new MCP server:** Please publish it to the [MCP Server Registry](https://github.com/modelcontextprotocol/registry) instead. You can browse published servers at [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io/).',
++                '',
++                '👉 **If this PR updates or removes an existing entry:** We do still accept these changes. Please reply with `/i-promise-this-is-not-a-new-server` to continue.',
++                '',
++                'If this PR is adding a new server, please close it and submit to the registry instead.',
++              ].join('\n'),
+             });
+ 
+   handle-confirmation:

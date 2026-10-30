@@ -1,0 +1,27 @@
+From 834021a3dfbea32b1334fd5c10e0dd2158af64b4 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 02:14:09 -0400
+Subject: [PATCH] fix(issue-triage): keep a failed step 0 close non-zero
+
+Copilot round 5 on #4906: the fallback echo returned 0, so a batch caller
+could carry on past a missing response or a failed close.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/issue-triage/SKILL.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/.claude/skills/issue-triage/SKILL.md b/.claude/skills/issue-triage/SKILL.md
+index 1dbc59a3cf..4f3f3b07c1 100644
+--- a/.claude/skills/issue-triage/SKILL.md
++++ b/.claude/skills/issue-triage/SKILL.md
+@@ -85,7 +85,7 @@ pass 1 for the rest meanwhile.
+ # safe). An empty or missing response stops here instead of closing silently.
+ BODY=$(cat "$D/response.md") && [ -n "$BODY" ] \
+   && gh issue close <N> --repo modelcontextprotocol/servers --reason "not planned" --comment "$BODY" \
+-  || echo "no response or close failed for #<N> — nothing closed, or check it" >&2
++  || { echo "no response or close failed for #<N> — stop and check it" >&2; false; }
+ # Spam or empty, the one class with no response:
+ gh issue close <N> --repo modelcontextprotocol/servers --reason "not planned"
+ ```

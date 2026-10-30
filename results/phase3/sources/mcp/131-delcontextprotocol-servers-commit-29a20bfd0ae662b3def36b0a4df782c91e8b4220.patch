@@ -1,0 +1,33 @@
+From 29a20bfd0ae662b3def36b0a4df782c91e8b4220 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 13 Dec 2025 15:46:57 -0500
+Subject: [PATCH] Updated doc in get-annotated-message.ts
+
+---
+ src/everything/tools/get-annotated-message.ts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/everything/tools/get-annotated-message.ts b/src/everything/tools/get-annotated-message.ts
+index b440d069fc..86eaf8aca0 100644
+--- a/src/everything/tools/get-annotated-message.ts
++++ b/src/everything/tools/get-annotated-message.ts
+@@ -24,16 +24,16 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'annotated-message' tool with the provided McpServer instance.
++ * Registers the 'get-annotated-message' tool with the provided McpServer instance.
+  *
+  * The registered tool generates and sends messages with specific types, such as error,
+  * success, or debug, carrying associated annotations like priority level and intended
+  * audience.
+  *
+- * Optionally, it can include an annotated image in the response.
++ * The response will have annotations and optionally contain an annotated image.
+  *
+  * @function
+- * @param {McpServer} server - The MCP server instance where the Annotated Message Tool is to be registered.
++ * @param {McpServer} server - The MCP server instance where the tool is to be registered.
+  */
+ export const registerGetAnnotatedMessageTool = (server: McpServer) => {
+   server.registerTool(name, config, async (args): Promise<CallToolResult> => {

@@ -1,0 +1,48 @@
+From cdbcdc551ad6a0f50ca2e78dae8f267ca35d3523 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 13 Dec 2025 16:25:28 -0500
+Subject: [PATCH] Cache roots in get-roots-list.ts if list was not already
+ present and had to be requested.
+
+---
+ src/everything/tools/get-roots-list.ts | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/src/everything/tools/get-roots-list.ts b/src/everything/tools/get-roots-list.ts
+index e073b60c51..1d9ba7c06a 100644
+--- a/src/everything/tools/get-roots-list.ts
++++ b/src/everything/tools/get-roots-list.ts
+@@ -36,10 +36,23 @@ export const registerGetRootsListTool = (server: McpServer) => {
+       name,
+       config,
+       async (args, extra): Promise<CallToolResult> => {
+-        const currentRoots = roots?.has(extra.sessionId)
++        // Check if the roots list is already cached for this client
++        const rootsCached = roots?.has(extra.sessionId);
++
++        // Fetch the current roots list from the client if need be
++        const currentRoots = rootsCached
+           ? roots.get(extra.sessionId)
+           : (await server.server.listRoots()).roots;
+-        if (currentRoots && currentRoots.length === 0) {
++
++        // If roots had to be fetched, store them in the cache
++        if (currentRoots && !rootsCached)
++          roots.set(extra.sessionId, currentRoots);
++
++        // Respond if client supports roots but doesn't have any configured
++        if (
++          clientSupportsRoots &&
++          (!currentRoots || currentRoots.length === 0)
++        ) {
+           return {
+             content: [
+               {
+@@ -55,6 +68,7 @@ export const registerGetRootsListTool = (server: McpServer) => {
+           };
+         }
+ 
++        // Create formatted response if there is a list of roots
+         const rootsList = currentRoots
+           ? currentRoots
+               .map((root, index) => {

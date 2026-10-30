@@ -1,0 +1,171 @@
+From d31124c982401739917fd817c2a59db344529c16 Mon Sep 17 00:00:00 2001
+From: Bryan Thompson <bthompson@anthropic.com>
+Date: Mon, 6 Jul 2026 12:15:49 -0500
+Subject: [PATCH] fix(filesystem): declare openWorldHint on all tools (#4480)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Every filesystem tool operates only on the local filesystem within its allowed
+directories — none reaches an open or external world — but none declared the
+MCP `openWorldHint` annotation, leaving open-world-hint coverage at 0/14. Set
+`openWorldHint: false` on all 14 tools and document it in the README's tool
+annotations section.
+
+Co-authored-by: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ src/filesystem/README.md |  3 ++-
+ src/filesystem/index.ts  | 28 ++++++++++++++--------------
+ 2 files changed, 16 insertions(+), 15 deletions(-)
+
+diff --git a/src/filesystem/README.md b/src/filesystem/README.md
+index 219f39b9be..5a7ffe791d 100644
+--- a/src/filesystem/README.md
++++ b/src/filesystem/README.md
+@@ -187,6 +187,7 @@ on each tool so clients can:
+ - Distinguish **read‑only** tools from write‑capable tools.
+ - Understand which write operations are **idempotent** (safe to retry with the same arguments).
+ - Highlight operations that may be **destructive** (overwriting or heavily mutating data).
++- Signal that a tool does **not** reach an open or external world (every filesystem tool sets `openWorldHint: false`).
+ 
+ The mapping for filesystem tools is:
+ 
+@@ -206,7 +207,7 @@ The mapping for filesystem tools is:
+ | `edit_file`                 | `false`      | `false`        | `true`          | Re‑applying edits can fail or double‑apply      |
+ | `move_file`                 | `false`      | `false`        | `true`          | Deletes source file                             |
+ 
+-> Note: `idempotentHint` and `destructiveHint` are meaningful only when `readOnlyHint` is `false`, as defined by the MCP spec.
++> Note: `idempotentHint` and `destructiveHint` are meaningful only when `readOnlyHint` is `false`, as defined by the MCP spec. Every tool also sets `openWorldHint: false` — this server only accesses the local filesystem within its allowed directories, never an open or external world.
+ 
+ ## Usage with Claude Desktop
+ Add this to your `claude_desktop_config.json`:
+diff --git a/src/filesystem/index.ts b/src/filesystem/index.ts
+index 25ccfc7c36..234605bb13 100644
+--- a/src/filesystem/index.ts
++++ b/src/filesystem/index.ts
+@@ -217,7 +217,7 @@ server.registerTool(
+     description: "Read the complete contents of a file as text. DEPRECATED: Use read_text_file instead.",
+     inputSchema: ReadTextFileArgsSchema.shape,
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   readTextFileHandler
+ );
+@@ -240,7 +240,7 @@ server.registerTool(
+       head: z.number().optional().describe("If provided, returns only the first N lines of the file")
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   readTextFileHandler
+ );
+@@ -274,7 +274,7 @@ server.registerTool(
+         })
+       ]))
+     },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof ReadMediaFileArgsSchema>) => {
+     const validPath = await validatePath(args.path);
+@@ -331,7 +331,7 @@ server.registerTool(
+         .describe("Array of file paths to read. Each path must be a string pointing to a valid file within allowed directories.")
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof ReadMultipleFilesArgsSchema>) => {
+     const results = await Promise.all(
+@@ -367,7 +367,7 @@ server.registerTool(
+       content: z.string()
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: false, idempotentHint: true, destructiveHint: true }
++    annotations: { readOnlyHint: false, idempotentHint: true, destructiveHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof WriteFileArgsSchema>) => {
+     const validPath = await validatePath(args.path);
+@@ -397,7 +397,7 @@ server.registerTool(
+       dryRun: z.boolean().default(false).describe("Preview changes using git-style diff format")
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: false, idempotentHint: false, destructiveHint: true }
++    annotations: { readOnlyHint: false, idempotentHint: false, destructiveHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof EditFileArgsSchema>) => {
+     const validPath = await validatePath(args.path);
+@@ -422,7 +422,7 @@ server.registerTool(
+       path: z.string()
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: false, idempotentHint: true, destructiveHint: false }
++    annotations: { readOnlyHint: false, idempotentHint: true, destructiveHint: false, openWorldHint: false }
+   },
+   async (args: z.infer<typeof CreateDirectoryArgsSchema>) => {
+     const validPath = await validatePath(args.path);
+@@ -448,7 +448,7 @@ server.registerTool(
+       path: z.string()
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof ListDirectoryArgsSchema>) => {
+     const validPath = await validatePath(args.path);
+@@ -477,7 +477,7 @@ server.registerTool(
+       sortBy: z.enum(["name", "size"]).optional().default("name").describe("Sort entries by name or size")
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof ListDirectoryWithSizesArgsSchema>) => {
+     const validPath = await validatePath(args.path);
+@@ -556,7 +556,7 @@ server.registerTool(
+       excludePatterns: z.array(z.string()).optional().default([])
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof DirectoryTreeArgsSchema>) => {
+     interface TreeEntry {
+@@ -626,7 +626,7 @@ server.registerTool(
+       destination: z.string()
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: false, idempotentHint: false, destructiveHint: true }
++    annotations: { readOnlyHint: false, idempotentHint: false, destructiveHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof MoveFileArgsSchema>) => {
+     const validSourcePath = await validatePath(args.source);
+@@ -657,7 +657,7 @@ server.registerTool(
+       excludePatterns: z.array(z.string()).optional().default([])
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof SearchFilesArgsSchema>) => {
+     const validPath = await validatePath(args.path);
+@@ -683,7 +683,7 @@ server.registerTool(
+       path: z.string()
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   async (args: z.infer<typeof GetFileInfoArgsSchema>) => {
+     const validPath = await validatePath(args.path);
+@@ -709,7 +709,7 @@ server.registerTool(
+       "before trying to access files.",
+     inputSchema: {},
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: true }
++    annotations: { readOnlyHint: true, openWorldHint: false }
+   },
+   async () => {
+     const text = `Allowed directories:\n${allowedDirectories.join('\n')}`;

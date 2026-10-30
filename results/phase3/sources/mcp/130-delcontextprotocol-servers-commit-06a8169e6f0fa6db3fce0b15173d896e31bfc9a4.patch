@@ -1,0 +1,157 @@
+From 06a8169e6f0fa6db3fce0b15173d896e31bfc9a4 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 16:45:25 -0400
+Subject: [PATCH] ci: remove dead release-triggered publish jobs; make
+ RELEASING.md claims true
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Review findings: RELEASING.md claimed publishing happens exclusively
+from release.yml with no registry tokens, but typescript.yml and
+python.yml still carried release:[published] publish jobs — never
+fired (releases are created with GITHUB_TOKEN, which suppresses
+workflow triggers) and unable to succeed under OIDC (typescript.yml's
+still referenced the deleted NPM_TOKEN). Remove both jobs and their
+release triggers; the workflows are now pure CI.
+
+Also:
+- add skip-existing to the PyPI publish action so re-runs tolerate
+  already-uploaded files, and describe the per-registry guard
+  accurately in RELEASING.md (npm aborts; PyPI skips)
+- correct the fresh-dispatch note: same-day dispatches collide on the
+  date-granular tag rather than minting a new version
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/python.yml     | 26 ------------------------
+ .github/workflows/release.yml    |  1 +
+ .github/workflows/typescript.yml | 34 --------------------------------
+ RELEASING.md                     |  4 ++--
+ 4 files changed, 3 insertions(+), 62 deletions(-)
+
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index df84276249..15f63945cd 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -5,8 +5,6 @@ on:
+     branches:
+       - main
+   pull_request:
+-  release:
+-    types: [published]
+ 
+ jobs:
+   detect-packages:
+@@ -95,27 +93,3 @@ jobs:
+         with:
+           name: dist-${{ matrix.package }}
+           path: src/${{ matrix.package }}/dist/
+-
+-  publish:
+-    runs-on: ubuntu-latest
+-    needs: [build, detect-packages]
+-    if: github.event_name == 'release'
+-
+-    strategy:
+-      matrix:
+-        package: ${{ fromJson(needs.detect-packages.outputs.packages) }}
+-    name: Publish ${{ matrix.package }}
+-
+-    environment: release
+-    permissions:
+-      id-token: write # Required for trusted publishing
+-
+-    steps:
+-      - name: Download artifacts
+-        uses: actions/download-artifact@v7
+-        with:
+-          name: dist-${{ matrix.package }}
+-          path: dist/
+-
+-      - name: Publish package to PyPI
+-        uses: pypa/gh-action-pypi-publish@release/v1
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index cb853cdc05..8d236071c0 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -155,6 +155,7 @@ jobs:
+         uses: pypa/gh-action-pypi-publish@release/v1
+         with:
+           packages-dir: src/${{ matrix.package }}/dist
++          skip-existing: true # re-runs tolerate already-uploaded files
+ 
+   publish-npm:
+     needs: [update-packages, create-metadata]
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index 4e29e524ad..154d5adda5 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -5,8 +5,6 @@ on:
+     branches:
+       - main
+   pull_request:
+-  release:
+-    types: [published]
+ 
+ jobs:
+   detect-packages:
+@@ -68,35 +66,3 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: npm run build
+ 
+-  publish:
+-    runs-on: ubuntu-latest
+-    needs: [build, detect-packages]
+-    if: github.event_name == 'release'
+-    environment: release
+-
+-    strategy:
+-      matrix:
+-        package: ${{ fromJson(needs.detect-packages.outputs.packages) }}
+-    name: Publish ${{ matrix.package }}
+-
+-    permissions:
+-      contents: read
+-      id-token: write
+-
+-    steps:
+-      - uses: actions/checkout@v6
+-      - uses: actions/setup-node@v6
+-        with:
+-          node-version: 22
+-          cache: npm
+-          registry-url: "https://registry.npmjs.org"
+-
+-      - name: Install dependencies
+-        working-directory: src/${{ matrix.package }}
+-        run: npm ci
+-
+-      - name: Publish package
+-        working-directory: src/${{ matrix.package }}
+-        run: npm publish --access public
+-        env:
+-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+diff --git a/RELEASING.md b/RELEASING.md
+index 51e6a52d5c..d0138e1536 100644
+--- a/RELEASING.md
++++ b/RELEASING.md
+@@ -15,7 +15,7 @@ A release run:
+ 
+ 1. **Detects changed packages** since the last release tag — a package counts as changed if any `.py`, `.ts`, or `.md` file in its directory changed (READMEs ship inside the published artifacts).
+ 2. **Stamps versions and pushes the release tag** — versions are date-based (CalVer, e.g. `2026.7.4`).
+-3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → abort if this version already exists on the registry (double-publish guard) → **run the package's tests** → build → publish.
++3. **Publishes each changed package as an independent matrix job** (`fail-fast: false` — one package's failure never blocks another). Each job: checkout at the release tag → install → double-publish guard → **run the package's tests** (plus `pyright` for Python) → build → publish. The guard differs by registry: the npm job aborts if the version already exists; the PyPI action skips files already uploaded (`skip-existing`).
+ 4. **Creates the GitHub release** with generated notes.
+ 
+ ## When a publish fails
+@@ -38,7 +38,7 @@ gh run rerun <run-id> --failed --repo modelcontextprotocol/servers
+ **Never:**
+ 
+ - Publish manually with an npm token or from a laptop — there are no registry tokens, and manual publishes would break the provenance/trust chain.
+-- Re-run or re-dispatch `release.yml` expecting a fresh run to retry a failed version — a fresh run mints a *new* version.
++- Dispatch a fresh `release.yml` run expecting it to retry a failed version — versions are date-granular, so a same-day dispatch collides with the existing tag, and a later dispatch mints a *new* version. Neither retries the failed one.
+ 
+ ## Environment approvals
+ 

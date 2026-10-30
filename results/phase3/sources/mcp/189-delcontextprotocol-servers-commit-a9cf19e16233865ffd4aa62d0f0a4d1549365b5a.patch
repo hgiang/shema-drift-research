@@ -1,0 +1,3497 @@
+From a9cf19e16233865ffd4aa62d0f0a4d1549365b5a Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 28 Sep 2026 23:37:17 -0400
+Subject: [PATCH] feat: coverage and lockstep guards, root validate,
+ per-package CI legs
+
+- verify:format-coverage and verify:typecheck-coverage ported from the
+  Inspector, with the Inspector's tsc-program and resolve-node-bin libs
+  (+ tests), adapted to npm workspaces via a new lib/workspaces.mjs that
+  reads the root workspaces patterns from disk and checks the root
+  validate still runs `npm run validate --workspaces`.
+- verify:dep-lockstep: every shared toolchain devDependency (typescript,
+  vitest, @vitest/coverage-v8, prettier, @types/node) is declared with one
+  range everywhere, or once at the root.
+- Root validate = validate:guards (root format/lint, the guards,
+  test:scripts) + npm run validate --workspaces.
+- typescript.yml: each matrix leg runs only its own package's validate;
+  the root-guards job runs validate:guards.
+- Removes #4863's temporary verify:format-coverage wiring allowance, and
+  fixes the four root-lint findings in the skills scripts.
+
+Refs #4864
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .github/workflows/typescript.yml              |  49 +-
+ scripts/lib/resolve-node-bin.mjs              | 120 ++++
+ scripts/lib/resolve-node-bin.test.mjs         | 217 ++++++
+ scripts/lib/skill-manifest.mjs                |   2 -
+ scripts/lib/skill-manifest.test.mjs           |   1 -
+ scripts/lib/tsc-program.mjs                   | 312 ++++++++
+ scripts/lib/tsc-program.test.mjs              | 153 ++++
+ scripts/lib/workspaces.mjs                    | 189 +++++
+ scripts/lib/workspaces.test.mjs               | 125 ++++
+ scripts/skill-eval.mjs                        |   4 +-
+ scripts/verify-dep-lockstep.mjs               | 136 ++++
+ scripts/verify-dep-lockstep.test.mjs          | 176 +++++
+ scripts/verify-format-coverage.main.test.mjs  | 218 ++++++
+ scripts/verify-format-coverage.mjs            | 261 +++++++
+ scripts/verify-skills.main.test.mjs           |  40 +-
+ scripts/verify-skills.mjs                     |  24 +-
+ .../verify-typecheck-coverage.main.test.mjs   | 229 ++++++
+ scripts/verify-typecheck-coverage.mjs         | 669 ++++++++++++++++++
+ scripts/verify-typecheck-coverage.test.mjs    | 292 ++++++++
+ 19 files changed, 3157 insertions(+), 60 deletions(-)
+ create mode 100644 scripts/lib/resolve-node-bin.mjs
+ create mode 100644 scripts/lib/resolve-node-bin.test.mjs
+ create mode 100644 scripts/lib/tsc-program.mjs
+ create mode 100644 scripts/lib/tsc-program.test.mjs
+ create mode 100644 scripts/lib/workspaces.mjs
+ create mode 100644 scripts/lib/workspaces.test.mjs
+ create mode 100644 scripts/verify-dep-lockstep.mjs
+ create mode 100644 scripts/verify-dep-lockstep.test.mjs
+ create mode 100644 scripts/verify-format-coverage.main.test.mjs
+ create mode 100644 scripts/verify-format-coverage.mjs
+ create mode 100644 scripts/verify-typecheck-coverage.main.test.mjs
+ create mode 100644 scripts/verify-typecheck-coverage.mjs
+ create mode 100644 scripts/verify-typecheck-coverage.test.mjs
+
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index 0e80752290..02adf6919e 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -11,9 +11,12 @@ concurrency:
+   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+ 
+ jobs:
+-  # Root-level guards: checks over repo-wide tooling that no per-package matrix
+-  # leg covers. Created by #4863 for the skills gates; #4864 extends it with the
+-  # root format/lint, the coverage guards and `test:scripts`.
++  # Root-level guards: the checks over repo-wide tooling that no per-package
++  # matrix leg covers. Created by #4863 for the skills gates; #4864 extended it
++  # to run the root's whole `validate:guards` — the root tooling's format and
++  # lint, `verify:format-coverage`, `verify:skills`, `verify:typecheck-coverage`,
++  # the shared-devDependency guard `verify:dep-lockstep`, and `test:scripts`
++  # (the guard scripts' own unit tests).
+   # `scripts/verify-skills.mjs` asserts this job keeps running
+   # `verify:skills:cli` unconditionally, so do not gate these steps with `if:`.
+   root-guards:
+@@ -30,8 +33,8 @@ jobs:
+       - name: Install dependencies
+         run: npm ci
+ 
+-      - name: Verify skills
+-        run: npm run verify:skills
++      - name: Run the root guards
++        run: npm run validate:guards
+ 
+       # The authoritative `claude plugin validate`, at the pinned CLI version
+       # (fetched with npx when not installed). Needs no authentication.
+@@ -51,12 +54,17 @@ jobs:
+           PACKAGES=$(find . -name package.json -not -path "*/node_modules/*" -exec dirname {} \; | sed 's/^\.\///' | jq -R -s -c 'split("\n")[:-1]')
+           echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
+ 
+-  test:
++  # One leg per TypeScript server, each running ONLY its own package's
++  # `validate` (format:check -> lint -> typecheck -> build -> test). What no
++  # leg covers — the root tooling and the cross-workspace guards — is the
++  # root-guards job above; together they are the root `npm run validate`.
++  validate:
+     needs: [detect-packages]
+     strategy:
++      fail-fast: false
+       matrix:
+         package: ${{ fromJson(needs.detect-packages.outputs.packages) }}
+-    name: Test ${{ matrix.package }}
++    name: Validate ${{ matrix.package }}
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v6
+@@ -70,29 +78,6 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: npm ci
+ 
+-      - name: Run tests
++      - name: Validate package
+         working-directory: src/${{ matrix.package }}
+-        run: npm test --if-present
+-
+-  build:
+-    needs: [detect-packages, test]
+-    strategy:
+-      matrix:
+-        package: ${{ fromJson(needs.detect-packages.outputs.packages) }}
+-    name: Build ${{ matrix.package }}
+-    runs-on: ubuntu-latest
+-    steps:
+-      - uses: actions/checkout@v6
+-
+-      - uses: actions/setup-node@v7
+-        with:
+-          node-version: 22
+-          cache: npm
+-
+-      - name: Install dependencies
+-        working-directory: src/${{ matrix.package }}
+-        run: npm ci
+-
+-      - name: Build package
+-        working-directory: src/${{ matrix.package }}
+-        run: npm run build
++        run: npm run validate
+diff --git a/scripts/lib/resolve-node-bin.mjs b/scripts/lib/resolve-node-bin.mjs
+new file mode 100644
+index 0000000000..810c2ae49a
+--- /dev/null
++++ b/scripts/lib/resolve-node-bin.mjs
+@@ -0,0 +1,120 @@
++// Shared resolver for spawning a package's CLI cross-platform (#1939).
++//
++// Ported from the MCP Inspector for #4864, where `verify:typecheck-coverage`
++// spawns tsc through it; `#N` in these comments are that repo's issues.
++//
++// On Windows, `npx`/`npm` are `.cmd` shims, not executables — a shell-free
++// `execFileSync`/`spawnSync` cannot start one (Node refuses `.cmd`/`.bat`
++// spawns without `shell: true` since the CVE-2024-27980 hardening) and throws
++// `ENOENT`. GitHub CI runs Linux, so the gate stayed green there while being
++// unrunnable for any Windows contributor. Instead of shelling through `npx`,
++// resolve the JS entry behind the package's bin and run it with
++// `process.execPath`: cross-platform, shell-free (no quoting hazards), faster
++// (no npx resolution), and pinned to the locally installed package exactly as
++// `npx --no-install` was.
++
++import { existsSync, readFileSync } from "node:fs";
++import { createRequire } from "node:module";
++import path from "node:path";
++
++/**
++ * Absolute path of the JS entry behind a package's bin (e.g. typescript's
++ * `tsc`, vite's `vite`), resolved from `fromDir` up the node_modules tree —
++ * the same walk `npx --no-install` does, minus the `.cmd` shim a shell-free
++ * spawn can't start on Windows. Reads the package's manifest and takes the
++ * path out of its `bin` field (what npx itself does) rather than resolving the
++ * bin path directly, because an `exports` map blocks deep resolution — Vite 8
++ * doesn't export `./bin/vite.js`, so `require.resolve("vite/bin/vite.js")`
++ * throws `ERR_PACKAGE_PATH_NOT_EXPORTED`.
++ *
++ * Throws if the package isn't installed from `fromDir`, declares no such bin,
++ * or declares one whose file is missing — the caller decides whether that's a
++ * hard "cannot measure" error or a fallback.
++ */
++export function resolveNodeBin(pkg, binName, fromDir) {
++  const pkgPath = resolveManifest(pkg, fromDir);
++  const manifest = JSON.parse(readFileSync(pkgPath, "utf8"));
++  const { bin } = manifest;
++  // A string-form `bin` is npm's shorthand for ONE command, named after the
++  // package (unscoped). It does not make every requested `binName` valid, so
++  // match it rather than accepting whatever was asked for — otherwise a typo
++  // silently resolves the package's only executable instead of failing.
++  const rel =
++    typeof bin === "string"
++      ? unscopedName(manifest.name ?? pkg) === binName
++        ? bin
++        : undefined
++      : bin?.[binName];
++  if (typeof rel !== "string")
++    throw new Error(`${pkg} declares no "${binName}" bin in its package.json`);
++  const entry = path.join(path.dirname(pkgPath), rel);
++  // A declared bin whose file is absent is a partial install, and it fails
++  // *silently* downstream: `process.execPath <missing>` still spawns fine and
++  // exits 1 with nothing on stdout, which `rawProjectListing` records as "no
++  // diagnostic captured" and turns into the bogus every-file-uncovered report
++  // this helper exists to eliminate. Fail here, where the remedy is actionable.
++  if (!existsSync(entry))
++    throw new Error(
++      `${pkg}'s "${binName}" bin points at a missing file: ${entry}`,
++    );
++  return entry;
++}
++
++/**
++ * The package's own `package.json`, found by walking the same `node_modules`
++ * chain Node's resolver would from `fromDir` — deliberately NOT via
++ * `require.resolve("<pkg>/package.json")`.
++ *
++ * That shortcut reads as safe and isn't: subpath resolution is governed by the
++ * package's `exports`, and a package may declare one that omits `./package.json`
++ * (Node dropped its special case for it, so there is no guaranteed export). Such
++ * a package throws `ERR_PACKAGE_PATH_NOT_EXPORTED` here even though its bin is
++ * installed and perfectly spawnable — a false "not installed" that would send
++ * someone to `npm install` for a package already on disk. `resolve.paths()`
++ * gives the search dirs without consulting `exports` at all.
++ *
++ * Its list is then filtered to the `node_modules` directories on `fromDir`'s
++ * own ancestor chain, because `resolve.paths()` also appends Node's GLOBAL
++ * FOLDERS (`$HOME/.node_modules`, `$HOME/.node_libraries`, `$PREFIX/lib/node`)
++ * and any `NODE_PATH` entries. Accepting those would quietly break the
++ * guarantee this module exists to keep — that the spawned tsc/vite is the
++ * REPO-PINNED one, exactly as `npx --no-install` promised. A missing repo
++ * install would then find a globally installed TypeScript and measure the
++ * programs with the wrong compiler, instead of failing with the actionable
++ * "run npm install" this helper is supposed to produce.
++ */
++function resolveManifest(pkg, fromDir) {
++  const require = createRequire(path.join(fromDir, "package.json"));
++  // `resolve.paths` returns null only for builtins, which have no bin to find.
++  for (const dir of localSearchDirs(
++    require.resolve.paths(pkg) ?? [],
++    fromDir,
++  )) {
++    const candidate = path.join(dir, ...pkg.split("/"), "package.json");
++    if (existsSync(candidate)) return candidate;
++  }
++  throw new Error(`cannot find ${pkg} from ${fromDir}`);
++}
++
++/**
++ * The subset of `resolve.paths()` that is a `node_modules` directory sitting
++ * directly under `fromDir` or one of its ancestors — i.e. the local walk, with
++ * Node's global folders and `NODE_PATH` dropped. Exported for its own test.
++ */
++export function localSearchDirs(dirs, fromDir) {
++  const ancestors = new Set();
++  for (let dir = path.resolve(fromDir); ; dir = path.dirname(dir)) {
++    ancestors.add(dir);
++    if (dir === path.dirname(dir)) break;
++  }
++  return dirs.filter(
++    (dir) =>
++      path.basename(dir) === "node_modules" &&
++      ancestors.has(path.dirname(path.resolve(dir))),
++  );
++}
++
++/** `@scope/name` → `name`; an unscoped name is returned unchanged. */
++function unscopedName(name) {
++  return name.startsWith("@") ? name.slice(name.indexOf("/") + 1) : name;
++}
+diff --git a/scripts/lib/resolve-node-bin.test.mjs b/scripts/lib/resolve-node-bin.test.mjs
+new file mode 100644
+index 0000000000..4208373e17
+--- /dev/null
++++ b/scripts/lib/resolve-node-bin.test.mjs
+@@ -0,0 +1,217 @@
++// Ported from the MCP Inspector for #4864; `#N` in these comments are that
++// repo's issues.
++//
++// Tests for `resolve-node-bin.mjs` (#1939) — the shared resolver that replaces
++// shelling through `npx`, which is a `.cmd` shim on Windows that a shell-free
++// `execFileSync`/`spawnSync` cannot start (ENOENT). Resolution is exercised
++// against the packages the callers actually spawn (typescript, eslint, prettier),
++// installed by the repo's own `npm install`, so the contract is pinned against
++// the real `bin`/`exports` shapes rather than fixtures that can drift.
++
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import {
++  existsSync,
++  mkdirSync,
++  mkdtempSync,
++  rmSync,
++  writeFileSync,
++} from "node:fs";
++import { tmpdir } from "node:os";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++import { localSearchDirs, resolveNodeBin } from "./resolve-node-bin.mjs";
++
++const repoRoot = path.resolve(
++  path.dirname(fileURLToPath(import.meta.url)),
++  "..",
++  "..",
++);
++
++test("resolves typescript's tsc (object-form bin) to an existing JS entry", () => {
++  const entry = resolveNodeBin("typescript", "tsc", repoRoot);
++  assert.ok(path.isAbsolute(entry), entry);
++  assert.ok(existsSync(entry), `resolved entry does not exist: ${entry}`);
++  assert.match(entry.split(path.sep).join("/"), /\/typescript\/.*tsc/);
++});
++
++test("resolves from a workspace dir, walking node_modules up like `npx --no-install`", () => {
++  const entry = resolveNodeBin(
++    "typescript",
++    "tsc",
++    path.join(repoRoot, "src", "memory"),
++  );
++  assert.ok(existsSync(entry), `resolved entry does not exist: ${entry}`);
++});
++
++test("resolves eslint's bin despite its exports map (no deep bin export)", () => {
++  // eslint's `exports` map does not export `./bin/eslint.js`, so a
++  // `require.resolve` of the bin path throws ERR_PACKAGE_PATH_NOT_EXPORTED —
++  // the reason the helper goes through `<pkg>/package.json`.
++  const entry = resolveNodeBin(
++    "eslint",
++    "eslint",
++    path.join(repoRoot, "src", "memory"),
++  );
++  assert.ok(existsSync(entry), `resolved entry does not exist: ${entry}`);
++  assert.match(entry.split(path.sep).join("/"), /\/eslint\/.*eslint\.js$/);
++});
++
++test("resolves a string-form bin (prettier) under the package's own name", () => {
++  const entry = resolveNodeBin("prettier", "prettier", repoRoot);
++  assert.ok(existsSync(entry), `resolved entry does not exist: ${entry}`);
++  assert.match(entry.split(path.sep).join("/"), /\/prettier\//);
++});
++
++test("rejects a mismatched binName against a string-form bin", () => {
++  // npm's string shorthand declares ONE command, named after the package — so
++  // a typo must fail rather than silently resolving prettier's executable.
++  assert.throws(
++    () => resolveNodeBin("prettier", "prettierd", repoRoot),
++    /prettier declares no "prettierd" bin/,
++  );
++});
++
++test("throws when the package is not installed from fromDir", () => {
++  assert.throws(
++    () => resolveNodeBin("definitely-not-installed-anywhere", "x", repoRoot),
++    /definitely-not-installed-anywhere/,
++  );
++});
++
++test("throws when the package declares no such bin", () => {
++  // typescript's bin map has `tsc`/`tsserver`, not `vite`.
++  assert.throws(
++    () => resolveNodeBin("typescript", "vite", repoRoot),
++    /typescript declares no "vite" bin/,
++  );
++});
++
++// The remaining cases need a manifest shape the real installs don't have, so
++// they run against a throwaway node_modules tree rather than a real package.
++function fixtureDir(manifest, { createBinFile = false } = {}) {
++  const dir = mkdtempSync(path.join(tmpdir(), "resolve-node-bin-"));
++  const pkgDir = path.join(dir, "node_modules", manifest.name);
++  mkdirSync(pkgDir, { recursive: true });
++  writeFileSync(
++    path.join(pkgDir, "package.json"),
++    JSON.stringify(manifest),
++    "utf8",
++  );
++  if (createBinFile) {
++    const rel =
++      typeof manifest.bin === "string"
++        ? manifest.bin
++        : Object.values(manifest.bin)[0];
++    const target = path.join(pkgDir, rel);
++    mkdirSync(path.dirname(target), { recursive: true });
++    writeFileSync(target, "", "utf8");
++  }
++  // The consumer `package.json` `createRequire` is based at.
++  writeFileSync(
++    path.join(dir, "package.json"),
++    JSON.stringify({ name: "consumer" }),
++    "utf8",
++  );
++  return dir;
++}
++
++test("throws when a declared bin's file is missing (partial install)", () => {
++  // The silent case this helper exists to kill: `process.execPath <missing>`
++  // spawns fine and exits 1 with empty stdout, which downstream reads as "no
++  // diagnostic captured" and reports every tracked file as uncovered.
++  const dir = fixtureDir({ name: "ghostpkg", bin: { ghost: "bin/ghost.js" } });
++  try {
++    assert.throws(
++      () => resolveNodeBin("ghostpkg", "ghost", dir),
++      /ghostpkg's "ghost" bin points at a missing file/,
++    );
++  } finally {
++    rmSync(dir, { recursive: true, force: true });
++  }
++});
++
++test("resolves a package whose `exports` hides ./package.json", () => {
++  // `require.resolve("<pkg>/package.json")` throws ERR_PACKAGE_PATH_NOT_EXPORTED
++  // for this shape — Node has no special case keeping `./package.json`
++  // exported — which would be a false "not installed" for a package whose bin
++  // is right there on disk. The manifest lookup walks node_modules instead.
++  const dir = fixtureDir(
++    {
++      name: "walledpkg",
++      exports: { ".": "./index.js" },
++      bin: { walled: "bin/walled.js" },
++    },
++    { createBinFile: true },
++  );
++  try {
++    const entry = resolveNodeBin("walledpkg", "walled", dir);
++    assert.ok(existsSync(entry), `resolved entry does not exist: ${entry}`);
++  } finally {
++    rmSync(dir, { recursive: true, force: true });
++  }
++});
++
++test("localSearchDirs keeps only node_modules on fromDir's ancestor chain", () => {
++  // `require.resolve.paths()` appends Node's GLOBAL FOLDERS and any NODE_PATH
++  // entries. Honouring those would break the guarantee this module exists for
++  // — that the spawned tsc/vite is the REPO-PINNED one — by letting a globally
++  // installed TypeScript stand in for a missing repo install, measuring the
++  // programs with the wrong compiler instead of failing actionably.
++  const from = path.join(path.sep, "repo", "src", "memory");
++  const kept = [
++    path.join(from, "node_modules"),
++    path.join(path.sep, "repo", "src", "node_modules"),
++    path.join(path.sep, "repo", "node_modules"),
++    path.join(path.sep, "node_modules"),
++  ];
++  const dropped = [
++    path.join(path.sep, "home", "dev", ".node_modules"),
++    path.join(path.sep, "home", "dev", ".node_libraries"),
++    path.join(path.sep, "usr", "local", "lib", "node"),
++    // A NODE_PATH entry off the chain — a real node_modules, just not ours.
++    path.join(path.sep, "opt", "shared", "node_modules"),
++  ];
++  assert.deepEqual(localSearchDirs([...kept, ...dropped], from), kept);
++});
++
++test("a package visible only outside the ancestor chain is not resolved", () => {
++  // The end-to-end form of the above: `ghostpkg` exists on disk, but under a
++  // sibling tree rather than an ancestor of `fromDir`.
++  const outside = fixtureDir(
++    { name: "elsewherepkg", bin: { elsewhere: "bin/e.js" } },
++    { createBinFile: true },
++  );
++  const consumer = mkdtempSync(path.join(tmpdir(), "resolve-node-bin-from-"));
++  try {
++    writeFileSync(
++      path.join(consumer, "package.json"),
++      JSON.stringify({ name: "consumer" }),
++      "utf8",
++    );
++    assert.throws(
++      () => resolveNodeBin("elsewherepkg", "elsewhere", consumer),
++      /cannot find elsewherepkg/,
++    );
++  } finally {
++    rmSync(outside, { recursive: true, force: true });
++    rmSync(consumer, { recursive: true, force: true });
++  }
++});
++
++test("accepts a scoped package's string-form bin under its unscoped name", () => {
++  const dir = fixtureDir(
++    { name: "@scope/tool", bin: "bin/tool.js" },
++    { createBinFile: true },
++  );
++  try {
++    const entry = resolveNodeBin("@scope/tool", "tool", dir);
++    assert.ok(existsSync(entry), `resolved entry does not exist: ${entry}`);
++    assert.throws(
++      () => resolveNodeBin("@scope/tool", "scope-tool", dir),
++      /declares no "scope-tool" bin/,
++    );
++  } finally {
++    rmSync(dir, { recursive: true, force: true });
++  }
++});
+diff --git a/scripts/lib/skill-manifest.mjs b/scripts/lib/skill-manifest.mjs
+index 158a04062e..5577ca8575 100644
+--- a/scripts/lib/skill-manifest.mjs
++++ b/scripts/lib/skill-manifest.mjs
+@@ -36,8 +36,6 @@ export const DESCRIPTION_CAP = 1536;
+  */
+ export const LISTING_BUDGET = 4000;
+ 
+-const FRONTMATTER_FENCE = "---";
+-
+ /**
+  * Split a SKILL.md into its raw frontmatter and body the way Claude Code does.
+  * Returns `{ error }` rather than throwing, so the caller can report every
+diff --git a/scripts/lib/skill-manifest.test.mjs b/scripts/lib/skill-manifest.test.mjs
+index ca8f64f403..3dc4af3f45 100644
+--- a/scripts/lib/skill-manifest.test.mjs
++++ b/scripts/lib/skill-manifest.test.mjs
+@@ -15,7 +15,6 @@ import {
+   validateEvalCases,
+   listingCost,
+   parseClaudeVersion,
+-  compareVersions,
+   PINNED_CLI_VERSION,
+   isPinnedVersion,
+   formatClaudeVersion,
+diff --git a/scripts/lib/tsc-program.mjs b/scripts/lib/tsc-program.mjs
+new file mode 100644
+index 0000000000..12404a70e0
+--- /dev/null
++++ b/scripts/lib/tsc-program.mjs
+@@ -0,0 +1,312 @@
++// What a `tsc` project actually pulls into its program — the measurement
++// `verify:typecheck-coverage` reads a workspace's programs through.
++//
++// Ported from the MCP Inspector for #4864; `#N` in these comments are that
++// repo's issues. The Inspector shares this module with a program-level
++// dependency guard that also asks which INSTALLED packages land in a program;
++// this repo's dependency guard (`verify-dep-lockstep.mjs`) compares declared
++// ranges instead, so that half was not ported. "Client" in the helpers' names
++// and comments is the Inspector's word for what is a workspace (`src/<name>`)
++// here: the unit that owns its own `package.json` and tsconfig projects.
++//
++// The answer comes from `tsc --listFilesOnly`: it reports every file the
++// program resolves, including the ones reached only through another file's
++// imports. That is the accurate measure — a tsconfig's `include` names only
++// the roots.
++//
++// The listing is memoized per (workspace, project) for the life of the
++// process. It is deliberately NOT cached to disk: a stale cache would make the
++// guard measure a program that no longer exists and pass on a real miss —
++// failing open, the one way a gate must never fail.
++
++import { execFileSync } from "node:child_process";
++import { readFileSync } from "node:fs";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++import { reachableScripts, tokenize } from "./npm-scripts.mjs";
++import { resolveNodeBin } from "./resolve-node-bin.mjs";
++
++export const repoRoot = path.resolve(
++  path.dirname(fileURLToPath(import.meta.url)),
++  "..",
++  "..",
++);
++
++// Match `tsc` by token basename so a path-invoked binary (`node_modules/.bin/
++// tsc`, `./node_modules/.bin/tsc.cmd`) counts, not just the bare `tsc` token.
++export const isTsc = (t) => /(?:^|[\\/])tsc(?:\.(?:cmd|exe|ps1))?$/.test(t);
++
++// A flag that makes a `tsc` pass list files without type-checking them (so it
++// gates nothing). Case-insensitive — tsc's own option parsing is.
++export const isDisablingFlag = (t) => /^--(noCheck|listFilesOnly)$/i.test(t);
++
++/**
++ * The tsconfig projects a client's `typecheck` names, harvested from **every**
++ * script reachable from `typecheck` (not just the one string) so a delegating
++ * `typecheck` (`npm run typecheck:src && …`) still counts — matching how
++ * `verify-format-coverage.mjs` harvests globs across reachable scripts. Splits
++ * each script on `&&`/`||`/`;` so a flag on one command doesn't leak onto
++ * another. Each `tsc` command's project comes from `-p`/`--project` (or a
++ * `-b`/`--build` path); a `tsc` command with **no** project flag resolves the
++ * implicit `./tsconfig.json` (tsc's own default), so that idiomatic form counts
++ * too. Returns `{ projects, neutered }`: `neutered` names any project whose own
++ * command carries `--noCheck`/`--nocheck` or `--listFilesOnly` (matched
++ * case-insensitively — tsc's option parsing is) — a pass that lists files
++ * without type-checking them, which would otherwise satisfy the typecheck guard
++ * while checking nothing.
++ *
++ * A harvested `tsc -b` **solution config** (`"files": []` + `references`) lists
++ * nothing itself; {@link resolveLeafProjects} expands it to its references.
++ *
++ * Minor limitations, all unreachable with the plain `-p --noEmit` passes here:
++ * the implicit-`./tsconfig.json` fallback assumes **no file operands** (`tsc
++ * <file>` ignores the config and checks only that file, but would be credited
++ * the whole config's file list); the `--noCheck`/`--listFilesOnly` detection
++ * ignores a following boolean, so the contrived explicit `--noCheck false`
++ * (checking *on*) is still treated as disabling; and the `&&`/`||`/`;` split
++ * runs before tokenizing, so a quoted operator inside an arg would split
++ * mid-token (project paths carry none of those).
++ */
++export function typecheckProjects(scripts) {
++  const projects = [];
++  const neutered = [];
++  const isFlag = (t) => t.startsWith("-");
++  const isProjectFlag = (t) => ["-p", "--project", "-b", "--build"].includes(t);
++  for (const name of reachableScripts(scripts, "typecheck")) {
++    const cmd = scripts?.[name];
++    if (typeof cmd !== "string") continue;
++    for (const segment of cmd.split(/&&|\|\||;/)) {
++      const tokens = tokenize(segment);
++      if (!tokens.some(isTsc)) continue; // only tsc commands name projects
++      const disabling = tokens.find(isDisablingFlag);
++      // A project path follows `-p`/`--project`/`-b`/`--build`; a tsc command
++      // with none uses the implicit `./tsconfig.json` (tsc's own default).
++      const named = [];
++      for (let i = 0; i < tokens.length; i++)
++        if (isProjectFlag(tokens[i]) && tokens[i + 1] && !isFlag(tokens[i + 1]))
++          named.push(tokens[i + 1]);
++      if (named.length === 0) named.push("tsconfig.json");
++      for (const project of named) {
++        if (disabling) neutered.push({ project, flag: disabling });
++        else projects.push(project);
++      }
++    }
++  }
++  return { projects, neutered };
++}
++
++/**
++ * The `references` paths declared in a tsconfig's raw text (a `tsc -b` solution
++ * config), or `[]` if it has none / isn't parseable. Paths are as written
++ * (relative to that tsconfig's own directory).
++ */
++export function parseTsconfigReferences(raw) {
++  try {
++    // Tolerate JSONC — block AND line comments + trailing commas (tsconfig
++    // allows all; block comments are in fact the style of every other tsconfig
++    // here). Block comments are stripped first so a `//` inside one doesn't
++    // survive; a `//` inside a string value (e.g. an `https://` URL) is a
++    // theoretical false strip this guard's tsconfigs never hit.
++    const cfg = JSON.parse(
++      raw
++        .replace(/\/\*[\s\S]*?\*\//g, "")
++        .replace(/\/\/.*$/gm, "")
++        .replace(/,(\s*[}\]])/g, "$1"),
++    );
++    return Array.isArray(cfg.references)
++      ? cfg.references.map((r) => r?.path).filter((p) => typeof p === "string")
++      : [];
++  } catch {
++    return [];
++  }
++}
++
++export function tsconfigReferences(tsconfigRel) {
++  try {
++    return parseTsconfigReferences(
++      readFileSync(path.join(repoRoot, tsconfigRel), "utf8"),
++    );
++  } catch {
++    return []; // unreadable file (e.g. a directory / missing path)
++  }
++}
++
++/**
++ * The `references` in a workspace's root `tsconfig.json`. Non-empty for a
++ * `tsc -b` solution config — the guard enrolls such a workspace through these
++ * instead of exempting the whole tree. No workspace here is one today; kept so
++ * that adopting project references does not silently drop a workspace.
++ */
++export function clientTsconfigReferences(clientDir) {
++  return tsconfigReferences(path.posix.join(clientDir, "tsconfig.json"));
++}
++
++/**
++ * The repo-relative tsconfig FILE a `clientDir`-relative `project` entry names.
++ * A directory-form entry (`{ "path": "./packages/a" }`, or `tsc -p src`) means
++ * `<dir>/tsconfig.json` — tsc's own rule.
++ */
++export function projectConfigFile(clientDir, project) {
++  const projectRel = path.posix.join(clientDir, project);
++  return projectRel.endsWith(".json")
++    ? projectRel
++    : path.posix.join(projectRel, "tsconfig.json");
++}
++
++/**
++ * A `references` entry `ref` (written relative to `fromConfigFile`'s own
++ * directory) as a `clientDir`-relative project path, the form the rest of the
++ * graph walk uses.
++ */
++export function refToProject(clientDir, fromConfigFile, ref) {
++  return path.posix.relative(
++    clientDir,
++    path.posix.join(path.posix.dirname(fromConfigFile), ref),
++  );
++}
++
++/**
++ * The leaf tsconfig projects `project` resolves to (paths relative to
++ * `clientDir`): itself if it lists files (or has no `references`), else its
++ * `references` expanded recursively. A `tsc -b` **solution config** (`{"files":
++ * [], "references": […]}`) lists nothing under `--listFilesOnly`, so this is how
++ * it's reduced to the real projects — and doing it here (not inside a single
++ * caller) is what lets every consumer follow the same graph.
++ */
++export function resolveLeafProjects(clientDir, project, seen = new Set()) {
++  if (seen.has(project)) return [];
++  seen.add(project);
++  // Lists first-party files → a real leaf. (An empty set is a solution config,
++  // or a config that errored — either way the reference expansion below is the
++  // right next step: a broken config yields no references either.)
++  if (projectSourceFiles(clientDir, project).size > 0) return [project];
++  const configFile = projectConfigFile(clientDir, project);
++  const refs = tsconfigReferences(configFile);
++  if (refs.length === 0) return [project]; // no files, no refs — itself
++  return refs.flatMap((ref) =>
++    resolveLeafProjects(
++      clientDir,
++      refToProject(clientDir, configFile, ref),
++      seen,
++    ),
++  );
++}
++
++/**
++ * The tsc JS entry a client's programs are measured with, resolved from the
++ * client dir up the node_modules tree exactly as `npx --no-install tsc` walked
++ * — but spawnable shell-free on Windows, where `npx` is a `.cmd` shim that
++ * `execFileSync` can't start (ENOENT — #1939). A resolution failure is a hard
++ * "cannot measure" error rather than an empty file set: the old ENOENT was
++ * doubly silent, echoing "(no diagnostic captured)" per project and then
++ * reporting every tracked file in the repo as uncovered. Cached per client;
++ * exported so a consumer's own tsc pass (`verify-typecheck-coverage`'s
++ * `--showConfig`) spawns the same entry the listings do.
++ */
++const tscEntryCache = new Map();
++export function tscEntry(clientDir) {
++  const cached = tscEntryCache.get(clientDir);
++  if (cached) return cached;
++  let entry;
++  try {
++    entry = resolveNodeBin("typescript", "tsc", path.join(repoRoot, clientDir));
++  } catch (err) {
++    console.error(
++      `cannot resolve \`typescript\` from ${clientDir} (${err.message}): no tsc program can be measured. Run \`npm install\` at the repo root first.`,
++    );
++    process.exit(1);
++  }
++  tscEntryCache.set(clientDir, entry);
++  return entry;
++}
++
++/**
++ * Every file ONE project's program resolves, as absolute POSIX paths and with no
++ * filtering at all — first-party sources, `node_modules` declarations, and the
++ * out-of-repo `lib.*.d.ts` — plus the config diagnostic if `tsc` exited
++ * non-zero. {@link projectSourceFiles} slices the first-party files out of it.
++ * Memoized per (client, project): the same project is listed
++ * by `resolveLeafProjects` and again by whichever slice the caller asks for.
++ */
++const listingCache = new Map();
++export function rawProjectListing(clientDir, project) {
++  const key = `${clientDir}|${project}`;
++  const cached = listingCache.get(key);
++  if (cached) return cached;
++  let stdout;
++  let error = null;
++  try {
++    stdout = execFileSync(
++      process.execPath,
++      [tscEntry(clientDir), "-p", project, "--listFilesOnly"],
++      {
++        cwd: path.join(repoRoot, clientDir),
++        encoding: "utf8",
++        stdio: ["ignore", "pipe", "pipe"],
++        maxBuffer: 1 << 28,
++      },
++    );
++  } catch (err) {
++    // `--listFilesOnly` doesn't type-check, but a config error (an unreadable or
++    // malformed tsconfig) still exits non-zero while printing the resolved file
++    // list; keep stdout so a broken config doesn't mask what the callers measure.
++    // Echo the diagnostic — the guards run before any client's own `typecheck`,
++    // so this is the first place a bad `-p` config surfaces, and without the
++    // reason the resulting report is misleading. tsc prints config errors
++    // (`error TS…`) to stdout, so scan both streams for them.
++    stdout = typeof err.stdout === "string" ? err.stdout : "";
++    const streams =
++      stdout + "\n" + (typeof err.stderr === "string" ? err.stderr : "");
++    error = streams
++      .split("\n")
++      .filter((l) => /error TS\d+/.test(l))
++      .join("\n")
++      .trim();
++    console.warn(
++      `tsc -p ${project} (in ${clientDir}) exited non-zero:\n${error || "(no diagnostic captured)"}\n`,
++    );
++    // An empty diagnostic still has to read as failure downstream, so the
++    // caller sees a string either way — never `""`.
++    error ||= "(no diagnostic captured)";
++  }
++  const files = stdout
++    .split("\n")
++    .map((l) => l.trim())
++    .filter(Boolean)
++    .map((abs) => abs.split(path.sep).join("/"));
++  const listing = { files, error };
++  listingCache.set(key, listing);
++  return listing;
++}
++
++/**
++ * The `tsc` diagnostic for a project whose listing exited non-zero, or null. A
++ * failed config still prints a file list — a partial, wrong one — so a consumer
++ * that must not measure a program it couldn't resolve has to ask.
++ */
++export function projectListingError(clientDir, project) {
++  return rawProjectListing(clientDir, project).error;
++}
++
++/**
++ * Whether a repo-relative path is an installed file rather than a first-party
++ * one. Matched by path SEGMENT, not substring, so a first-party directory whose
++ * name merely embeds the word (`src/x/node_modules_fixtures/`) is not mistaken
++ * for an install.
++ */
++const isInstalledPath = (rel) => rel.split("/").includes("node_modules");
++
++/**
++ * Repo-relative POSIX paths of the first-party files ONE project (no reference
++ * expansion) typechecks. Absolute paths outside the repo root (`lib.d.ts`) and
++ * anything under `node_modules` are dropped.
++ */
++export function projectSourceFiles(clientDir, project) {
++  const covered = new Set();
++  for (const abs of rawProjectListing(clientDir, project).files) {
++    const rel = path.relative(repoRoot, abs).split(path.sep).join("/");
++    if (rel.startsWith("..") || isInstalledPath(rel)) continue;
++    covered.add(rel);
++  }
++  return covered;
++}
+diff --git a/scripts/lib/tsc-program.test.mjs b/scripts/lib/tsc-program.test.mjs
+new file mode 100644
+index 0000000000..efed37ba69
+--- /dev/null
++++ b/scripts/lib/tsc-program.test.mjs
+@@ -0,0 +1,153 @@
++// Table-driven tests for the `tsc` program helpers `verify:typecheck-coverage`
++// reads a workspace's programs through. Ported from the MCP Inspector for
++// #4864: one case per rule, and the comment names the rule, so relaxing one
++// shows up as a deleted assertion rather than a quiet behavior shift. The
++// `(rN)` tags are the Inspector review rounds (inspector#1799) that found them.
++// Run via `npm run test:scripts`.
++
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import {
++  isDisablingFlag,
++  isTsc,
++  parseTsconfigReferences,
++  projectConfigFile,
++  refToProject,
++  typecheckProjects,
++} from "./tsc-program.mjs";
++
++test("isTsc: matches by basename incl. path-invoked (r18 regression)", () => {
++  for (const t of [
++    "tsc",
++    "node_modules/.bin/tsc",
++    "./node_modules/.bin/tsc.cmd",
++  ])
++    assert.ok(isTsc(t), t);
++  for (const t of ["vitest", "prettier", "tscx", "atsc"])
++    assert.ok(!isTsc(t), t);
++});
++
++test("isDisablingFlag: case-insensitive (r18)", () => {
++  for (const t of [
++    "--noCheck",
++    "--nocheck",
++    "--listFilesOnly",
++    "--LISTFILESONLY",
++  ])
++    assert.ok(isDisablingFlag(t), t);
++  for (const t of ["--noEmit", "-p", "--project", "noCheck"])
++    assert.ok(!isDisablingFlag(t), t);
++});
++
++test("typecheckProjects: harvests -p / --project / -b, implicit tsconfig.json (r13)", () => {
++  const { projects, neutered } = typecheckProjects({
++    typecheck:
++      "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
++  });
++  assert.deepEqual(projects, ["tsconfig.json", "tsconfig.test.json"]);
++  assert.equal(neutered.length, 0);
++
++  // A bare `tsc` (no project flag) resolves the implicit ./tsconfig.json.
++  assert.deepEqual(typecheckProjects({ typecheck: "tsc --noEmit" }).projects, [
++    "tsconfig.json",
++  ]);
++
++  // Path-invoked binary still counts (r18).
++  assert.deepEqual(
++    typecheckProjects({ typecheck: "node_modules/.bin/tsc -p tsconfig.json" })
++      .projects,
++    ["tsconfig.json"],
++  );
++
++  // A quoted project path (r17).
++  assert.deepEqual(
++    typecheckProjects({ typecheck: `tsc -p "tsconfig.test.json"` }).projects,
++    ["tsconfig.test.json"],
++  );
++
++  // `--project` long form, and `-b`/`--build` project paths (r13).
++  const proj = (cmd) => typecheckProjects({ typecheck: cmd }).projects;
++  assert.deepEqual(proj("tsc --noEmit --project tsconfig.json"), [
++    "tsconfig.json",
++  ]);
++  assert.deepEqual(proj("tsc -b tsconfig.json"), ["tsconfig.json"]);
++  assert.deepEqual(proj("tsc --build tsconfig.json"), ["tsconfig.json"]);
++  assert.deepEqual(proj("tsc -b"), ["tsconfig.json"]); // implicit fallback
++});
++
++test("typecheckProjects: neutered by --noCheck / --listFilesOnly (r10)", () => {
++  const { projects, neutered } = typecheckProjects({
++    typecheck:
++      "tsc --noEmit -p tsconfig.json --noCheck && tsc --noEmit -p tsconfig.test.json",
++  });
++  assert.deepEqual(projects, ["tsconfig.test.json"]);
++  assert.deepEqual(neutered, [{ project: "tsconfig.json", flag: "--noCheck" }]);
++});
++
++test("typecheckProjects: delegating typecheck, ignores non-tsc segments (r15)", () => {
++  const { projects } = typecheckProjects({
++    typecheck: "npm run typecheck:src && npm run typecheck:test",
++    "typecheck:src": "tsc --noEmit -p tsconfig.json",
++    "typecheck:test": "tsc --noEmit --project tsconfig.test.json",
++  });
++  assert.deepEqual(projects.sort(), ["tsconfig.json", "tsconfig.test.json"]);
++});
++
++test("parseTsconfigReferences: JSONC tolerance (r17-nit2 block comments)", () => {
++  const refs = (raw) => parseTsconfigReferences(raw);
++  assert.deepEqual(refs('{ "references": [{ "path": "./a" }] }'), ["./a"]);
++  assert.deepEqual(
++    refs('/* solution */\n{ "references": [{ "path": "./a" }] }'),
++    ["./a"],
++  );
++  assert.deepEqual(refs('{ "references": [{ "path": "./a" }] } // trailing'), [
++    "./a",
++  ]);
++  assert.deepEqual(refs('{ "references": [{ "path": "./a" },] }'), ["./a"]); // trailing comma
++  assert.deepEqual(refs('{ "files": [] }'), []); // no references
++  assert.deepEqual(refs("{ not json"), []); // malformed
++  assert.deepEqual(refs('{ "references": [{ "prepend": true }] }'), []); // no path
++});
++
++test("projectConfigFile: directory-form entry means <dir>/tsconfig.json (r26)", () => {
++  assert.equal(
++    projectConfigFile("src/memory", "tsconfig.test.json"),
++    "src/memory/tsconfig.test.json",
++  );
++  assert.equal(
++    projectConfigFile("src/memory", "packages/a"),
++    "src/memory/packages/a/tsconfig.json",
++  );
++  assert.equal(
++    projectConfigFile("src/memory", "."),
++    "src/memory/tsconfig.json",
++  );
++});
++
++test("refToProject: refs resolve against the REFERRING config's dir (r26)", () => {
++  // A ref is relative to the tsconfig that declares it, not to clientDir.
++  assert.equal(
++    refToProject(
++      "src/everything",
++      "src/everything/tsconfig.json",
++      "./tsconfig.app.json",
++    ),
++    "tsconfig.app.json",
++  );
++  assert.equal(
++    refToProject(
++      "src/everything",
++      "src/everything/sub/tsconfig.json",
++      "../other.json",
++    ),
++    "other.json",
++  );
++  assert.equal(
++    refToProject(
++      "src/everything",
++      "src/everything/sub/tsconfig.json",
++      "./deep",
++    ),
++    "sub/deep",
++  );
++});
+diff --git a/scripts/lib/workspaces.mjs b/scripts/lib/workspaces.mjs
+new file mode 100644
+index 0000000000..99d9a22f39
+--- /dev/null
++++ b/scripts/lib/workspaces.mjs
+@@ -0,0 +1,189 @@
++// The npm workspaces the root gate aggregates, and whether the root `validate`
++// actually runs each one's `validate` (#4864).
++//
++// The Inspector's coverage guards were written for clients that each keep
++// their own install and are validated with `cd clients/x && npm run validate`.
++// This repo is one npm workspace instead: the root `validate` runs `npm run
++// validate --workspaces`. Both guards ask the same two questions of that
++// layout — which workspaces are there, and does the root chain still run each
++// one — so the answers live here, once, and the two cannot disagree.
++
++import { existsSync, readdirSync, readFileSync } from "node:fs";
++import path from "node:path";
++
++/**
++ * The directories the root manifest's `workspaces` patterns name, as
++ * repo-relative POSIX paths, sorted. Returned whether or not each holds a
++ * `package.json` (`hasManifest` says which): npm itself only treats a match
++ * with a manifest as a workspace, so a caller that must notice TypeScript
++ * sitting in a matched directory with no manifest — source npm would silently
++ * skip — needs the ones without too.
++ *
++ * Supports the two pattern shapes this repo uses or would plausibly adopt: a
++ * plain directory (`src/everything`) and a single trailing `*` segment
++ * (`src/*`). Anything richer throws rather than guessing, so a new pattern
++ * fails the guard loudly instead of quietly matching nothing.
++ *
++ * @param {string} repoRoot
++ * @param {unknown} patterns The root manifest's `workspaces` value.
++ * @returns {{ dir: string, hasManifest: boolean }[]}
++ */
++export function workspaceDirs(repoRoot, patterns) {
++  if (!Array.isArray(patterns) || patterns.length === 0)
++    throw new Error(
++      "the root package.json declares no `workspaces` array — there is nothing to gate.",
++    );
++  const dirs = new Set();
++  for (const pattern of patterns) {
++    if (typeof pattern !== "string")
++      throw new Error(
++        `unsupported workspaces entry: ${JSON.stringify(pattern)}`,
++      );
++    const clean = pattern.replace(/^\.\//, "").replace(/\/$/, "");
++    if (/[*?{}[\]!]/.test(clean.replace(/\/\*$/, "")))
++      throw new Error(
++        `unsupported workspaces pattern \`${pattern}\`: only a plain directory or a trailing \`/*\` is understood. Extend scripts/lib/workspaces.mjs.`,
++      );
++    if (clean.endsWith("/*")) {
++      const parent = clean.slice(0, -2);
++      let entries;
++      try {
++        entries = readdirSync(path.join(repoRoot, parent), {
++          withFileTypes: true,
++        });
++      } catch {
++        continue; // a pattern whose parent is missing matches nothing, as in npm
++      }
++      for (const e of entries)
++        if (e.isDirectory() && e.name !== "node_modules")
++          dirs.add(path.posix.join(parent, e.name));
++    } else if (existsSync(path.join(repoRoot, clean))) {
++      dirs.add(clean);
++    }
++  }
++  return [...dirs].sort().map((dir) => ({
++    dir,
++    hasManifest: existsSync(path.join(repoRoot, dir, "package.json")),
++  }));
++}
++
++/** Read the root manifest and return its workspaces (see {@link workspaceDirs}). */
++export function readWorkspaces(repoRoot) {
++  const pkg = JSON.parse(
++    readFileSync(path.join(repoRoot, "package.json"), "utf8"),
++  );
++  return workspaceDirs(repoRoot, pkg.workspaces);
++}
++
++// npm's spellings of `run` (`run-script` is canonical; the rest are aliases).
++const RUN = new Set(["run", "run-script", "rum", "urn"]);
++
++/**
++ * Every command segment that actually executes when `npm run <entry>` runs:
++ * scripts reached through a real `npm run <name>` invocation, plus npm's
++ * implicit `pre`/`post` hooks. Splitting is on `\n`, `;` and `&&` only — never
++ * on `|` or `||`, so `npm run X || true` (which swallows X's failure) and
++ * `true || npm run X` (which never runs it) stay whole and match nothing. The
++ * same rule `scriptChainRuns` in `npm-scripts.mjs` applies to a vouch.
++ */
++function executedSegments(scripts, entry) {
++  const seen = new Set();
++  const queue = [entry];
++  /** @type {string[][][]} one entry per script body, each a list of segments */
++  const bodies = [];
++  while (queue.length > 0) {
++    const name = queue.shift();
++    if (seen.has(name)) continue;
++    seen.add(name);
++    for (const hook of [`pre${name}`, `post${name}`])
++      if (typeof scripts?.[hook] === "string") queue.push(hook);
++    const body = scripts?.[name];
++    if (typeof body !== "string") continue;
++    const segments = [];
++    bodies.push(segments);
++    for (const part of body.split(/\n|;|&&/)) {
++      const tokens = part.trim().split(/\s+/).filter(Boolean);
++      if (tokens.length === 0) continue;
++      segments.push(tokens);
++      // Follow a plain `npm run <other>` (no workspace flags) into the same
++      // manifest; a workspace-scoped run executes in the workspace instead.
++      if (
++        tokens[0] === "npm" &&
++        RUN.has(tokens[1]) &&
++        tokens[2] &&
++        tokens.length === 3
++      )
++        queue.push(tokens[2]);
++    }
++  }
++  return bodies;
++}
++
++/**
++ * Whether the root `validate` chain runs `dir`'s own `validate`, in one of the
++ * forms npm offers for it:
++ *
++ *   - `npm run validate --workspaces` (or `-ws`) — every workspace, the form
++ *     the root uses;
++ *   - `npm run validate --workspace <dir>` / `--workspace=<dir>` / `-w <dir>`;
++ *   - `cd <dir> && npm run validate` / `npm --prefix <dir> run validate`.
++ *
++ * Anything else on the command disqualifies it. In particular
++ * `--if-present` is refused: it makes npm skip a workspace that has no
++ * `validate` and still exit 0, which is exactly the "gate silently stops
++ * gating" failure this check exists for. A `validate:fast` or any other script
++ * name does not count as `validate`.
++ *
++ * @param {Record<string, string>} rootScripts
++ * @param {string} dir Repo-relative workspace directory.
++ */
++export function rootRunsWorkspaceValidate(rootScripts, dir) {
++  const target = path.posix.normalize(dir).replace(/\/$/, "");
++  const norm = (d) =>
++    path.posix.normalize(d.replace(/["']/g, "")).replace(/\/$/, "");
++  for (const segments of executedSegments(rootScripts, "validate")) {
++    // A `cd` holds for the rest of its own script body (npm starts every
++    // script from the package root), so track it per body.
++    let cwd = ".";
++    for (const tokens of segments) {
++      if (tokens[0] === "cd" && tokens.length === 2) {
++        cwd = norm(path.posix.join(cwd, tokens[1]));
++        continue;
++      }
++      if (tokens[0] !== "npm") continue;
++      let rest = tokens.slice(1);
++      let prefix = null;
++      if (rest[0] === "--prefix" && rest[1]) {
++        prefix = norm(path.posix.join(cwd, rest[1]));
++        rest = rest.slice(2);
++      }
++      if (!RUN.has(rest[0]) || rest[1] !== "validate") continue;
++      const flags = rest.slice(2);
++      if (flags.length === 0) {
++        if ((prefix ?? cwd) === target) return true;
++        continue;
++      }
++      // Workspace flags are resolved by npm against the workspace root, not
++      // the current directory, so they only count from the root itself.
++      if (prefix !== null || cwd !== ".") continue;
++      if (
++        flags.length === 1 &&
++        (flags[0] === "--workspaces" || flags[0] === "-ws")
++      )
++        return true;
++      if (
++        flags.length === 1 &&
++        flags[0].startsWith("--workspace=") &&
++        norm(flags[0].slice("--workspace=".length)) === target
++      )
++        return true;
++      if (
++        flags.length === 2 &&
++        (flags[0] === "--workspace" || flags[0] === "-w") &&
++        norm(flags[1]) === target
++      )
++        return true;
++    }
++  }
++  return false;
++}
+diff --git a/scripts/lib/workspaces.test.mjs b/scripts/lib/workspaces.test.mjs
+new file mode 100644
+index 0000000000..74bbf2e59d
+--- /dev/null
++++ b/scripts/lib/workspaces.test.mjs
+@@ -0,0 +1,125 @@
++// Tests for `workspaces.mjs` (#4864): which workspaces the root gate covers,
++// and whether the root `validate` still runs each one. One case per rule.
++// Run via `npm run test:scripts`.
++
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import path from "node:path";
++import { rootRunsWorkspaceValidate, workspaceDirs } from "./workspaces.mjs";
++
++const runs = (validate, dir = "src/a", extra = {}) =>
++  rootRunsWorkspaceValidate({ validate, ...extra }, dir);
++
++test("rootRunsWorkspaceValidate: the aggregate form covers every workspace", () => {
++  assert.ok(runs("npm run validate --workspaces"));
++  assert.ok(runs("npm run validate -ws", "src/b"));
++  assert.ok(runs("npm run-script validate --workspaces"));
++  assert.ok(runs("npm run guards && npm run validate --workspaces"));
++});
++
++test("rootRunsWorkspaceValidate: the per-workspace forms cover only their own dir", () => {
++  for (const cmd of [
++    "npm run validate --workspace src/a",
++    "npm run validate --workspace=src/a",
++    "npm run validate -w src/a",
++    "npm run validate -w ./src/a/",
++    "cd src/a && npm run validate",
++    "cd ./src/a && npm run validate",
++    "npm --prefix src/a run validate",
++  ]) {
++    assert.ok(runs(cmd), cmd);
++    assert.ok(!runs(cmd, "src/b"), `${cmd} must not vouch for src/b`);
++  }
++});
++
++test("rootRunsWorkspaceValidate: a prefix-sibling dir does not count", () => {
++  assert.ok(!runs("npm run validate -w src/a-next"));
++  assert.ok(!runs("cd src/a-next && npm run validate"));
++});
++
++test("rootRunsWorkspaceValidate: --if-present is refused (it skips a workspace with no validate)", () => {
++  assert.ok(!runs("npm run validate --workspaces --if-present"));
++  assert.ok(!runs("npm run validate --if-present -w src/a"));
++});
++
++test("rootRunsWorkspaceValidate: another script name is not validate", () => {
++  assert.ok(!runs("npm run validate:fast --workspaces"));
++  assert.ok(!runs("npm run check --workspaces"));
++});
++
++test("rootRunsWorkspaceValidate: a mention or a masked failure is not an invocation", () => {
++  assert.ok(!runs("echo npm run validate --workspaces"));
++  assert.ok(!runs("npm run validate --workspaces || true"));
++  assert.ok(!runs("true || npm run validate --workspaces"));
++});
++
++test("rootRunsWorkspaceValidate: follows delegation and lifecycle hooks", () => {
++  assert.ok(
++    runs("npm run validate:ts", "src/a", {
++      "validate:ts": "npm run validate --workspaces",
++    }),
++  );
++  assert.ok(
++    runs("npm run guards", "src/a", {
++      postvalidate: "npm run validate -w src/a",
++    }),
++  );
++});
++
++test("rootRunsWorkspaceValidate: a cd holds only within its own script body", () => {
++  // `cd` then a delegated script: npm starts the delegate from the root again,
++  // so the delegate's bare `npm run validate` is the ROOT's validate.
++  assert.ok(
++    !runs("cd src/a && npm run other", "src/a", {
++      other: "npm run validate",
++    }),
++  );
++  // Workspace flags are resolved from the workspace root, so under a `cd`
++  // they are not the root's aggregate.
++  assert.ok(!runs("cd src/b && npm run validate -w src/a"));
++});
++
++test("rootRunsWorkspaceValidate: nothing reachable, nothing run", () => {
++  assert.ok(!rootRunsWorkspaceValidate({}, "src/a"));
++  assert.ok(!rootRunsWorkspaceValidate(undefined, "src/a"));
++});
++
++function fixture(layout) {
++  const dir = mkdtempSync(path.join(tmpdir(), "workspaces-"));
++  for (const [rel, withManifest] of Object.entries(layout)) {
++    mkdirSync(path.join(dir, rel), { recursive: true });
++    if (withManifest) writeFileSync(path.join(dir, rel, "package.json"), "{}");
++  }
++  return dir;
++}
++
++test("workspaceDirs: expands a trailing /* and a plain dir, flags missing manifests", () => {
++  const dir = fixture({
++    "src/a": true,
++    "src/b": false,
++    "src/node_modules": false,
++    tools: true,
++  });
++  try {
++    assert.deepEqual(workspaceDirs(dir, ["src/*", "tools", "./missing"]), [
++      { dir: "src/a", hasManifest: true },
++      { dir: "src/b", hasManifest: false },
++      { dir: "tools", hasManifest: true },
++    ]);
++  } finally {
++    rmSync(dir, { recursive: true, force: true });
++  }
++});
++
++test("workspaceDirs: a pattern it cannot read fails loudly instead of matching nothing", () => {
++  assert.throws(() => workspaceDirs("/nowhere", ["src/**"]), /unsupported/);
++  assert.throws(
++    () => workspaceDirs("/nowhere", ["packages/*/x"]),
++    /unsupported/,
++  );
++  assert.throws(() => workspaceDirs("/nowhere", [{}]), /unsupported/);
++  assert.throws(() => workspaceDirs("/nowhere", []), /no `workspaces`/);
++  assert.throws(() => workspaceDirs("/nowhere", undefined), /no `workspaces`/);
++});
+diff --git a/scripts/skill-eval.mjs b/scripts/skill-eval.mjs
+index b53b8540a8..b298ad92fc 100644
+--- a/scripts/skill-eval.mjs
++++ b/scripts/skill-eval.mjs
+@@ -178,6 +178,7 @@ export function collectCases(only, skillsDir = SKILLS_DIR) {
+     } catch (e) {
+       throw new Error(
+         `${dir}/evals/evals.json is not valid JSON — ${e.message}`,
++        { cause: e },
+       );
+     }
+     files.push({ dir, parsed });
+@@ -831,7 +832,6 @@ export function passesThreshold(rate, threshold, strict) {
+  */
+ export function formatReport(cases, results, ours, opts) {
+   const lines = [];
+-  let failed = 0;
+ 
+   const group = (members, heading, threshold, strict) => {
+     if (members.length === 0) return 0;
+@@ -870,7 +870,7 @@ export function formatReport(cases, results, ours, opts) {
+     opts.chainThreshold,
+     true,
+   );
+-  failed = directShort + chainedShort;
++  const failed = directShort + chainedShort;
+ 
+   // Two numbers, never one. A hand-off is a second-hop load over many turns and
+   // a first-move rate is the model's opening move; summing them would produce a
+diff --git a/scripts/verify-dep-lockstep.mjs b/scripts/verify-dep-lockstep.mjs
+new file mode 100644
+index 0000000000..a0caa84014
+--- /dev/null
++++ b/scripts/verify-dep-lockstep.mjs
+@@ -0,0 +1,136 @@
++#!/usr/bin/env node
++// Shared-devDependency lockstep guard (#4864), adapted from the MCP
++// Inspector's `verify:dep-lockstep`.
++//
++// The Inspector's version runs over five separate installs and asks which
++// packages two installs put into one `tsc` program. This repo is a single npm
++// workspace with one lockfile, so that question mostly answers itself — but
++// not entirely: each workspace still declares its own ranges, and they drift.
++// When this guard landed, `typescript` alone was declared three ways
++// (`^5.6.2`, `^5.8.2`, `^5.3.3`), and `everything` pinned Prettier 2 while the
++// repo moved to Prettier 3. A range is a statement about which toolchain the
++// package builds and tests with; three statements about one toolchain is two
++// too many, and the lockfile resolving them to one version today is luck that
++// the next install can undo.
++//
++// So the rule is the smaller one §2.3 of docs/agent-guidance-inception.md
++// sets: every SHARED toolchain package is declared with ONE range everywhere it
++// is declared — across the root and every workspace, in any dependency section
++// — or declared only once (hoisted to the root). The shared set is named
++// below. The Python servers are independent by design and have no manifest
++// here, so they are out of scope.
++//
++// Exits non-zero, naming each package and where each range is declared.
++
++import { readFileSync } from "node:fs";
++import path from "node:path";
++import { fileURLToPath, pathToFileURL } from "node:url";
++import { rootReachesScript } from "./lib/npm-scripts.mjs";
++import { readWorkspaces } from "./lib/workspaces.mjs";
++
++const repoRoot = path.resolve(
++  path.dirname(fileURLToPath(import.meta.url)),
++  "..",
++);
++
++/**
++ * The toolchain every TypeScript workspace builds, tests or formats with. A
++ * package belongs here when two workspaces declaring different ranges of it
++ * would mean they are gated by different tools.
++ */
++export const SHARED_DEV_DEPENDENCIES = [
++  "typescript",
++  "vitest",
++  "@vitest/coverage-v8",
++  "prettier",
++  "@types/node",
++];
++
++// Every section a range can be declared in. `peerDependencies` is not one: a
++// peer range states what a consumer may bring, not what this repo installs.
++const SECTIONS = ["dependencies", "devDependencies", "optionalDependencies"];
++
++/**
++ * Pure: the lockstep problems in a set of manifests.
++ *
++ * @param {{ dir: string, pkg: Record<string, unknown> }[]} manifests `dir` is
++ *   repo-relative (`.` for the root).
++ * @param {string[]} [shared]
++ * @returns {string[]} One message per divergent package.
++ */
++export function lockstepProblems(manifests, shared = SHARED_DEV_DEPENDENCIES) {
++  const problems = [];
++  for (const name of shared) {
++    /** @type {Map<string, string[]>} range -> ["dir (section)", …] */
++    const byRange = new Map();
++    for (const { dir, pkg } of manifests)
++      for (const section of SECTIONS) {
++        const range = pkg?.[section]?.[name];
++        if (typeof range !== "string") continue;
++        if (!byRange.has(range)) byRange.set(range, []);
++        byRange.get(range).push(`${dir} (${section})`);
++      }
++    if (byRange.size <= 1) continue;
++    const detail = [...byRange.entries()]
++      .map(([range, where]) => `    ${range}: ${where.join(", ")}`)
++      .join("\n");
++    problems.push(
++      `\`${name}\` is declared with ${byRange.size} different ranges:\n${detail}`,
++    );
++  }
++  return problems;
++}
++
++/** Read the root manifest and every workspace manifest. */
++function readManifests() {
++  const read = (dir) =>
++    JSON.parse(readFileSync(path.join(repoRoot, dir, "package.json"), "utf8"));
++  return [
++    { dir: ".", pkg: read(".") },
++    ...readWorkspaces(repoRoot)
++      .filter((w) => w.hasManifest)
++      .map((w) => ({ dir: w.dir, pkg: read(w.dir) })),
++  ];
++}
++
++export function main() {
++  let manifests;
++  try {
++    manifests = readManifests();
++  } catch (err) {
++    console.error(`verify:dep-lockstep — ${err.message}`);
++    process.exit(1);
++  }
++
++  // Vouch for the sibling guard: a guard cannot detect being unrun itself, but
++  // `verify:format-coverage` checks this one is still in `validate`, and this
++  // checks it back — so dropping either is caught by the other.
++  if (!rootReachesScript(manifests[0].pkg.scripts, "verify:format-coverage")) {
++    console.error(
++      "verify:dep-lockstep — the root `validate` no longer runs `verify:format-coverage` (its sibling guard). Restore it.",
++    );
++    process.exit(1);
++  }
++
++  const problems = lockstepProblems(manifests);
++  if (problems.length > 0) {
++    console.error(
++      `verify:dep-lockstep — ${problems.length} shared toolchain package(s) are not in lockstep:\n`,
++    );
++    for (const p of problems) console.error(`  ${p}`);
++    console.error(
++      "\nDeclare each with one identical range everywhere it is declared, or only once at the root.",
++    );
++    console.error(
++      "Bump it in every manifest in the same change, then `npm install` at the root so the lockfile follows.",
++    );
++    process.exit(1);
++  }
++  console.log(
++    `verify:dep-lockstep — OK: ${SHARED_DEV_DEPENDENCIES.length} shared toolchain packages are in lockstep across ${manifests.length} manifests.`,
++  );
++}
++
++// Run only when executed directly; importing (tests) exposes the pure helper.
++if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)
++  main();
+diff --git a/scripts/verify-dep-lockstep.test.mjs b/scripts/verify-dep-lockstep.test.mjs
+new file mode 100644
+index 0000000000..41e3c031a4
+--- /dev/null
++++ b/scripts/verify-dep-lockstep.test.mjs
+@@ -0,0 +1,176 @@
++// Tests for `verify-dep-lockstep.mjs` (#4864): the pure rule, the sibling
++// vouch, and the guard against the repository as it stands. Run via
++// `npm run test:scripts`.
++
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import { spawnSync } from "node:child_process";
++import {
++  cpSync,
++  mkdirSync,
++  mkdtempSync,
++  realpathSync,
++  rmSync,
++  writeFileSync,
++} from "node:fs";
++import { tmpdir } from "node:os";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++import {
++  SHARED_DEV_DEPENDENCIES,
++  lockstepProblems,
++} from "./verify-dep-lockstep.mjs";
++
++const scriptsDir = path.dirname(fileURLToPath(import.meta.url));
++
++test("lockstep: one range everywhere passes", () => {
++  assert.deepEqual(
++    lockstepProblems([
++      { dir: ".", pkg: {} },
++      { dir: "src/a", pkg: { devDependencies: { typescript: "^5.8.2" } } },
++      { dir: "src/b", pkg: { devDependencies: { typescript: "^5.8.2" } } },
++    ]),
++    [],
++  );
++});
++
++test("lockstep: declared only once (hoisted to the root) passes", () => {
++  assert.deepEqual(
++    lockstepProblems([
++      { dir: ".", pkg: { devDependencies: { prettier: "3.8.4" } } },
++      { dir: "src/a", pkg: {} },
++    ]),
++    [],
++  );
++});
++
++test("lockstep: a divergent range fails, naming every declaration", () => {
++  const problems = lockstepProblems([
++    { dir: ".", pkg: {} },
++    { dir: "src/a", pkg: { devDependencies: { typescript: "^5.6.2" } } },
++    { dir: "src/b", pkg: { devDependencies: { typescript: "^5.8.2" } } },
++    { dir: "src/c", pkg: { devDependencies: { typescript: "^5.8.2" } } },
++  ]);
++  assert.equal(problems.length, 1);
++  assert.match(problems[0], /`typescript` is declared with 2 different ranges/);
++  assert.match(problems[0], /\^5\.6\.2: src\/a \(devDependencies\)/);
++  assert.match(
++    problems[0],
++    /\^5\.8\.2: src\/b \(devDependencies\), src\/c \(devDependencies\)/,
++  );
++});
++
++test("lockstep: the root counts, and so does every dependency section", () => {
++  // A root pin that disagrees with a workspace is the same drift, and moving a
++  // range to `dependencies` does not hide it.
++  const problems = lockstepProblems([
++    { dir: ".", pkg: { devDependencies: { prettier: "3.8.4" } } },
++    { dir: "src/a", pkg: { dependencies: { prettier: "^2.8.8" } } },
++  ]);
++  assert.equal(problems.length, 1);
++  assert.match(problems[0], /src\/a \(dependencies\)/);
++  assert.match(
++    lockstepProblems([
++      { dir: "a", pkg: { optionalDependencies: { vitest: "^4.1.8" } } },
++      { dir: "b", pkg: { devDependencies: { vitest: "^4.0.0" } } },
++    ])[0],
++    /`vitest`/,
++  );
++});
++
++test("lockstep: peer ranges and packages outside the shared set are not compared", () => {
++  assert.deepEqual(
++    lockstepProblems([
++      { dir: "a", pkg: { peerDependencies: { typescript: ">=4" } } },
++      { dir: "b", pkg: { devDependencies: { typescript: "^5.8.2" } } },
++      { dir: "a", pkg: { devDependencies: { zod: "^3" } } },
++      { dir: "b", pkg: { devDependencies: { zod: "^4" } } },
++    ]),
++    [],
++  );
++});
++
++test("lockstep: the shared set is the one §2.3 names", () => {
++  assert.deepEqual(
++    [...SHARED_DEV_DEPENDENCIES].sort(),
++    [
++      "@types/node",
++      "@vitest/coverage-v8",
++      "prettier",
++      "typescript",
++      "vitest",
++    ].sort(),
++  );
++});
++
++/** Run the real guard in a throwaway repo; `files` maps paths to JSON. */
++function runGuard(rootPkg, files = {}) {
++  const dir = realpathSync(mkdtempSync(path.join(tmpdir(), "dep-lockstep-")));
++  try {
++    writeFileSync(path.join(dir, "package.json"), JSON.stringify(rootPkg));
++    for (const [rel, content] of Object.entries(files)) {
++      mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true });
++      writeFileSync(path.join(dir, rel), JSON.stringify(content));
++    }
++    mkdirSync(path.join(dir, "scripts", "lib"), { recursive: true });
++    for (const rel of [
++      "verify-dep-lockstep.mjs",
++      path.join("lib", "npm-scripts.mjs"),
++      path.join("lib", "workspaces.mjs"),
++    ])
++      cpSync(path.join(scriptsDir, rel), path.join(dir, "scripts", rel));
++    const r = spawnSync(
++      process.execPath,
++      [path.join(dir, "scripts", "verify-dep-lockstep.mjs")],
++      { cwd: dir, encoding: "utf8" },
++    );
++    return { status: r.status, out: `${r.stdout}${r.stderr}` };
++  } finally {
++    rmSync(dir, { recursive: true, force: true });
++  }
++}
++
++const WIRED = {
++  validate: "npm run verify:format-coverage && npm run verify:dep-lockstep",
++  "verify:format-coverage": "node scripts/verify-format-coverage.mjs",
++  "verify:dep-lockstep": "node scripts/verify-dep-lockstep.mjs",
++};
++
++test("guard: reads every workspace manifest and fails on drift", () => {
++  const { status, out } = runGuard(
++    { workspaces: ["src/*"], scripts: WIRED },
++    {
++      "src/a/package.json": { devDependencies: { typescript: "^5.6.2" } },
++      "src/b/package.json": { devDependencies: { typescript: "^5.8.2" } },
++    },
++  );
++  assert.equal(status, 1, out);
++  assert.match(out, /1 shared toolchain package\(s\) are not in lockstep/);
++});
++
++test("guard: passes when aligned", () => {
++  const { status, out } = runGuard(
++    { workspaces: ["src/*"], scripts: WIRED },
++    {
++      "src/a/package.json": { devDependencies: { typescript: "^5.8.2" } },
++      "src/b/package.json": { devDependencies: { typescript: "^5.8.2" } },
++    },
++  );
++  assert.equal(status, 0, out);
++  assert.match(out, /OK: 5 shared toolchain packages are in lockstep across 3/);
++});
++
++test("guard: vouches for verify:format-coverage", () => {
++  const { status, out } = runGuard({
++    workspaces: ["src/*"],
++    scripts: { ...WIRED, validate: "npm run verify:dep-lockstep" },
++  });
++  assert.equal(status, 1, out);
++  assert.match(out, /no longer runs `verify:format-coverage`/);
++});
++
++test("guard: a root manifest with no workspaces fails loudly", () => {
++  const { status, out } = runGuard({ scripts: WIRED });
++  assert.equal(status, 1, out);
++  assert.match(out, /declares no `workspaces`/);
++});
+diff --git a/scripts/verify-format-coverage.main.test.mjs b/scripts/verify-format-coverage.main.test.mjs
+new file mode 100644
+index 0000000000..6b623340fa
+--- /dev/null
++++ b/scripts/verify-format-coverage.main.test.mjs
+@@ -0,0 +1,218 @@
++// Ported from the MCP Inspector for #4864; `#N` below are that repo's issues
++// unless marked otherwise.
++//
++// Regression tests for `verify-format-coverage`'s sibling-guard vouch (Copilot,
++// #1962). The three root guards form a cycle so that dropping any one from
++// `validate` is caught by another — but the vouch branch itself had no test, so
++// a typo in a sibling's name would leave `test:scripts` green while that guard
++// silently stopped being enforced. That is the same "a gate that stops gating"
++// failure the cycle exists to prevent, one level up.
++//
++// The vouch runs before any file enumeration, so the fixture needs only a
++// `package.json` and the script. The workspace-reach and file-coverage phases
++// (added here for this repo's npm workspaces) get fixtures of their own below.
++// Run via `npm run test:scripts`.
++
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import { execFileSync, spawnSync } from "node:child_process";
++import {
++  cpSync,
++  mkdirSync,
++  mkdtempSync,
++  realpathSync,
++  rmSync,
++  writeFileSync,
++} from "node:fs";
++import { tmpdir } from "node:os";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++
++const scriptsDir = path.dirname(fileURLToPath(import.meta.url));
++
++/** A `validate` chain running each named guard, plus the always-present self. */
++function scriptsRunning(guards) {
++  const scripts = {
++    validate: ["verify:format-coverage", ...guards]
++      .map((g) => `npm run ${g}`)
++      .join(" && "),
++    "verify:format-coverage": "node scripts/verify-format-coverage.mjs",
++  };
++  for (const g of guards) scripts[g] = `node scripts/${g.slice(7)}.mjs`;
++  return scripts;
++}
++
++/**
++ * Run `verify-format-coverage` in a throwaway repo whose root `validate` runs
++ * exactly `guards`. realpath'd because the script only executes when
++ * `import.meta.url` matches `process.argv[1]`, and macOS `tmpdir()` is a
++ * symlink — see the note in `verify-dep-lockstep.main.test.mjs`.
++ */
++function runWithGuards(guards) {
++  return runWithScripts(scriptsRunning(guards));
++}
++
++/**
++ * Same, for a fixture whose `scripts` are built by hand. `files` maps extra
++ * repo-relative paths to their contents (a workspace manifest, a source file).
++ */
++function runWithScripts(scripts, files = {}) {
++  const dir = realpathSync(mkdtempSync(path.join(tmpdir(), "format-cov-")));
++  try {
++    writeFileSync(
++      path.join(dir, "package.json"),
++      JSON.stringify(
++        { name: "fixture", workspaces: ["src/*"], scripts },
++        null,
++        2,
++      ),
++    );
++    for (const [rel, content] of Object.entries(files)) {
++      mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true });
++      writeFileSync(path.join(dir, rel), content);
++    }
++    mkdirSync(path.join(dir, "scripts", "lib"), { recursive: true });
++    for (const rel of [
++      "verify-format-coverage.mjs",
++      path.join("lib", "npm-scripts.mjs"),
++      path.join("lib", "workspaces.mjs"),
++    ])
++      cpSync(path.join(scriptsDir, rel), path.join(dir, "scripts", rel));
++    execFileSync("git", ["init", "-q"], { cwd: dir });
++    execFileSync("git", ["add", "-A"], { cwd: dir });
++
++    const r = spawnSync(
++      process.execPath,
++      [path.join(dir, "scripts", "verify-format-coverage.mjs")],
++      { cwd: dir, encoding: "utf8" },
++    );
++    return { status: r.status, out: `${r.stdout}${r.stderr}` };
++  } finally {
++    rmSync(dir, { recursive: true, force: true });
++  }
++}
++
++const ALL_SIBLINGS = [
++  "verify:typecheck-coverage",
++  "verify:dep-lockstep",
++  "verify:skills",
++];
++
++for (const dropped of ALL_SIBLINGS) {
++  test(`vouch: fails when \`${dropped}\` is dropped from validate`, () => {
++    const { status, out } = runWithGuards(
++      ALL_SIBLINGS.filter((g) => g !== dropped),
++    );
++    assert.equal(status, 1, out);
++    assert.match(out, new RegExp("no longer runs `" + dropped + "`"));
++  });
++}
++
++test("vouch: a mention is not an invocation", () => {
++  // `rootReachesScript` used to match any `npm run …` substring, so a `validate`
++  // reading `echo npm run verify:skills` satisfied the vouch while the guard
++  // never executed — the cycle protecting nothing (Copilot).
++  const scripts = scriptsRunning(ALL_SIBLINGS);
++  scripts.validate = scripts.validate.replace(
++    "npm run verify:skills",
++    "echo npm run verify:skills",
++  );
++  const { status, out } = runWithScripts(scripts);
++  assert.equal(status, 1, out);
++  assert.match(out, /no longer runs `verify:skills`/);
++});
++
++test("vouch: passes when every sibling is still wired", () => {
++  // The run still fails afterwards — the copied guard scripts are tracked and
++  // no glob covers them — so assert on the *reason*, not the exit status: no
++  // sibling may be reported missing.
++  const { out } = runWithGuards(ALL_SIBLINGS);
++  assert.doesNotMatch(out, /no longer runs/);
++});
++
++// --- workspaces (#4864) --------------------------------------------------------
++
++const SERVER = {
++  name: "server",
++  scripts: {
++    validate: "npm run format:check",
++    "format:check":
++      'prettier --check "**/*.{ts,mjs}" --ignore-path ../../.prettierignore',
++  },
++};
++
++/** Root scripts with every sibling wired, plus `format:check:root` over scripts/. */
++function wiredRoot(validateTail) {
++  const scripts = scriptsRunning(ALL_SIBLINGS);
++  scripts.validate = `npm run format:check:root && ${scripts.validate}${validateTail}`;
++  scripts["format:check:root"] = 'prettier --check "scripts/**/*.mjs"';
++  return scripts;
++}
++
++test("workspaces: a fully wired tree passes", () => {
++  const { status, out } = runWithScripts(
++    wiredRoot(" && npm run validate --workspaces"),
++    {
++      "src/server/package.json": JSON.stringify(SERVER),
++      "src/server/index.ts": "export {};\n",
++    },
++  );
++  assert.equal(status, 0, out);
++  assert.match(out, /OK: all \d+ tracked source files are format-gated/);
++});
++
++test("workspaces: a workspace the root validate never runs fails", () => {
++  const { status, out } = runWithScripts(wiredRoot(""), {
++    "src/server/package.json": JSON.stringify(SERVER),
++    "src/server/index.ts": "export {};\n",
++  });
++  assert.equal(status, 1, out);
++  assert.match(out, /does not invoke 1 workspace validation/);
++  assert.match(out, /src\/server/);
++});
++
++test("workspaces: --ignore-path's value is not read as a glob that covers files", () => {
++  // Without the value-taking-flag skip, `../../.prettierignore` joined onto the
++  // workspace dir is a path; this pins that it is not harvested at all, by
++  // making it the ONLY argument that could cover the file.
++  const onlyIgnorePath = {
++    ...SERVER,
++    scripts: {
++      validate: "npm run format:check",
++      "format:check": "prettier --check --ignore-path index.ts",
++    },
++  };
++  const { status, out } = runWithScripts(
++    wiredRoot(" && npm run validate --workspaces"),
++    {
++      "src/server/package.json": JSON.stringify(onlyIgnorePath),
++      "src/server/index.ts": "export {};\n",
++    },
++  );
++  assert.equal(status, 1, out);
++  assert.match(out, /src\/server\/index\.ts/);
++});
++
++test("workspaces: a tracked source file no glob covers fails, naming it", () => {
++  const { status, out } = runWithScripts(
++    wiredRoot(" && npm run validate --workspaces"),
++    {
++      "src/server/package.json": JSON.stringify(SERVER),
++      "src/server/index.ts": "export {};\n",
++      "tools/gen.mjs": "export {};\n",
++    },
++  );
++  assert.equal(status, 1, out);
++  assert.match(out, /not covered by any prettier format glob/);
++  assert.match(out, /tools\/gen\.mjs/);
++});
++
++test("workspaces: a matched directory with source but no manifest is ungated", () => {
++  // npm skips a `src/*` match without a package.json, so nothing formats it.
++  const { status, out } = runWithScripts(
++    wiredRoot(" && npm run validate --workspaces"),
++    { "src/orphan/index.ts": "export {};\n" },
++  );
++  assert.equal(status, 1, out);
++  assert.match(out, /src\/orphan\/index\.ts/);
++});
+diff --git a/scripts/verify-format-coverage.mjs b/scripts/verify-format-coverage.mjs
+new file mode 100644
+index 0000000000..8a0e9b82f7
+--- /dev/null
++++ b/scripts/verify-format-coverage.mjs
+@@ -0,0 +1,261 @@
++#!/usr/bin/env node
++// Durable guard for the "every first-party source file is format-gated"
++// invariant (#4864, ported from the MCP Inspector, where it is inspector#1789).
++// A prettier `format:check` glob that stops covering a file fails silently —
++// the file is simply skipped, not reported — so a new directory or a new
++// extension can re-open the gap unnoticed. This enumerates every tracked
++// JS/TS source file and asserts each is matched by at least one
++// `prettier --check` glob declared in a `package.json` whose `validate` the
++// root chain actually runs. Exits non-zero, listing the offenders, on any miss.
++//
++// Source of truth is the `format:check*` scripts themselves — this parser
++// reads the globs out of them, so widening/narrowing a glob is reflected here
++// with no second list to keep in sync. The manifests are the root plus every
++// npm workspace (`scripts/lib/workspaces.mjs`), read from disk, so a new
++// server is gated without editing this file.
++
++import { readFileSync } from "node:fs";
++import { execFileSync } from "node:child_process";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++import {
++  reachableScripts,
++  rootReachesScript,
++  tokenize,
++} from "./lib/npm-scripts.mjs";
++import {
++  readWorkspaces,
++  rootRunsWorkspaceValidate,
++} from "./lib/workspaces.mjs";
++
++const repoRoot = path.resolve(
++  path.dirname(fileURLToPath(import.meta.url)),
++  "..",
++);
++
++// File extensions prettier formats as first-party source here. Kept in sync with
++// the union of the format globs; a file with one of these extensions that no
++// glob matches is the failure this guard exists to catch.
++const SOURCE_EXTENSIONS = [
++  "ts",
++  "tsx",
++  "mts",
++  "cts",
++  "js",
++  "jsx",
++  "mjs",
++  "cjs",
++];
++
++// The `package.json`s whose `format:check*` scripts define the gate: the root
++// (its `format:check:root`, for the root tooling) and each workspace (its own
++// `format:check`). Paths are relative to the repo root; each glob resolves
++// relative to its manifest's directory (prettier's cwd for that script). A
++// matched workspace directory with no manifest is not a workspace to npm, so it
++// has no script to harvest — any tracked source in it simply shows up below as
++// ungated, which is the right report.
++const WORKSPACES = (() => {
++  try {
++    return readWorkspaces(repoRoot)
++      .filter((w) => w.hasManifest)
++      .map((w) => w.dir);
++  } catch (err) {
++    console.error(`verify:format-coverage — ${err.message}`);
++    process.exit(1);
++  }
++})();
++const MANIFESTS = [".", ...WORKSPACES];
++
++// prettier flags whose VALUE is the next token — a path or a name, never a glob
++// of files to check. `--ignore-path ../../.prettierignore` must not be read as
++// a file argument.
++const VALUE_TAKING_FLAGS = new Set([
++  "--ignore-path",
++  "--config",
++  "--plugin",
++  "--parser",
++  "--log-level",
++  "--cache-location",
++  "--cache-strategy",
++  "--stdin-filepath",
++]);
++
++/**
++ * Extract the path/glob args from every `prettier --check …` in a manifest's
++ * scripts that is reachable from `validate`. Restricting to reachable scripts is
++ * what makes the guard assert "this file is checked by CI", not merely "some
++ * glob covers it".
++ */
++function prettierCheckArgs(scripts) {
++  const reachable = reachableScripts(scripts);
++  const args = [];
++  for (const [name, value] of Object.entries(scripts ?? {})) {
++    if (!reachable.has(name)) continue;
++    if (typeof value !== "string" || !value.includes("prettier --check"))
++      continue;
++    // A manifest may chain `prettier --check …` inside a larger script; take the
++    // segment starting at each occurrence up to the next `&&`/`||`/`;`.
++    for (const segment of value.split(/&&|\|\||;/)) {
++      const trimmed = segment.trim();
++      if (!trimmed.startsWith("prettier --check")) continue;
++      const tokens = tokenize(trimmed).slice(2); // drop `prettier` `--check`
++      for (let i = 0; i < tokens.length; i++) {
++        const t = tokens[i];
++        if (VALUE_TAKING_FLAGS.has(t)) {
++          i++; // skip the flag's value too
++          continue;
++        }
++        if (t.startsWith("-")) continue; // a flag, not a path
++        // A negated pattern removes files; it never adds coverage. Ignoring it
++        // here errs toward reporting a file as gated that prettier skips, so
++        // no first-party path is negated in any `format:check` today.
++        if (t.startsWith("!")) continue;
++        args.push(t);
++      }
++    }
++  }
++  return args;
++}
++
++const GLOB_CHARS = /[*?{}[\]]/;
++
++/** Convert a prettier glob to an anchored RegExp over repo-relative POSIX paths. */
++function globToRegExp(glob) {
++  let re = "";
++  for (let i = 0; i < glob.length; i++) {
++    const c = glob[i];
++    if (c === "*") {
++      if (glob[i + 1] === "*") {
++        // `**` (optionally `**/`) crosses path separators.
++        if (glob[i + 2] === "/") {
++          re += "(?:.*/)?";
++          i += 2;
++        } else {
++          re += ".*";
++          i += 1;
++        }
++      } else {
++        re += "[^/]*"; // `*` stays within a segment
++      }
++    } else if (c === "?") {
++      re += "[^/]";
++    } else if (c === "{") {
++      re += "(?:";
++    } else if (c === "}") {
++      re += ")";
++    } else if (c === ",") {
++      re += "|";
++    } else if (".+^$()|\\/".includes(c)) {
++      re += "\\" + c;
++    } else {
++      re += c;
++    }
++  }
++  return new RegExp("^" + re + "$");
++}
++
++/**
++ * Assert the root `validate` chain actually invokes each workspace's
++ * `validate` (normally via `npm run validate --workspaces`). Without this, a
++ * workspace's globs would still be harvested from its own `validate` and count
++ * as coverage even if the root chain stopped running it — the same "gate
++ * silently stops gating" failure as the reachable-script check, one level up.
++ * Returns the workspace dirs the root chain does NOT reach.
++ */
++function workspacesUnreachedFromRoot() {
++  const rootPkg = JSON.parse(
++    readFileSync(path.join(repoRoot, "package.json"), "utf8"),
++  );
++  return WORKSPACES.filter(
++    (dir) => !rootRunsWorkspaceValidate(rootPkg.scripts, dir),
++  );
++}
++
++/** Build the set of coverage predicates from all manifests' format globs. */
++function buildMatchers() {
++  const matchers = [];
++  for (const manifestDir of MANIFESTS) {
++    const manifestPath = path.join(repoRoot, manifestDir, "package.json");
++    const pkg = JSON.parse(readFileSync(manifestPath, "utf8"));
++    for (const arg of prettierCheckArgs(pkg.scripts)) {
++      const rel = manifestDir === "." ? arg : path.posix.join(manifestDir, arg);
++      if (GLOB_CHARS.test(arg)) {
++        const re = globToRegExp(rel);
++        matchers.push((f) => re.test(f));
++      } else {
++        // A bare path: a directory prettier recurses into, or an exact file.
++        matchers.push((f) => f === rel || f.startsWith(rel + "/"));
++      }
++    }
++  }
++  return matchers;
++}
++
++function trackedSourceFiles() {
++  const out = execFileSync(
++    "git",
++    ["ls-files", ...SOURCE_EXTENSIONS.map((e) => `*.${e}`)],
++    { cwd: repoRoot, encoding: "utf8" },
++  );
++  return out.split("\n").filter(Boolean);
++}
++
++// Vouch for the sibling guards: a guard can't detect being unrun itself, so they
++// form a cycle instead. This one checks the others; each of them checks only
++// this one. So dropping `verify:typecheck-coverage`, `verify:dep-lockstep` or
++// `verify:skills` is caught here, and dropping *this* guard is caught by any of
++// them. Only removing all of them at once slips through.
++const rootScripts = JSON.parse(
++  readFileSync(path.join(repoRoot, "package.json"), "utf8"),
++).scripts;
++for (const sibling of [
++  "verify:typecheck-coverage",
++  "verify:dep-lockstep",
++  "verify:skills",
++]) {
++  if (rootReachesScript(rootScripts, sibling)) continue;
++  console.error(
++    `verify:format-coverage — the root \`validate\` no longer runs \`${sibling}\` (its sibling guard). Restore it.`,
++  );
++  process.exit(1);
++}
++
++const unreachedWorkspaces = workspacesUnreachedFromRoot();
++if (unreachedWorkspaces.length > 0) {
++  console.error(
++    `verify:format-coverage — the root \`validate\` chain does not invoke ${unreachedWorkspaces.length} workspace validation(s):\n`,
++  );
++  for (const dir of unreachedWorkspaces)
++    console.error(
++      `  ${dir} (expected \`npm run validate --workspaces\` in the root \`validate\`)`,
++    );
++  console.error(
++    "\nA workspace whose `validate` the root chain never runs is not format-gated by it,",
++  );
++  console.error(
++    "even though its globs exist. Restore `npm run validate --workspaces` in the root `validate`.",
++  );
++  process.exit(1);
++}
++
++const matchers = buildMatchers();
++const files = trackedSourceFiles();
++const ungated = files.filter((f) => !matchers.some((m) => m(f)));
++
++if (ungated.length > 0) {
++  console.error(
++    `verify:format-coverage — ${ungated.length} tracked source file(s) are not covered by any prettier format glob:\n`,
++  );
++  for (const f of ungated) console.error("  " + f);
++  console.error(
++    "\nAdd the file's directory (or a matching glob) to the relevant `format`/`format:check` script,",
++  );
++  console.error(
++    "or widen the extension set. Root tooling belongs under `format:check:root`; a server's source under its own `format:check`.",
++  );
++  process.exit(1);
++}
++
++console.log(
++  `verify:format-coverage — OK: all ${files.length} tracked source files are format-gated.`,
++);
+diff --git a/scripts/verify-skills.main.test.mjs b/scripts/verify-skills.main.test.mjs
+index dc90a8922a..916e9ada11 100644
+--- a/scripts/verify-skills.main.test.mjs
++++ b/scripts/verify-skills.main.test.mjs
+@@ -347,23 +347,43 @@ test("the real verifier passes on the repository as it stands", () => {
+ 
+ test("a wiring allowance excuses its link only while the pending script is absent", () => {
+   const unwired = {
++    validate: "npm run verify:format-coverage",
++    "verify:format-coverage": "node scripts/verify-format-coverage.mjs",
+     "verify:skills": "node scripts/verify-skills.mjs",
+     "verify:skills:cli": "node scripts/verify-skills-cli.mjs",
+   };
+   assert.deepEqual(checkWiring(unwired, WIRED_WORKFLOW, WIRING_ALLOWANCES), []);
+-  // Strict by default: the same manifest fails both links without them.
+-  assert.equal(checkWiring(unwired, WIRED_WORKFLOW).length, 2);
++  // Strict by default: the same manifest fails the `local:gate` link without it.
++  assert.match(
++    checkWiring(unwired, WIRED_WORKFLOW).join(),
++    /local:gate` no longer runs `verify:skills:cli`/,
++  );
+ });
+ 
+ test("a wiring allowance goes stale once its pending script exists", () => {
+-  // #4864 adds `verify:format-coverage`; the allowance must then fail the
+-  // guard until it is deleted, even if the link itself is wired.
++  // #4871 adds `local:gate`; the allowance must then fail the guard until it
++  // is deleted, even if the link itself is wired.
+   const stale = checkWiring(WIRED_SCRIPTS, WIRED_WORKFLOW, WIRING_ALLOWANCES);
+-  assert.equal(stale.length, 2, stale.join("\n"));
+-  assert.match(stale.join(), /`verify:format-coverage` now exists.*#4864/);
++  assert.equal(stale.length, 1, stale.join("\n"));
+   assert.match(stale.join(), /`local:gate` now exists.*#4871/);
+ });
+ 
++test("the format-coverage link has no allowance any more (#4864)", () => {
++  // #4864 built `verify:format-coverage` and removed its temporary allowance,
++  // so a root `validate` that stops running it fails even under the
++  // allowances that remain.
++  const scripts = {
++    validate: "npm run verify:skills",
++    "verify:skills": "node scripts/verify-skills.mjs",
++    "verify:skills:cli": "node scripts/verify-skills-cli.mjs",
++  };
++  assert.ok(!WIRING_ALLOWANCES.some((a) => a.link === "format-coverage"));
++  assert.match(
++    checkWiring(scripts, WIRED_WORKFLOW, WIRING_ALLOWANCES).join(),
++    /no longer runs `verify:format-coverage`/,
++  );
++});
++
+ test("an allowance never masks a link that exists but is broken", () => {
+   // `local:gate` present but not running the validator: the allowance is
+   // stale AND the link is reported — it does not excuse a real regression.
+@@ -497,11 +517,15 @@ test("the repository's workflow runs the validator unconditionally", () => {
+     ciRunsUnconditionally(repoWorkflow(), "npm run verify:skills:cli"),
+     true,
+   );
+-  // And the fast guard beside it, which nothing else in CI would run.
++  // And the fast guard beside it. Since #4864 the root-guards job runs it as
++  // part of the root's `validate:guards`, so assert that link end to end: the
++  // workflow runs `validate:guards` unconditionally, and that chain reaches
++  // `verify:skills`.
+   assert.equal(
+-    ciRunsUnconditionally(repoWorkflow(), "npm run verify:skills"),
++    ciRunsUnconditionally(repoWorkflow(), "npm run validate:guards"),
+     true,
+   );
++  assert.ok(scriptChainRuns(repoScripts(), "validate:guards", "verify:skills"));
+ });
+ 
+ test("runsCommand matches an exact invocation, not a substring", () => {
+diff --git a/scripts/verify-skills.mjs b/scripts/verify-skills.mjs
+index 0161e43d13..eb49b152b3 100644
+--- a/scripts/verify-skills.mjs
++++ b/scripts/verify-skills.mjs
+@@ -189,28 +189,25 @@ export const GUARDS_WORKFLOW = path.join(
+ /**
+  * TEMPORARY allowances for wiring links whose other end does not exist yet.
+  *
+- * `checkWiring` asserts two npm-script links that this repo cannot satisfy on
+- * the day the skills harness lands, because the scripts at their far end are
+- * built by later sub-issues of #4858:
++ * `checkWiring` asserts npm-script links that this repo could not all satisfy
++ * on the day the skills harness landed, because the scripts at their far end
++ * are built by later sub-issues of #4858. One remains:
+  *
+- *   - the root `validate` reaching `verify:format-coverage` — #4864 adds both;
+  *   - `local:gate` reaching `verify:skills:cli` — #4871 adds `local:gate`.
+  *
+- * Each allowance is deliberately narrow: it excuses its link only while
++ * (The root `validate` reaching `verify:format-coverage` had one too; #4864
++ * built both ends and removed it, so that link is now enforced strictly.)
++ *
++ * An allowance is deliberately narrow: it excuses its link only while
+  * `pendingScript` is ABSENT from the root manifest. The moment the issue that
+  * builds that script adds it, the allowance stops excusing anything and
+  * `checkWiring` reports it as stale instead — so the later PR cannot land
+  * without wiring the link and deleting its entry here, and an allowance can
+  * never mask a link that was wired and then broken.
+  *
+- * @type {ReadonlyArray<{ link: "format-coverage" | "local-gate-cli", pendingScript: string, removedBy: string }>}
++ * @type {ReadonlyArray<{ link: "local-gate-cli", pendingScript: string, removedBy: string }>}
+  */
+ export const WIRING_ALLOWANCES = [
+-  {
+-    link: "format-coverage",
+-    pendingScript: "verify:format-coverage",
+-    removedBy: "#4864",
+-  },
+   { link: "local-gate-cli", pendingScript: "local:gate", removedBy: "#4871" },
+ ];
+ 
+@@ -265,10 +262,7 @@ export function checkWiring(rootScripts, workflowText, allowances = []) {
+       );
+     }
+   }
+-  if (
+-    !rootReachesScript(rootScripts, "verify:format-coverage") &&
+-    !excused("format-coverage")
+-  ) {
++  if (!rootReachesScript(rootScripts, "verify:format-coverage")) {
+     problems.push(
+       "the root `validate` no longer runs `verify:format-coverage` (a sibling guard). Restore it.",
+     );
+diff --git a/scripts/verify-typecheck-coverage.main.test.mjs b/scripts/verify-typecheck-coverage.main.test.mjs
+new file mode 100644
+index 0000000000..5acd279914
+--- /dev/null
++++ b/scripts/verify-typecheck-coverage.main.test.mjs
+@@ -0,0 +1,229 @@
++// End-to-end tests for `verify-typecheck-coverage` (#4864), run against
++// throwaway repos. Ported from the MCP Inspector, where the first case pins
++// inspector#1939's "doubly silent" failure: when the tsc entry cannot be
++// resolved (a missing install), the guard must hard-fail with an actionable
++// "cannot measure" error — NOT echo "(no diagnostic captured)" per project and
++// then report every tracked file as getting no tsc pass. The rest pin this
++// repo's workspace layout: the root `validate --workspaces` link, a workspace
++// with no `typecheck`, and a test file the build config leaves out.
++//
++// Fixtures that need a real tsc run from a temp dir INSIDE this repo, so
++// `typescript` resolves by walking up to the repo's own install exactly as it
++// does for a real workspace. Run via `npm run test:scripts`.
++
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import { execFileSync, spawnSync } from "node:child_process";
++import {
++  cpSync,
++  mkdirSync,
++  mkdtempSync,
++  realpathSync,
++  rmSync,
++  writeFileSync,
++} from "node:fs";
++import { tmpdir } from "node:os";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++
++const scriptsDir = path.dirname(fileURLToPath(import.meta.url));
++const repoRoot = path.resolve(scriptsDir, "..");
++
++const ROOT_SCRIPTS = {
++  validate:
++    "npm run verify:format-coverage && npm run verify:typecheck-coverage && npm run test:scripts && npm run validate --workspaces",
++  "verify:format-coverage": "node scripts/verify-format-coverage.mjs",
++  "verify:typecheck-coverage": "node scripts/verify-typecheck-coverage.mjs",
++  "test:scripts": 'node --test "scripts/**/*.test.mjs"',
++};
++
++const WORKSPACE = {
++  name: "fixture-server",
++  scripts: {
++    validate: "npm run typecheck",
++    typecheck: "tsc -p tsconfig.test.json",
++  },
++};
++
++/**
++ * Build a fixture repo under `parent`, run the guard in it, and return
++ * `{ status, out }`. `files` maps repo-relative paths to contents.
++ * realpath'd because the guard only executes when `import.meta.url` matches
++ * `process.argv[1]`, and macOS `tmpdir()` is a symlink.
++ */
++function runFixture(parent, rootScripts, files) {
++  const dir = realpathSync(mkdtempSync(path.join(parent, "typecheck-cov-")));
++  try {
++    writeFileSync(
++      path.join(dir, "package.json"),
++      JSON.stringify({
++        name: "fixture",
++        workspaces: ["src/*"],
++        scripts: rootScripts,
++      }),
++    );
++    for (const [rel, content] of Object.entries(files)) {
++      mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true });
++      writeFileSync(path.join(dir, rel), content);
++    }
++    mkdirSync(path.join(dir, "scripts", "lib"), { recursive: true });
++    for (const rel of [
++      "verify-typecheck-coverage.mjs",
++      path.join("lib", "npm-scripts.mjs"),
++      path.join("lib", "resolve-node-bin.mjs"),
++      path.join("lib", "tsc-program.mjs"),
++      path.join("lib", "workspaces.mjs"),
++    ])
++      cpSync(path.join(scriptsDir, rel), path.join(dir, "scripts", rel));
++    // A guard-script test file, so `test:scripts`' own axes are satisfied.
++    writeFileSync(
++      path.join(dir, "scripts", "x.test.mjs"),
++      'import { test } from "node:test";\ntest("x", () => {});\n',
++    );
++    execFileSync("git", ["init", "-q"], { cwd: dir });
++    execFileSync("git", ["add", "-A"], { cwd: dir });
++    const r = spawnSync(
++      process.execPath,
++      [path.join(dir, "scripts", "verify-typecheck-coverage.mjs")],
++      { cwd: dir, encoding: "utf8" },
++    );
++    return { status: r.status, out: `${r.stdout}${r.stderr}` };
++  } finally {
++    rmSync(dir, { recursive: true, force: true });
++  }
++}
++
++/** A scratch parent inside the repo, so `typescript` resolves by walk-up. */
++function inRepo(fn) {
++  const parent = mkdtempSync(path.join(repoRoot, ".typecheck-cov-fixture-"));
++  try {
++    return fn(parent);
++  } finally {
++    rmSync(parent, { recursive: true, force: true });
++  }
++}
++
++/** A workspace whose build config leaves its tests out, as three servers do. */
++const SERVER_FILES = {
++  "src/server/package.json": JSON.stringify(WORKSPACE),
++  "src/server/tsconfig.json": JSON.stringify({
++    compilerOptions: { strict: true, noEmit: true },
++    include: ["./**/*.ts"],
++    exclude: ["__tests__", "node_modules"],
++  }),
++  "src/server/tsconfig.test.json": JSON.stringify({
++    extends: "./tsconfig.json",
++    include: ["./**/*.ts"],
++    exclude: ["node_modules"],
++  }),
++  "src/server/index.ts": "export const x = 1;\n",
++  "src/server/__tests__/index.test.ts": "export const y = 2;\n",
++};
++
++test("unresolvable tsc is a hard 'cannot measure' error, not an empty file set", () => {
++  // Outside the repo: no node_modules anywhere up the temp tree.
++  const { status, out } = runFixture(tmpdir(), ROOT_SCRIPTS, SERVER_FILES);
++  assert.equal(status, 1, out);
++  assert.match(out, /cannot resolve `typescript` from src\/server/, out);
++  assert.match(out, /npm install/, out);
++  // The pre-inspector#1939 failure shape.
++  assert.doesNotMatch(out, /get no `tsc` pass/, out);
++  assert.doesNotMatch(out, /no diagnostic captured/, out);
++});
++
++test("a wired workspace whose typecheck program covers its tests passes", () => {
++  const { status, out } = inRepo((p) =>
++    runFixture(p, ROOT_SCRIPTS, SERVER_FILES),
++  );
++  assert.equal(status, 0, out);
++  assert.match(out, /OK: all 2 tracked source files \(1 workspaces/);
++});
++
++test("a typecheck that runs only the build config leaves the tests uncovered", () => {
++  // The hole this guard exists for in this repo: the build tsconfig excludes
++  // `__tests__`, so typechecking it alone never looks at the tests.
++  const files = {
++    ...SERVER_FILES,
++    "src/server/package.json": JSON.stringify({
++      ...WORKSPACE,
++      scripts: { ...WORKSPACE.scripts, typecheck: "tsc -p tsconfig.json" },
++    }),
++  };
++  const { status, out } = inRepo((p) => runFixture(p, ROOT_SCRIPTS, files));
++  assert.equal(status, 1, out);
++  assert.match(
++    out,
++    /src\/server\/__tests__\/index\.test\.ts — in no tsconfig project/,
++  );
++});
++
++test("the root validate must still run the workspaces' validate", () => {
++  const root = {
++    ...ROOT_SCRIPTS,
++    validate: ROOT_SCRIPTS.validate.replace(
++      " && npm run validate --workspaces",
++      "",
++    ),
++  };
++  const { status, out } = runFixture(tmpdir(), root, SERVER_FILES);
++  assert.equal(status, 1, out);
++  assert.match(
++    out,
++    /src\/server: the root `validate` chain no longer runs its `validate`/,
++  );
++});
++
++test("a workspace with no typecheck script is not enrolled, and fails", () => {
++  const files = {
++    ...SERVER_FILES,
++    "src/server/package.json": JSON.stringify({
++      name: "fixture-server",
++      scripts: { validate: "npm run build", build: "tsc" },
++    }),
++  };
++  const { status, out } = runFixture(tmpdir(), ROOT_SCRIPTS, files);
++  assert.equal(status, 1, out);
++  assert.match(out, /src\/server: declares no `typecheck` script/);
++});
++
++test("typecheck not reachable from the workspace's own validate fails", () => {
++  const files = {
++    ...SERVER_FILES,
++    "src/server/package.json": JSON.stringify({
++      ...WORKSPACE,
++      scripts: {
++        ...WORKSPACE.scripts,
++        validate: "npm run build",
++        build: "tsc",
++      },
++    }),
++  };
++  const { status, out } = runFixture(tmpdir(), ROOT_SCRIPTS, files);
++  assert.equal(status, 1, out);
++  assert.match(out, /`typecheck` is not reachable from its `validate`/);
++});
++
++test("a matched src/* dir with TypeScript but no manifest fails", () => {
++  const { status, out } = inRepo((p) =>
++    runFixture(p, ROOT_SCRIPTS, {
++      ...SERVER_FILES,
++      "src/orphan/index.ts": "export {};\n",
++    }),
++  );
++  assert.equal(status, 1, out);
++  assert.match(
++    out,
++    /src\/orphan: holds tracked TypeScript but has no readable/,
++  );
++});
++
++test("a Python server sharing src/* (no manifest, no TypeScript) is ignored", () => {
++  const { status, out } = inRepo((p) =>
++    runFixture(p, ROOT_SCRIPTS, {
++      ...SERVER_FILES,
++      "src/py/pyproject.toml": "[project]\nname = 'py'\n",
++      "src/py/src/py/__init__.py": "",
++    }),
++  );
++  assert.equal(status, 0, out);
++});
+diff --git a/scripts/verify-typecheck-coverage.mjs b/scripts/verify-typecheck-coverage.mjs
+new file mode 100644
+index 0000000000..9b1084b508
+--- /dev/null
++++ b/scripts/verify-typecheck-coverage.mjs
+@@ -0,0 +1,669 @@
++#!/usr/bin/env node
++// Durable guard for the "every tracked TypeScript file gets a `tsc` pass"
++// invariant (#4864, ported from the MCP Inspector, where it is inspector#1791;
++// `rN` tags below are that repo's review rounds). A tsconfig project only
++// typechecks the files its `include`/`files` name plus whatever those
++// transitively import — so a new test, helper or config file can silently fall
++// outside every project and get no type-checking. Three of this repo's four
++// servers exclude their tests from the build `tsconfig.json`, which is exactly
++// that hole; each workspace's `typecheck` runs `tsconfig.test.json` to close it,
++// and this guard keeps it closed.
++//
++// For each npm workspace (read from the root `workspaces` patterns on disk, so
++// a new server is required automatically) it runs every project the
++// workspace's `typecheck` script names with `tsc --listFilesOnly` (the accurate
++// measure — it includes import-reached files), unions the result, and asserts
++// every tracked first-party `.ts`/`.tsx`/`.mts`/`.cts` under the workspace is
++// in that union. Tracked TypeScript OUTSIDE every workspace (a new top-level
++// location) is covered deny-by-default: it must land in the global union.
++// Exits non-zero, listing the offenders, on any miss.
++//
++// Like its sibling it also asserts the gate is actually WIRED: each
++// workspace's `typecheck` must be reachable from that workspace's `validate`,
++// and the root `validate` chain must invoke each workspace's `validate` —
++// otherwise the guard could measure a `typecheck` script nothing runs and stay
++// green while nothing is typechecked ("gate silently stops gating").
++//
++// Source of truth is the `typecheck` scripts themselves — the parser reads the
++// `-p`/`--project`/`-b`/`--build` args (and the implicit `./tsconfig.json` a
++// bare `tsc` resolves) out of every script reachable from `typecheck`, so
++// adding/removing a project is reflected here with no second list to keep in
++// sync. ("Client" in the helper names below is the Inspector's word for what
++// is a workspace here.)
++
++import { execFileSync } from "node:child_process";
++import { readFileSync } from "node:fs";
++import path from "node:path";
++import { fileURLToPath, pathToFileURL } from "node:url";
++import {
++  reachableScripts,
++  rootReachesScript,
++  tokenize,
++} from "./lib/npm-scripts.mjs";
++import {
++  readWorkspaces,
++  rootRunsWorkspaceValidate,
++} from "./lib/workspaces.mjs";
++// The `tsc --listFilesOnly` machinery lives in `lib/tsc-program.mjs`.
++// `tscEntry` (the inspector#1939 Windows-safe tsc resolver) comes from the same
++// module so the `--showConfig` pass below spawns tsc the same way the listings
++// do.
++import {
++  clientTsconfigReferences,
++  isDisablingFlag,
++  isTsc,
++  projectSourceFiles,
++  resolveLeafProjects,
++  tscEntry,
++  typecheckProjects,
++} from "./lib/tsc-program.mjs";
++
++const repoRoot = path.resolve(
++  path.dirname(fileURLToPath(import.meta.url)),
++  "..",
++);
++
++// Workspaces this guard deliberately does NOT gate, with the reason. The escape
++// hatch for a genuinely-ungateable workspace. Empty, and meant to stay so: an
++// exemption is wider than any gate it defers to.
++const EXEMPT = new Map();
++
++// TypeScript source extensions this guard requires a tsc pass for. Matches its
++// sibling's TS set (`verify-format-coverage.mjs`), so a workspace `.mts`/`.cts`
++// is gated too. Ambient declaration files are excluded: an unreferenced
++// `*.d.{ts,mts,cts}` shim is type-only and not a real gap. There are no
++// `.mts`/`.cts` files today; this pre-empts one.
++export const isRequiredSource = (rel) =>
++  /\.(ts|tsx|mts|cts)$/.test(rel) && !/\.d\.(ts|mts|cts)$/.test(rel);
++
++/**
++ * Whether a tracked test file is matched by one of the `test:scripts` command's
++ * globs. Delegates to node's own `path.matchesGlob` (22.5.0+; the repo floor is
++ * `>=22.19.0`) rather than hand-translating the glob to a RegExp — `node --test`
++ * is the thing whose matching we're modeling, so measuring with node's matcher
++ * is exact for every form it accepts (`**` incl. zero depth, `*`, `?` as exactly
++ * one non-separator char, brace alternation, character classes) instead of
++ * false-failing on whichever form the translator hadn't covered yet.
++ */
++export const matchesTestGlob = (file, glob) => path.matchesGlob(file, glob);
++
++// `node --test` flags that make it execute only PART of the suite its globs
++// match, while still exiting 0. This is `--noCheck` for the test runner: the
++// gate runs, but gates less than it appears to.
++const NARROWING_TEST_FLAGS = new Set([
++  "--test-shard",
++  "--test-only",
++  "--test-name-pattern",
++  "--test-skip-pattern",
++]);
++
++// `node --test` flags whose VALUE is a separate token — never a positional glob.
++const VALUE_TAKING_TEST_FLAGS = new Set([
++  "--test-coverage-include",
++  "--test-coverage-exclude",
++  "--test-reporter",
++  "--test-reporter-destination",
++  "--test-name-pattern",
++  "--test-skip-pattern",
++  "--test-shard",
++  // Threshold flags: numeric values, so harvesting one is inert rather than a
++  // suppression (a number can't be a BROADER glob) — listed for completeness.
++  "--test-coverage-lines",
++  "--test-coverage-branches",
++  "--test-coverage-functions",
++]);
++
++/**
++ * The path/glob arguments `test:scripts` hands `node --test`, harvested across
++ * every script reachable FROM it — not just its own literal string. A delegating
++ * `test:scripts` ("npm run test:scripts:lib && npm run test:scripts:guard", the
++ * way other scripts here split) genuinely runs every test, and reading the one
++ * string would instead harvest `npm`/`run`/`test:scripts:lib` and report each
++ * test file as unmatched with unfollowable advice. Reachability also picks up a
++ * `pretest:scripts` hook for free.
++ *
++ * Scoped per COMMAND SEGMENT to the ones that actually invoke `node --test`,
++ * exactly as `typecheckProjects` gates on `tokens.some(isTsc)` before harvesting
++ * `-p` args. Without that scoping a glob belonging to a *neighbouring* command
++ * is attributed to the test runner — and since `.some()` only needs ONE glob to
++ * match, a broader one silently suppresses a real miss rather than adding an
++ * inert pattern. A `pretest:scripts` of `prettier --check "scripts/**\/*.mjs"`
++ * is enough to do it: that glob matches a renamed `*.spec.mjs`, so the rename
++ * `node --test` skips would pass the check. Reachability widened what's read;
++ * this keeps what's *harvested* to the runner's own arguments.
++ *
++ * Within a kept segment only the POSITIONAL args count. `--test-coverage-include
++ * "scripts/**\/*.mjs"` is the same suppression one level in — a glob-valued flag
++ * broader than the test glob, which would vouch for the very file the runner
++ * skips (and it's the obvious next addition here, since `scripts/` sits outside
++ * the ≥90 coverage gate). A leading `./` is normalized off because `git ls-files`
++ * emits none, so `./scripts/…` — the common npm-script idiom, which `node --test`
++ * accepts — would otherwise match nothing and blame every file for a rename that
++ * never happened (`rootRunsClientValidate` normalizes it for the same reason).
++ */
++const testRunnerSegments = (scripts) =>
++  [...reachableScripts(scripts, "test:scripts")]
++    .map((n) => scripts?.[n])
++    .filter((c) => typeof c === "string")
++    .flatMap((c) => c.split(/&&|\|\||;/))
++    .map((segment) => tokenize(segment))
++    .filter((tokens) => tokens.includes("--test")); // only `node --test` names test files
++
++export const testScriptGlobs = (scripts) =>
++  testRunnerSegments(scripts)
++    .flatMap((tokens) =>
++      tokens.filter(
++        (t, i) =>
++          !t.startsWith("-") &&
++          t !== "node" &&
++          !VALUE_TAKING_TEST_FLAGS.has(tokens[i - 1]),
++      ),
++    )
++    .map((g) => g.replace(/^\.\//, ""));
++
++/**
++ * Suite-narrowing flags the `test:scripts` runner is given. The other three axes
++ * ask whether the tests are RUN, whether there are any, and whether the runner
++ * is told about each — none asks what it then DOES with them. `--test-shard 1/2`
++ * keeps every glob intact and executes half the suite, exiting 0; `--test-only`
++ * and the name/skip patterns are the same shape. Three of these are already in
++ * `VALUE_TAKING_TEST_FLAGS` — the guard knew them well enough to drop their
++ * values, but not that they shrink the run.
++ *
++ * Known boundary: COMPLEMENTARY shards (`--test-shard 1/2` and `2/2` in two
++ * reachable scripts) do run the whole suite, and this flags them anyway. Fail-
++ * safe, and nobody shards a sub-100ms suite; reconstructing shard arithmetic to
++ * allow it would cost more than the case is worth.
++ */
++export const testScriptNarrowingFlags = (scripts) =>
++  testRunnerSegments(scripts)
++    .flat()
++    // `--flag=value` and `--flag value` both report as the bare flag name.
++    .map((t) => t.split("=")[0])
++    .filter((t) => NARROWING_TEST_FLAGS.has(t));
++
++/**
++ * Whether a tracked `scripts/` file is one of this guard's own test files, by
++ * CONTENT rather than name: a JS file that registers tests with `node:test` is
++ * a test whatever it's called.
++ *
++ * Deciding it by name would key the required set off the same pattern the
++ * `test:scripts` glob uses, so a rename escaping BOTH is invisible to every axis
++ * — a dot→hyphen slip (`npm-scripts.test.mjs` → `npm-scripts-test.mjs`) drops
++ * the file from `testFiles` entirely, so nothing asks whether the runner is told
++ * about it, and the surviving file satisfies the non-empty axis. Round 30 fixed
++ * "renamed to a form the GLOB misses" by broadening the name pattern; a fifth
++ * name pattern only moves that boundary again. `node --test` decides what a test
++ * is by whether it registers tests, so read that instead of guessing.
++ */
++// The extension half, alone: `main()` needs it BEFORE reading a file, and the
++// predicate needs it as part of its contract. One definition, two positions.
++export const isJsFile = (file) => /\.(c|m)?js$/.test(file);
++
++export const isScriptsTestFile = (file, source) =>
++  isJsFile(file) &&
++  // Node's actual criterion is REGISTERING tests, not mentioning the module: a
++  // shared helper importing `node:test`'s `mock` registers none, and telling it
++  // to rename itself to `*.test.mjs` would only make node run an empty file.
++  /(?:\bfrom|\brequire\(\s*)\s*["']node:test["']/.test(source) &&
++  /\b(?:test|it|describe|suite)\s*\(/.test(source);
++
++/**
++ * Gate-integrity problems with `test:scripts` — this guard's OWN parser tests —
++ * given the root `scripts` and the tracked `scripts/**` test files. Vouched for
++ * the same way the guard vouches for a `tsc` pass, on three axes: it must be run
++ * from `validate`, its file set must be non-empty, and every one of those files
++ * must be matched by a glob the runner is actually given — because `node --test`
++ * SKIPS a file its glob misses and still exits 0, so a rename to `*.spec.mjs`
++ * would shrink the suite with a green run.
++ *
++ * Pure, and separate from `main()`, so each branch below is reachable from the
++ * test suite: every previous round put the newest branch inside `main()`, where
++ * mutation testing found it untested three rounds running.
++ */
++export function testScriptProblems(scripts, testFiles) {
++  if (!rootReachesScript(scripts, "test:scripts"))
++    return [
++      "the root `validate` no longer runs `test:scripts` — the guard's own parser tests run nowhere; restore it.",
++    ];
++  const problems = [];
++  if (testFiles.length === 0)
++    problems.push(
++      "no `scripts/**/*.test.*` files are tracked — the guard's parser tests are gone.",
++    );
++  const globs = testScriptGlobs(scripts);
++  if (globs.length === 0) {
++    // A bare `node --test` (auto-discovery from the cwd) names no glob, and
++    // `.some()` over an empty list would blame every file individually with
++    // advice none of them can follow. Say the actual problem once instead.
++    problems.push(
++      '`test:scripts` names no path/glob — this guard can\'t tell which files `node --test` runs. Give it an explicit glob (e.g. `node --test "scripts/**/*.test.mjs"`).',
++    );
++    return problems;
++  }
++  for (const flag of testScriptNarrowingFlags(scripts))
++    problems.push(
++      `\`test:scripts\` passes \`${flag}\` — \`node --test\` then runs only part of the matched suite and still exits 0, so the parsers this guard gates are partly unrun. Drop it.`,
++    );
++  for (const f of testFiles)
++    if (!globs.some((g) => matchesTestGlob(f, g)))
++      problems.push(
++        `${f}: not matched by the \`test:scripts\` glob — \`node --test\` won't run it (a rename to a form it skips). Rename it back to \`*.test.mjs\`.`,
++      );
++  return problems;
++}
++
++/**
++ * How the client's `validate` runs `tsc -b` (the pass that typechecks a
++ * reference client): `"ok"` (a real `tsc -b`), `"neutered"` (a `tsc -b` carrying
++ * `--noCheck`/`--listFilesOnly` — lists files but checks nothing, the same hole
++ * the `typecheck`-script path rejects), or `"none"` (no `tsc -b` at all).
++ */
++export function tscBuildStatus(scripts) {
++  let status = "none";
++  for (const name of reachableScripts(scripts, "validate")) {
++    const cmd = scripts?.[name];
++    if (typeof cmd !== "string") continue;
++    for (const segment of cmd.split(/&&|\|\||;/)) {
++      const tokens = tokenize(segment);
++      if (!tokens.some(isTsc)) continue;
++      if (!tokens.some((t) => t === "-b" || t === "--build")) continue;
++      if (tokens.some(isDisablingFlag)) status = "neutered";
++      else return "ok"; // a real, checking `tsc -b`
++    }
++  }
++  return status;
++}
++
++/**
++ * The workspaces this guard covers: every directory the root `workspaces`
++ * patterns match (`scripts/lib/workspaces.mjs`) with a readable `package.json`
++ * is required to be **enrolled** — either it declares a `typecheck` script
++ * (measured through that script's projects) or its root `tsconfig.json` has
++ * `references` (a `tsc -b` solution, measured through those) — **or** be in
++ * {@link EXEMPT}. Anything else is a gate-integrity failure. Enumerated from
++ * **disk** so it is fail-closed: a new server is auto-required, renaming the
++ * `typecheck` script hard-fails rather than silently dropping the workspace,
++ * and a matched directory holding tracked TypeScript but no manifest (which npm
++ * would simply not treat as a workspace) hard-fails too. Returns
++ * `{ clients, problems }`.
++ */
++function nodeClients() {
++  const clients = [];
++  const problems = [];
++  let entries;
++  try {
++    entries = readWorkspaces(repoRoot);
++  } catch (err) {
++    problems.push(err.message);
++    return { clients, problems };
++  }
++  for (const { dir, hasManifest } of entries) {
++    if (EXEMPT.has(dir)) continue;
++    let scripts;
++    try {
++      if (!hasManifest) throw new Error("no package.json");
++      scripts = JSON.parse(
++        readFileSync(path.join(repoRoot, dir, "package.json"), "utf8"),
++      ).scripts;
++    } catch {
++      // No readable manifest. If the dir still holds tracked TS its source gets
++      // no tsc pass — a gate hole; otherwise it just isn't a workspace (the
++      // Python servers share `src/*` with the TypeScript ones).
++      if (trackedSourceFiles(dir).length > 0)
++        problems.push(
++          `${dir}: holds tracked TypeScript but has no readable \`package.json\` — npm does not treat it as a workspace, so its source gets no tsc pass. Add a manifest with a \`typecheck\` (or exempt it).`,
++        );
++      continue;
++    }
++    if (
++      typeof scripts?.typecheck === "string" ||
++      clientTsconfigReferences(dir).length > 0
++    )
++      clients.push(dir);
++    else
++      problems.push(
++        `${dir}: declares no \`typecheck\` script, has no \`tsconfig.json\` \`references\`, and isn't in the EXEMPT set — it gets no tsc pass. Add a \`typecheck\` (or exempt it with a reason).`,
++      );
++  }
++  // A stale EXEMPT key would otherwise be asserted in the success line while
++  // naming a dir that no longer exists — the exemption outliving its subject.
++  const present = new Set(entries.map((e) => e.dir));
++  for (const dir of EXEMPT.keys())
++    if (!present.has(dir))
++      problems.push(
++        `${dir}: listed in EXEMPT but is not a workspace directory — remove the stale exemption.`,
++      );
++  return { clients, problems };
++}
++
++/**
++ * Whether the tsconfig `project` sets `noCheck` (which disables type-checking as
++ * thoroughly as the CLI flag, but can't be seen in the `typecheck` script
++ * string). `tsc --showConfig` emits the merged compilerOptions, surfacing a
++ * `noCheck` from the config or its `extends` chain. Best-effort: on any error
++ * (e.g. an unreadable config, already reported elsewhere) it returns false.
++ */
++function projectDisablesChecking(clientDir, project) {
++  try {
++    const out = execFileSync(
++      process.execPath,
++      [tscEntry(clientDir), "-p", project, "--showConfig"],
++      { cwd: path.join(repoRoot, clientDir), encoding: "utf8" },
++    );
++    return JSON.parse(out)?.compilerOptions?.noCheck === true;
++  } catch {
++    return false;
++  }
++}
++
++/** Repo-relative files a project covers, following a solution config's references. */
++function projectFiles(clientDir, project) {
++  const covered = new Set();
++  for (const leaf of resolveLeafProjects(clientDir, project))
++    for (const f of projectSourceFiles(clientDir, leaf)) covered.add(f);
++  return covered;
++}
++
++/**
++ * The leaf projects (across `projects`, solutions expanded) that genuinely
++ * type-check — i.e. minus any whose tsconfig sets `noCheck`, each of which is
++ * pushed to `integrity`. Shared by both enrollment paths so a `noCheck` in a
++ * referenced project is caught whether the solution was harvested from a
++ * `typecheck` script or is the reference-path client's own `tsconfig.json`.
++ */
++function checkingLeaves(clientDir, projects, integrity) {
++  const checking = [];
++  // Dedup across all harvested projects (a leaf can be reached from two of them
++  // — `resolveLeafProjects` only dedups within one) so a shared leaf isn't
++  // reported twice, nor `--showConfig`-spawned twice.
++  const seen = new Set();
++  for (const project of projects)
++    for (const leaf of resolveLeafProjects(clientDir, project)) {
++      if (seen.has(leaf)) continue;
++      seen.add(leaf);
++      if (projectDisablesChecking(clientDir, leaf))
++        integrity.push(
++          `${clientDir}: \`${leaf}\` sets \`noCheck\` in its tsconfig — that project lists files without type-checking them, so it gates nothing.`,
++        );
++      else checking.push(leaf);
++    }
++  return checking;
++}
++
++/** Tracked first-party TS (`.ts`/`.tsx`/`.mts`/`.cts`) under a workspace (excludes build output). */
++function trackedSourceFiles(clientDir) {
++  const out = execFileSync(
++    "git",
++    ["ls-files", "*.ts", "*.tsx", "*.mts", "*.cts"],
++    { cwd: path.join(repoRoot, clientDir), encoding: "utf8" },
++  );
++  return out
++    .split("\n")
++    .filter(Boolean)
++    .map((f) => path.posix.join(clientDir, f))
++    .filter(isRequiredSource)
++    .filter((f) => !f.includes("/build/") && !f.includes("/dist/"));
++}
++
++/**
++ * Tracked first-party TS that is not under any workspace dir (which the
++ * per-workspace pass covers) — anything at a new top-level location, and any
++ * root-level config written in TypeScript. Deny-by-default: such a file is
++ * required without editing this guard, matching the repo-wide reach of the
++ * sibling `verify-format-coverage`, and it must get a tsc pass from SOME
++ * workspace project (checked against the GLOBAL union). The root tooling under
++ * `scripts/` is `.mjs`, which is not in the required set.
++ */
++function trackedNonClientSource(workspaceDirs) {
++  const out = execFileSync(
++    "git",
++    ["ls-files", "*.ts", "*.tsx", "*.mts", "*.cts"],
++    { cwd: repoRoot, encoding: "utf8" },
++  );
++  return out
++    .split("\n")
++    .filter(Boolean)
++    .filter(isRequiredSource)
++    .filter((f) => !f.includes("/build/") && !f.includes("/dist/"))
++    .filter((f) => !workspaceDirs.some((d) => f.startsWith(`${d}/`)));
++}
++
++/**
++ * The remediation footer for a set of gate-integrity problems, or `null` when
++ * none of them is about the typecheck wiring. Not every phase-1 problem is: the
++ * sibling-guard vouch (`verify:format-coverage`) and the `test:scripts` axes are
++ * about OTHER gates, and appending `--noCheck`/`tsc -b` advice under one of them
++ * sends the reader after the wrong thing. The criterion is "is this about the
++ * typecheck pass at all", not "does it carry its own per-line advice" — several
++ * typecheck problems do carry their own and still want the footer. Client
++ * enrollment ("declares no `typecheck` script …") is therefore NOT excluded: the
++ * footer's first clause is exactly its fix.
++ *
++ * Pure and outside `main()` on purpose — this is the third consecutive round in
++ * which the newest branch in `main()` turned out to be the one mutation testing
++ * couldn't reach, including the branch this function replaces.
++ */
++export function integrityAdvice(problems, nonTypecheckProblems) {
++  const isTypecheck = (f) => !nonTypecheckProblems.includes(f);
++  return problems.some(isTypecheck)
++    ? "\nRestore the `typecheck` wiring (workspace `validate` → `typecheck`, root `validate` → `npm run validate --workspaces`), and drop any `--noCheck`/`--listFilesOnly`/`noCheck` from the typecheck pass."
++    : null;
++}
++
++/**
++ * Run the guard: enumerate clients, check gate integrity (phase 1), then file
++ * coverage (phase 2). Prints its verdict and `process.exit(1)`s on any failure.
++ * Called only when this file is executed directly — importing it (for tests)
++ * gives access to the pure helpers above without running any of this.
++ */
++export function main() {
++  const rootPkg = JSON.parse(
++    readFileSync(path.join(repoRoot, "package.json"), "utf8"),
++  );
++  const { clients: CLIENTS, problems: enrollmentProblems } = nodeClients();
++
++  // -------------------------------------------------------------------------
++  // Phase 1 — gate integrity: is each client's `typecheck` actually run, and
++  // does it actually type-check? Reported (and exited) before the file-coverage
++  // pass so a mis-wired / inert gate isn't buried under a flood of consequent
++  // "in no tsconfig project" lines. Records, per client, the projects that
++  // genuinely type-check, for phase 2. Boundary: does NOT detect shell-level
++  // failure suppression (`… || true`, `; exit 0`).
++  // -------------------------------------------------------------------------
++  // A client that declares no `typecheck` and isn't exempt is a gate-integrity
++  // failure (seeded so a renamed/removed `typecheck` is loud, not a silent
++  // drop). If that leaves nothing enrolled AND surfaced no such problem, the
++  // enumeration itself is broken (a moved `src/` dir) — fail, don't no-op.
++  const integrity = [...enrollmentProblems];
++  const checkingProjects = new Map();
++  if (CLIENTS.length === 0 && integrity.length === 0) {
++    console.error(
++      "verify:typecheck-coverage — found no workspace to check. The guard would check nothing; fix the enumeration.",
++    );
++    process.exit(1);
++  }
++
++  // Vouch for the sibling guard — a guard can't detect being unrun itself, but the
++  // two can each assert the other is still wired into `validate`, so dropping
++  // either is caught here (only deleting both slips through).
++  const siblingVouchIssues = [];
++  if (!rootReachesScript(rootPkg.scripts, "verify:format-coverage")) {
++    siblingVouchIssues.push(
++      "the root `validate` no longer runs `verify:format-coverage` (its sibling guard) — restore it.",
++    );
++  }
++  integrity.push(...siblingVouchIssues);
++
++  const testScriptIssues = testScriptProblems(
++    rootPkg.scripts,
++    execFileSync("git", ["ls-files", "scripts"], {
++      cwd: repoRoot,
++      encoding: "utf8",
++    })
++      .split("\n")
++      .filter(Boolean)
++      // Extension first, and the read guarded: a file in the index but not the
++      // worktree (`rm` without `git rm`, an ordinary mid-work state) would
++      // otherwise abort phase 1 with a raw ENOENT stack, masking every real
++      // finding — the round-6 precedent, where a failed `tsc` echoes its
++      // diagnostic instead of dying.
++      .filter(isJsFile)
++      .filter((f) => {
++        let src;
++        try {
++          src = readFileSync(path.join(repoRoot, f), "utf8");
++        } catch (err) {
++          console.warn(
++            `verify:typecheck-coverage — skipping tracked-but-unreadable ${f}: ${err.message}`,
++          );
++          return false;
++        }
++        return isScriptsTestFile(f, src);
++      }),
++  );
++  integrity.push(...testScriptIssues);
++
++  for (const clientDir of CLIENTS) {
++    checkingProjects.set(clientDir, []);
++    if (!rootRunsWorkspaceValidate(rootPkg.scripts, clientDir)) {
++      integrity.push(
++        `${clientDir}: the root \`validate\` chain no longer runs its \`validate\` (expected \`npm run validate --workspaces\`) — its typecheck isn't invoked by the gate.`,
++      );
++      continue;
++    }
++    const scripts = JSON.parse(
++      readFileSync(path.join(repoRoot, clientDir, "package.json"), "utf8"),
++    ).scripts;
++
++    // Reference (`tsc -b`) client — no `typecheck` script; measured through its
++    // `tsconfig.json` `references`, and wired iff its `validate` runs a real
++    // (checking) `tsc -b`.
++    if (typeof scripts?.typecheck !== "string") {
++      const status = tscBuildStatus(scripts);
++      if (status !== "ok") {
++        integrity.push(
++          status === "neutered"
++            ? `${clientDir}: its \`validate\`'s \`tsc -b\` carries \`--noCheck\`/\`--listFilesOnly\` — it lists files without type-checking them, so its references are gated by nothing.`
++            : `${clientDir}: no \`typecheck\` script and its \`validate\` never runs \`tsc -b\` — its \`tsconfig.json\` references are typechecked by nothing.`,
++        );
++        continue;
++      }
++      checkingProjects.set(
++        clientDir,
++        checkingLeaves(
++          clientDir,
++          clientTsconfigReferences(clientDir),
++          integrity,
++        ),
++      );
++      continue;
++    }
++
++    if (!reachableScripts(scripts, "validate").has("typecheck")) {
++      integrity.push(
++        `${clientDir}: \`typecheck\` is not reachable from its \`validate\` — the typecheck it measures gates nothing.`,
++      );
++      continue;
++    }
++    const { projects, neutered } = typecheckProjects(scripts);
++    for (const { project, flag } of neutered)
++      integrity.push(
++        `${clientDir}: its \`typecheck\` runs \`-p ${project}\` with \`${flag}\` — that pass lists files without type-checking them, so it gates nothing.`,
++      );
++    // Fire only when nothing was harvested at all — not when projects WERE named
++    // but every one is neutered (command flag) or config-disabled (`projects` was
++    // non-empty in that case; those get their own lines above).
++    if (projects.length === 0 && neutered.length === 0)
++      integrity.push(
++        `${clientDir}: its \`typecheck\` names no \`-p <project>\` — nothing is typechecked.`,
++      );
++    // Resolve each harvested project to its leaves (a `tsc -b` solution expands),
++    // and disable-check each leaf — so a `noCheck` in a referenced project counts.
++    checkingProjects.set(
++      clientDir,
++      checkingLeaves(clientDir, projects, integrity),
++    );
++  }
++
++  if (integrity.length > 0) {
++    console.error(
++      `verify:typecheck-coverage — ${integrity.length} gate-integrity issue(s): a typecheck gate is not run, or runs but checks nothing:\n`,
++    );
++    for (const f of integrity) console.error("  " + f);
++    // NOT `enrollmentProblems`: "declares no `typecheck` script …" IS about the
++    // typecheck pass, and the footer's first clause is its canonical fix.
++    const advice = integrityAdvice(integrity, [
++      ...siblingVouchIssues,
++      ...testScriptIssues,
++    ]);
++    if (advice) console.error(advice);
++    process.exit(1);
++  }
++
++  // ---------------------------------------------------------------------------
++  // Phase 2 — file coverage: every tracked source file lands in a checking project.
++  // ---------------------------------------------------------------------------
++  let totalChecked = 0;
++  const failures = [];
++  const globalCovered = new Set();
++  for (const clientDir of CLIENTS) {
++    const covered = new Set();
++    for (const project of checkingProjects.get(clientDir))
++      for (const f of projectFiles(clientDir, project)) {
++        covered.add(f);
++        globalCovered.add(f);
++      }
++
++    const tracked = trackedSourceFiles(clientDir);
++    totalChecked += tracked.length;
++    for (const f of tracked)
++      if (!covered.has(f)) failures.push(`${f} — in no tsconfig project`);
++  }
++
++  // First-party TS outside every workspace gets no workspace of its own;
++  // require each to land in the GLOBAL union of workspace projects, so it's
++  // deny-by-default rather than an allowlist that a new location could fall
++  // outside.
++  const otherTracked = trackedNonClientSource(CLIENTS);
++  totalChecked += otherTracked.length;
++  const nonClientMisses = [];
++  for (const f of otherTracked)
++    if (!globalCovered.has(f)) {
++      nonClientMisses.push(f);
++      failures.push(`${f} — in no workspace's tsconfig project`);
++    }
++
++  if (failures.length > 0) {
++    console.error(
++      `verify:typecheck-coverage — ${failures.length} tracked source file(s) get no \`tsc\` pass:\n`,
++    );
++    for (const f of failures) console.error("  " + f);
++    console.error(
++      "\nAdd the file to its workspace's `tsconfig.test.json` `include` (the program `typecheck` runs). Keep a test out of the build `tsconfig.json`, or the build emits it into `dist/`.",
++    );
++    if (nonClientMisses.some((f) => f.startsWith("scripts/")))
++      console.error(
++        "For root tooling under `scripts/`, keep it `.mjs` (the convention there — prettier-gated via `format:check:root`, and `.mjs` isn't in this guard's required set).",
++      );
++    else if (nonClientMisses.length > 0)
++      console.error(
++        "A TypeScript file outside every workspace needs a workspace project that includes it, or a move into the workspace that owns it.",
++      );
++    process.exit(1);
++  }
++
++  const exemptNote = [...EXEMPT.entries()]
++    .map(([dir, reason]) => `${dir} exempt: ${reason}`)
++    .join("; ");
++  console.log(
++    `verify:typecheck-coverage — OK: all ${totalChecked} tracked source files ` +
++      `(${CLIENTS.length} workspaces + non-workspace) get a tsc pass` +
++      (exemptNote ? ` (${exemptNote}).` : "."),
++  );
++}
++
++// Run only when executed directly (`node scripts/verify-typecheck-coverage.mjs`);
++// importing this file (tests) exposes the pure helpers without running the guard.
++if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)
++  main();
+diff --git a/scripts/verify-typecheck-coverage.test.mjs b/scripts/verify-typecheck-coverage.test.mjs
+new file mode 100644
+index 0000000000..15b2d55dc3
+--- /dev/null
++++ b/scripts/verify-typecheck-coverage.test.mjs
+@@ -0,0 +1,292 @@
++// Table-driven tests for verify-typecheck-coverage's pure parsers, ported from
++// the MCP Inspector for #4864. Importing the module exposes these without
++// running the guard (its execution is behind `main()`, called only when the
++// file is run directly). Each case pins a rule an Inspector review round
++// (inspector#1799, `rN`) found; the `tsc`-script and tsconfig-graph parsers
++// are tested in `lib/tsc-program.test.mjs`. Run via `npm run test:scripts`.
++
++import { test } from "node:test";
++import assert from "node:assert/strict";
++import {
++  matchesTestGlob,
++  isRequiredSource,
++  integrityAdvice,
++  isScriptsTestFile,
++  testScriptGlobs,
++  testScriptNarrowingFlags,
++  testScriptProblems,
++  tscBuildStatus,
++} from "./verify-typecheck-coverage.mjs";
++
++test("isRequiredSource: TS extensions, ambient .d.ts excluded (r7)", () => {
++  for (const f of ["a.ts", "a.tsx", "a.mts", "a.cts"])
++    assert.ok(isRequiredSource(f), f);
++  for (const f of ["a.js", "a.d.ts", "a.d.mts", "a.d.cts", "a.json"])
++    assert.ok(!isRequiredSource(f), f);
++});
++
++test("tscBuildStatus: ok / neutered / none (r25)", () => {
++  const status = (build) =>
++    tscBuildStatus({ validate: "npm run build", build });
++  assert.equal(status("tsc -b && vite build"), "ok");
++  assert.equal(status("tsc --build"), "ok");
++  assert.equal(status("tsc -b --noCheck && vite build"), "neutered");
++  assert.equal(status("vite build"), "none");
++  assert.equal(status("tsc --noEmit -p tsconfig.json"), "none"); // -b required
++});
++
++test("matchesTestGlob: the guard's contract, not node's glob engine", () => {
++  // Only the two properties the guard actually relies on — the rest of node's
++  // glob semantics are node's to test, which is the point of delegating to it.
++  const g = "scripts/**/*.test.mjs";
++  assert.ok(matchesTestGlob("scripts/verify-typecheck-coverage.test.mjs", g)); // zero-depth **
++  assert.ok(matchesTestGlob("scripts/lib/npm-scripts.test.mjs", g)); // nested
++  assert.ok(!matchesTestGlob("scripts/lib/npm-scripts.spec.mjs", g)); // the probe-B rename
++});
++
++test("testScriptGlobs: harvests across delegation (r31 finding 1 / r32 finding 2)", () => {
++  // Direct form — the glob itself, with `node` and flags dropped.
++  assert.deepEqual(
++    testScriptGlobs({ "test:scripts": 'node --test "scripts/**/*.test.mjs"' }),
++    ["scripts/**/*.test.mjs"],
++  );
++  // Delegating form — BOTH child globs, not the literal npm/run/<name> tokens.
++  const delegating = testScriptGlobs({
++    "test:scripts": "npm run test:scripts:lib && npm run test:scripts:guard",
++    "test:scripts:lib": 'node --test "scripts/lib/**/*.test.mjs"',
++    "test:scripts:guard": 'node --test "scripts/*.test.mjs"',
++  });
++  assert.ok(delegating.includes("scripts/lib/**/*.test.mjs"));
++  assert.ok(delegating.includes("scripts/*.test.mjs"));
++  // A pre<name> hook is reached too (npm runs it implicitly).
++  assert.ok(
++    testScriptGlobs({
++      "test:scripts": "node --test scripts/a.test.mjs",
++      "pretest:scripts": "node --test scripts/b.test.mjs",
++    }).includes("scripts/b.test.mjs"),
++  );
++  // An unreachable script contributes nothing.
++  assert.deepEqual(
++    testScriptGlobs({
++      "test:scripts": "node --test scripts/a.test.mjs",
++      other: "node --test scripts/z.test.mjs",
++    }),
++    ["scripts/a.test.mjs"],
++  );
++});
++
++test("testScriptGlobs: only `node --test` segments contribute (r33 finding 1)", () => {
++  // A reachable NON-runner command's glob must not be attributed to the runner:
++  // `scripts/**/*.mjs` matches a renamed `*.spec.mjs`, so harvesting it would
++  // make the probe-B rename pass while `node --test` silently ran 6 fewer tests.
++  assert.deepEqual(
++    testScriptGlobs({
++      "test:scripts": 'node --test "scripts/**/*.test.mjs"',
++      "pretest:scripts": 'prettier --check "scripts/**/*.mjs"',
++    }),
++    ["scripts/**/*.test.mjs"],
++  );
++  // Same within one command: only the `--test` segment's args are harvested.
++  assert.deepEqual(
++    testScriptGlobs({
++      "test:scripts":
++        'prettier --check "scripts/**/*.mjs" && node --test "scripts/**/*.test.mjs"',
++    }),
++    ["scripts/**/*.test.mjs"],
++  );
++});
++
++test("testScriptGlobs: flag values and ./ prefixes (r34 findings 1 & 2)", () => {
++  // A glob-valued `--test-*` flag is NOT a positional arg. `scripts/**/*.mjs`
++  // matches a renamed `*.spec.mjs`, so harvesting it would vouch for the very
++  // file the runner skips — the r33 suppression one level in.
++  assert.deepEqual(
++    testScriptGlobs({
++      "test:scripts":
++        'node --test --experimental-test-coverage --test-coverage-include "scripts/**/*.mjs" "scripts/**/*.test.mjs"',
++    }),
++    ["scripts/**/*.test.mjs"],
++  );
++  // A leading `./` is normalized off — `node --test` accepts it, `git ls-files`
++  // never emits it, so keeping it would blame every file for a rename that
++  // never happened.
++  assert.deepEqual(
++    testScriptGlobs({
++      "test:scripts": 'node --test "./scripts/**/*.test.mjs"',
++    }),
++    ["scripts/**/*.test.mjs"],
++  );
++  // …and the normalized glob really does match what `git ls-files` emits.
++  assert.ok(
++    testScriptProblems(
++      {
++        validate: "npm run test:scripts",
++        "test:scripts": 'node --test "./scripts/**/*.test.mjs"',
++      },
++      ["scripts/lib/npm-scripts.test.mjs"],
++    ).length === 0,
++  );
++});
++
++test("testScriptGlobs: empty when no glob is named (r33 finding 2)", () => {
++  // The condition the "`test:scripts` names no path/glob" branch keys off — a
++  // bare `node --test` auto-discovers, so the guard can't tell what it runs.
++  assert.deepEqual(testScriptGlobs({ "test:scripts": "node --test" }), []);
++  assert.deepEqual(testScriptGlobs({}), []);
++});
++
++test("testScriptProblems: all three axes (r33 finding 2)", () => {
++  const WIRED = {
++    validate: "npm run test:scripts",
++    "test:scripts": 'node --test "scripts/**/*.test.mjs"',
++  };
++  const only = (p) => (assert.equal(p.length, 1, p.join("\n")), p[0]);
++
++  // Green: wired, non-empty, every file glob-matched.
++  assert.deepEqual(testScriptProblems(WIRED, ["scripts/a.test.mjs"]), []);
++
++  // Axis 1 — not reachable from `validate`. Reported alone: with the tests
++  // unrun, the other two axes are moot.
++  assert.match(
++    only(
++      testScriptProblems(
++        { validate: "echo hi", "test:scripts": WIRED["test:scripts"] },
++        ["scripts/a.test.mjs"],
++      ),
++    ),
++    /no longer runs `test:scripts`/,
++  );
++
++  // Axis 2 — no tracked test files at all.
++  assert.match(
++    only(testScriptProblems(WIRED, [])),
++    /no `scripts\/\*\*\/\*\.test\.\*` files are tracked/,
++  );
++
++  // Axis 3 — a file `node --test` would skip (the probe-B rename).
++  assert.match(
++    only(testScriptProblems(WIRED, ["scripts/a.spec.mjs"])),
++    /^scripts\/a\.spec\.mjs: not matched by the `test:scripts` glob/,
++  );
++
++  // The empty-harvest branch: ONE message naming the real problem, not one
++  // unfollowable blame per file. (`if (false)`-mutating it yields 2 messages.)
++  assert.match(
++    only(
++      testScriptProblems(
++        { validate: "npm run test:scripts", "test:scripts": "node --test" },
++        ["scripts/a.test.mjs", "scripts/b.test.mjs"],
++      ),
++    ),
++    /names no path\/glob/,
++  );
++});
++
++test("isScriptsTestFile: discovery by content, not name (r36 finding 1)", () => {
++  const TEST_SRC = 'import { test } from "node:test";\ntest("x", () => {});\n';
++  // The name is irrelevant — a dot→hyphen rename escapes every name pattern,
++  // and that is exactly the rename that silently dropped 6 of 24 tests.
++  assert.ok(isScriptsTestFile("scripts/lib/npm-scripts.test.mjs", TEST_SRC));
++  assert.ok(isScriptsTestFile("scripts/lib/npm-scripts-test.mjs", TEST_SRC));
++  assert.ok(isScriptsTestFile("scripts/tokenize-tests.mjs", TEST_SRC));
++  assert.ok(isScriptsTestFile("scripts/a.test.js", TEST_SRC));
++  assert.ok(
++    isScriptsTestFile(
++      "scripts/a.test.cjs",
++      "const { test } = require('node:test');\ntest('x', () => {});\n",
++    ),
++  );
++  // A shared helper importing `node:test`'s `mock` registers no tests — telling
++  // it to rename itself to `*.test.mjs` would make node run an empty file.
++  assert.ok(
++    !isScriptsTestFile(
++      "scripts/lib/test-mocks.mjs",
++      'import { mock } from "node:test";\nexport const resetAll = () => mock.reset();\n',
++    ),
++  );
++  // A guard script that merely mentions testing is not a test.
++  assert.ok(
++    !isScriptsTestFile(
++      "scripts/verify-typecheck-coverage.mjs",
++      "// runs the test:scripts glob\nimport path from 'node:path';\n",
++    ),
++  );
++  // Non-JS never counts, whatever it contains.
++  assert.ok(!isScriptsTestFile("scripts/notes.md", TEST_SRC));
++  assert.ok(!isScriptsTestFile("scripts/a.test.ts", TEST_SRC));
++});
++
++test("testScriptNarrowingFlags: flags that shrink the run (r35 finding 1)", () => {
++  const flags = (cmd) => testScriptNarrowingFlags({ "test:scripts": cmd });
++  const GLOB = '"scripts/**/*.test.mjs"';
++  // `--test-shard 1/2` keeps every glob intact and runs half the suite, exit 0.
++  assert.deepEqual(flags(`node --test --test-shard 1/2 ${GLOB}`), [
++    "--test-shard",
++  ]);
++  assert.deepEqual(flags(`node --test --test-only ${GLOB}`), ["--test-only"]);
++  assert.deepEqual(flags(`node --test --test-name-pattern zzz ${GLOB}`), [
++    "--test-name-pattern",
++  ]);
++  assert.deepEqual(flags(`node --test --test-skip-pattern=zzz ${GLOB}`), [
++    "--test-skip-pattern",
++  ]); // `=` form
++  // Not narrowing: the plain form, and a coverage flag that only reports.
++  assert.deepEqual(flags(`node --test ${GLOB}`), []);
++  assert.deepEqual(
++    flags(
++      `node --test --experimental-test-coverage --test-coverage-include "scripts/**/*.mjs" ${GLOB}`,
++    ),
++    [],
++  );
++  // A narrowing flag on a NON-runner segment isn't the runner's (r33 gate).
++  assert.deepEqual(
++    testScriptNarrowingFlags({
++      "test:scripts": `node --test ${GLOB}`,
++      "pretest:scripts": "some-tool --test-only",
++    }),
++    [],
++  );
++  // Reported as a gate-integrity problem, with the globs still harvested.
++  const wired = {
++    validate: "npm run test:scripts",
++    "test:scripts": `node --test --test-shard 1/2 ${GLOB}`,
++  };
++  assert.deepEqual(testScriptGlobs(wired), ["scripts/**/*.test.mjs"]);
++  const problems = testScriptProblems(wired, ["scripts/a.test.mjs"]);
++  assert.equal(problems.length, 1);
++  assert.match(
++    problems[0],
++    /--test-shard.*runs only part of the matched suite/,
++  );
++});
++
++test("integrityAdvice: typecheck footer only for typecheck issues (r35 finding 2 / nit 3)", () => {
++  const TYPECHECK =
++    "src/memory: the root `validate` chain no longer runs its `validate` …";
++  const SIBLING =
++    "the root `validate` no longer runs `verify:format-coverage` …";
++  const TESTS = "scripts/a.spec.mjs: not matched by the `test:scripts` glob …";
++  // Only typecheck-wiring issues → advise.
++  assert.match(
++    integrityAdvice([TYPECHECK], []),
++    /Restore the `typecheck` wiring/,
++  );
++  // Every issue is a non-typecheck one → stay silent. The sibling-guard vouch
++  // and client-enrollment problems count here too, not just `test:scripts`.
++  assert.equal(integrityAdvice([TESTS], [TESTS]), null);
++  assert.equal(integrityAdvice([SIBLING], [SIBLING]), null);
++  assert.equal(integrityAdvice([SIBLING, TESTS], [SIBLING, TESTS]), null);
++  // Client enrollment ("declares no `typecheck` script …") IS about the
++  // typecheck pass — the footer's first clause is its fix — so it advises.
++  const ENROLLMENT =
++    "src/time: declares no `typecheck` script, has no `tsconfig.json` `references` …";
++  assert.match(
++    integrityAdvice([ENROLLMENT], [SIBLING, TESTS]),
++    /Restore the `typecheck` wiring/,
++  );
++  // A mix still advises — the typecheck issue is real.
++  assert.match(
++    integrityAdvice([SIBLING, TYPECHECK, TESTS], [SIBLING, TESTS]),
++    /Restore the `typecheck` wiring/,
++  );
++});

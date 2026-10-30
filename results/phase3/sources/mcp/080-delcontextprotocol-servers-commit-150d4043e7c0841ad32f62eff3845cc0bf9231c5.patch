@@ -1,0 +1,28 @@
+From 150d4043e7c0841ad32f62eff3845cc0bf9231c5 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 28 Sep 2026 23:34:52 -0400
+Subject: [PATCH] docs: use the corrected end-to-end prompt in the chain
+ example
+
+The example carried the exact trigger the section's own warning says makes
+a chain case false-pass.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ docs/skill-authoring.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/docs/skill-authoring.md b/docs/skill-authoring.md
+index dfb66b93eb..d9208e9303 100644
+--- a/docs/skill-authoring.md
++++ b/docs/skill-authoring.md
+@@ -223,7 +223,7 @@ A chained case names the ordered skills one run should load:
+ 
+ ```json
+ {
+-  "prompt": "Write an integration test that exercises tool listing against a real server.",
++  "prompt": "Write an integration test that exercises tool listing end to end.",
+   "chain": ["testing", "test-servers"]
+ }
+ ```

@@ -1,0 +1,24 @@
+From 579c3903f30044eb702a599a74b3ae77588e722e Mon Sep 17 00:00:00 2001
+From: Abhinav Prakash <60460989+AbhiPra24@users.noreply.github.com>
+Date: Mon, 31 Aug 2026 21:52:36 +0530
+Subject: [PATCH] docs(brave-search): point to official
+ @brave/brave-search-mcp-server package (#4714)
+
+Fixes #4694
+---
+ README.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index fe5351a890..9c388c80a4 100644
+--- a/README.md
++++ b/README.md
+@@ -39,7 +39,7 @@ These servers aim to demonstrate MCP features and the official SDKs.
+ The following reference servers are now archived and can be found at [servers-archived](https://github.com/modelcontextprotocol/servers-archived).
+ 
+ - **[AWS KB Retrieval](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/aws-kb-retrieval-server)** - Retrieval from AWS Knowledge Base using Bedrock Agent Runtime.
+-- **[Brave Search](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/brave-search)** - Web and local search using Brave's Search API.  Has been replaced by the [official server](https://github.com/brave/brave-search-mcp-server).
++- **[Brave Search](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/brave-search)** - Web and local search using Brave's Search API. Has been replaced by the [official server](https://github.com/brave/brave-search-mcp-server) ([`@brave/brave-search-mcp-server`](https://www.npmjs.com/package/@brave/brave-search-mcp-server)).
+ - **[EverArt](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/everart)** - AI image generation using various models.
+ - **[GitHub](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/github)** - Repository management, file operations, and GitHub API integration.
+ - **[GitLab](https://github.com/modelcontextprotocol/servers-archived/tree/main/src/gitlab)** - GitLab API, enabling project management.

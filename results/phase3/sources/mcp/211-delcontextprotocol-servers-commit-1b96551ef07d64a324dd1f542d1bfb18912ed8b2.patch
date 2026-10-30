@@ -1,0 +1,31 @@
+From 1b96551ef07d64a324dd1f542d1bfb18912ed8b2 Mon Sep 17 00:00:00 2001
+From: Ellis Shang <40737228+Shellishack@users.noreply.github.com>
+Date: Thu, 19 Feb 2026 20:52:11 +0800
+Subject: [PATCH] fix(filesystem): use fileURLToPath for Windows absolute path
+ parsing (#3205)
+
+---
+ src/filesystem/roots-utils.ts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/filesystem/roots-utils.ts b/src/filesystem/roots-utils.ts
+index 8732997757..5e26bb246b 100644
+--- a/src/filesystem/roots-utils.ts
++++ b/src/filesystem/roots-utils.ts
+@@ -3,6 +3,7 @@ import path from 'path';
+ import os from 'os';
+ import { normalizePath } from './path-utils.js';
+ import type { Root } from '@modelcontextprotocol/sdk/types.js';
++import { fileURLToPath } from "url";
+ 
+ /**
+  * Converts a root URI to a normalized directory path with basic security validation.
+@@ -11,7 +12,7 @@ import type { Root } from '@modelcontextprotocol/sdk/types.js';
+  */
+ async function parseRootUri(rootUri: string): Promise<string | null> {
+   try {
+-    const rawPath = rootUri.startsWith('file://') ? rootUri.slice(7) : rootUri;
++    const rawPath = rootUri.startsWith('file://') ? fileURLToPath(rootUri) : rootUri;
+     const expandedPath = rawPath.startsWith('~/') || rawPath === '~' 
+       ? path.join(os.homedir(), rawPath.slice(1)) 
+       : rawPath;

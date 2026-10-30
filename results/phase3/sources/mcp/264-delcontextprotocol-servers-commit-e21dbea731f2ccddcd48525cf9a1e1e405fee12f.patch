@@ -1,0 +1,293 @@
+From e21dbea731f2ccddcd48525cf9a1e1e405fee12f Mon Sep 17 00:00:00 2001
+From: ShionElia <supercutelulu@hotmail.com>
+Date: Sat, 21 Mar 2026 04:10:32 +0000
+Subject: [PATCH] docs: add Windows npx wrapper examples
+
+---
+ README.md                        | 15 +++++++++
+ src/everything/README.md         | 32 +++++++++++++++++-
+ src/filesystem/README.md         | 39 ++++++++++++++++++++++
+ src/memory/README.md             | 57 ++++++++++++++++++++++++++++++++
+ src/sequentialthinking/README.md | 36 ++++++++++++++++++++
+ 5 files changed, 178 insertions(+), 1 deletion(-)
+
+diff --git a/README.md b/README.md
+index aefbd53c0b..24a464621a 100644
+--- a/README.md
++++ b/README.md
+@@ -1600,6 +1600,19 @@ However, running a server on its own isn't very useful, and should instead be co
+ }
+ ```
+ 
++On Windows, wrap `npx` with `cmd /c`:
++
++```json
++{
++  "mcpServers": {
++    "memory": {
++      "command": "cmd",
++      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-memory"]
++    }
++  }
++}
++```
++
+ Additional examples of using the Claude Desktop as an MCP client might look like:
+ 
+ ```json
+@@ -1628,6 +1641,8 @@ Additional examples of using the Claude Desktop as an MCP client might look like
+ }
+ ```
+ 
++On Windows, apply the same wrapper to each `npx`-based entry above by changing `"command"` to `"cmd"` and prepending `"/c", "npx"` to the existing `args`. Leave `uvx` entries unchanged.
++
+ ## 🛠️ Creating Your Own Server
+ 
+ Interested in creating your own MCP server? Visit the official documentation at [modelcontextprotocol.io](https://modelcontextprotocol.io/introduction) for comprehensive guides, best practices, and technical details on implementing MCP servers.
+diff --git a/src/everything/README.md b/src/everything/README.md
+index 8109e4449f..6c718fd71a 100644
+--- a/src/everything/README.md
++++ b/src/everything/README.md
+@@ -31,6 +31,24 @@ Add to your `claude_desktop_config.json`:
+ }
+ ```
+ 
++On Windows, use `cmd /c` to launch `npx`:
++
++```json
++{
++  "mcpServers": {
++    "everything": {
++      "command": "cmd",
++      "args": [
++        "/c",
++        "npx",
++        "-y",
++        "@modelcontextprotocol/server-everything"
++      ]
++    }
++  }
++}
++```
++
+ ## Usage with VS Code
+ 
+ For quick installation, use of of the one-click install buttons below...
+@@ -62,6 +80,19 @@ Alternatively, you can add the configuration to a file called `.vscode/mcp.json`
+ }
+ ```
+ 
++On Windows, use:
++
++```json
++{
++  "servers": {
++    "everything": {
++      "command": "cmd",
++      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-everything"]
++    }
++  }
++}
++```
++
+ ## Running from source with [HTTP+SSE Transport](https://modelcontextprotocol.io/specification/2024-11-05/basic/transports#http-with-sse) (deprecated as of [2025-03-26](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports))
+ 
+ ```shell
+@@ -103,4 +134,3 @@ npx @modelcontextprotocol/server-everything sse
+ ```shell
+ npx @modelcontextprotocol/server-everything streamableHttp
+ ```
+-
+diff --git a/src/filesystem/README.md b/src/filesystem/README.md
+index bf087a2b25..c099da1e8c 100644
+--- a/src/filesystem/README.md
++++ b/src/filesystem/README.md
+@@ -250,6 +250,26 @@ Note: all directories must be mounted to `/projects` by default.
+ }
+ ```
+ 
++On Windows, use `cmd /c` to launch `npx`:
++
++```json
++{
++  "mcpServers": {
++    "filesystem": {
++      "command": "cmd",
++      "args": [
++        "/c",
++        "npx",
++        "-y",
++        "@modelcontextprotocol/server-filesystem",
++        "/Users/username/Desktop",
++        "/path/to/other/allowed/dir"
++      ]
++    }
++  }
++}
++```
++
+ ## Usage with VS Code
+ 
+ For quick installation, click the installation buttons below...
+@@ -308,6 +328,25 @@ Note: all directories must be mounted to `/projects` by default.
+ }
+ ```
+ 
++On Windows, use:
++
++```json
++{
++  "servers": {
++    "filesystem": {
++      "command": "cmd",
++      "args": [
++        "/c",
++        "npx",
++        "-y",
++        "@modelcontextprotocol/server-filesystem",
++        "${workspaceFolder}"
++      ]
++    }
++  }
++}
++```
++
+ ## Build
+ 
+ Docker build:
+diff --git a/src/memory/README.md b/src/memory/README.md
+index dcc8116156..fdb8c4613e 100644
+--- a/src/memory/README.md
++++ b/src/memory/README.md
+@@ -159,6 +159,24 @@ Add this to your claude_desktop_config.json:
+ }
+ ```
+ 
++On Windows, use `cmd /c` to launch `npx`:
++
++```json
++{
++  "mcpServers": {
++    "memory": {
++      "command": "cmd",
++      "args": [
++        "/c",
++        "npx",
++        "-y",
++        "@modelcontextprotocol/server-memory"
++      ]
++    }
++  }
++}
++```
++
+ #### NPX with custom setting
+ 
+ The server can be configured using the following environment variables:
+@@ -180,6 +198,27 @@ The server can be configured using the following environment variables:
+ }
+ ```
+ 
++On Windows, use:
++
++```json
++{
++  "mcpServers": {
++    "memory": {
++      "command": "cmd",
++      "args": [
++        "/c",
++        "npx",
++        "-y",
++        "@modelcontextprotocol/server-memory"
++      ],
++      "env": {
++        "MEMORY_FILE_PATH": "/path/to/custom/memory.jsonl"
++      }
++    }
++  }
++}
++```
++
+ - `MEMORY_FILE_PATH`: Path to the memory storage JSONL file (default: `memory.jsonl` in the server directory)
+ 
+ # VS Code Installation Instructions
+@@ -216,6 +255,24 @@ Alternatively, you can add the configuration to a file called `.vscode/mcp.json`
+ }
+ ```
+ 
++On Windows, use:
++
++```json
++{
++  "servers": {
++    "memory": {
++      "command": "cmd",
++      "args": [
++        "/c",
++        "npx",
++        "-y",
++        "@modelcontextprotocol/server-memory"
++      ]
++    }
++  }
++}
++```
++
+ #### Docker
+ 
+ ```json
+diff --git a/src/sequentialthinking/README.md b/src/sequentialthinking/README.md
+index 322ded2726..80d5a1ab8d 100644
+--- a/src/sequentialthinking/README.md
++++ b/src/sequentialthinking/README.md
+@@ -59,6 +59,24 @@ Add this to your `claude_desktop_config.json`:
+ }
+ ```
+ 
++On Windows, use `cmd /c` to launch `npx`:
++
++```json
++{
++  "mcpServers": {
++    "sequential-thinking": {
++      "command": "cmd",
++      "args": [
++        "/c",
++        "npx",
++        "-y",
++        "@modelcontextprotocol/server-sequential-thinking"
++      ]
++    }
++  }
++}
++```
++
+ #### docker
+ 
+ ```json
+@@ -114,6 +132,24 @@ For NPX installation:
+ }
+ ```
+ 
++On Windows, use:
++
++```json
++{
++  "servers": {
++    "sequential-thinking": {
++      "command": "cmd",
++      "args": [
++        "/c",
++        "npx",
++        "-y",
++        "@modelcontextprotocol/server-sequential-thinking"
++      ]
++    }
++  }
++}
++```
++
+ For Docker installation:
+ 
+ ```json

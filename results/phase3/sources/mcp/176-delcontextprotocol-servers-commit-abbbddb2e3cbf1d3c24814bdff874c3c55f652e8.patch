@@ -1,0 +1,273 @@
+From abbbddb2e3cbf1d3c24814bdff874c3c55f652e8 Mon Sep 17 00:00:00 2001
+From: Connor Moss <140426627+ConnorMoss02@users.noreply.github.com>
+Date: Wed, 2 Sep 2026 21:34:53 -0400
+Subject: [PATCH] fix(memory): stop reporting deletions that did not happen
+ (#4738)
+
+delete_entities, delete_observations and delete_relations returned
+success: true with a hardcoded "deleted successfully" message regardless
+of what matched. An agent that mistypes an entity name is told its memory
+is clean while the data is still on disk, and nothing in the response
+contradicts that. addObservations throws for the same condition ten lines
+above, so the file already disagreed with itself.
+
+Staying quiet is deliberate and documented, so nothing throws and the
+output schema is unchanged. The three manager methods now return what
+they matched, and the handlers say so. A delete where everything is found
+returns the same message it always did.
+
+README updated: the three "Silent operation" bullets described the
+absence of an error, which is still true, but read as if the response
+said nothing either.
+---
+ src/memory/README.md                          |  6 +-
+ src/memory/__tests__/delete-reporting.test.ts | 99 +++++++++++++++++++
+ src/memory/index.ts                           | 48 ++++++---
+ 3 files changed, 138 insertions(+), 15 deletions(-)
+ create mode 100644 src/memory/__tests__/delete-reporting.test.ts
+
+diff --git a/src/memory/README.md b/src/memory/README.md
+index 18851aedaa..de7be2c060 100644
+--- a/src/memory/README.md
++++ b/src/memory/README.md
+@@ -87,7 +87,7 @@ Example:
+   - Remove entities and their relations
+   - Input: `entityNames` (string[])
+   - Cascading deletion of associated relations
+-  - Silent operation if entity doesn't exist
++  - No error if an entity doesn't exist; the response reports which names were not found
+ 
+ - **delete_observations**
+   - Remove specific observations from entities
+@@ -95,7 +95,7 @@ Example:
+     - Each object contains:
+       - `entityName` (string): Target entity
+       - `observations` (string[]): Observations to remove
+-  - Silent operation if observation doesn't exist
++  - No error if an observation doesn't exist; the response reports how many were deleted
+ 
+ - **delete_relations**
+   - Remove specific relations from the graph
+@@ -104,7 +104,7 @@ Example:
+       - `from` (string): Source entity name
+       - `to` (string): Target entity name
+       - `relationType` (string): Relationship type
+-  - Silent operation if relation doesn't exist
++  - No error if a relation doesn't exist; the response reports how many were deleted
+ 
+ - **read_graph**
+   - Read the entire knowledge graph
+diff --git a/src/memory/__tests__/delete-reporting.test.ts b/src/memory/__tests__/delete-reporting.test.ts
+new file mode 100644
+index 0000000000..944c30204f
+--- /dev/null
++++ b/src/memory/__tests__/delete-reporting.test.ts
+@@ -0,0 +1,99 @@
++import { describe, it, expect, beforeEach, afterEach } from 'vitest';
++import { promises as fs } from 'fs';
++import path from 'path';
++import { fileURLToPath } from 'url';
++import { KnowledgeGraphManager, Entity, Relation } from '../index.js';
++
++/**
++ * The delete tools stay silent when a target is absent, which the README
++ * documents. What they must not do is report a deletion that did not happen:
++ * an agent that mistypes a name is told its memory is clean while the data is
++ * still on disk, and nothing in the response contradicts that.
++ */
++describe('delete reporting', () => {
++  let manager: KnowledgeGraphManager;
++  let testFilePath: string;
++
++  const entities: Entity[] = [
++    { name: 'Alice', entityType: 'person', observations: ['works at Acme Corp', 'likes tea'] },
++    { name: 'Bob', entityType: 'person', observations: ['likes programming'] },
++  ];
++  const relations: Relation[] = [{ from: 'Alice', to: 'Bob', relationType: 'works_with' }];
++
++  beforeEach(async () => {
++    testFilePath = path.join(
++      path.dirname(fileURLToPath(import.meta.url)),
++      `test-delete-reporting-${Date.now()}-${Math.random().toString(16).slice(2)}.jsonl`
++    );
++    manager = new KnowledgeGraphManager(testFilePath);
++    await manager.createEntities(entities);
++    await manager.createRelations(relations);
++  });
++
++  afterEach(async () => {
++    try {
++      await fs.unlink(testFilePath);
++    } catch {
++      // the file is gone already
++    }
++  });
++
++  describe('deleteEntities', () => {
++    it('reports which names matched and which did not', async () => {
++      const result = await manager.deleteEntities(['Alice', 'Alise']);
++      expect(result).toEqual({ deleted: ['Alice'], notFound: ['Alise'] });
++    });
++
++    it('reports nothing deleted when no name matches', async () => {
++      const result = await manager.deleteEntities(['Nobody']);
++      expect(result).toEqual({ deleted: [], notFound: ['Nobody'] });
++
++      const graph = await manager.readGraph();
++      expect(graph.entities).toHaveLength(2);
++    });
++
++    it('still deletes the entity and its relations', async () => {
++      await manager.deleteEntities(['Alice']);
++
++      const graph = await manager.readGraph();
++      expect(graph.entities.map(e => e.name)).toEqual(['Bob']);
++      expect(graph.relations).toHaveLength(0);
++    });
++  });
++
++  describe('deleteObservations', () => {
++    it('counts only the observations that were present', async () => {
++      const result = await manager.deleteObservations([
++        { entityName: 'Alice', observations: ['likes tea', 'never said this'] },
++      ]);
++      expect(result).toEqual({ deletedCount: 1, missingEntities: [] });
++    });
++
++    it('names an entity that does not exist', async () => {
++      const result = await manager.deleteObservations([
++        { entityName: 'Carol', observations: ['anything'] },
++      ]);
++      expect(result).toEqual({ deletedCount: 0, missingEntities: ['Carol'] });
++    });
++  });
++
++  describe('deleteRelations', () => {
++    it('counts only the relations that matched', async () => {
++      const result = await manager.deleteRelations([
++        { from: 'Alice', to: 'Bob', relationType: 'works_with' },
++        { from: 'Alice', to: 'Bob', relationType: 'never_existed' },
++      ]);
++      expect(result).toEqual({ deletedCount: 1 });
++    });
++
++    it('reports nothing deleted when the relation type is wrong', async () => {
++      const result = await manager.deleteRelations([
++        { from: 'Alice', to: 'Bob', relationType: 'manages' },
++      ]);
++      expect(result).toEqual({ deletedCount: 0 });
++
++      const graph = await manager.readGraph();
++      expect(graph.relations).toHaveLength(1);
++    });
++  });
++});
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index 82fe3845ec..95e0bc796f 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -202,32 +202,45 @@ export class KnowledgeGraphManager {
+     return results;
+   }
+ 
+-  async deleteEntities(entityNames: string[]): Promise<void> {
++  async deleteEntities(entityNames: string[]): Promise<{ deleted: string[]; notFound: string[] }> {
+     const graph = await this.loadGraph();
++    const present = new Set(graph.entities.map(e => e.name));
++    const deleted = entityNames.filter(name => present.has(name));
++    const notFound = entityNames.filter(name => !present.has(name));
+     graph.entities = graph.entities.filter(e => !entityNames.includes(e.name));
+     graph.relations = graph.relations.filter(r => !entityNames.includes(r.from) && !entityNames.includes(r.to));
+     await this.saveGraph(graph);
++    return { deleted, notFound };
+   }
+ 
+-  async deleteObservations(deletions: { entityName: string; observations: string[] }[]): Promise<void> {
++  async deleteObservations(deletions: { entityName: string; observations: string[] }[]): Promise<{ deletedCount: number; missingEntities: string[] }> {
+     const graph = await this.loadGraph();
++    let deletedCount = 0;
++    const missingEntities: string[] = [];
+     deletions.forEach(d => {
+       const entity = graph.entities.find(e => e.name === d.entityName);
+       if (entity) {
++        const before = entity.observations.length;
+         entity.observations = entity.observations.filter(o => !d.observations.includes(o));
++        deletedCount += before - entity.observations.length;
++      } else {
++        missingEntities.push(d.entityName);
+       }
+     });
+     await this.saveGraph(graph);
++    return { deletedCount, missingEntities };
+   }
+ 
+-  async deleteRelations(relations: Relation[]): Promise<void> {
++  async deleteRelations(relations: Relation[]): Promise<{ deletedCount: number }> {
+     const graph = await this.loadGraph();
++    const before = graph.relations.length;
+     graph.relations = graph.relations.filter(r => !relations.some(delRelation => 
+       r.from === delRelation.from && 
+       r.to === delRelation.to && 
+       r.relationType === delRelation.relationType
+     ));
+     await this.saveGraph(graph);
++    return { deletedCount: before - graph.relations.length };
+   }
+ 
+   async readGraph(): Promise<KnowledgeGraph> {
+@@ -436,11 +449,14 @@ server.registerTool(
+     }
+   },
+   async ({ entityNames }) => {
+-    await knowledgeGraphManager.deleteEntities(entityNames);
++    const { deleted, notFound } = await knowledgeGraphManager.deleteEntities(entityNames);
+     notifyGraphUpdated();
++    const message = notFound.length === 0
++      ? "Entities deleted successfully"
++      : `Deleted ${deleted.length} of ${entityNames.length} entities. Not found: ${notFound.join(", ")}`;
+     return {
+-      content: [{ type: "text" as const, text: "Entities deleted successfully" }],
+-      structuredContent: { success: true, message: "Entities deleted successfully" }
++      content: [{ type: "text" as const, text: message }],
++      structuredContent: { success: true, message }
+     };
+   }
+ );
+@@ -469,11 +485,16 @@ server.registerTool(
+     }
+   },
+   async ({ deletions }) => {
+-    await knowledgeGraphManager.deleteObservations(deletions);
++    const { deletedCount, missingEntities } = await knowledgeGraphManager.deleteObservations(deletions);
+     notifyGraphUpdated();
++    const requested = deletions.reduce((total, d) => total + d.observations.length, 0);
++    const message = deletedCount === requested
++      ? "Observations deleted successfully"
++      : `Deleted ${deletedCount} of ${requested} observations.` +
++        (missingEntities.length ? ` Entities not found: ${missingEntities.join(", ")}` : "");
+     return {
+-      content: [{ type: "text" as const, text: "Observations deleted successfully" }],
+-      structuredContent: { success: true, message: "Observations deleted successfully" }
++      content: [{ type: "text" as const, text: message }],
++      structuredContent: { success: true, message }
+     };
+   }
+ );
+@@ -499,11 +520,14 @@ server.registerTool(
+     }
+   },
+   async ({ relations }) => {
+-    await knowledgeGraphManager.deleteRelations(relations);
++    const { deletedCount } = await knowledgeGraphManager.deleteRelations(relations);
+     notifyGraphUpdated();
++    const message = deletedCount === relations.length
++      ? "Relations deleted successfully"
++      : `Deleted ${deletedCount} of ${relations.length} relations. The rest matched nothing.`;
+     return {
+-      content: [{ type: "text" as const, text: "Relations deleted successfully" }],
+-      structuredContent: { success: true, message: "Relations deleted successfully" }
++      content: [{ type: "text" as const, text: message }],
++      structuredContent: { success: true, message }
+     };
+   }
+ );

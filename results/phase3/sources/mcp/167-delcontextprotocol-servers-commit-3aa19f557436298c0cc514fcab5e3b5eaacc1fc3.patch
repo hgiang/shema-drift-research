@@ -1,0 +1,194 @@
+From 3aa19f557436298c0cc514fcab5e3b5eaacc1fc3 Mon Sep 17 00:00:00 2001
+From: Abhinav Prakash <60460989+AbhiPra24@users.noreply.github.com>
+Date: Wed, 2 Sep 2026 07:55:31 +0530
+Subject: [PATCH] fix(git): unify git_log output schema and remove
+ raise_exceptions from server.run (#4658)
+
+---
+ src/git/src/mcp_server_git/server.py | 65 +++++++++-------------
+ src/git/tests/test_server.py         | 80 ++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+), 41 deletions(-)
+
+diff --git a/src/git/src/mcp_server_git/server.py b/src/git/src/mcp_server_git/server.py
+index 84188d8fd7..b94af84661 100644
+--- a/src/git/src/mcp_server_git/server.py
++++ b/src/git/src/mcp_server_git/server.py
+@@ -1,6 +1,6 @@
+ import logging
+ from pathlib import Path
+-from typing import Sequence, Optional
++from typing import Any, Optional, Sequence
+ from mcp.server import Server
+ from mcp.server.session import ServerSession
+ from mcp.server.stdio import stdio_server
+@@ -157,45 +157,28 @@ def git_reset(repo: git.Repo) -> str:
+     return "All staged changes reset"
+ 
+ def git_log(repo: git.Repo, max_count: int = 10, start_timestamp: Optional[str] = None, end_timestamp: Optional[str] = None) -> list[str]:
+-    if start_timestamp or end_timestamp:
+-        # Defense in depth: reject timestamps starting with '-' to prevent flag injection
+-        if start_timestamp and start_timestamp.startswith("-"):
+-            raise ValueError(f"Invalid start_timestamp: '{start_timestamp}' - cannot start with '-'")
+-        if end_timestamp and end_timestamp.startswith("-"):
+-            raise ValueError(f"Invalid end_timestamp: '{end_timestamp}' - cannot start with '-'")
+-        # Use git log command with date filtering
+-        args = []
+-        if start_timestamp:
+-            args.extend(['--since', start_timestamp])
+-        if end_timestamp:
+-            args.extend(['--until', end_timestamp])
+-        args.extend(['--format=%H%n%an%n%ad%n%s%n'])
+-
+-        log_output = repo.git.log(*args).split('\n')
+-
+-        log = []
+-        # Process commits in groups of 4 (hash, author, date, message)
+-        for i in range(0, len(log_output), 4):
+-            if i + 3 < len(log_output) and len(log) < max_count:
+-                log.append(
+-                    f"Commit: {log_output[i]}\n"
+-                    f"Author: {log_output[i+1]}\n"
+-                    f"Date: {log_output[i+2]}\n"
+-                    f"Message: {log_output[i+3]}\n"
+-                )
+-        return log
+-    else:
+-        # Use existing logic for simple log without date filtering
+-        commits = list(repo.iter_commits(max_count=max_count))
+-        log = []
+-        for commit in commits:
+-            log.append(
+-                f"Commit: {commit.hexsha!r}\n"
+-                f"Author: {commit.author!r}\n"
+-                f"Date: {commit.authored_datetime}\n"
+-                f"Message: {commit.message!r}\n"
+-            )
+-        return log
++    # Defense in depth: reject timestamps starting with '-' to prevent flag injection
++    if start_timestamp and start_timestamp.startswith("-"):
++        raise ValueError(f"Invalid start_timestamp: '{start_timestamp}' - cannot start with '-'")
++    if end_timestamp and end_timestamp.startswith("-"):
++        raise ValueError(f"Invalid end_timestamp: '{end_timestamp}' - cannot start with '-'")
++
++    kwargs: dict[str, Any] = {"max_count": max_count}
++    if start_timestamp:
++        kwargs["since"] = start_timestamp
++    if end_timestamp:
++        kwargs["until"] = end_timestamp
++
++    commits = list(repo.iter_commits(**kwargs))
++    log = []
++    for commit in commits:
++        log.append(
++            f"Commit: {commit.hexsha}\n"
++            f"Author: {commit.author}\n"
++            f"Date: {commit.authored_datetime}\n"
++            f"Message: {commit.message}\n"
++        )
++    return log
+ 
+ def git_create_branch(repo: git.Repo, branch_name: str, base_branch: str | None = None) -> str:
+     # Defense in depth: reject names starting with '-' to prevent flag injection
+@@ -599,4 +582,4 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
+ 
+     options = server.create_initialization_options()
+     async with stdio_server() as (read_stream, write_stream):
+-        await server.run(read_stream, write_stream, options, raise_exceptions=True)
++        await server.run(read_stream, write_stream, options)
+diff --git a/src/git/tests/test_server.py b/src/git/tests/test_server.py
+index 893195d414..05d5931466 100644
+--- a/src/git/tests/test_server.py
++++ b/src/git/tests/test_server.py
+@@ -16,8 +16,10 @@
+     git_create_branch,
+     git_show,
+     validate_repo_path,
++    serve,
+ )
+ import shutil
++import unittest.mock as mock
+ 
+ @pytest.fixture
+ def test_repository(tmp_path: Path):
+@@ -508,3 +510,81 @@ def test_git_branch_rejects_contains_flag_injection(test_repository):
+ 
+     with pytest.raises(BadName):
+         git_branch(test_repository, "local", not_contains="--exec=evil")
++
++
++def test_git_log_formatting_no_repr(test_repository):
++    """Test that git_log does not use !r formatting (no Python object repr or quotes)."""
++    file_path = Path(test_repository.working_dir) / "multiline.txt"
++    file_path.write_text("multiline test")
++    test_repository.index.add(["multiline.txt"])
++    test_repository.index.commit("Subject line\n\nDetailed body line 1\nDetailed body line 2")
++
++    result = git_log(test_repository, max_count=1)
++    entry = result[0]
++
++    # Verify no python repr quotes around commit hash or message
++    assert "Commit: '" not in entry
++    assert 'Commit: "' not in entry
++    assert "<git.Actor" not in entry
++    assert "Message: '" not in entry
++    assert 'Message: "' not in entry
++
++    # Verify full message with body is included
++    assert "Subject line\n\nDetailed body line 1\nDetailed body line 2" in entry
++
++
++def test_git_log_filtered_unfiltered_parity(test_repository):
++    """Test that filtered and unfiltered git_log produce identical schema and preserve commit body."""
++    file_path = Path(test_repository.working_dir) / "parity_test.txt"
++    file_path.write_text("parity test")
++    test_repository.index.add(["parity_test.txt"])
++    test_repository.index.commit("Parity subject\n\nParity body line 1\nParity body line 2")
++
++    unfiltered = git_log(test_repository, max_count=1)
++    filtered_since = git_log(test_repository, max_count=1, start_timestamp="yesterday")
++    filtered_until = git_log(test_repository, max_count=1, end_timestamp="2099-01-01")
++
++    # Output schemas and contents must be identical
++    assert unfiltered == filtered_since
++    assert unfiltered == filtered_until
++
++    # Multi-line commit message preserved in filtered results
++    assert "Parity subject\n\nParity body line 1\nParity body line 2" in filtered_since[0]
++
++
++def test_git_log_date_filtering(test_repository):
++    """Test date filtering logic in git_log."""
++    # Future start_timestamp should return no commits
++    future_result = git_log(test_repository, start_timestamp="2099-01-01")
++    assert future_result == []
++
++    # Past end_timestamp should return no commits
++    past_result = git_log(test_repository, end_timestamp="2000-01-01")
++    assert past_result == []
++
++    # Valid range with max_count
++    valid_result = git_log(test_repository, max_count=1, start_timestamp="2000-01-01")
++    assert len(valid_result) == 1
++
++
++def test_serve_run_does_not_raise_exceptions(tmp_path: Path):
++    """Verify that serve() runs server.run without raise_exceptions=True."""
++    import anyio
++
++    repo_path = tmp_path / "serve_test_repo"
++    git.Repo.init(repo_path)
++
++    async def _run():
++        with mock.patch("mcp_server_git.server.stdio_server") as mock_stdio:
++            mock_read = mock.AsyncMock()
++            mock_write = mock.AsyncMock()
++            mock_stdio.return_value.__aenter__.return_value = (mock_read, mock_write)
++            mock_stdio.return_value.__aexit__.return_value = None
++
++            with mock.patch("mcp_server_git.server.Server.run", new_callable=mock.AsyncMock) as mock_run:
++                await serve(repo_path)
++                mock_run.assert_awaited_once()
++                _, kwargs = mock_run.call_args
++                assert kwargs.get("raise_exceptions") is not True
++
++    anyio.run(_run)

@@ -1,0 +1,24 @@
+From 83b22050b833a1c64e8f7b277c60e17c79d860f9 Mon Sep 17 00:00:00 2001
+From: Anshul Garg <anshulgarg.garg509@gmail.com>
+Date: Sun, 15 Mar 2026 21:05:30 +0530
+Subject: [PATCH] fix(fetch): handle malformed input without crashing (#3515)
+
+fix(fetch): handle malformed input without crashing
+
+Changes `raise_exceptions=True` to `raise_exceptions=False` in the fetch server's `Server.run()` call, preventing the server from crashing on malformed JSON-RPC input. This aligns with the SDK's intended default behavior and is consistent with other reference servers.
+
+Fixes #3359
+---
+ src/fetch/src/mcp_server_fetch/server.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/fetch/src/mcp_server_fetch/server.py b/src/fetch/src/mcp_server_fetch/server.py
+index d128987351..b42c7b1f6b 100644
+--- a/src/fetch/src/mcp_server_fetch/server.py
++++ b/src/fetch/src/mcp_server_fetch/server.py
+@@ -285,4 +285,4 @@ async def get_prompt(name: str, arguments: dict | None) -> GetPromptResult:
+ 
+     options = server.create_initialization_options()
+     async with stdio_server() as (read_stream, write_stream):
+-        await server.run(read_stream, write_stream, options, raise_exceptions=True)
++        await server.run(read_stream, write_stream, options, raise_exceptions=False)

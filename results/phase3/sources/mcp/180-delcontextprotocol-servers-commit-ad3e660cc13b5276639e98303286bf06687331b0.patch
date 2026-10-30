@@ -1,0 +1,75 @@
+From 3e1be88c3bf20bcaf8cb007d190c708f69057fee Mon Sep 17 00:00:00 2001
+From: Greg King <greg@dotsetlabs.com>
+Date: Mon, 26 Jan 2026 09:10:58 -0500
+Subject: [PATCH] fix(everything): allow re-registration of session resources
+
+When a tool like `gzip-file-as-resource` is called multiple times with the
+same output name (especially the default `README.md.gz`), the server would
+throw "Resource already registered" because the SDK doesn't allow
+registering duplicate URIs.
+
+This fix:
+- Tracks registered resources by URI in a module-level Map
+- Before registering a new resource, checks if the URI already exists
+- If it does, removes the old resource using the SDK's `remove()` method
+- Then registers the new resource with fresh content
+
+This allows tools to be called repeatedly with the same parameters without
+errors, which is important for LLM agents that may retry tool calls.
+
+Found using Bellwether (https://bellwether.sh), an MCP server validation tool.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+---
+ src/everything/resources/session.ts | 23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
+
+diff --git a/src/everything/resources/session.ts b/src/everything/resources/session.ts
+index f4e16d3b78..10e0db33c1 100644
+--- a/src/everything/resources/session.ts
++++ b/src/everything/resources/session.ts
+@@ -1,6 +1,13 @@
+-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
++import { McpServer, RegisteredResource } from "@modelcontextprotocol/sdk/server/mcp.js";
+ import { Resource, ResourceLink } from "@modelcontextprotocol/sdk/types.js";
+ 
++/**
++ * Tracks registered session resources by URI to allow updating/removing on re-registration.
++ * This prevents "Resource already registered" errors when a tool creates a resource
++ * with the same URI multiple times during a session.
++ */
++const registeredResources = new Map<string, RegisteredResource>();
++
+ /**
+  * Generates a session-scoped resource URI string based on the provided resource name.
+  *
+@@ -47,17 +54,27 @@ export const registerSessionResource = (
+           blob: payload,
+         };
+ 
++  // Check if a resource with this URI is already registered and remove it
++  const existingResource = registeredResources.get(uri);
++  if (existingResource) {
++    existingResource.remove();
++    registeredResources.delete(uri);
++  }
++
+   // Register file resource
+-  server.registerResource(
++  const registeredResource = server.registerResource(
+     name,
+     uri,
+     { mimeType, description, title, annotations, icons, _meta },
+-    async (uri) => {
++    async () => {
+       return {
+         contents: [resourceContent],
+       };
+     }
+   );
+ 
++  // Track the registered resource for potential future removal
++  registeredResources.set(uri, registeredResource);
++
+   return { type: "resource_link", ...resource };
+ };

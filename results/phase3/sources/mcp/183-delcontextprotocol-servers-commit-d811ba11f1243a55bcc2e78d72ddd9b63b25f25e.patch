@@ -1,0 +1,57 @@
+From d811ba11f1243a55bcc2e78d72ddd9b63b25f25e Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Tue, 18 Aug 2026 08:57:03 -0700
+Subject: [PATCH] docs(python): note the mcp 1.x requirement in fetch, git, and
+ time
+
+Users hitting the 2.0.0 startup failure land on the README first. Also makes
+the three packages qualify for the next release: the release workflow selects
+packages by .py/.ts/.md changes, so a dependency-only fix would merge without
+publishing.
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ src/fetch/README.md | 2 ++
+ src/git/README.md   | 2 ++
+ src/time/README.md  | 2 ++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/src/fetch/README.md b/src/fetch/README.md
+index ed6d2262f4..7e2869983f 100644
+--- a/src/fetch/README.md
++++ b/src/fetch/README.md
+@@ -6,6 +6,8 @@ A Model Context Protocol server that provides web content fetching capabilities.
+ 
+ Source: https://github.com/modelcontextprotocol/servers/tree/main/src/fetch
+ 
++Requires MCP Python SDK 1.x (`mcp>=1.29.0,<2`). SDK 2.0 renamed APIs this server uses. The port to v2 is in progress.
++
+ > [!CAUTION]
+ > This server can access local/internal IP addresses and may represent a security risk. Exercise caution when using this MCP server to ensure this does not expose any sensitive data.
+ 
+diff --git a/src/git/README.md b/src/git/README.md
+index a252a4a7ba..70b00974e6 100644
+--- a/src/git/README.md
++++ b/src/git/README.md
+@@ -8,6 +8,8 @@ A Model Context Protocol server for Git repository interaction and automation. T
+ 
+ Source: https://github.com/modelcontextprotocol/servers/tree/main/src/git
+ 
++Requires MCP Python SDK 1.x (`mcp>=1.29.0,<2`). SDK 2.0 renamed APIs this server uses. The port to v2 is in progress.
++
+ Please note that mcp-server-git is currently in early development. The functionality and available tools are subject to change and expansion as we continue to develop and improve the server.
+ 
+ ### Tools
+diff --git a/src/time/README.md b/src/time/README.md
+index 9adbe19483..9a2c1c42fd 100644
+--- a/src/time/README.md
++++ b/src/time/README.md
+@@ -6,6 +6,8 @@ A Model Context Protocol server that provides time and timezone conversion capab
+ 
+ Source: https://github.com/modelcontextprotocol/servers/tree/main/src/time
+ 
++Requires MCP Python SDK 1.x (`mcp>=1.29.0,<2`). SDK 2.0 renamed APIs this server uses. The port to v2 is in progress.
++
+ ### Available Tools
+ 
+ - `get_current_time` - Get current time in a specific timezone or system timezone.
