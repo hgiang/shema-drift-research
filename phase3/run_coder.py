@@ -48,7 +48,8 @@ def call_codex(prompt, model=CODEX_MODEL):
     """Non-interactive Codex in a throwaway empty directory; it may read nothing on disk."""
     with tempfile.TemporaryDirectory() as empty:
         done = subprocess.run(
-            ["codex", "exec", "--sandbox", "read-only", "--model", model, "-"],
+            ["codex", "exec", "--sandbox", "read-only", "--skip-git-repo-check",
+             "--model", model, "-"],
             input=prompt, capture_output=True, text=True, cwd=empty, timeout=900)
     if done.returncode != 0:
         raise RuntimeError(f"codex exec failed: {done.stderr[-400:]}")
