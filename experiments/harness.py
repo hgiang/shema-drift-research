@@ -60,10 +60,24 @@ def declaration(name, tool_v1, params):
             "parameters": {"type": "object", "properties": props, "required": req}}
 
 
-def build_condition(task, cond, drift_class):
+CATALOGS = ("small", "full")
+
+
+def _catalog_tools(task, catalog):
+    """Which tools are declared. "small" is the study's baseline: the task's own steps.
+    "full" is every frozen tool in the Phase-3 order (MILESTONES.md amendment 4)."""
+    if catalog in (None, "small"):
+        return sorted({s["tool"] for s in task["steps"]})
+    if catalog == "full":
+        import phase3_grid
+        return list(phase3_grid.CATALOG_ORDER)
+    raise ValueError(f"unknown catalog {catalog!r}; choose from {CATALOGS}")
+
+
+def build_condition(task, cond, drift_class, catalog=None):
     """Return dict with system, user, declarations, active_schemas, profile, retry."""
     if cond in FILL_BASE:  # Phase 2: the base condition with the fill instruction
-        return {**build_condition(task, FILL_BASE[cond], drift_class), "system": FILL_SYSTEM}
+        return {**build_condition(task, FILL_BASE[cond], drift_class, catalog), "system": FILL_SYSTEM}
     if is_phase1(cond):
         return build_phase1(task, cond, drift_class)
     tools_v1 = frozen()["tools_v1"]
@@ -72,7 +86,7 @@ def build_condition(task, cond, drift_class):
     v2_params = frozen()["v2_schemas"][key]
     diff = frozen()["diffs"][key]
 
-    step_tools = sorted({s["tool"] for s in task["steps"]})
+    step_tools = _catalog_tools(task, catalog)
     decls, active, profile, retry = [], {}, "strict", False
     system = SYSTEM
     for name in step_tools:
@@ -322,9 +336,9 @@ def step_outcome(status, payload, gt_args, active_params):
 
 # ---------------- episode runner ----------------
 
-def run_episode(task, cond, drift_class, call_model, phrasing_idx=0):
+def run_episode(task, cond, drift_class, call_model, phrasing_idx=0, catalog=None):
     """Run one task episode. Returns a record dict (JSONL-ready)."""
-    setup = build_condition(task, cond, drift_class)
+    setup = build_condition(task, cond, drift_class, catalog)
     dt, didx = task["drift_tool"], task["drift_step_index"]
     no_drift = FILL_BASE.get(cond, cond) == "A"
     gt_steps = task["gt_v1"] if no_drift else task["gt_v2"][drift_class]
