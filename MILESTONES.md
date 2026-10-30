@@ -784,6 +784,52 @@ earlier test whose BH verdict moves in the 307 family.
 - `HARD_STOP_USD = 50.00`; the Phase-3 projection is ≤ $3 and the pilot re-projects before the full run.
 - Any reversal is reported plainly, as in Phases 1 and 2.
 
+## Phase 3 amendment 1 — 2026-10-30, after the coder pilot, before the corpus is built
+
+Changes **who applies the labels**, and nothing else. The window, the unit of analysis, the
+inclusion and exclusion rules, the seven labels, the `agent_visible` rule, the sampling draw,
+the per-source cap, the reliability threshold, P17–P21 and the BH treatment are all unchanged.
+
+**Why.** The locked design said the label is "decided by the rule written in
+`phase3/code_changes.py`". The pilot (run log, 2026-10-30) shows that rule cannot do the job:
+57 units, all 57 `other`, and the identifier clause pulled in error codes, CLI commands, plan
+names and string literals out of diffs. Deciding which class a sentence of English describes
+is a judgement, and the locked design handed it to a regex table.
+
+**New instrument.**
+1. `phase3/build_digests.py` replaces the labelling half of `code_changes.py`. For every
+   drawn entry, in the order `sampling.draw_order` already fixed, it writes a deterministic
+   digest: source, entry URL, date, the entry's own heading, and the candidate spans — the
+   sentences that name a parameter-like identifier next to a change word, with MCP patches
+   restricted to hunks that touch a schema. **A digest carries no label and no
+   `agent_visible`.** The same archive gives the same digests byte for byte.
+2. **Two independent blind coders, neither of which has seen the Phase-3 predictions**, read
+   the same digest and the same coding guide (the lock's inclusion rule, the seven labels and
+   the `agent_visible` rule, quoted verbatim, with no mention of P17–P21 and no expected
+   proportions):
+   - **Coder A — Codex**, `codex exec`, gpt-6-sol, sandbox read-only, run in an empty
+     directory with the digest on stdin, as the Phase-2 label audit was run.
+   - **Coder B — Claude Sonnet 5.5** via OpenRouter, provider `anthropic` pinned with
+     `allow_fallbacks: false`, temperature 0.
+3. `drift_rules.py` is kept **only to propose candidate spans**. It proposes; it no longer
+   decides. Its `classify` output is not used for any corpus label.
+
+**Unit set and reliability.** A unit enters the corpus when **both** coders return it for the
+same (entry, parameter). Units returned by one coder only are archived and reported, never
+counted in a prevalence share. Three reliability figures are reported: unit-set agreement
+(both ÷ either), and, on the agreed set, raw agreement and Cohen's kappa for `label` and for
+`agent_visible`. The locked threshold is unchanged — raw agreement ≥ 0.90 on `label`; below
+it the coding guide is clarified and **both** passes are re-run before any prevalence number
+is quoted.
+
+**Adjudication.** The author of the predictions sees the coders' output only after both passes
+are archived, adjudicates disagreements alone, and the user reads them. Adjudicated labels are
+reported separately from the agreed ones, and the prevalence shares are computed on the agreed
+set, so adjudication cannot move a predicted share.
+
+**Spend.** Coder A is free of this budget; coder B is the only cost, projected ≤ $2, run under
+`--cap` like every other OpenRouter call. Everything else in Phase 3 stays as locked.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)
