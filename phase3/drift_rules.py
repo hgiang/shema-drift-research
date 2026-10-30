@@ -70,9 +70,13 @@ _EXISTING = re.compile(r"\bexisting\b", re.I)
 _EXAMPLE = re.compile(r"[?&]{p}=|[`\"]{p}[`\"]\s*[:=]|^\s*[-+]?\s*[`\"]?{p}[`\"]?\s*:", re.M)
 
 
-def qualifies(span):
-    """True when the span is about a change to a request parameter of an existing endpoint."""
-    if not (_PARAM_WORD.search(span) or et.identifiers(span)):
+def qualifies(span, names=None):
+    """True when the span is about a change to a request parameter of an existing endpoint.
+
+    `names` lets a caller supply the identifiers it found; a changed line of code names its
+    parameter as `name:`, with no backticks for `et.identifiers` to see.
+    """
+    if not (_PARAM_WORD.search(span) or (names if names is not None else et.identifiers(span))):
         return False
     if not _CHANGE_WORD.search(span):
         return False
