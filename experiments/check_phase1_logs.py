@@ -29,13 +29,14 @@ sys.path.insert(0, str(HERE))
 import harness  # noqa: E402
 import phase1_grid as p1  # noqa: E402
 import phase2_grid as p2  # noqa: E402
+import phase3_grid as p3  # noqa: E402
 from cost_tracker import COST_LOG  # noqa: E402
 
 REQUIRED = ("transcript", "usage", "meta", "reasoning", "arm", "phase")
 TRUNCATED = {"length", "MAX_TOKENS"}  # OpenRouter/vLLM, Gemini
 MAX_LENGTH_RATE = 0.05
 NONE = "(none)"
-PHASES = (1, 2)
+PHASES = (1, 2, 3)
 
 
 def read_records(path):
@@ -56,9 +57,11 @@ def read_records(path):
     return records, bad
 
 
-def safe_key(rec):
+def safe_key(rec, phase=1):
+    """The key a record is counted under. Phase 3 keys on the catalog size instead of the
+    phrasing and repetition a Phase-1 or Phase-2 record carries."""
     try:
-        k = p1.rec_key(rec)
+        k = p3.rec_key(rec) if phase == 3 else p1.rec_key(rec)
         hash(k)
         return k
     except (KeyError, TypeError):
@@ -72,21 +75,28 @@ def _jobs(arm, cells, phase):
         return p1.jobs(arm, cells)
     if cells:
         raise SystemExit("--cells applies to Phase 1 only")
+    if phase == 3:
+        if arm not in p3.ARMS:
+            raise SystemExit(f"unknown Phase-3 arm {arm!r}; choose from {p3.ARMS}")
+        return p3.jobs(arm)
     return p2.jobs(arm)
 
 
 def expected_keys(arm, reasoning, cells=None, phase=1):
-    return {p1.key(t["id"], c, cls, ph, rep, reasoning) for t, c, cls, ph, rep in _jobs(arm, cells, phase)}
+    jobs = _jobs(arm, cells, phase)
+    if phase == 3:
+        return {(t["id"], c, cls, cat) for t, c, cls, cat in jobs}
+    return {p1.key(t["id"], c, cls, ph, rep, reasoning) for t, c, cls, ph, rep in jobs}
 
 
 def coverage(records, arm, reasoning, cells=None, phase=1):
     expected = expected_keys(arm, reasoning, cells, phase)
-    present = expected & {safe_key(r) for r in records}
+    present = expected & {safe_key(r, phase) for r in records}
     return {"expected": len(expected), "present": len(present), "missing": sorted(expected - present)}
 
 
-def duplicates(records):
-    counts = Counter(safe_key(r) for r in records)
+def duplicates(records, phase=1):
+    counts = Counter(safe_key(r, phase) for r in records)
     return sorted(k for k, n in counts.items() if k is not None and n > 1)
 
 
@@ -184,12 +194,12 @@ def gate(path, arm, reasoning, cells=None, pilot=False, phase=1):
     """(ok, report). File-wide checks: parse, duplicates, versions; the rest on this arm's records."""
     records, bad = read_records(path)
     expected = expected_keys(arm, reasoning, cells, phase)
-    arm_records = [r for r in records if safe_key(r) in expected]
+    arm_records = [r for r in records if safe_key(r, phase) in expected]
     cov = coverage(records, arm, reasoning, cells, phase)
     cell_rows = cell_report(arm_records)
     versions = dict(Counter(_meta(r, "model") for r in records))
-    dups = duplicates(records)
-    keyless = [_who(r) for r in records if safe_key(r) is None]
+    dups = duplicates(records, phase)
+    keyless = [_who(r) for r in records if safe_key(r, phase) is None]
     failures = _failures(bad, keyless, completeness(arm_records), dups, cell_rows, versions, cov, pilot)
     model = Counter(r.get("model") for r in records).most_common(1)[0][0] if records else None
     report = {"file": str(path), "phase": phase, "arm": arm, "reasoning": reasoning, "pilot": pilot,
@@ -216,12 +226,12 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("file")
     ap.add_argument("--phase", type=int, choices=PHASES, default=1)
-    ap.add_argument("--arm", required=True, choices=sorted(set(p1.ARMS) | set(p2.ARMS)))
+    ap.add_argument("--arm", required=True, choices=sorted(set(p1.ARMS) | set(p2.ARMS) | set(p3.ARMS)))
     ap.add_argument("--reasoning", default="default")
     ap.add_argument("--cells", default="")
     ap.add_argument("--pilot", action="store_true", help="partial run: skip the 100% coverage check")
     args = ap.parse_args()
-    if args.arm not in (p1.ARMS if args.phase == 1 else p2.ARMS):
+    if args.arm not in {1: p1.ARMS, 2: p2.ARMS, 3: p3.ARMS}[args.phase]:
         ap.error(f"--arm {args.arm} is not a Phase-{args.phase} arm")
     ok, report = gate(args.file, args.arm, args.reasoning, args.cells.split(",") if args.cells else None,
                       pilot=args.pilot, phase=args.phase)

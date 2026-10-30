@@ -13352,3 +13352,13 @@
 {"ts": "2026-10-30T12:48:10", "phase": "phase3", "model": "anthropic/claude-sonnet-5.5", "tag": "p3-coder-sonnet", "tokens_in": 5625, "tokens_out": 861, "est_cost_usd": 0.01986}
 {"ts": "2026-10-30T12:48:18", "phase": "phase3", "model": "anthropic/claude-sonnet-5.5", "tag": "p3-coder-sonnet", "tokens_in": 6760, "tokens_out": 928, "est_cost_usd": 0.0228}
 {"ts": "2026-10-30T12:48:20", "phase": "phase3", "model": "anthropic/claude-sonnet-5.5", "tag": "p3-coder-sonnet", "tokens_in": 2330, "tokens_out": 61, "est_cost_usd": 0.00527}
+{"ts": "2026-10-30T14:31:05", "phase": "phase3", "model": "gemini-3.6-flash", "tag": "p3-web01-B_strict-default_change-full-MINIMAL", "tokens_in": 6501, "tokens_out": 49, "est_cost_usd": 0.005059}
+{"ts": "2026-10-30T14:31:06", "phase": "phase3", "model": "gemini-3.6-flash", "tag": "p3-fly03-C-rename-full-MINIMAL", "tokens_in": 6594, "tokens_out": 60, "est_cost_usd": 0.00517}
+{"ts": "2026-10-30T14:31:08", "phase": "phase3", "model": "gemini-3.6-flash", "tag": "p3-bmk02-B_strict-default_change-full-MINIMAL", "tokens_in": 6504, "tokens_out": 43, "est_cost_usd": 0.005039}
+{"ts": "2026-10-30T14:31:10", "phase": "phase3", "model": "gemini-3.6-flash", "tag": "p3-sched01-A-enum_tighten-full-MINIMAL", "tokens_in": 6514, "tokens_out": 70, "est_cost_usd": 0.005148}
+{"ts": "2026-10-30T14:31:11", "phase": "phase3", "model": "gemini-3.6-flash", "tag": "p3-chan03-B_strict-rename-full-MINIMAL", "tokens_in": 6491, "tokens_out": 37, "est_cost_usd": 0.005007}
+{"ts": "2026-10-30T14:31:14", "phase": "phase3", "model": "anthropic/claude-haiku-5.5", "tag": "p3-web01-B_strict-default_change-full-default", "tokens_in": 9867, "tokens_out": 156, "est_cost_usd": 0.001065}
+{"ts": "2026-10-30T14:31:16", "phase": "phase3", "model": "anthropic/claude-haiku-5.5", "tag": "p3-fly03-C-rename-full-default", "tokens_in": 9984, "tokens_out": 321, "est_cost_usd": 0.001159}
+{"ts": "2026-10-30T14:31:19", "phase": "phase3", "model": "anthropic/claude-haiku-5.5", "tag": "p3-bmk02-B_strict-default_change-full-default", "tokens_in": 9873, "tokens_out": 161, "est_cost_usd": 0.001068}
+{"ts": "2026-10-30T14:31:21", "phase": "phase3", "model": "anthropic/claude-haiku-5.5", "tag": "p3-sched01-A-enum_tighten-full-default", "tokens_in": 9894, "tokens_out": 225, "est_cost_usd": 0.001102}
+{"ts": "2026-10-30T14:31:24", "phase": "phase3", "model": "anthropic/claude-haiku-5.5", "tag": "p3-chan03-B_strict-rename-full-default", "tokens_in": 9855, "tokens_out": 123, "est_cost_usd": 0.001047}

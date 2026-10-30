@@ -217,8 +217,10 @@ def test_phase2_arm_and_cells_validated():
         chk.expected_keys("ablation", "default", phase=2)
     with pytest.raises(SystemExit, match="--cells"):
         chk.expected_keys("core", "default", cells=["C"], phase=2)
-    with pytest.raises(SystemExit, match="phase"):
-        chk.expected_keys("core", "default", phase=3)
+    with pytest.raises(SystemExit, match="Phase-3 arm"):
+        chk.expected_keys("core", "default", phase=3)    # phase 3 exists; "core" is not its arm
+    with pytest.raises(SystemExit, match="unknown phase"):
+        chk.expected_keys("core", "default", phase=4)
 
 
 def test_phase2_complete_run_passes(tmp_path):
