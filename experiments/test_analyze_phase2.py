@@ -76,7 +76,10 @@ def phase2_dir(tmp_path_factory):
 
 def run_analysis(tmp_path, phase2_dir, out=True):
     target = tmp_path / "analysis.json"
-    cmd = [sys.executable, str(HERE / "analyze.py"), "--phase1-dir", str(PHASE1_DIR), "--phase2-dir", str(phase2_dir)]
+    empty3 = tmp_path / "no_phase3"          # these tests look at Phase 2 alone
+    empty3.mkdir(exist_ok=True)
+    cmd = [sys.executable, str(HERE / "analyze.py"), "--phase1-dir", str(PHASE1_DIR),
+           "--phase2-dir", str(phase2_dir), "--phase3-dir", str(empty3)]
     res = subprocess.run(cmd + (["--out", str(target)] if out else []), capture_output=True, text=True)
     return res, (json.loads(target.read_text()) if out and target.exists() else None)
 

@@ -742,6 +742,12 @@ site and film still show the September analysis; they are rebuilt in Phase 4.
   GitHub 2. Round-3 answers are `coder_*_answers.jsonl`; rounds 1 and 2 are kept beside them
   and are not analysed.
 
+- 2026-10-30 Catalog arm (Tasks 7-9, $1.056: Flash $0.856, Haiku $0.200; cumulative $22.628).
+  480 episodes, 240 per family, both files gated **PASS** at 100% coverage with one provider
+  each (Google, Anthropic) and no truncation in any cell. Mean declarations per episode:
+  **1.275 in the small catalog, 30.0 in the full one**. Pilots (5 episodes per family) are
+  kept as `*.pilot.jsonl` and are not analysed.
+
 ## Phase 3 pre-registration — LOCKED 2026-10-30
 
 Written before any page is fetched and before any Phase-3 model call. Execution plan: `phase3/PLAN.md`.
@@ -1079,6 +1085,51 @@ provider-default thinking); conditions A, B_strict, C; 40 of the 120 primary pai
 drift class, drawn with `RNG_P3`; 40 × 3 × 2 = 240 episodes per family, 480 in all;
 temperature 0; `max_tokens` 700 (OpenRouter) and 1024 (Gemini); the six BH tests with `p3:`
 labels, taking the family from 301 to 307; each family keeps its existing noise floor.
+
+## Phase 3 catalog results — 2026-10-30
+
+Source: `results/analysis.json → phase3.catalog` (regenerated twice, identical hash
+`9c4f8c9f`). The six `p3:` tests take the BH family from 301 to **307**; 165 tests still
+survive and `phase3.bh_changes` is empty, so no earlier test changes its verdict. `models`,
+`token_costs`, `n_records`, `phase1`, `bh_original_family` and the whole `phase2` block are
+byte-identical to `2e97a2b`.
+
+**Success by catalog size** (40 pairs, 8 per drift class).
+
+| | A small | A full | B_strict small | B_strict full | C small | C full |
+|---|---|---|---|---|---|---|
+| Gemini Flash | 1.000 | 0.975 | 0.075 | 0.125 | 0.925 | 0.925 |
+| Claude Haiku 5.5 | 0.975 | 0.900 | 0.175 | 0.150 | 0.775 | 0.725 |
+
+**P21 fails, and the way it fails matters.** The rule asks for the CI of C(full) − C(small)
+to sit inside [−0.10, +0.10]. Flash: +0.000, CI [−0.075, +0.075] — inside, equivalence shown.
+Haiku: −0.050, CI [−0.125, +0.000] — the point estimate is comfortably inside the band but
+the CI's lower end is not, so **equivalence is not shown for Haiku**. This is the Phase-1 P6
+situation again: a failure to demonstrate equivalence at n = 40, not a demonstration of harm.
+Neither test survives BH, and neither difference is distinguishable from each family's noise
+floor (Flash 0.133, Haiku 0.000 from Phase 2).
+
+**The manipulation check.** A(full) − A(small) is −0.025 for Flash, CI [−0.075, 0.000], and
+−0.075 for Haiku, CI [−0.175, 0.000]. Haiku loses a little even with no drift at all, so part
+of its C drop is the catalog and not the diff. Said plainly: a 24-fold larger tool catalog
+costs Haiku a few points of plain tool use, and costs Flash essentially nothing.
+
+**The failure mode a one-tool catalog cannot show did not appear.** Calling a tool that is
+not the task's was **0.000 in every cell, in both families, at 30 declarations**. No-call
+rates moved little: Flash 0.233 → 0.217, Haiku 0.233 → 0.283. Thirty tools in context is not
+enough to make either model pick the wrong one.
+
+**What this does and does not license.** It says diff-following in these two families does
+not collapse when the catalog grows from 1.275 to 30 declarations. It does **not** say the
+finding survives a production catalog: the contrast stops at 30 because that is every tool
+the frozen testbed has, and reaching 100 would have meant inventing 70 declarations whose
+quality nobody could vouch for (amendment 4). A null at 30 tools is weaker evidence than a
+null at 100 would have been, and the honest reading is "no collapse at 30", not "no effect
+of catalog size".
+
+**Phase 3 overall.** P17 fails, P18 undecided, P19 holds, P20 undecided (corpus results
+above); P21 fails as an equivalence claim on Haiku alone. The corpus arm cost $1.884 and the
+catalog arm $1.056: **$2.94 for the whole phase**, cumulative $22.628 of the $50 hard stop.
 
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified

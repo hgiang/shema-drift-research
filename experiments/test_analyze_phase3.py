@@ -92,9 +92,13 @@ def test_an_empty_phase3_dir_leaves_analysis_json_byte_identical(tmp_path):
     assert res.returncode == 0, res.stderr
     got = json.loads(out.read_text())
     assert "phase3" not in got
-    for key in ("models", "token_costs", "n_records", "phase1", "phase2", "bh",
+    for key in ("models", "token_costs", "n_records", "phase1", "phase2",
                 "bh_original_family"):
         assert got[key] == COMMITTED[key], key
+    # the committed file carries the catalog arm's six tests; without Phase 3 the family is 301
+    assert got["bh"]["n_tests"] == COMMITTED["bh"]["n_tests"] - 6 == 301
+    assert got["bh"]["survivors"] == [s for s in COMMITTED["bh"]["survivors"]
+                                      if not s.startswith("p3:")]
 
 
 def test_the_corpus_registers_no_bh_test(tmp_path):

@@ -87,8 +87,8 @@ schema (D), raw-error retry (E). 24 accepted-wrong episodes hand-audited, 24/24 
 **Analysis.** One script produces every number. Within-pair paired differences, bootstrap
 CIs, sign-flip permutation, paired effect sizes, direct class × condition interaction tests,
 one Benjamini–Hochberg family of 112 tests (74 survive). Phase 1 widened the family to 194
-tests (108 survive) and Phase 2 to 301 (165 survive); the 112-test family alone is kept as
-`bh_original_family`, and Phase-1 verdicts stay on their 194-test family.
+tests (108 survive), Phase 2 to 301 and Phase 3 to 307 (165 survive); the 112-test family
+alone is kept as `bh_original_family`, and each phase's verdicts stay on its own family.
 
 **Outreach.** The website (`docs/`), three GIFs, and the film (`video/`).
 
@@ -187,7 +187,7 @@ Do the phases in order. Phase 1 is the cheapest and matters the most.
 4. **Add new models to the price table in `cost_tracker.py`** or the spend cap will not see
    them. Use `--limit 5` first; a smoke test costs cents.
 5. **Extend `analyze.py`, do not fork it.** One script producing every number is what makes
-   the study checkable. New tests join the BH family; update the family size (currently 301)
+   the study checkable. New tests join the BH family; update the family size (currently 307)
    wherever it is stated.
 6. **Audit by hand.** For any new accepted-wrong cell or new coding, read 20+ episodes and
    save the sample, as `results/audit_accepted_wrong_sample.json` does.
@@ -223,6 +223,7 @@ Do the phases in order. Phase 1 is the cheapest and matters the most.
 | 2026-10-19 | Phase 1 steps 1-3 | Step 1 diagnostic on old logs (`phase1/`); pre-registration locked in `MILESTONES.md`; Phase-1 conditions, logging and runners added (`experiments/phase1_grid.py`, `test_phase1.py`); logs go to `results/phase1/` |
 | 2026-10-20 | Phase 1 results | All arms complete; `analysis.json` regenerated (BH family 194, 108 survive); P1, P3, P4, P5 hold, P2, P6 (Flash), P7 (luna) fail, P8/P9 not run, H-dec undecided; see "Phase 1 results" in `MILESTONES.md`. Spend $11.76 of $25. Explorer, figures, site and film still show September (Phase 4) |
 | 2026-10-30 | Phase 2 results | All arms complete; `analysis.json` regenerated (BH family 301, 165 survive; `bh_changes` empty); P10 and P14 hold, P11 fails but is uninformative (Llama A - B_strict = 0.025), P12 fails on Llama, P13 fails on both Claude families (pin A7 reversed again), P15 untested (no luna direct lift), P16 fails (pydantic/FastAPI 0.877 vs lenient); see "Phase 2 results" in `MILESTONES.md`. Spend $19.69 of $50. Explorer, figures, site and film still show September (Phase 4) |
+| 2026-10-30 | Phase 3 results | Changelog corpus: 71 units, two blind coders, label agreement 0.949. P17 **fails** - the five classes plus compound cover 0.563 of real request-parameter changes, CI [0.451, 0.676]; the biggest gap is parameter *removal*, which the testbed has no class for. P19 holds, P18 and P20 undecided. Catalog arm: 1.275 -> 30 declarations, P21 fails as an equivalence claim on Haiku alone (CI [-0.125, 0.000]); wrong-tool rate 0.000 everywhere. BH family 307, 165 survive. Spend $22.63 of $50 |
 | | | |
 
 Good luck. The instrument is clean, the statistics are careful, and the diff result is the

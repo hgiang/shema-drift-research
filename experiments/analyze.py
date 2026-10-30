@@ -447,7 +447,10 @@ def main(argv=None):
     ctx3 = phase3_ctx()
     phase3 = ap3.analyze(args.phase3_dir, ctx3) if args.phase3_dir.exists() else None
     p3runs = ap3c.load_catalog_runs(args.phase3_dir) if args.phase3_dir.exists() else []
-    catalog = ap3c.analyze(p3runs, ctx3, sept_noise)
+    floors = {**sept_noise, **{m: {"success_flip_rate": v}
+                               for m, v in ((phase2 or {}).get("noise_floor") or {}).items()
+                               if v is not None}}
+    catalog = ap3c.analyze(p3runs, ctx3, floors)
     if phase3 or catalog:
         phase3 = phase3 or {"status": {}}
         if catalog:

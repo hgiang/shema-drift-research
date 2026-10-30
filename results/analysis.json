@@ -14286,6 +14286,146 @@
    }
   },
   "status": {},
+  "catalog": {
+   "status": {},
+   "families": {
+    "anthropic/claude-haiku-5.5": {
+     "n_pairs": 40,
+     "success": {
+      "small": {
+       "A": 0.975,
+       "B_strict": 0.175,
+       "C": 0.775
+      },
+      "full": {
+       "A": 0.9,
+       "B_strict": 0.15,
+       "C": 0.725
+      }
+     },
+     "tests": {
+      "A": {
+       "n": 40,
+       "mean": -0.075,
+       "ci95": [
+        -0.175,
+        0.0
+       ],
+       "p_signflip": 0.24605,
+       "dz": -0.28116552785513027
+      },
+      "B_strict": {
+       "n": 40,
+       "mean": -0.025,
+       "ci95": [
+        -0.075,
+        0.0
+       ],
+       "p_signflip": 1.0,
+       "dz": -0.15811388300841897
+      },
+      "C": {
+       "n": 40,
+       "mean": -0.05,
+       "ci95": [
+        -0.125,
+        0.0
+       ],
+       "p_signflip": 0.50175,
+       "dz": -0.22652988649112996
+      }
+     },
+     "declarations": {
+      "small": 1.275,
+      "full": 30.0
+     },
+     "wrong_tool": {
+      "small": {
+       "n": 120,
+       "no_call_rate": 0.23333333333333334,
+       "wrong_tool_rate": 0.0
+      },
+      "full": {
+       "n": 120,
+       "no_call_rate": 0.2833333333333333,
+       "wrong_tool_rate": 0.0
+      }
+     }
+    },
+    "gemini-3.6-flash": {
+     "n_pairs": 40,
+     "success": {
+      "small": {
+       "A": 1.0,
+       "B_strict": 0.075,
+       "C": 0.925
+      },
+      "full": {
+       "A": 0.975,
+       "B_strict": 0.125,
+       "C": 0.925
+      }
+     },
+     "tests": {
+      "A": {
+       "n": 40,
+       "mean": -0.025,
+       "ci95": [
+        -0.075,
+        0.0
+       ],
+       "p_signflip": 1.0,
+       "dz": -0.15811388300841897
+      },
+      "B_strict": {
+       "n": 40,
+       "mean": 0.05,
+       "ci95": [
+        -0.05,
+        0.15
+       ],
+       "p_signflip": 0.62255,
+       "dz": 0.158113883008419
+      },
+      "C": {
+       "n": 40,
+       "mean": 0.0,
+       "ci95": [
+        -0.075,
+        0.075
+       ],
+       "p_signflip": 1.0,
+       "dz": 0.0
+      }
+     },
+     "declarations": {
+      "small": 1.275,
+      "full": 30.0
+     },
+     "wrong_tool": {
+      "small": {
+       "n": 120,
+       "no_call_rate": 0.23333333333333334,
+       "wrong_tool_rate": 0.0
+      },
+      "full": {
+       "n": 120,
+       "no_call_rate": 0.21666666666666667,
+       "wrong_tool_rate": 0.0
+      }
+     }
+    }
+   },
+   "noise_floor": {
+    "anthropic/claude-haiku-5.5": {
+     "success_flip_rate": 0.0
+    },
+    "gemini-3.6-flash": {
+     "success_flip_rate": 0.13333333333333333
+    }
+   },
+   "n_tests": 6
+  },
   "predictions": {
    "P17": {
     "holds": false,
@@ -14302,11 +14442,24 @@
    "P20": {
     "holds": null,
     "basis": "share of units that are compound 0.070 CI [0.014, 0.141] on n=71; needs >= 0.1"
+   },
+   "P21": {
+    "holds": false,
+    "basis": "C(full) - C(small) inside [-0.1, 0.1] in every family: {'anthropic/claude-haiku-5.5': '-0.050 CI [-0.125, 0.000], BH False', 'gemini-3.6-flash': '+0.000 CI [-0.075, 0.075], BH False'}"
    }
+  },
+  "family": {
+   "n_tests": 307,
+   "expected": 307,
+   "complete": true
+  },
+  "bh_changes": {
+   "lost": [],
+   "gained": []
   }
  },
  "bh": {
-  "n_tests": 301,
+  "n_tests": 307,
   "effective_threshold": 0.0225,
   "n_survive": 165,
   "survivors": [
