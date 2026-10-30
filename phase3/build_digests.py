@@ -34,6 +34,12 @@ DIGEST_FIELDS = ("digest_id", "source", "entry_url", "entry_path", "draw_rank", 
 MAX_SPANS = 12
 MAX_SPAN_CHARS = 400
 MAX_ENTRIES = 60
+# Phase 3 amendment 2: an index page is normally an enumeration, but GitHub publishes its own
+# list of REST schema changes, which is an entry in its own right. It is coded at rank -1.
+CODEABLE_INDEX = {
+    "github": ("https://docs.github.com/en/rest/about-the-rest-api/breaking-changes",),
+    "stripe": (), "slack": (), "mcp": (),
+}
 # A patch hunk is worth reading only when it touches a schema, not any line of code.
 _SCHEMA_CUE = re.compile(r"\b(inputSchema|outputSchema|jsonSchema|zodToJsonSchema|z\.[a-z]|"
                          r"required|properties|parameters|\.optional\(|\.default\(|"
@@ -71,10 +77,20 @@ def candidates(text, is_patch=False):
     return out
 
 
+def _codeable_index_entries(root, source):
+    """(rank -1, url, path) for the index pages this source declares to be real entries."""
+    import web_archive as wa
+    manifest = wa.load_manifest(root, source)
+    folder = wa.archive_path(root, source, 0, "x").parent
+    return [(-1, url, folder / manifest[url]["path"])
+            for url in CODEABLE_INDEX.get(source, ()) if url in manifest]
+
+
 def digests_for(root, source, max_entries=MAX_ENTRIES):
-    """One digest per drawn entry that has at least one candidate span, in the drawn order."""
+    """One digest per entry that has at least one candidate span, in the drawn order."""
     out = []
-    for rank, url, path in cc._entry_paths(root, source)[:max_entries]:
+    entries = _codeable_index_entries(root, source) + cc._entry_paths(root, source)[:max_entries]
+    for rank, url, path in entries:
         text = et.read_entry(path)
         if not text:
             continue
@@ -82,7 +98,7 @@ def digests_for(root, source, max_entries=MAX_ENTRIES):
         if not found:
             continue
         scope = cc._scope(text, url)
-        out.append({"digest_id": f"{source}:{rank:03d}", "source": source, "entry_url": url,
+        out.append({"digest_id": f"{source}:{rank:03d}" if rank >= 0 else f"{source}:index", "source": source, "entry_url": url,
                     "entry_path": path.name, "draw_rank": rank, "scope": scope,
                     "candidates": found})
     return out
@@ -91,7 +107,7 @@ def digests_for(root, source, max_entries=MAX_ENTRIES):
 def write_digests(root, out, sources=cc.SOURCES, max_entries=MAX_ENTRIES, summary_path=None):
     rows, summary = [], {}
     for source in sorted(sources):
-        read = len(cc._entry_paths(root, source)[:max_entries])
+        read = len(cc._entry_paths(root, source)[:max_entries]) + len(_codeable_index_entries(root, source))
         found = digests_for(root, source, max_entries)
         summary[source] = {"n_entries_read": read, "n_digests": len(found),
                            "n_candidates": sum(len(d["candidates"]) for d in found)}

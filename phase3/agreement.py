@@ -17,11 +17,18 @@ THRESHOLD = 0.90  # locked: raw agreement on `label`
 
 
 def _key(unit):
-    return (unit["digest_id"], unit["parameter"])
+    """Phase 3 amendment 2: coders name a parameter by its path or by its bare name, and the
+    locked unit key does not say which. Match on the last dotted segment, lowercased."""
+    tail = str(unit["parameter"]).replace("#", ".").rstrip(".").rsplit(".", 1)[-1]
+    return (unit["digest_id"], tail.strip("[]").lower())
 
 
 def _index(units):
-    return {_key(u): u for u in units}
+    """First unit wins, so two paths that collapse to one parameter become one unit."""
+    out = {}
+    for unit in units:
+        out.setdefault(_key(unit), unit)
+    return out
 
 
 def unit_sets(a, b):

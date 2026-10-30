@@ -115,3 +115,22 @@ def test_spans_are_trimmed_so_a_coder_reads_a_bounded_page(tmp_path):
     digests = bd.digests_for(build_archive(tmp_path, long_entry), "stripe", max_entries=10)
     assert len(digests[0]["candidates"]) <= bd.MAX_SPANS
     assert all(len(c["span"]) <= bd.MAX_SPAN_CHARS for c in digests[0]["candidates"])
+
+
+def test_a_source_can_declare_an_index_page_as_a_codeable_entry(tmp_path):
+    """Phase 3 amendment 2: GitHub's own breaking-changes page is an index URL but a real
+    entry, so the builder reads the index pages a source declares codeable."""
+    url = "https://docs.github.com/en/rest/about-the-rest-api/breaking-changes"
+    assert url in bd.CODEABLE_INDEX["github"]
+    entries = {url: "# Breaking changes\n\nThe `permission` parameter is now required.\n"}
+    build_archive(tmp_path, entries, source="github")
+    (tmp_path / "github.fetch.json").write_text(json.dumps(
+        {"source": "github", "n_enumerated": 0, "drawn": []}))      # an index page is not drawn
+    digests = bd.digests_for(tmp_path, "github", max_entries=10)
+    assert len(digests) == 1 and digests[0]["draw_rank"] == -1
+    assert digests[0]["candidates"][0]["identifiers"] == ["permission"]
+
+
+def test_a_sources_other_index_pages_are_not_coded(tmp_path):
+    assert "https://github.blog/changelog-sitemap.xml" not in bd.CODEABLE_INDEX["github"]
+    assert bd.CODEABLE_INDEX.get("stripe", ()) == ()

@@ -83,3 +83,29 @@ def test_report_fails_below_the_threshold():
 def test_an_empty_agreed_set_is_pending_not_passing():
     out = ag.report(A, [unit("z:9", "q", "other")])
     assert out["label"]["n"] == 0 and out["passes"] is None
+
+
+def test_units_are_matched_on_the_parameters_last_segment():
+    a = [unit("s:0", "Plan#create.aggregate_usage", "rename"),
+         unit("s:0", "Price#create.recurring.aggregate_usage", "rename")]
+    b = [unit("s:0", "aggregate_usage", "rename")]
+    out = ag.unit_sets(a, b)
+    assert out["n_a"] == 1 and out["n_b"] == 1 and out["n_both"] == 1
+    assert out["only_a"] == [] and out["only_b"] == []
+
+
+def test_matching_is_case_insensitive_on_the_segment():
+    a = [unit("s:0", "Body.Limit", "required")]
+    b = [unit("s:0", "limit", "required")]
+    assert ag.unit_sets(a, b)["n_both"] == 1
+
+
+def test_merging_within_a_coder_keeps_the_first_unit_seen():
+    a = [unit("s:0", "a.x", "rename"), unit("s:0", "b.x", "other")]
+    out = ag.label_agreement(a, [unit("s:0", "x", "rename")])
+    assert out["n"] == 1 and out["n_agree"] == 1
+
+
+def test_different_parameters_in_one_digest_stay_separate():
+    a = [unit("s:0", "limit", "required"), unit("s:0", "offset", "required")]
+    assert ag.unit_sets(a, list(a))["n_both"] == 2
