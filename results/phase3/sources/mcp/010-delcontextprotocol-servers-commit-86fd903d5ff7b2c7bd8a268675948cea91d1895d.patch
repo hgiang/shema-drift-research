@@ -1,0 +1,40 @@
+From 86fd903d5ff7b2c7bd8a268675948cea91d1895d Mon Sep 17 00:00:00 2001
+From: lunov <lunovich@pm.me>
+Date: Sat, 10 Jan 2026 19:15:39 +0700
+Subject: [PATCH] fix(filesystem): mark move_file as destructive operation
+
+move_file deletes the source file, which is a destructive operation.
+Updated annotations and README documentation to reflect this.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+---
+ src/filesystem/README.md | 2 +-
+ src/filesystem/index.ts  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/filesystem/README.md b/src/filesystem/README.md
+index e9ddc2b1e2..bf087a2b25 100644
+--- a/src/filesystem/README.md
++++ b/src/filesystem/README.md
+@@ -200,7 +200,7 @@ The mapping for filesystem tools is:
+ | `create_directory`          | `false`      | `true`         | `false`         | Re‑creating the same dir is a no‑op             |
+ | `write_file`                | `false`      | `true`         | `true`          | Overwrites existing files                       |
+ | `edit_file`                 | `false`      | `false`        | `true`          | Re‑applying edits can fail or double‑apply      |
+-| `move_file`                 | `false`      | `false`        | `false`         | Move/rename only; repeat usually errors         |
++| `move_file`                 | `false`      | `false`        | `true`          | Deletes source file                             |
+ 
+ > Note: `idempotentHint` and `destructiveHint` are meaningful only when `readOnlyHint` is `false`, as defined by the MCP spec.
+ 
+diff --git a/src/filesystem/index.ts b/src/filesystem/index.ts
+index 48a599fae1..7657000812 100644
+--- a/src/filesystem/index.ts
++++ b/src/filesystem/index.ts
+@@ -589,7 +589,7 @@ server.registerTool(
+       destination: z.string()
+     },
+     outputSchema: { content: z.string() },
+-    annotations: { readOnlyHint: false, idempotentHint: false, destructiveHint: false }
++    annotations: { readOnlyHint: false, idempotentHint: false, destructiveHint: true }
+   },
+   async (args: z.infer<typeof MoveFileArgsSchema>) => {
+     const validSourcePath = await validatePath(args.source);

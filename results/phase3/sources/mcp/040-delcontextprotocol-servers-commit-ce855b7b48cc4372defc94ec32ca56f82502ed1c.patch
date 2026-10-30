@@ -1,0 +1,31 @@
+From ce855b7b48cc4372defc94ec32ca56f82502ed1c Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 02:43:10 -0400
+Subject: [PATCH] docs(issue-triage): route duplicates away from the
+ not-planned close recipe
+
+Copilot round 9 on #4906: the generic step 0 close would record a duplicate as
+not planned and skip the card deletion; the recipe now sends duplicates
+through board-ops' duplicate close and card delete.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/issue-triage/SKILL.md | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/.claude/skills/issue-triage/SKILL.md b/.claude/skills/issue-triage/SKILL.md
+index f527d820c1..ea2a40feb3 100644
+--- a/.claude/skills/issue-triage/SKILL.md
++++ b/.claude/skills/issue-triage/SKILL.md
+@@ -86,7 +86,9 @@ D=${D:-$(mktemp -d)}
+ # Copy the class's response from Canned responses into "$D/response.md" (the
+ # text inside the quote, with #ORIGINAL or the SDK link filled in) first.
+ # Close as not planned, with that response (body in a file, so quoting is
+-# safe). An empty or missing response stops here instead of closing silently.
++# safe). NOT for a duplicate: post the Duplicate response with `gh issue
++# comment`, close it with the `board-ops` state_reason=duplicate call, and
++# delete its card if it has one (`board-ops`, Delete a card). An empty or missing response stops here instead of closing silently.
+ BODY=$(cat "$D/response.md") && [ -n "$BODY" ] \
+   && gh issue close <N> --repo modelcontextprotocol/servers --reason "not planned" --comment "$BODY" \
+   || { echo "no response or close failed for #<N> — stop and check it" >&2; false; }

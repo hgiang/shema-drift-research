@@ -1,0 +1,178 @@
+From 29c9f8c58ea94dd67d55d5e80e06f67096e56c02 Mon Sep 17 00:00:00 2001
+From: "claude[bot]" <209825114+claude[bot]@users.noreply.github.com>
+Date: Sun, 24 Aug 2025 02:44:31 +0000
+Subject: [PATCH 1/3] fix: resolve relative paths against allowed directories
+ instead of process.cwd()
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fixes issue where relative paths were incorrectly resolved against process.cwd(),
+causing "Access denied - path outside allowed directories" errors when the MCP
+server's working directory was outside the configured allowed directories.
+
+The fix implements intelligent path resolution that:
+1. First tries to resolve relative paths against each allowed directory
+2. Validates the resulting path is within allowed directories
+3. Falls back to the first allowed directory if no valid resolution is found
+4. Maintains backward compatibility by falling back to process.cwd() when no allowed directories are configured
+
+Resolves #2526
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+
+Co-authored-by: Ola Hungerford <olaservo@users.noreply.github.com>
+---
+ src/filesystem/__tests__/lib.test.ts | 24 ++++++++++++++++++++++++
+ src/filesystem/lib.ts                | 25 ++++++++++++++++++++++++-
+ 2 files changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/src/filesystem/__tests__/lib.test.ts b/src/filesystem/__tests__/lib.test.ts
+index cc13ef0353..bc7fb86e84 100644
+--- a/src/filesystem/__tests__/lib.test.ts
++++ b/src/filesystem/__tests__/lib.test.ts
+@@ -204,6 +204,30 @@ describe('Lib Functions', () => {
+         await expect(validatePath(newFilePath))
+           .rejects.toThrow('Parent directory does not exist');
+       });
++
++      it('resolves relative paths against allowed directories instead of process.cwd()', async () => {
++        const relativePath = 'test-file.txt';
++        const originalCwd = process.cwd;
++        
++        // Mock process.cwd to return a directory outside allowed directories
++        const disallowedCwd = process.platform === 'win32' ? 'C:\\Windows\\System32' : '/root';
++        (process as any).cwd = jest.fn(() => disallowedCwd);
++        
++        try {
++          const result = await validatePath(relativePath);
++          
++          // Result should be resolved against first allowed directory, not process.cwd()
++          const expectedPath = process.platform === 'win32' 
++            ? path.resolve('C:\\Users\\test', relativePath)
++            : path.resolve('/home/user', relativePath);
++          
++          expect(result).toBe(expectedPath);
++          expect(result).not.toContain(disallowedCwd);
++        } finally {
++          // Restore original process.cwd
++          process.cwd = originalCwd;
++        }
++      });
+     });
+   });
+ 
+diff --git a/src/filesystem/lib.ts b/src/filesystem/lib.ts
+index 240ca0d476..17e4654cd5 100644
+--- a/src/filesystem/lib.ts
++++ b/src/filesystem/lib.ts
+@@ -72,12 +72,35 @@ export function createUnifiedDiff(originalContent: string, newContent: string, f
+   );
+ }
+ 
++// Helper function to resolve relative paths against allowed directories
++function resolveRelativePathAgainstAllowedDirectories(relativePath: string): string {
++  if (allowedDirectories.length === 0) {
++    // Fallback to process.cwd() if no allowed directories are set
++    return path.resolve(process.cwd(), relativePath);
++  }
++
++  // Try to resolve relative path against each allowed directory
++  for (const allowedDir of allowedDirectories) {
++    const candidate = path.resolve(allowedDir, relativePath);
++    const normalizedCandidate = normalizePath(candidate);
++    
++    // Check if the resulting path lies within any allowed directory
++    if (isPathWithinAllowedDirectories(normalizedCandidate, allowedDirectories)) {
++      return candidate;
++    }
++  }
++  
++  // If no valid resolution found, use the first allowed directory as base
++  // This provides a consistent fallback behavior
++  return path.resolve(allowedDirectories[0], relativePath);
++}
++
+ // Security & Validation Functions
+ export async function validatePath(requestedPath: string): Promise<string> {
+   const expandedPath = expandHome(requestedPath);
+   const absolute = path.isAbsolute(expandedPath)
+     ? path.resolve(expandedPath)
+-    : path.resolve(process.cwd(), expandedPath);
++    : resolveRelativePathAgainstAllowedDirectories(expandedPath);
+ 
+   const normalizedRequested = normalizePath(absolute);
+ 
+
+From dd6594c083b452671ed1e3899fdae2276e40aaac Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Wed, 4 Feb 2026 05:24:02 -0700
+Subject: [PATCH 2/3] fix(filesystem): use vi.fn() instead of jest.fn() in test
+
+The project uses Vitest, not Jest. Replace jest.fn() with vi.fn()
+to fix the ReferenceError in the relative path resolution test.
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+---
+ src/filesystem/__tests__/lib.test.ts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/filesystem/__tests__/lib.test.ts b/src/filesystem/__tests__/lib.test.ts
+index f339e81c85..f7e585af22 100644
+--- a/src/filesystem/__tests__/lib.test.ts
++++ b/src/filesystem/__tests__/lib.test.ts
+@@ -211,7 +211,7 @@ describe('Lib Functions', () => {
+         
+         // Mock process.cwd to return a directory outside allowed directories
+         const disallowedCwd = process.platform === 'win32' ? 'C:\\Windows\\System32' : '/root';
+-        (process as any).cwd = jest.fn(() => disallowedCwd);
++        (process as any).cwd = vi.fn(() => disallowedCwd);
+         
+         try {
+           const result = await validatePath(relativePath);
+
+From 87a996b5480be3cd5ea566d373a9c82b83f5e4d6 Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Sat, 7 Feb 2026 18:52:47 -0700
+Subject: [PATCH 3/3] fix(filesystem): run npm audit fix to resolve qs
+ vulnerability
+
+Fixes high-severity qs DoS vulnerability (GHSA-6rw7-vpxm-498p).
+Remaining moderate-severity issues are in dev dependencies
+(esbuild/vite/vitest) and require a breaking vitest v2->v4 upgrade.
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+---
+ package-lock.json | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/package-lock.json b/package-lock.json
+index 18de9f8b8b..46db9cb702 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -2752,9 +2752,9 @@
+       }
+     },
+     "node_modules/qs": {
+-      "version": "6.14.0",
+-      "resolved": "https://registry.npmjs.org/qs/-/qs-6.14.0.tgz",
+-      "integrity": "sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==",
++      "version": "6.14.1",
++      "resolved": "https://registry.npmjs.org/qs/-/qs-6.14.1.tgz",
++      "integrity": "sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==",
+       "license": "BSD-3-Clause",
+       "dependencies": {
+         "side-channel": "^1.1.0"
+@@ -3443,9 +3443,9 @@
+       }
+     },
+     "node_modules/vite": {
+-      "version": "5.4.20",
+-      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.20.tgz",
+-      "integrity": "sha512-j3lYzGC3P+B5Yfy/pfKNgVEg4+UtcIJcVRt2cDjIOmhLourAqPqf8P7acgxeiSgUB7E3p2P8/3gNIgDLpwzs4g==",
++      "version": "5.4.21",
++      "resolved": "https://registry.npmjs.org/vite/-/vite-5.4.21.tgz",
++      "integrity": "sha512-o5a9xKjbtuhY6Bi5S3+HvbRERmouabWbyUcpXXUA1u+GNUKoROi9byOJ8M0nHbHYHkYICiMlqxkg1KkYmm25Sw==",
+       "dev": true,
+       "license": "MIT",
+       "dependencies": {

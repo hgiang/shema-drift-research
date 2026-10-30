@@ -1,0 +1,58 @@
+From 14c2593e88fbe79421ced09cec42910ec2082593 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:32:17 -0400
+Subject: [PATCH] fix: record the private-fork advisory PR as an AGENTS.md
+ exception
+
+AGENTS.md said every PR links a public issue and that no PR but
+Dependabot's is exempt, which contradicted the security-advisory skill's
+private-fork fix. Add a narrow exception beside the Dependabot one: a PR
+in an advisory's private fork links no public issue, carries no labels
+and is tracked by the [GHSA-...] draft card, while still targeting
+v2/main. The skill points at it.
+
+Refs #4870
+
+Signed-off-by: cliffhall <cliff@futurescale.com>
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+---
+ .claude/skills/security-advisory/SKILL.md |  4 +++-
+ AGENTS.md                                 | 10 +++++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/.claude/skills/security-advisory/SKILL.md b/.claude/skills/security-advisory/SKILL.md
+index 13af1aae4e..6165404ad8 100644
+--- a/.claude/skills/security-advisory/SKILL.md
++++ b/.claude/skills/security-advisory/SKILL.md
+@@ -32,7 +32,9 @@ publication**, never merely after the release (step 6).
+ 
+ ⚠️ **The PR flow does not apply to the fix itself.** It needs a public issue
+ and a public PR against `v2/main`, which is the disclosure this flow exists to
+-delay. The fix is reviewed inside the private fork (step 4).
++delay. The fix is reviewed inside the private fork (step 4), and `AGENTS.md`
++records that fork PR as an exception to its PR rules (no public issue link, no
++labels, tracked by the draft card).
+ 
+ ## The flow
+ 
+diff --git a/AGENTS.md b/AGENTS.md
+index 0c810cfa8e..4edef942df 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -183,7 +183,15 @@ holds for a maintainer's own one-line fix as much as for a feature.
+   linked issue, no `v2` label and no checklist. They are exempt from the PR rules
+   in this file (issue link, base branch, labels, checklist, board) until the
+   change that replaces them with issue-filing sweeps lands and removes this
+-  exception. No other PR is exempt.
++  exception.
++- **Exception: a security advisory's fix, in its private fork.** A PR in the
++  advisory's temporary private fork (`servers-<ghsa-id>`) links no public
++  issue, carries no labels, and is tracked by the advisory's `[GHSA-…]` draft
++  card rather than an issue's card, because each of those would disclose the
++  vulnerability before a fix ships. It still targets `v2/main`, and it is
++  reviewed inside the fork. The flow is the `security-advisory` skill.
++
++No other PR is exempt.
+ 
+ Every PR answers the checklist in
+ [`.github/pull_request_template.md`](./.github/pull_request_template.md):

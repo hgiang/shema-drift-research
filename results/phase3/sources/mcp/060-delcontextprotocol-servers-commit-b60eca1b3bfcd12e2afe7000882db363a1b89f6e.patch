@@ -1,0 +1,60 @@
+From b60eca1b3bfcd12e2afe7000882db363a1b89f6e Mon Sep 17 00:00:00 2001
+From: Arif Celebi <arifcelebi.uk@gmail.com>
+Date: Mon, 16 Mar 2026 19:12:00 +0000
+Subject: [PATCH] fix(filesystem): ensure bare Windows drive letters normalize
+ to root (#3434)
+
+fix(filesystem): ensure bare Windows drive letters normalize to root
+
+Appends path.sep to bare drive letters (e.g. "C:") before calling path.normalize(), preventing them from normalizing to "C:." (current directory on drive) instead of "C:\" (drive root). Includes test coverage with platform mocking.
+
+Fixes #3418
+---
+ src/filesystem/__tests__/path-utils.test.ts | 11 +++++++++++
+ src/filesystem/path-utils.ts                |  7 +++++++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/src/filesystem/__tests__/path-utils.test.ts b/src/filesystem/__tests__/path-utils.test.ts
+index 5530cba1c3..3f6072377b 100644
+--- a/src/filesystem/__tests__/path-utils.test.ts
++++ b/src/filesystem/__tests__/path-utils.test.ts
+@@ -354,6 +354,17 @@ describe('Path Utilities', () => {
+       expect(result).not.toContain('\\');
+     });
+ 
++    it('normalizes bare Windows drive letters to the drive root on Windows', () => {
++      Object.defineProperty(process, 'platform', {
++        value: 'win32',
++        writable: true,
++        configurable: true
++      });
++
++      expect(normalizePath('C:')).toBe('C:\\');
++      expect(normalizePath('d:')).toBe('D:\\');
++    });
++
+     it('should handle relative path slash conversion based on platform', () => {
+       // This test verifies platform-specific behavior naturally without mocking
+       // On Windows: forward slashes converted to backslashes
+diff --git a/src/filesystem/path-utils.ts b/src/filesystem/path-utils.ts
+index 50910b995b..6ab5a5969b 100644
+--- a/src/filesystem/path-utils.ts
++++ b/src/filesystem/path-utils.ts
+@@ -77,6 +77,12 @@ export function normalizePath(p: string): string {
+     p = p.replace(/\\\\/g, '\\');
+   }
+ 
++  // On Windows, if we have a bare drive letter (e.g. "C:"), append a separator
++  // so path.normalize doesn't return "C:." which can break path validation.
++  if (process.platform === 'win32' && /^[a-zA-Z]:$/.test(p)) {
++    p = p + path.sep;
++  }
++
+   // Use Node's path normalization, which handles . and .. segments
+   let normalized = path.normalize(p);
+ 
+@@ -116,3 +122,4 @@ export function expandHome(filepath: string): string {
+   }
+   return filepath;
+ }
++

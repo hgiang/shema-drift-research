@@ -1,0 +1,52 @@
+From f4c86ff9647d609e2ae06c90ce37718eec46cad1 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 4 Jul 2026 15:29:44 -0400
+Subject: [PATCH] fix(release): count .md changes in package matrix; use
+ --frozen for pytest
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Review findings from the PR:
+- release.py's has_changes() only counted .py/.ts files, so the README
+  touches meant to enroll the four TS packages in the npm matrix would
+  have been ignored. Include .md — READMEs ship inside the published
+  package (npm tarball / PyPI long_description), so doc changes are
+  release-relevant.
+- uv run --frozen pytest for consistency with the job's other uv calls.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/release.yml | 2 +-
+ scripts/release.py            | 4 +++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index 579631059d..cb853cdc05 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -142,7 +142,7 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: |
+           if [ -d "tests" ] || [ -d "test" ]; then
+-            uv run pytest
++            uv run --frozen pytest
+           else
+             echo "No tests directory, skipping"
+           fi
+diff --git a/scripts/release.py b/scripts/release.py
+index e4ce1274c3..b3dcf0c1e2 100755
+--- a/scripts/release.py
++++ b/scripts/release.py
+@@ -113,7 +113,9 @@ def has_changes(path: Path, git_hash: GitHash) -> bool:
+         )
+ 
+         changed_files = [Path(f) for f in output.stdout.splitlines()]
+-        relevant_files = [f for f in changed_files if f.suffix in [".py", ".ts"]]
++        # .md counts as a change: READMEs ship inside the published package
++        # (npm tarball / PyPI long_description)
++        relevant_files = [f for f in changed_files if f.suffix in [".py", ".ts", ".md"]]
+         return len(relevant_files) >= 1
+     except subprocess.CalledProcessError:
+         return False

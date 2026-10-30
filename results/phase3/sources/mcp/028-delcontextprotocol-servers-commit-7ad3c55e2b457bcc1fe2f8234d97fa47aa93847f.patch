@@ -1,0 +1,28 @@
+From 7ad3c55e2b457bcc1fe2f8234d97fa47aa93847f Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 02:37:35 -0400
+Subject: [PATCH] docs(issue-triage): correct the trust-boundary arithmetic
+
+Copilot round 8 on #4906: the axes max out at 10, so reaching Urgent with the
+reporter's +1 takes the axes plus another bonus, not 11 from the axes alone.
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/issue-triage/SKILL.md | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/.claude/skills/issue-triage/SKILL.md b/.claude/skills/issue-triage/SKILL.md
+index ce434f110c..f527d820c1 100644
+--- a/.claude/skills/issue-triage/SKILL.md
++++ b/.claude/skills/issue-triage/SKILL.md
+@@ -236,7 +236,8 @@ field, public, and settable by people outside maintainer triage (the two fields
+ are compared in `board-ops`). A value there is a preference, not an assessment,
+ so it earns the flat +1 and nothing more. It can lift an issue at most one band,
+ and nothing a reporter sets reaches Urgent by itself, because Urgent needs 12
+-and the issue would already sit at 11 on maintainer-assessed axes. **Never copy
++and the issue would already need 11 from the maintainer-assessed axes (at most
++10) plus at least one other bonus. **Never copy
+ the value across:** a reporter choosing `Urgent` does not make the card Urgent,
+ or the queue would sort by assertiveness instead of impact.
+ 

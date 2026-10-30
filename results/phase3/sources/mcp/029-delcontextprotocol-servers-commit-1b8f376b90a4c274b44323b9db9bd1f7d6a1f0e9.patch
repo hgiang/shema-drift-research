@@ -1,0 +1,953 @@
+From 1b8f376b90a4c274b44323b9db9bd1f7d6a1f0e9 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 15 Dec 2025 17:51:30 -0500
+Subject: [PATCH] Demonstrate registration of tools conditioned upon client
+ capability support. Also, obviated need for clientConnected callback to pass
+ sessionId because we defer initial fetching of roots happens when you run the
+ get-roots-list tool.
+
+* In how-it-works.md,
+  - added a section on conditional tool registration
+
+* In server/index.ts
+  - import registerConditionalTools
+  - in an oninitialized handler for the server, call registerConditionalTools
+  - removed clientConnected from ServerFactoryResponse and all mentions in docs
+
+* In tools/index.ts
+  - export a registerConditionalTools function
+  - refactor/move calls to registerGetRootsListTool, registerTriggerElicitationRequestTool, and registerTriggerSamplingRequestTool out of registerTools and into registerConditionalTools
+
+* In server/roots.ts
+  - only act if client supports roots
+  - remove setInterval from call to requestRoots. It isn't happening during the initialze handshake anymore, so it doesn't interfere with that process if called immediaately
+
+* In get-roots-list.ts, trigger-elicitation-request.ts, and trigger-sampling-request.ts,
+  - only register tool if client supports capability
+
+* Throughout the rest of the files, removing all references to `clientConnected`
+---
+ src/everything/AGENTS.md                      |   2 +-
+ src/everything/docs/how-it-works.md           |  14 +-
+ src/everything/docs/startup.md                |  41 --
+ src/everything/docs/structure.md              |   3 -
+ src/everything/server/index.ts                |  17 +-
+ src/everything/server/roots.ts                |  93 ++---
+ src/everything/tools/get-roots-list.ts        |  13 +-
+ src/everything/tools/index.ts                 |  12 +-
+ .../tools/trigger-elicitation-request.ts      | 349 +++++++++---------
+ .../tools/trigger-sampling-request.ts         |  88 +++--
+ src/everything/transports/sse.ts              |   5 +-
+ src/everything/transports/stdio.ts            |   6 +-
+ src/everything/transports/streamableHttp.ts   |   3 +-
+ 13 files changed, 323 insertions(+), 323 deletions(-)
+
+diff --git a/src/everything/AGENTS.md b/src/everything/AGENTS.md
+index 12e2873920..cb9912d5e5 100644
+--- a/src/everything/AGENTS.md
++++ b/src/everything/AGENTS.md
+@@ -48,5 +48,5 @@ The server factory is `src/everything/server/index.ts` and registers all feature
+ - Export a `registerX(server)` function that registers new items with the MCP SDK in the same style as existing ones.
+ - Wire your new module into the central index (e.g., update `tools/index.ts`, `resources/index.ts`, or `prompts/index.ts`).
+ - Ensure schemas (for tools) are accurate JSON Schema and include helpful descriptions and examples.
+-- If the feature is session‑aware, accept/pass `sessionId` where needed. See the `clientConnected(sessionId)` pattern in `server/index.ts` and usages in `logging.ts` and `subscriptions.ts`.
++  `server/index.ts` and usages in `logging.ts` and `subscriptions.ts`.
+ - Keep the docs in `src/everything/docs/` up to date if you add or modify noteworthy features.
+diff --git a/src/everything/docs/how-it-works.md b/src/everything/docs/how-it-works.md
+index b01f915c8b..514c6f5663 100644
+--- a/src/everything/docs/how-it-works.md
++++ b/src/everything/docs/how-it-works.md
+@@ -7,9 +7,19 @@
+ | [Extension Points](extension.md)
+ | How It Works**
+ 
+-## Resource Subscriptions
++# Conditional Tool Registration
++
++### Module: `server/index.ts`
+ 
+-Each client manages its own resource subscriptions and receives notifications only for the URIs it subscribed to, independent of other clients.
++- Some tools require client support for the capability they demonstrate. These are:
++  - `get-roots-list`
++  - `trigger-elicitation-request`
++  - `trigger-sampling-request`
++- Client capabilities aren't known until after initilization handshake is complete.
++- Most tools are registered immediately during the Server Factory execution, prior to client connection.
++- To defer registration of these commands until client capabilities are known, a `registerConditionalTools(server)` function is invoked from an `onintitialized` handler.
++
++## Resource Subscriptions
+ 
+ ### Module: `resources/subscriptions.ts`
+ 
+diff --git a/src/everything/docs/startup.md b/src/everything/docs/startup.md
+index cf8a47c594..1d006589a9 100644
+--- a/src/everything/docs/startup.md
++++ b/src/everything/docs/startup.md
+@@ -20,7 +20,6 @@
+ 
+ - Creates a server instance using `createServer()` from `server/index.ts`
+   - Connects it to the chosen transport type from the MCP SDK.
+-  - Calls the `clientConnected()` callback upon transport connection.
+ - Handles communication according to the MCP specs for the chosen transport.
+   - **STDIO**:
+     - One simple, process‑bound connection.
+@@ -72,43 +71,3 @@
+ 
+ Some of the transport managers defined in the `transports` folder can support multiple clients.
+ In order to do so, they must map certain data to a session identifier.
+-
+-### About the `clientConnected` callback returned by the Server Factory
+-
+-Some server functions require a `sessionId` but can't reach it via its scope.
+-For instance, the automatic log-level handling in the Typescript SDK tracks
+-the client's requested logging level by `sessionId`. In order
+-
+-So, the Server Factory provides a callback to allow the chosen Transport Manager
+-to provide the server with the `sessionId` (or `undefined`) for each new connection.
+-
+-### On `clientConnected` vs `server.oninitialized` for post-connection setup
+-
+-#### Q:
+-
+-> Why not hook `server.server.oninitialized` to trigger post-connection setup?
+-> You could call `syncRoots` in a handler, obviating the `clientConnected` hook.
+-
+-#### A:
+-
+-In `oninitialized`, a transport is connected, but there is no way to access it
+-or its `sessionId`. Therefore, calling any function that needs a `sessionId` is
+-right out.
+-
+-#### Q:
+-
+-> Why is it important to have access to the `sessionId` anywhere but in a request
+-> handler?
+-
+-### A:
+-
+-When setting up a server that tracks any data per session, you need to map
+-that data to a `sessionId`. See `logging.ts` and `subscriptions.ts` for examples.
+-
+-In an STDIO server, it doesn't matter because there is one client per server.
+-Features that track data by `sessionId` can accept `undefined` for that value
+-and still track session-scoped data for STDIO clients.
+-
+-But with HTTP protocols, you can have multiple clients. So you have to track
+-their logging intervals, resource subscriptions, and other session-scoped
+-data per client.
+diff --git a/src/everything/docs/structure.md b/src/everything/docs/structure.md
+index 34571d6445..6bcedcd425 100644
+--- a/src/everything/docs/structure.md
++++ b/src/everything/docs/structure.md
+@@ -168,7 +168,6 @@ src/everything
+ 
+ - `stdio.ts`
+   - Starts a `StdioServerTransport`, created the server via `createServer()`, and connects it.
+-  - Calls `clientConnected()` to inform the server of the connection.
+   - Handles `SIGINT` to close cleanly and calls `cleanup()` to remove any live intervals.
+ - `sse.ts`
+   - Express server exposing:
+@@ -176,10 +175,8 @@ src/everything
+     - `POST /message` for client messages.
+   - Manages multiple connected clients via a transport map.
+   - Starts an `SSEServerTransport`, created the server via `createServer()`, and connects it to a new transport.
+-  - Calls `clientConnected(sessionId)` to inform the server of the connection.
+   - On server disconnect, calls `cleanup()` to remove any live intervals.
+ - `streamableHttp.ts`
+   - Express server exposing a single `/mcp` endpoint for POST (JSON‑RPC), GET (SSE stream), and DELETE (session termination) using `StreamableHTTPServerTransport`.
+   - Uses an `InMemoryEventStore` for resumable sessions and tracks transports by `sessionId`.
+   - Connects a fresh server instance on initialization POST and reuses the transport for subsequent requests.
+-  - Calls `clientConnected(sessionId)` to inform the server of the connection.
+diff --git a/src/everything/server/index.ts b/src/everything/server/index.ts
+index 96a19f5ded..6293245c76 100644
+--- a/src/everything/server/index.ts
++++ b/src/everything/server/index.ts
+@@ -3,16 +3,14 @@ import {
+   setSubscriptionHandlers,
+   stopSimulatedResourceUpdates,
+ } from "../resources/subscriptions.js";
+-import { registerTools } from "../tools/index.js";
++import { registerConditionalTools, registerTools } from "../tools/index.js";
+ import { registerResources, readInstructions } from "../resources/index.js";
+ import { registerPrompts } from "../prompts/index.js";
+ import { stopSimulatedLogging } from "./logging.js";
+-import { syncRoots } from "./roots.js";
+ 
+ // Server Factory response
+ export type ServerFactoryResponse = {
+   server: McpServer;
+-  clientConnected: (sessionId?: string) => void;
+   cleanup: (sessionId?: string) => void;
+ };
+ 
+@@ -22,13 +20,11 @@ export type ServerFactoryResponse = {
+  * This function initializes a `McpServer` with specific capabilities and instructions,
+  * registers tools, resources, and prompts, and configures resource subscription handlers.
+  *
+- * @returns {ServerFactoryResponse} An object containing the server instance, a `clientConnected`
+- * callback for post-connection setup, and a `cleanup` function for handling server-side cleanup
+- * when a session ends.
++ * @returns {ServerFactoryResponse} An object containing the server instance, and a `cleanup`
++ * function for handling server-side cleanup when a session ends.
+  *
+  * Properties of the returned object:
+  * - `server` {Object}: The initialized server instance.
+- * - `clientConnected` {Function}: A post-connect callback to enable operations that require a `sessionId`.
+  * - `cleanup` {Function}: Function to perform cleanup operations for a closing session.
+  */
+ export const createServer: () => ServerFactoryResponse = () => {
+@@ -72,13 +68,12 @@ export const createServer: () => ServerFactoryResponse = () => {
+   // Set resource subscription handlers
+   setSubscriptionHandlers(server);
+ 
++  // Register conditional tools until client capabilities are known
++  server.server.oninitialized = () => registerConditionalTools(server);
++
+   // Return the ServerFactoryResponse
+   return {
+     server,
+-    clientConnected: (sessionId?: string) => {
+-      // Set a roots list changed handler and fetch the initial roots list from the client
+-      syncRoots(server, sessionId);
+-    },
+     cleanup: (sessionId?: string) => {
+       // Stop any simulated logging or resource updates that may have been initiated.
+       stopSimulatedLogging(sessionId);
+diff --git a/src/everything/server/roots.ts b/src/everything/server/roots.ts
+index 5f3d723083..30671b1766 100644
+--- a/src/everything/server/roots.ts
++++ b/src/everything/server/roots.ts
+@@ -22,56 +22,65 @@ export const roots: Map<string | undefined, Root[]> = new Map<
+  *
+  * @throws {Error} In case of a failure to request the roots from the client, an error log message is sent.
+  */
+-export const syncRoots = (server: McpServer, sessionId?: string) => {
+-  // Function to request the updated roots list from the client
+-  const requestRoots = async () => {
+-    try {
+-      // Request the updated roots list from the client
+-      const response = await server.server.listRoots();
+-      if (response && "roots" in response) {
+-        // Store the roots list for this client
+-        roots.set(sessionId, response.roots);
++export const syncRoots = async (server: McpServer, sessionId?: string) => {
+ 
+-        // Notify the client of roots received
+-        await server.sendLoggingMessage(
+-          {
+-            level: "info",
+-            logger: "everything-server",
+-            data: `Roots updated: ${response.roots.length} root(s) received from client`,
+-          },
+-          sessionId
+-        );
+-      } else {
++  const clientCapabilities = server.server.getClientCapabilities() || {};
++  const clientSupportsRoots: boolean = clientCapabilities.roots !== undefined;
++
++  // If roots have not been fetched for this client, fetch them
++  if (clientSupportsRoots && !roots.has(sessionId)) {
++    // Function to request the updated roots list from the client
++    const requestRoots = async () => {
++      try {
++        // Request the updated roots list from the client
++        const response = await server.server.listRoots();
++        if (response && "roots" in response) {
++          // Store the roots list for this client
++          roots.set(sessionId, response.roots);
++
++          // Notify the client of roots received
++          await server.sendLoggingMessage(
++            {
++              level: "info",
++              logger: "everything-server",
++              data: `Roots updated: ${response.roots.length} root(s) received from client`,
++            },
++            sessionId
++          );
++        } else {
++          await server.sendLoggingMessage(
++            {
++              level: "info",
++              logger: "everything-server",
++              data: "Client returned no roots set",
++            },
++            sessionId
++          );
++        }
++      } catch (error) {
+         await server.sendLoggingMessage(
+           {
+-            level: "info",
++            level: "error",
+             logger: "everything-server",
+-            data: "Client returned no roots set",
++            data: `Failed to request roots from client: ${
++              error instanceof Error ? error.message : String(error)
++            }`,
+           },
+           sessionId
+         );
+       }
+-    } catch (error) {
+-      await server.sendLoggingMessage(
+-        {
+-          level: "error",
+-          logger: "everything-server",
+-          data: `Failed to request roots from client: ${
+-            error instanceof Error ? error.message : String(error)
+-          }`,
+-        },
+-        sessionId
+-      );
+-    }
+-  };
++    };
++
++    // Set the list changed notification handler
++    server.server.setNotificationHandler(
++      RootsListChangedNotificationSchema,
++      requestRoots
++    );
+ 
+-  // Set the list changed notification handler
+-  server.server.setNotificationHandler(
+-    RootsListChangedNotificationSchema,
+-    requestRoots
+-  );
++    // Request initial roots list immediatelys
++    await requestRoots();
+ 
+-  // Request initial roots list after a brief delay
+-  // Allows initial POST request to complete on streamableHttp transports
+-  setTimeout(() => requestRoots(), 350);
++    // Return the roots list for this client
++    return roots.get(sessionId);
++  }
+ };
+diff --git a/src/everything/tools/get-roots-list.ts b/src/everything/tools/get-roots-list.ts
+index 1d9ba7c06a..0d8fe9c555 100644
+--- a/src/everything/tools/get-roots-list.ts
++++ b/src/everything/tools/get-roots-list.ts
+@@ -1,6 +1,6 @@
+ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+ import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+-import { roots } from "../server/roots.js";
++import { roots, syncRoots } from "../server/roots.js";
+ 
+ // Tool configuration
+ const name = "get-roots-list";
+@@ -29,9 +29,12 @@ const config = {
+  * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerGetRootsListTool = (server: McpServer) => {
+-  const clientSupportsRoots =
+-    server.server.getClientCapabilities()?.roots?.listChanged;
+-  if (!clientSupportsRoots) {
++  // Does client support roots?
++  const clientCapabilities = server.server.getClientCapabilities() || {};
++  const clientSupportsRoots: boolean = clientCapabilities.roots !== undefined;
++
++  // If so, register tool
++  if (clientSupportsRoots) {
+     server.registerTool(
+       name,
+       config,
+@@ -42,7 +45,7 @@ export const registerGetRootsListTool = (server: McpServer) => {
+         // Fetch the current roots list from the client if need be
+         const currentRoots = rootsCached
+           ? roots.get(extra.sessionId)
+-          : (await server.server.listRoots()).roots;
++          : await syncRoots(server, extra.sessionId);
+ 
+         // If roots had to be fetched, store them in the cache
+         if (currentRoots && !rootsCached)
+diff --git a/src/everything/tools/index.ts b/src/everything/tools/index.ts
+index 980afb4b80..f1bab0fa22 100644
+--- a/src/everything/tools/index.ts
++++ b/src/everything/tools/index.ts
+@@ -25,14 +25,22 @@ export const registerTools = (server: McpServer) => {
+   registerGetEnvTool(server);
+   registerGetResourceLinksTool(server);
+   registerGetResourceReferenceTool(server);
+-  registerGetRootsListTool(server);
+   registerGetStructuredContentTool(server);
+   registerGetSumTool(server);
+   registerGetTinyImageTool(server);
+   registerGZipFileAsResourceTool(server);
+   registerToggleSimulatedLoggingTool(server);
+   registerToggleSubscriberUpdatesTool(server);
+-  registerTriggerElicitationRequestTool(server);
+   registerTriggerLongRunningOperationTool(server);
++};
++
++/**
++ * Register the tools that are conditional upon client capabilities.
++ * These must be registered conditionally, after initialization.
++ */
++export const registerConditionalTools = (server: McpServer) => {
++  console.log("Registering conditional tools...");
++  registerGetRootsListTool(server);
++  registerTriggerElicitationRequestTool(server);
+   registerTriggerSamplingRequestTool(server);
+ };
+diff --git a/src/everything/tools/trigger-elicitation-request.ts b/src/everything/tools/trigger-elicitation-request.ts
+index 55c82652ba..260c805d18 100644
+--- a/src/everything/tools/trigger-elicitation-request.ts
++++ b/src/everything/tools/trigger-elicitation-request.ts
+@@ -13,6 +13,8 @@ const config = {
+ /**
+  * Registers the 'trigger-elicitation-request' tool.
+  *
++ * If the client does not support the elicitation capability, the tool is not registered.
++ *
+  * The registered tool sends an elicitation request for the user to provide information
+  * based on a pre-defined schema of fields including text inputs, booleans, numbers,
+  * email, dates, enums of various types, etc. It uses validation and handles multiple
+@@ -27,188 +29,199 @@ const config = {
+  * @param {McpServer} server - TThe McpServer instance where the tool will be registered.
+  */
+ export const registerTriggerElicitationRequestTool = (server: McpServer) => {
+-  server.registerTool(
+-    name,
+-    config,
+-    async (args, extra): Promise<CallToolResult> => {
+-      const elicitationResult = await extra.sendRequest(
+-        {
+-          method: "elicitation/create",
+-          params: {
+-            message: "Please provide inputs for the following fields:",
+-            requestedSchema: {
+-              type: "object",
+-              properties: {
+-                name: {
+-                  title: "String",
+-                  type: "string",
+-                  description: "Your full, legal name",
+-                },
+-                check: {
+-                  title: "Boolean",
+-                  type: "boolean",
+-                  description: "Agree to the terms and conditions",
+-                },
+-                firstLine: {
+-                  title: "String with default",
+-                  type: "string",
+-                  description: "Favorite first line of a story",
+-                  default: "It was a dark and stormy night.",
+-                },
+-                email: {
+-                  title: "String with email format",
+-                  type: "string",
+-                  format: "email",
+-                  description:
+-                    "Your email address (will be verified, and never shared with anyone else)",
+-                },
+-                homepage: {
+-                  type: "string",
+-                  format: "uri",
+-                  title: "String with uri format",
+-                  description: "Portfolio / personal website",
+-                },
+-                birthdate: {
+-                  title: "String with date format",
+-                  type: "string",
+-                  format: "date",
+-                  description: "Your date of birth",
+-                },
+-                integer: {
+-                  title: "Integer",
+-                  type: "integer",
+-                  description:
+-                    "Your favorite integer (do not give us your phone number, pin, or other sensitive info)",
+-                  minimum: 1,
+-                  maximum: 100,
+-                  default: 42,
+-                },
+-                number: {
+-                  title: "Number in range 1-1000",
+-                  type: "number",
+-                  description: "Favorite number (there are no wrong answers)",
+-                  minimum: 0,
+-                  maximum: 1000,
+-                  default: 3.14,
+-                },
+-                untitledSingleSelectEnum: {
+-                  type: "string",
+-                  title: "Untitled Single Select Enum",
+-                  description: "Choose your favorite friend",
+-                  enum: [
+-                    "Monica",
+-                    "Rachel",
+-                    "Joey",
+-                    "Chandler",
+-                    "Ross",
+-                    "Phoebe",
+-                  ],
+-                  default: "Monica",
+-                },
+-                untitledMultipleSelectEnum: {
+-                  type: "array",
+-                  title: "Untitled Multiple Select Enum",
+-                  description: "Choose your favorite instruments",
+-                  minItems: 1,
+-                  maxItems: 3,
+-                  items: {
++  // Does the client support elicitation?
++  const clientCapabilities = server.server.getClientCapabilities() || {};
++  const clientSupportsElicitation: boolean =
++    clientCapabilities.elicitation !== undefined;
++
++  // If so, register tool
++  if (clientSupportsElicitation) {
++    server.registerTool(
++      name,
++      config,
++      async (args, extra): Promise<CallToolResult> => {
++        const elicitationResult = await extra.sendRequest(
++          {
++            method: "elicitation/create",
++            params: {
++              message: "Please provide inputs for the following fields:",
++              requestedSchema: {
++                type: "object",
++                properties: {
++                  name: {
++                    title: "String",
+                     type: "string",
+-                    enum: ["Guitar", "Piano", "Violin", "Drums", "Bass"],
++                    description: "Your full, legal name",
+                   },
+-                  default: ["Guitar"],
+-                },
+-                titledSingleSelectEnum: {
+-                  type: "string",
+-                  title: "Titled Single Select Enum",
+-                  description: "Choose your favorite hero",
+-                  oneOf: [
+-                    { const: "hero-1", title: "Superman" },
+-                    { const: "hero-2", title: "Green Lantern" },
+-                    { const: "hero-3", title: "Wonder Woman" },
+-                  ],
+-                  default: "hero-1",
+-                },
+-                titledMultipleSelectEnum: {
+-                  type: "array",
+-                  title: "Titled Multiple Select Enum",
+-                  description: "Choose your favorite types of fish",
+-                  minItems: 1,
+-                  maxItems: 3,
+-                  items: {
+-                    anyOf: [
+-                      { const: "fish-1", title: "Tuna" },
+-                      { const: "fish-2", title: "Salmon" },
+-                      { const: "fish-3", title: "Trout" },
++                  check: {
++                    title: "Boolean",
++                    type: "boolean",
++                    description: "Agree to the terms and conditions",
++                  },
++                  firstLine: {
++                    title: "String with default",
++                    type: "string",
++                    description: "Favorite first line of a story",
++                    default: "It was a dark and stormy night.",
++                  },
++                  email: {
++                    title: "String with email format",
++                    type: "string",
++                    format: "email",
++                    description:
++                      "Your email address (will be verified, and never shared with anyone else)",
++                  },
++                  homepage: {
++                    type: "string",
++                    format: "uri",
++                    title: "String with uri format",
++                    description: "Portfolio / personal website",
++                  },
++                  birthdate: {
++                    title: "String with date format",
++                    type: "string",
++                    format: "date",
++                    description: "Your date of birth",
++                  },
++                  integer: {
++                    title: "Integer",
++                    type: "integer",
++                    description:
++                      "Your favorite integer (do not give us your phone number, pin, or other sensitive info)",
++                    minimum: 1,
++                    maximum: 100,
++                    default: 42,
++                  },
++                  number: {
++                    title: "Number in range 1-1000",
++                    type: "number",
++                    description: "Favorite number (there are no wrong answers)",
++                    minimum: 0,
++                    maximum: 1000,
++                    default: 3.14,
++                  },
++                  untitledSingleSelectEnum: {
++                    type: "string",
++                    title: "Untitled Single Select Enum",
++                    description: "Choose your favorite friend",
++                    enum: [
++                      "Monica",
++                      "Rachel",
++                      "Joey",
++                      "Chandler",
++                      "Ross",
++                      "Phoebe",
+                     ],
++                    default: "Monica",
++                  },
++                  untitledMultipleSelectEnum: {
++                    type: "array",
++                    title: "Untitled Multiple Select Enum",
++                    description: "Choose your favorite instruments",
++                    minItems: 1,
++                    maxItems: 3,
++                    items: {
++                      type: "string",
++                      enum: ["Guitar", "Piano", "Violin", "Drums", "Bass"],
++                    },
++                    default: ["Guitar"],
++                  },
++                  titledSingleSelectEnum: {
++                    type: "string",
++                    title: "Titled Single Select Enum",
++                    description: "Choose your favorite hero",
++                    oneOf: [
++                      {const: "hero-1", title: "Superman"},
++                      {const: "hero-2", title: "Green Lantern"},
++                      {const: "hero-3", title: "Wonder Woman"},
++                    ],
++                    default: "hero-1",
++                  },
++                  titledMultipleSelectEnum: {
++                    type: "array",
++                    title: "Titled Multiple Select Enum",
++                    description: "Choose your favorite types of fish",
++                    minItems: 1,
++                    maxItems: 3,
++                    items: {
++                      anyOf: [
++                        {const: "fish-1", title: "Tuna"},
++                        {const: "fish-2", title: "Salmon"},
++                        {const: "fish-3", title: "Trout"},
++                      ],
++                    },
++                    default: ["fish-1"],
++                  },
++                  legacyTitledEnum: {
++                    type: "string",
++                    title: "Legacy Titled Single Select Enum",
++                    description: "Choose your favorite type of pet",
++                    enum: ["pet-1", "pet-2", "pet-3", "pet-4", "pet-5"],
++                    enumNames: ["Cats", "Dogs", "Birds", "Fish", "Reptiles"],
++                    default: "pet-1",
+                   },
+-                  default: ["fish-1"],
+-                },
+-                legacyTitledEnum: {
+-                  type: "string",
+-                  title: "Legacy Titled Single Select Enum",
+-                  description: "Choose your favorite type of pet",
+-                  enum: ["pet-1", "pet-2", "pet-3", "pet-4", "pet-5"],
+-                  enumNames: ["Cats", "Dogs", "Birds", "Fish", "Reptiles"],
+-                  default: "pet-1",
+                 },
++                required: ["name"],
+               },
+-              required: ["name"],
+             },
+           },
+-        },
+-        ElicitResultSchema,
+-        { timeout: 10 * 60 * 1000 /* 10 minutes */ }
+-      );
++          ElicitResultSchema,
++          {timeout: 10 * 60 * 1000 /* 10 minutes */}
++        );
+ 
+-      // Handle different response actions
+-      const content: CallToolResult["content"] = [];
++        // Handle different response actions
++        const content: CallToolResult["content"] = [];
+ 
+-      if (elicitationResult.action === "accept" && elicitationResult.content) {
+-        content.push({
+-          type: "text",
+-          text: `✅ User provided the requested information!`,
+-        });
++        if (
++          elicitationResult.action === "accept" &&
++          elicitationResult.content
++        ) {
++          content.push({
++            type: "text",
++            text: `✅ User provided the requested information!`,
++          });
+ 
+-        // Only access elicitationResult.content when action is accept
+-        const userData = elicitationResult.content;
+-        const lines = [];
+-        if (userData.name) lines.push(`- Name: ${userData.name}`);
+-        if (userData.check !== undefined)
+-          lines.push(`- Agreed to terms: ${userData.check}`);
+-        if (userData.color) lines.push(`- Favorite Color: ${userData.color}`);
+-        if (userData.email) lines.push(`- Email: ${userData.email}`);
+-        if (userData.homepage) lines.push(`- Homepage: ${userData.homepage}`);
+-        if (userData.birthdate)
+-          lines.push(`- Birthdate: ${userData.birthdate}`);
+-        if (userData.integer !== undefined)
+-          lines.push(`- Favorite Integer: ${userData.integer}`);
+-        if (userData.number !== undefined)
+-          lines.push(`- Favorite Number: ${userData.number}`);
+-        if (userData.petType) lines.push(`- Pet Type: ${userData.petType}`);
++          // Only access elicitationResult.content when action is accept
++          const userData = elicitationResult.content;
++          const lines = [];
++          if (userData.name) lines.push(`- Name: ${userData.name}`);
++          if (userData.check !== undefined)
++            lines.push(`- Agreed to terms: ${userData.check}`);
++          if (userData.color) lines.push(`- Favorite Color: ${userData.color}`);
++          if (userData.email) lines.push(`- Email: ${userData.email}`);
++          if (userData.homepage) lines.push(`- Homepage: ${userData.homepage}`);
++          if (userData.birthdate)
++            lines.push(`- Birthdate: ${userData.birthdate}`);
++          if (userData.integer !== undefined)
++            lines.push(`- Favorite Integer: ${userData.integer}`);
++          if (userData.number !== undefined)
++            lines.push(`- Favorite Number: ${userData.number}`);
++          if (userData.petType) lines.push(`- Pet Type: ${userData.petType}`);
+ 
++          content.push({
++            type: "text",
++            text: `User inputs:\n${lines.join("\n")}`,
++          });
++        } else if (elicitationResult.action === "decline") {
++          content.push({
++            type: "text",
++            text: `❌ User declined to provide the requested information.`,
++          });
++        } else if (elicitationResult.action === "cancel") {
++          content.push({
++            type: "text",
++            text: `⚠️ User cancelled the elicitation dialog.`,
++          });
++        }
++
++        // Include raw result for debugging
+         content.push({
+           type: "text",
+-          text: `User inputs:\n${lines.join("\n")}`,
+-        });
+-      } else if (elicitationResult.action === "decline") {
+-        content.push({
+-          type: "text",
+-          text: `❌ User declined to provide the requested information.`,
+-        });
+-      } else if (elicitationResult.action === "cancel") {
+-        content.push({
+-          type: "text",
+-          text: `⚠️ User cancelled the elicitation dialog.`,
++          text: `\nRaw result: ${JSON.stringify(elicitationResult, null, 2)}`,
+         });
+-      }
+ 
+-      // Include raw result for debugging
+-      content.push({
+-        type: "text",
+-        text: `\nRaw result: ${JSON.stringify(elicitationResult, null, 2)}`,
+-      });
+-
+-      return { content };
+-    }
+-  );
++        return {content};
++      }
++    );
++  }
+ };
+diff --git a/src/everything/tools/trigger-sampling-request.ts b/src/everything/tools/trigger-sampling-request.ts
+index 1f66bf3c79..5785f5210f 100644
+--- a/src/everything/tools/trigger-sampling-request.ts
++++ b/src/everything/tools/trigger-sampling-request.ts
+@@ -26,6 +26,8 @@ const config = {
+ /**
+  * Registers the 'trigger-sampling-request' tool.
+  *
++ * If the client does not support the sampling capability, the tool is not registered.
++ *
+  * The registered tool performs the following operations:
+  * - Validates incoming arguments using `TriggerSamplingRequestSchema`.
+  * - Constructs a `sampling/createMessage` request object using provided prompt and maximum tokens.
+@@ -35,47 +37,55 @@ const config = {
+  * @param {McpServer} server - The McpServer instance where the tool will be registered.
+  */
+ export const registerTriggerSamplingRequestTool = (server: McpServer) => {
+-  server.registerTool(
+-    name,
+-    config,
+-    async (args, extra): Promise<CallToolResult> => {
+-      const validatedArgs = TriggerSamplingRequestSchema.parse(args);
+-      const { prompt, maxTokens } = validatedArgs;
++  // Does the client support sampling?
++  const clientCapabilities = server.server.getClientCapabilities() || {};
++  const clientSupportsSampling: boolean =
++    clientCapabilities.sampling !== undefined;
+ 
+-      // Create the sampling request
+-      const request: CreateMessageRequest = {
+-        method: "sampling/createMessage",
+-        params: {
+-          messages: [
+-            {
+-              role: "user",
+-              content: {
+-                type: "text",
+-                text: `Resource ${name} context: ${prompt}`,
++  // If so, register tool
++  if (clientSupportsSampling) {
++    server.registerTool(
++      name,
++      config,
++      async (args, extra): Promise<CallToolResult> => {
++        const validatedArgs = TriggerSamplingRequestSchema.parse(args);
++        const { prompt, maxTokens } = validatedArgs;
++
++        // Create the sampling request
++        const request: CreateMessageRequest = {
++          method: "sampling/createMessage",
++          params: {
++            messages: [
++              {
++                role: "user",
++                content: {
++                  type: "text",
++                  text: `Resource ${name} context: ${prompt}`,
++                },
+               },
+-            },
+-          ],
+-          systemPrompt: "You are a helpful test server.",
+-          maxTokens,
+-          temperature: 0.7,
+-        },
+-      };
++            ],
++            systemPrompt: "You are a helpful test server.",
++            maxTokens,
++            temperature: 0.7,
++          },
++        };
+ 
+-      // Send the sampling request to the client
+-      const result = await extra.sendRequest(
+-        request,
+-        CreateMessageResultSchema
+-      );
++        // Send the sampling request to the client
++        const result = await extra.sendRequest(
++          request,
++          CreateMessageResultSchema
++        );
+ 
+-      // Return the result to the client
+-      return {
+-        content: [
+-          {
+-            type: "text",
+-            text: `LLM sampling result: \n${JSON.stringify(result, null, 2)}`,
+-          },
+-        ],
+-      };
+-    }
+-  );
++        // Return the result to the client
++        return {
++          content: [
++            {
++              type: "text",
++              text: `LLM sampling result: \n${JSON.stringify(result, null, 2)}`,
++            },
++          ],
++        };
++      }
++    );
++  }
+ };
+diff --git a/src/everything/transports/sse.ts b/src/everything/transports/sse.ts
+index 199e1fcb71..2406db7cfa 100644
+--- a/src/everything/transports/sse.ts
++++ b/src/everything/transports/sse.ts
+@@ -25,7 +25,7 @@ const transports: Map<string, SSEServerTransport> = new Map<
+ // Handle GET requests for new SSE streams
+ app.get("/sse", async (req, res) => {
+   let transport: SSEServerTransport;
+-  const { server, clientConnected, cleanup } = createServer();
++  const { server, cleanup } = createServer();
+ 
+   // Session Id should not exist for GET /sse requests
+   if (req?.query?.sessionId) {
+@@ -40,10 +40,9 @@ app.get("/sse", async (req, res) => {
+     transport = new SSEServerTransport("/message", res);
+     transports.set(transport.sessionId, transport);
+ 
+-    // Connect server to transport and invoke clientConnected callback
++    // Connect server to transport
+     await server.connect(transport);
+     const sessionId = transport.sessionId;
+-    clientConnected(sessionId);
+     console.error("Client Connected: ", sessionId);
+ 
+     // Handle close of connection
+diff --git a/src/everything/transports/stdio.ts b/src/everything/transports/stdio.ts
+index 6ca65f1fd7..3e653bcf4d 100644
+--- a/src/everything/transports/stdio.ts
++++ b/src/everything/transports/stdio.ts
+@@ -8,18 +8,16 @@ console.error("Starting default (STDIO) server...");
+ /**
+  * The main method
+  * - Initializes the StdioServerTransport, sets up the server,
+- * - Connects the transport to the server, invokes the `clientConnected` callback,
+  * - Handles cleanup on process exit.
+  *
+  * @return {Promise<void>} A promise that resolves when the main function has executed and the process exits.
+  */
+ async function main(): Promise<void> {
+   const transport = new StdioServerTransport();
+-  const { server, clientConnected, cleanup } = createServer();
++  const { server, cleanup } = createServer();
+ 
+-  // Connect transport to server and invoke clientConnected callback
++  // Connect transport to server
+   await server.connect(transport);
+-  clientConnected();
+ 
+   // Cleanup on exit
+   process.on("SIGINT", async () => {
+diff --git a/src/everything/transports/streamableHttp.ts b/src/everything/transports/streamableHttp.ts
+index 1e903e1086..13ed250776 100644
+--- a/src/everything/transports/streamableHttp.ts
++++ b/src/everything/transports/streamableHttp.ts
+@@ -38,7 +38,7 @@ app.post("/mcp", async (req: Request, res: Response) => {
+       // Reuse existing transport
+       transport = transports.get(sessionId)!;
+     } else if (!sessionId) {
+-      const { server, clientConnected, cleanup } = createServer();
++      const { server, cleanup } = createServer();
+ 
+       // New initialization request
+       const eventStore = new InMemoryEventStore();
+@@ -68,7 +68,6 @@ app.post("/mcp", async (req: Request, res: Response) => {
+       // Connect the transport to the MCP server BEFORE handling the request
+       // so responses can flow back through the same transport
+       await server.connect(transport);
+-      clientConnected(transport.sessionId);
+       await transport.handleRequest(req, res);
+       return;
+     } else {

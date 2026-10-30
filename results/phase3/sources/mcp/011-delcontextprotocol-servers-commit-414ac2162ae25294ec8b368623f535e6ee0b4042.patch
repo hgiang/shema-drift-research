@@ -1,0 +1,57 @@
+From 414ac2162ae25294ec8b368623f535e6ee0b4042 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 01:24:53 -0400
+Subject: [PATCH] fix: accurate protocol-era wording; scope label only for
+ one-server harvests
+
+The bug form described the modern era's version as "negotiated", but in
+2026-07-28 there is no initialize handshake and the version travels in
+each request's _meta; say which revision the client spoke instead. The
+backlog plan's verify step required a scope label on every harvest issue,
+contradicting AGENTS.md, which gives one only to an issue concerning
+exactly one server. (Copilot, round 2.)
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .github/ISSUE_TEMPLATE/1-bug_report.yml | 9 +++++----
+ docs/contribution-model.md              | 6 ++++--
+ 2 files changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/.github/ISSUE_TEMPLATE/1-bug_report.yml b/.github/ISSUE_TEMPLATE/1-bug_report.yml
+index dea4fa2e7a..df01d473b3 100644
+--- a/.github/ISSUE_TEMPLATE/1-bug_report.yml
++++ b/.github/ISSUE_TEMPLATE/1-bug_report.yml
+@@ -96,10 +96,11 @@ body:
+     attributes:
+       label: Protocol era
+       description: >
+-        Which revision of the MCP specification the client negotiated. Modern
+-        is 2026-07-28, the stateless revision with no `initialize` handshake.
+-        Legacy is 2025-11-25 or earlier. The client's logs, or the MCP
+-        Inspector, show the negotiated version.
++        Which revision of the MCP specification the client spoke. Modern is
++        2026-07-28, the stateless revision: there is no `initialize` handshake,
++        and the protocol version travels with each request. Legacy is
++        2025-11-25 or earlier, where the version is agreed in `initialize`.
++        The client's logs, or the MCP Inspector, show which one was used.
+       options:
+         - Modern (2026-07-28)
+         - Legacy (2025-11-25 or earlier)
+diff --git a/docs/contribution-model.md b/docs/contribution-model.md
+index b55493c975..82812390a5 100644
+--- a/docs/contribution-model.md
++++ b/docs/contribution-model.md
+@@ -179,8 +179,10 @@ The pass is complete when:
+   as left open by an issue that owns it;
+ - every closed PR marked for harvest points, in its close comment, at an open or
+   closed issue that links back to it;
+-- every harvest issue carries `v2`, one type label and its scope label, and sits
+-  in `Incoming` with no milestone.
++- every harvest issue carries `v2` and exactly one type label, plus its
++  `server-<name>` scope label when it concerns exactly one server (a
++  repository-level or multi-server issue carries none), and sits in `Incoming`
++  with no milestone.
+ 
+ The report lists the counts per class, the harvest issues filed, and the
+ maintainer-authored PRs still targeting `main`.

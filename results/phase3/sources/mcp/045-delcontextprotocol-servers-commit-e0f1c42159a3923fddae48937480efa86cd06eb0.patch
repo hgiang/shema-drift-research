@@ -1,0 +1,35 @@
+From e0f1c42159a3923fddae48937480efa86cd06eb0 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 15 Dec 2025 14:39:20 -0500
+Subject: [PATCH] Add listChanged capability for tools, prompts, and resources
+ in servers/index.ts
+
+---
+ src/everything/server/index.ts | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/src/everything/server/index.ts b/src/everything/server/index.ts
+index 2f50de1674..96a19f5ded 100644
+--- a/src/everything/server/index.ts
++++ b/src/everything/server/index.ts
+@@ -44,12 +44,17 @@ export const createServer: () => ServerFactoryResponse = () => {
+     },
+     {
+       capabilities: {
+-        tools: {},
+-        logging: {},
+-        prompts: {},
++        tools: {
++          listChanged: true,
++        },
++        prompts: {
++          listChanged: true,
++        },
+         resources: {
+           subscribe: true,
++          listChanged: true,
+         },
++        logging: {},
+       },
+       instructions,
+     }

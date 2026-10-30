@@ -1,0 +1,235 @@
+From 71a59645c93f2d907c5a442cf5793964e125a551 Mon Sep 17 00:00:00 2001
+From: Padraic Slattery <pgoslatara@gmail.com>
+Date: Tue, 20 Jan 2026 11:31:43 +0100
+Subject: [PATCH] chore: Update outdated GitHub Actions versions
+
+---
+ .github/workflows/claude.yml          |  2 +-
+ .github/workflows/python.yml          | 14 +++++++-------
+ .github/workflows/readme-pr-check.yml |  4 ++--
+ .github/workflows/release.yml         | 18 +++++++++---------
+ .github/workflows/typescript.yml      | 14 +++++++-------
+ 5 files changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/.github/workflows/claude.yml b/.github/workflows/claude.yml
+index 2726c2671a..92c74fceba 100644
+--- a/.github/workflows/claude.yml
++++ b/.github/workflows/claude.yml
+@@ -26,7 +26,7 @@ jobs:
+       actions: read
+     steps:
+       - name: Checkout repository
+-        uses: actions/checkout@v4
++        uses: actions/checkout@v6
+         with:
+           fetch-depth: 1
+ 
+diff --git a/.github/workflows/python.yml b/.github/workflows/python.yml
+index 3f227b2737..df84276249 100644
+--- a/.github/workflows/python.yml
++++ b/.github/workflows/python.yml
+@@ -14,7 +14,7 @@ jobs:
+     outputs:
+       packages: ${{ steps.find-packages.outputs.packages }}
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+ 
+       - name: Find Python packages
+         id: find-packages
+@@ -31,13 +31,13 @@ jobs:
+     name: Test ${{ matrix.package }}
+     runs-on: ubuntu-latest
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+ 
+       - name: Install uv
+         uses: astral-sh/setup-uv@v3
+ 
+       - name: Set up Python
+-        uses: actions/setup-python@v5
++        uses: actions/setup-python@v6
+         with:
+           python-version-file: "src/${{ matrix.package }}/.python-version"
+ 
+@@ -68,13 +68,13 @@ jobs:
+     name: Build ${{ matrix.package }}
+     runs-on: ubuntu-latest
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+ 
+       - name: Install uv
+         uses: astral-sh/setup-uv@v3
+ 
+       - name: Set up Python
+-        uses: actions/setup-python@v5
++        uses: actions/setup-python@v6
+         with:
+           python-version-file: "src/${{ matrix.package }}/.python-version"
+ 
+@@ -91,7 +91,7 @@ jobs:
+         run: uv build
+ 
+       - name: Upload artifacts
+-        uses: actions/upload-artifact@v4
++        uses: actions/upload-artifact@v6
+         with:
+           name: dist-${{ matrix.package }}
+           path: src/${{ matrix.package }}/dist/
+@@ -112,7 +112,7 @@ jobs:
+ 
+     steps:
+       - name: Download artifacts
+-        uses: actions/download-artifact@v4
++        uses: actions/download-artifact@v7
+         with:
+           name: dist-${{ matrix.package }}
+           path: dist/
+diff --git a/.github/workflows/readme-pr-check.yml b/.github/workflows/readme-pr-check.yml
+index eacb87c478..e74713fa10 100644
+--- a/.github/workflows/readme-pr-check.yml
++++ b/.github/workflows/readme-pr-check.yml
+@@ -17,7 +17,7 @@ jobs:
+       pull-requests: write
+     steps:
+       - name: Check files and comment if README-only
+-        uses: actions/github-script@v7
++        uses: actions/github-script@v8
+         with:
+           script: |
+             const { owner, repo } = context.repo;
+@@ -63,7 +63,7 @@ jobs:
+       pull-requests: write
+     steps:
+       - name: Swap labels and minimize comments
+-        uses: actions/github-script@v7
++        uses: actions/github-script@v8
+         with:
+           script: |
+             const { owner, repo } = context.repo;
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index ba42d7b809..a3ad5387d3 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -15,7 +15,7 @@ jobs:
+       npm_packages: ${{ steps.create-npm-packages.outputs.npm_packages}}
+       pypi_packages: ${{ steps.create-pypi-packages.outputs.pypi_packages}}
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+         with:
+           fetch-depth: 0
+ 
+@@ -43,7 +43,7 @@ jobs:
+           cat RELEASE_NOTES.md
+ 
+       - name: Release notes
+-        uses: actions/upload-artifact@v4
++        uses: actions/upload-artifact@v6
+         with:
+           name: release-notes
+           path: RELEASE_NOTES.md
+@@ -74,7 +74,7 @@ jobs:
+     outputs:
+       changes_made: ${{ steps.commit.outputs.changes_made }}
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+         with:
+           fetch-depth: 0
+ 
+@@ -118,7 +118,7 @@ jobs:
+       id-token: write # Required for trusted publishing
+     runs-on: ubuntu-latest
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+         with:
+           ref: ${{ needs.create-metadata.outputs.version }}
+ 
+@@ -126,7 +126,7 @@ jobs:
+         uses: astral-sh/setup-uv@v5
+ 
+       - name: Set up Python
+-        uses: actions/setup-python@v5
++        uses: actions/setup-python@v6
+         with:
+           python-version-file: "src/${{ matrix.package }}/.python-version"
+ 
+@@ -158,11 +158,11 @@ jobs:
+     environment: release
+     runs-on: ubuntu-latest
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+         with:
+           ref: ${{ needs.create-metadata.outputs.version }}
+ 
+-      - uses: actions/setup-node@v4
++      - uses: actions/setup-node@v6
+         with:
+           node-version: 22
+           cache: npm
+@@ -204,10 +204,10 @@ jobs:
+     permissions:
+       contents: write
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+ 
+       - name: Download release notes
+-        uses: actions/download-artifact@v4
++        uses: actions/download-artifact@v7
+         with:
+           name: release-notes
+ 
+diff --git a/.github/workflows/typescript.yml b/.github/workflows/typescript.yml
+index c99318bd78..4e29e524ad 100644
+--- a/.github/workflows/typescript.yml
++++ b/.github/workflows/typescript.yml
+@@ -14,7 +14,7 @@ jobs:
+     outputs:
+       packages: ${{ steps.find-packages.outputs.packages }}
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+       - name: Find JS packages
+         id: find-packages
+         working-directory: src
+@@ -30,9 +30,9 @@ jobs:
+     name: Test ${{ matrix.package }}
+     runs-on: ubuntu-latest
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+ 
+-      - uses: actions/setup-node@v4
++      - uses: actions/setup-node@v6
+         with:
+           node-version: 22
+           cache: npm
+@@ -53,9 +53,9 @@ jobs:
+     name: Build ${{ matrix.package }}
+     runs-on: ubuntu-latest
+     steps:
+-      - uses: actions/checkout@v4
++      - uses: actions/checkout@v6
+ 
+-      - uses: actions/setup-node@v4
++      - uses: actions/setup-node@v6
+         with:
+           node-version: 22
+           cache: npm
+@@ -84,8 +84,8 @@ jobs:
+       id-token: write
+ 
+     steps:
+-      - uses: actions/checkout@v4
+-      - uses: actions/setup-node@v4
++      - uses: actions/checkout@v6
++      - uses: actions/setup-node@v6
+         with:
+           node-version: 22
+           cache: npm

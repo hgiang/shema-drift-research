@@ -1,0 +1,22 @@
+From f4244583a6af9425633e433a3eec000d23f4e011 Mon Sep 17 00:00:00 2001
+From: Arif Celebi <arifcelebi.uk@gmail.com>
+Date: Tue, 17 Mar 2026 14:21:11 +0000
+Subject: [PATCH] fix(fetch): refresh uv lockfile (#3598)
+
+---
+ src/fetch/uv.lock | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/fetch/uv.lock b/src/fetch/uv.lock
+index c2159b229f..0690b49f76 100644
+--- a/src/fetch/uv.lock
++++ b/src/fetch/uv.lock
+@@ -547,7 +547,7 @@ dev = [
+ 
+ [package.metadata]
+ requires-dist = [
+-    { name = "httpx", specifier = "<0.28" },
++    { name = "httpx", specifier = ">=0.27" },
+     { name = "markdownify", specifier = ">=0.13.1" },
+     { name = "mcp", specifier = ">=1.1.3" },
+     { name = "protego", specifier = ">=0.3.1" },

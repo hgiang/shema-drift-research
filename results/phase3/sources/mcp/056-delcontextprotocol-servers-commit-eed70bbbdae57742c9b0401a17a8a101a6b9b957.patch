@@ -1,0 +1,23 @@
+From eed70bbbdae57742c9b0401a17a8a101a6b9b957 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 13 Dec 2025 15:48:41 -0500
+Subject: [PATCH] Updated doc in trigger-sampling-request.ts
+
+---
+ src/everything/tools/trigger-sampling-request.ts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/everything/tools/trigger-sampling-request.ts b/src/everything/tools/trigger-sampling-request.ts
+index fb8ee33e7f..78f5e05bba 100644
+--- a/src/everything/tools/trigger-sampling-request.ts
++++ b/src/everything/tools/trigger-sampling-request.ts
+@@ -32,8 +32,7 @@ const config = {
+  * - Sends the request to the server for sampling.
+  * - Formats and returns the sampling result content to the client.
+  *
+- * @param {McpServer} server - The instance of the MCP server where the tool
+- *        will be registered.
++ * @param {McpServer} server - The instance of the MCP server where the tool will be registered.
+  */
+ export const registerTriggerSamplingRequestTool = (server: McpServer) => {
+   server.registerTool(

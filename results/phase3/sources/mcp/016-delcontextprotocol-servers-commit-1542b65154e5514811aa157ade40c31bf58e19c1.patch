@@ -1,0 +1,51 @@
+From 1542b65154e5514811aa157ade40c31bf58e19c1 Mon Sep 17 00:00:00 2001
+From: olaservo <olahungerford@gmail.com>
+Date: Wed, 21 Jan 2026 18:39:29 -0700
+Subject: [PATCH] fix(everything): move task to params.task and remove
+ pollInterval from requests
+
+- Use params.task instead of params._meta.task for task metadata
+- Remove pollInterval from task requests (only available on result)
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+---
+ src/everything/tools/trigger-elicitation-request-async.ts | 5 ++---
+ src/everything/tools/trigger-sampling-request-async.ts    | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/src/everything/tools/trigger-elicitation-request-async.ts b/src/everything/tools/trigger-elicitation-request-async.ts
+index 2de0afb0ab..f2829299a8 100644
+--- a/src/everything/tools/trigger-elicitation-request-async.ts
++++ b/src/everything/tools/trigger-elicitation-request-async.ts
+@@ -54,9 +54,8 @@ export const registerTriggerElicitationRequestAsyncTool = (server: McpServer) =>
+           method: "elicitation/create" as const,
+           params: {
+             task: {
+-                ttl: 600000, // 10 minutes (user input may take a while)
+-                pollInterval: POLL_INTERVAL,
+-              },
++              ttl: 600000, // 10 minutes (user input may take a while)
++            },
+             message: "Please provide inputs for the following fields (async task demo):",
+             requestedSchema: {
+               type: "object" as const,
+diff --git a/src/everything/tools/trigger-sampling-request-async.ts b/src/everything/tools/trigger-sampling-request-async.ts
+index c93cc12e7c..51ac240f59 100644
+--- a/src/everything/tools/trigger-sampling-request-async.ts
++++ b/src/everything/tools/trigger-sampling-request-async.ts
+@@ -63,13 +63,12 @@ export const registerTriggerSamplingRequestAsyncTool = (server: McpServer) => {
+         const { prompt, maxTokens } = validatedArgs;
+ 
+         // Create the sampling request WITH task metadata
+-        // The _meta.task field signals to the client that this should be executed as a task
+-        const request: CreateMessageRequest & { params: { _meta?: { task: { ttl: number; pollInterval: number } } } } = {
++        // The params.task field signals to the client that this should be executed as a task
++        const request: CreateMessageRequest & { params: { task?: { ttl: number } } } = {
+           method: "sampling/createMessage",
+           params: {
+             task: {
+               ttl: 300000, // 5 minutes
+-              pollInterval: POLL_INTERVAL,
+             },
+             messages: [
+               {

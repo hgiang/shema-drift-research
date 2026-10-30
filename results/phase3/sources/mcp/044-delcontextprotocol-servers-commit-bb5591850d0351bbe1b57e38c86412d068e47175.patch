@@ -1,0 +1,125 @@
+From bb5591850d0351bbe1b57e38c86412d068e47175 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Mon, 28 Sep 2026 23:27:43 -0400
+Subject: [PATCH] fix: refuse masked intermediate hops and unusable eval counts
+
+scriptChainRuns no longer follows an intermediate segment carrying a pipe
+or ||, so a target reached through a masked stage does not vouch as run.
+skills:eval rejects a non-positive-integer CHAIN_MAX_TURNS, RUNS or
+CONCURRENCY, which would otherwise remove Copilot's turn cap.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ scripts/lib/npm-scripts.mjs         |  4 ++++
+ scripts/skill-eval.mjs              | 25 +++++++++++++++++++++++++
+ scripts/skill-eval.test.mjs         |  8 ++++++++
+ scripts/verify-skills.main.test.mjs | 24 ++++++++++++++++++++++++
+ 4 files changed, 61 insertions(+)
+
+diff --git a/scripts/lib/npm-scripts.mjs b/scripts/lib/npm-scripts.mjs
+index fcc1c3d432..a387e737bd 100644
+--- a/scripts/lib/npm-scripts.mjs
++++ b/scripts/lib/npm-scripts.mjs
+@@ -153,6 +153,10 @@ export function scriptChainRuns(scripts, entry, target) {
+       .map((part) => unwrapGateLease(part.trim()))) {
+       if (segment === `npm run ${target}`) return true;
+       const tokens = segment.split(/\s+/);
++      // An intermediate hop must be as unmasked as the target itself: in
++      // `npm run stage || true` (or `| tee`) the stage's failure is swallowed,
++      // so a target reached through it gates nothing (Copilot, #4895).
++      if (segment.includes("|")) continue;
+       if (tokens[0] === "npm" && tokens[1] === "run" && tokens[2]) {
+         queue.push(tokens[2]);
+       }
+diff --git a/scripts/skill-eval.mjs b/scripts/skill-eval.mjs
+index 8b6cb97654..b53b8540a8 100644
+--- a/scripts/skill-eval.mjs
++++ b/scripts/skill-eval.mjs
+@@ -786,6 +786,15 @@ async function pool(items, n, fn) {
+   return out;
+ }
+ 
++/**
++ * Whether an env-supplied count is usable as a run, turn or worker count.
++ *
++ * @param {number} value
++ */
++export function isPositiveInteger(value) {
++  return Number.isInteger(value) && value > 0;
++}
++
+ /**
+  * Whether a measured rate clears its bar.
+  *
+@@ -906,6 +915,22 @@ async function main() {
+     );
+     process.exit(1);
+   }
++  // The turn budget is also Copilot's external stop condition, so a non-numeric
++  // value would silently remove the cap on metered calls (`turnOffset >= NaN`
++  // is never true); RUNS and CONCURRENCY fail the same quiet way (Copilot,
++  // #4895).
++  for (const [name, value] of [
++    ["CHAIN_MAX_TURNS", CHAIN_MAX_TURNS],
++    ["RUNS", RUNS],
++    ["CONCURRENCY", CONCURRENCY],
++  ]) {
++    if (!isPositiveInteger(value)) {
++      console.error(
++        `skills:eval — ${name} must be a positive integer (got ${process.env[name] ?? value}).`,
++      );
++      process.exit(1);
++    }
++  }
+   if (!AGENTS.includes(AGENT)) {
+     console.error(
+       `skills:eval — AGENT must be one of ${AGENTS.join(", ")} (got \`${AGENT}\`).`,
+diff --git a/scripts/skill-eval.test.mjs b/scripts/skill-eval.test.mjs
+index 79ca803c93..467583858c 100644
+--- a/scripts/skill-eval.test.mjs
++++ b/scripts/skill-eval.test.mjs
+@@ -1053,3 +1053,11 @@ test("a rejected Copilot run leaves the in-flight set", async () => {
+   );
+   assert.equal(stopLiveCopilotRuns(), 0);
+ });
++
++test("isPositiveInteger accepts only usable counts (#4895)", async () => {
++  const { isPositiveInteger } = await import("./skill-eval.mjs");
++  for (const ok of [1, 3, 14]) assert.equal(isPositiveInteger(ok), true, ok);
++  for (const bad of [0, -1, 1.5, Number.NaN, Number("abc"), Infinity]) {
++    assert.equal(isPositiveInteger(bad), false, String(bad));
++  }
++});
+diff --git a/scripts/verify-skills.main.test.mjs b/scripts/verify-skills.main.test.mjs
+index fc86a55b50..dc90a8922a 100644
+--- a/scripts/verify-skills.main.test.mjs
++++ b/scripts/verify-skills.main.test.mjs
+@@ -746,3 +746,27 @@ test("scriptChainRuns follows npm's implicit pre/post hooks", () => {
+     true,
+   );
+ });
++
++test("scriptChainRuns does not follow a masked intermediate hop (#4895)", () => {
++  const T = "verify:skills:cli";
++  for (const gate of ["npm run stage || true", "npm run stage | tee log"]) {
++    assert.equal(
++      scriptChainRuns(
++        { "local:gate": gate, stage: `npm run ${T}` },
++        "local:gate",
++        T,
++      ),
++      false,
++      gate,
++    );
++  }
++  // The unmasked hop is still followed.
++  assert.equal(
++    scriptChainRuns(
++      { "local:gate": "npm run stage", stage: `npm run ${T}` },
++      "local:gate",
++      T,
++    ),
++    true,
++  );
++});

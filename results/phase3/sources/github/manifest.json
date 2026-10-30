@@ -1,0 +1,498 @@
+{
+ "https://docs.github.com/en/rest/about-the-rest-api/breaking-changes": {
+  "url": "https://docs.github.com/en/rest/about-the-rest-api/breaking-changes",
+  "path": "001-en-rest-about-the-rest-api-breaking-changes.txt",
+  "status": 200,
+  "n_bytes": 500820,
+  "sha256": "ae4c42e336535c15fcbef013d4bec1f07b0e6bc1d57a3cc99afefeabf6c3ba69",
+  "fetched_at": "2026-10-30T03:18:18Z"
+ },
+ "https://github.blog/changelog-sitemap.xml": {
+  "url": "https://github.blog/changelog-sitemap.xml",
+  "path": "000-changelog-sitemap.xml",
+  "status": 200,
+  "n_bytes": 182804,
+  "sha256": "3dcd86f28421e5de5f359a8e771b901ac0ca95e85c2164264ea69fc8ca5c55b2",
+  "fetched_at": "2026-10-30T03:18:17Z"
+ },
+ "https://github.blog/changelog/2023-01-10-github-actions-openid-connect-token-now-supports-more-claims-for-configuring-granular-cloud-access": {
+  "url": "https://github.blog/changelog/2023-01-10-github-actions-openid-connect-token-now-supports-more-claims-for-configuring-granular-cloud-access",
+  "path": "040-nid-connect-token-now-supports-more-claims-for-configuring-granular-cloud-ac.txt",
+  "status": 200,
+  "n_bytes": 97897,
+  "sha256": "5828ecc91a6d24aafcd9b7d2ea4635d7762311eab2c2a9349a75b02dcaf8d409",
+  "fetched_at": "2026-10-30T03:19:17Z"
+ },
+ "https://github.blog/changelog/2023-01-10-github-actions-support-for-configuration-variables-in-workflows": {
+  "url": "https://github.blog/changelog/2023-01-10-github-actions-support-for-configuration-variables-in-workflows",
+  "path": "034-gelog-2023-01-10-github-actions-support-for-configuration-variables-in-workf.txt",
+  "status": 200,
+  "n_bytes": 100093,
+  "sha256": "0a8afc5fcbe1fe44bfe24253b90de9a564de1ebdcc5e95946dab57af50777b30",
+  "fetched_at": "2026-10-30T03:19:08Z"
+ },
+ "https://github.blog/changelog/2023-01-11-second-factor-validation-after-2fa-setup": {
+  "url": "https://github.blog/changelog/2023-01-11-second-factor-validation-after-2fa-setup",
+  "path": "014-changelog-2023-01-11-second-factor-validation-after-2fa-setup.txt",
+  "status": 200,
+  "n_bytes": 99655,
+  "sha256": "dee48a6c66b022e63e69b1a8e55030757d7d7ff1798b0feefb13fa94c29db893",
+  "fetched_at": "2026-10-30T03:18:38Z"
+ },
+ "https://github.blog/changelog/2023-01-13-security-overviews-team-filter-now-includes-repositories-with-write-privileges": {
+  "url": "https://github.blog/changelog/2023-01-13-security-overviews-team-filter-now-includes-repositories-with-write-privileges",
+  "path": "017-3-security-overviews-team-filter-now-includes-repositories-with-write-privil.txt",
+  "status": 200,
+  "n_bytes": 100286,
+  "sha256": "9c79fcd84bedc4f5fa332022237ad27e76a344dd00e7e161387d523fdc3ee2d5",
+  "fetched_at": "2026-10-30T03:18:42Z"
+ },
+ "https://github.blog/changelog/2023-01-19-the-crate-io-registry-is-now-a-github-secret-scanning-integrator": {
+  "url": "https://github.blog/changelog/2023-01-19-the-crate-io-registry-is-now-a-github-secret-scanning-integrator",
+  "path": "044-elog-2023-01-19-the-crate-io-registry-is-now-a-github-secret-scanning-integr.txt",
+  "status": 200,
+  "n_bytes": 98629,
+  "sha256": "0f48fcbecd67a0159d635a9443c35b1ffa56aa00fdbf2b21d738c93be1d7941e",
+  "fetched_at": "2026-10-30T03:19:22Z"
+ },
+ "https://github.blog/changelog/2023-01-23-github-sponsors-will-stop-supporting-paypal": {
+  "url": "https://github.blog/changelog/2023-01-23-github-sponsors-will-stop-supporting-paypal",
+  "path": "037-changelog-2023-01-23-github-sponsors-will-stop-supporting-paypal.txt",
+  "status": 200,
+  "n_bytes": 127611,
+  "sha256": "9af60b9df00aad5244b231e6758d3f66862076e8bf51f999efa6246b2ac53c5a",
+  "fetched_at": "2026-10-30T03:19:13Z"
+ },
+ "https://github.blog/changelog/2023-01-27-github-desktop-improves-force-pushing-and-fetching-along-with-many-great-open-source-contributions": {
+  "url": "https://github.blog/changelog/2023-01-27-github-desktop-improves-force-pushing-and-fetching-along-with-many-great-open-source-contributions",
+  "path": "031-roves-force-pushing-and-fetching-along-with-many-great-open-source-contribut.txt",
+  "status": 200,
+  "n_bytes": 110059,
+  "sha256": "b12bf9e8d6c37a48f193ed8cc0a5c3a490a1c6396df4e3c0a472c8ad017bef75",
+  "fetched_at": "2026-10-30T03:19:03Z"
+ },
+ "https://github.blog/changelog/2023-01-31-roadmap-in-projects-public-beta": {
+  "url": "https://github.blog/changelog/2023-01-31-roadmap-in-projects-public-beta",
+  "path": "024-changelog-2023-01-31-roadmap-in-projects-public-beta.txt",
+  "status": 200,
+  "n_bytes": 142374,
+  "sha256": "816a9f4e25c112dfb7b7af2168c2943cf5b12e04cab43f54d9386300249a3aa4",
+  "fetched_at": "2026-10-30T03:18:53Z"
+ },
+ "https://github.blog/changelog/2023-02-03-persona-is-now-a-github-secret-scanning-partner": {
+  "url": "https://github.blog/changelog/2023-02-03-persona-is-now-a-github-secret-scanning-partner",
+  "path": "021-changelog-2023-02-03-persona-is-now-a-github-secret-scanning-partner.txt",
+  "status": 200,
+  "n_bytes": 98126,
+  "sha256": "4b2a7a402bf33fd0e39930b578c67e6fd7f346aa8ab2e1a2f23da7c3db28e6d8",
+  "fetched_at": "2026-10-30T03:18:48Z"
+ },
+ "https://github.blog/changelog/2023-02-07-code-scanning-can-be-set-up-not-to-fail-a-pull-request-check": {
+  "url": "https://github.blog/changelog/2023-02-07-code-scanning-can-be-set-up-not-to-fail-a-pull-request-check",
+  "path": "012-hangelog-2023-02-07-code-scanning-can-be-set-up-not-to-fail-a-pull-request-c.txt",
+  "status": 200,
+  "n_bytes": 100947,
+  "sha256": "71d1516336d0973a67211edbec99fcdd71a7cd8593c521a3f8b812cbc2c97f98",
+  "fetched_at": "2026-10-30T03:18:35Z"
+ },
+ "https://github.blog/changelog/2023-02-07-dependabot-alerts-default-permissions-change": {
+  "url": "https://github.blog/changelog/2023-02-07-dependabot-alerts-default-permissions-change",
+  "path": "022-changelog-2023-02-07-dependabot-alerts-default-permissions-change.txt",
+  "status": 200,
+  "n_bytes": 104820,
+  "sha256": "ec45766428f96a894e7957de52925a4c2486793b276a8843931af71faca0b803",
+  "fetched_at": "2026-10-30T03:18:50Z"
+ },
+ "https://github.blog/changelog/2023-02-08-manage-branch-protection-rules-with-a-new-permission": {
+  "url": "https://github.blog/changelog/2023-02-08-manage-branch-protection-rules-with-a-new-permission",
+  "path": "004-changelog-2023-02-08-manage-branch-protection-rules-with-a-new-permission.txt",
+  "status": 200,
+  "n_bytes": 127615,
+  "sha256": "120a59e05d50d36cc9d94b9f3595cdb652d04462d2d42a1846e7cc83290de61e",
+  "fetched_at": "2026-10-30T03:18:24Z"
+ },
+ "https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions": {
+  "url": "https://github.blog/changelog/2023-02-08-sunset-notice-team-discussions",
+  "path": "032-changelog-2023-02-08-sunset-notice-team-discussions.txt",
+  "status": 200,
+  "n_bytes": 99721,
+  "sha256": "92439e968f15a48f563ae3cb8257cf22e96b18a44f8b00f4c92b799563c49708",
+  "fetched_at": "2026-10-30T03:19:05Z"
+ },
+ "https://github.blog/changelog/2023-02-09-github-projects-feburary-9th-update": {
+  "url": "https://github.blog/changelog/2023-02-09-github-projects-feburary-9th-update",
+  "path": "013-changelog-2023-02-09-github-projects-feburary-9th-update.txt",
+  "status": 200,
+  "n_bytes": 113814,
+  "sha256": "db74f0978b043ce5a1104a79ed9559b378c793d5e7d3227f82660b5d3e9bd0b6",
+  "fetched_at": "2026-10-30T03:18:36Z"
+ },
+ "https://github.blog/changelog/2023-02-21-github-pages-deprecating-symlinks-in-non-actions-builds": {
+  "url": "https://github.blog/changelog/2023-02-21-github-pages-deprecating-symlinks-in-non-actions-builds",
+  "path": "051-changelog-2023-02-21-github-pages-deprecating-symlinks-in-non-actions-builds.txt",
+  "status": 200,
+  "n_bytes": 96460,
+  "sha256": "9a7ca07ca8021fa0b09c71b8280dd74587904bfa39870634dad1638694f40923",
+  "fetched_at": "2026-10-30T03:19:32Z"
+ },
+ "https://github.blog/changelog/2023-02-23-no-more-waitlist-code-search-and-code-view-are-available-to-all-in-public-beta": {
+  "url": "https://github.blog/changelog/2023-02-23-no-more-waitlist-code-search-and-code-view-are-available-to-all-in-public-beta",
+  "path": "056-3-no-more-waitlist-code-search-and-code-view-are-available-to-all-in-public-.txt",
+  "status": 200,
+  "n_bytes": 105282,
+  "sha256": "0cf06df35227200c530e51e04e48001c0993de85fef48b6f6105912a15b99410",
+  "fetched_at": "2026-10-30T03:19:39Z"
+ },
+ "https://github.blog/changelog/2023-03-10-dependency-graph-and-dependabot-support-npm-v9": {
+  "url": "https://github.blog/changelog/2023-03-10-dependency-graph-and-dependabot-support-npm-v9",
+  "path": "008-changelog-2023-03-10-dependency-graph-and-dependabot-support-npm-v9.txt",
+  "status": 200,
+  "n_bytes": 96844,
+  "sha256": "21decc0968244cae3135f15cbaa2e5e607d79b942a0dc9b534f7df3edb084f59",
+  "fetched_at": "2026-10-30T03:18:30Z"
+ },
+ "https://github.blog/changelog/2023-03-21-you-can-now-use-the-security-extended-query-suite-in-code-scanning-default-setup-with-codeql": {
+  "url": "https://github.blog/changelog/2023-03-21-you-can-now-use-the-security-extended-query-suite-in-code-scanning-default-setup-with-codeql",
+  "path": "007-use-the-security-extended-query-suite-in-code-scanning-default-setup-with-co.txt",
+  "status": 200,
+  "n_bytes": 102475,
+  "sha256": "bddbea73e9f8c56abdc0759bc9d5a82fa0e0f2f65e47c9729a4e15cd6a3c9099",
+  "fetched_at": "2026-10-30T03:18:28Z"
+ },
+ "https://github.blog/changelog/2023-03-31-repository-topics-and-team-filters-for-organization-level-dependabot-secret-scanning-and-code-scanning-pages": {
+  "url": "https://github.blog/changelog/2023-03-31-repository-topics-and-team-filters-for-organization-level-dependabot-secret-scanning-and-code-scanning-pages",
+  "path": "028-ilters-for-organization-level-dependabot-secret-scanning-and-code-scanning-p.txt",
+  "status": 200,
+  "n_bytes": 101709,
+  "sha256": "ba5836fdf250a2b3df3f3d08f7cd9e8863b1c45a8ba767b5719d283744788785",
+  "fetched_at": "2026-10-30T03:18:59Z"
+ },
+ "https://github.blog/changelog/2023-04-17-organize-discussions-categories-into-sections": {
+  "url": "https://github.blog/changelog/2023-04-17-organize-discussions-categories-into-sections",
+  "path": "026-changelog-2023-04-17-organize-discussions-categories-into-sections.txt",
+  "status": 200,
+  "n_bytes": 98119,
+  "sha256": "5a6da375fcbb1ba732a02b24d7272b35f5e87d84af909d76de61cd40d607dae0",
+  "fetched_at": "2026-10-30T03:18:56Z"
+ },
+ "https://github.blog/changelog/2023-04-24-github-actions-faster-macos-runners-are-now-available-in-open-public-beta": {
+  "url": "https://github.blog/changelog/2023-04-24-github-actions-faster-macos-runners-are-now-available-in-open-public-beta",
+  "path": "020-04-24-github-actions-faster-macos-runners-are-now-available-in-open-public-b.txt",
+  "status": 200,
+  "n_bytes": 96287,
+  "sha256": "4d96ad67fe61fe497b07cebb74cfd0ded595b6e337853679b32c2ebc1bdb7c69",
+  "fetched_at": "2026-10-30T03:18:47Z"
+ },
+ "https://github.blog/changelog/2023-04-24-github-actions-macos-13-is-now-available": {
+  "url": "https://github.blog/changelog/2023-04-24-github-actions-macos-13-is-now-available",
+  "path": "058-changelog-2023-04-24-github-actions-macos-13-is-now-available.txt",
+  "status": 200,
+  "n_bytes": 95851,
+  "sha256": "599410601f80c7e463c22aeb1532c94a54c6ea3971cfcc7c6b17c8d667f9b46a",
+  "fetched_at": "2026-10-30T03:19:42Z"
+ },
+ "https://github.blog/changelog/2023-05-03-doppler-is-a-github-secret-scanning-partner": {
+  "url": "https://github.blog/changelog/2023-05-03-doppler-is-a-github-secret-scanning-partner",
+  "path": "002-changelog-2023-05-03-doppler-is-a-github-secret-scanning-partner.txt",
+  "status": 200,
+  "n_bytes": 98019,
+  "sha256": "ba81198ad7e88d1397983116580ce6ac3b99b55f71888617d0cfefd1869a63f4",
+  "fetched_at": "2026-10-30T03:18:20Z"
+ },
+ "https://github.blog/changelog/2023-05-10-display-pronouns-on-github-mobile-profile": {
+  "url": "https://github.blog/changelog/2023-05-10-display-pronouns-on-github-mobile-profile",
+  "path": "009-changelog-2023-05-10-display-pronouns-on-github-mobile-profile.txt",
+  "status": 200,
+  "n_bytes": 99417,
+  "sha256": "76378b39287199df1a21753086c0d992809a98872ee32aefc193c61f2c234385",
+  "fetched_at": "2026-10-30T03:18:31Z"
+ },
+ "https://github.blog/changelog/2023-05-25-github-issues-projects-may-25th-update": {
+  "url": "https://github.blog/changelog/2023-05-25-github-issues-projects-may-25th-update",
+  "path": "029-changelog-2023-05-25-github-issues-projects-may-25th-update.txt",
+  "status": 200,
+  "n_bytes": 118760,
+  "sha256": "11e26bc55e9b840ef49ecee1fa780b7d7d4bbf363633cbf923348ff1f821de69",
+  "fetched_at": "2026-10-30T03:19:01Z"
+ },
+ "https://github.blog/changelog/2023-06-09-upcoming-changes-to-codespaces-access-ownership-and-billing-settings": {
+  "url": "https://github.blog/changelog/2023-06-09-upcoming-changes-to-codespaces-access-ownership-and-billing-settings",
+  "path": "054-2023-06-09-upcoming-changes-to-codespaces-access-ownership-and-billing-setti.txt",
+  "status": 200,
+  "n_bytes": 113541,
+  "sha256": "cca887847d61f27b04f6342708980b34007b93bc780509cee7290e6602bc443b",
+  "fetched_at": "2026-10-30T03:19:37Z"
+ },
+ "https://github.blog/changelog/2023-06-12-github-advanced-security-trial-now-available-on-github-enterprise-cloud": {
+  "url": "https://github.blog/changelog/2023-06-12-github-advanced-security-trial-now-available-on-github-enterprise-cloud",
+  "path": "050-23-06-12-github-advanced-security-trial-now-available-on-github-enterprise-c.txt",
+  "status": 200,
+  "n_bytes": 101842,
+  "sha256": "f2a99751742880dd80d6906b6e05f601f46aa042fa0c562607c0b9701878f26f",
+  "fetched_at": "2026-10-30T03:19:31Z"
+ },
+ "https://github.blog/changelog/2023-06-29-totp-codes-for-2fa-are-now-single-use": {
+  "url": "https://github.blog/changelog/2023-06-29-totp-codes-for-2fa-are-now-single-use",
+  "path": "006-changelog-2023-06-29-totp-codes-for-2fa-are-now-single-use.txt",
+  "status": 200,
+  "n_bytes": 98575,
+  "sha256": "bfcbe1b0269b6e92ae203787cf35288c1d45d58e11508aee98e9dc72f55ceb2c",
+  "fetched_at": "2026-10-30T03:18:27Z"
+ },
+ "https://github.blog/changelog/2023-06-30-grouped-version-updates-for-dependabot-public-beta": {
+  "url": "https://github.blog/changelog/2023-06-30-grouped-version-updates-for-dependabot-public-beta",
+  "path": "018-changelog-2023-06-30-grouped-version-updates-for-dependabot-public-beta.txt",
+  "status": 200,
+  "n_bytes": 98820,
+  "sha256": "8fdb989dc6e2ed99c75f7db14f15566f8b10f8b3beef22732fc4d638620d23ca",
+  "fetched_at": "2026-10-30T03:18:44Z"
+ },
+ "https://github.blog/changelog/2023-07-03-new-rate-limit-is-coming-for-the-audit-log-api-endpoints": {
+  "url": "https://github.blog/changelog/2023-07-03-new-rate-limit-is-coming-for-the-audit-log-api-endpoints",
+  "path": "023-changelog-2023-07-03-new-rate-limit-is-coming-for-the-audit-log-api-endpoint.txt",
+  "status": 200,
+  "n_bytes": 101343,
+  "sha256": "58ca28fac4668102bd15630d77020f04443c4a67237426158edf8372266266ff",
+  "fetched_at": "2026-10-30T03:18:51Z"
+ },
+ "https://github.blog/changelog/2023-07-31-code-scanning-default-setup-is-now-available-for-swift": {
+  "url": "https://github.blog/changelog/2023-07-31-code-scanning-default-setup-is-now-available-for-swift",
+  "path": "052-changelog-2023-07-31-code-scanning-default-setup-is-now-available-for-swift.txt",
+  "status": 200,
+  "n_bytes": 101947,
+  "sha256": "f21dc4bd26539b65f57e274ede153aec76eb8ddae9546300cd825cbebb2d8017",
+  "fetched_at": "2026-10-30T03:19:34Z"
+ },
+ "https://github.blog/changelog/2023-07-31-secret-scanning-shows-metrics-for-push-protection-at-the-organization-level": {
+  "url": "https://github.blog/changelog/2023-07-31-secret-scanning-shows-metrics-for-push-protection-at-the-organization-level",
+  "path": "033-7-31-secret-scanning-shows-metrics-for-push-protection-at-the-organization-l.txt",
+  "status": 200,
+  "n_bytes": 130701,
+  "sha256": "491cb11ed270ece75a1e9c2a0c81c375edea57d2cf1f5b3f55b6ca53b84e6f2d",
+  "fetched_at": "2026-10-30T03:19:06Z"
+ },
+ "https://github.blog/changelog/2023-08-01-new-rate-limit-for-the-audit-log-api-endpoints-is-active": {
+  "url": "https://github.blog/changelog/2023-08-01-new-rate-limit-for-the-audit-log-api-endpoints-is-active",
+  "path": "016-changelog-2023-08-01-new-rate-limit-for-the-audit-log-api-endpoints-is-activ.txt",
+  "status": 200,
+  "n_bytes": 101228,
+  "sha256": "47802cf6464aa7d524edda063657a82385836396dc44a04cc0e8290cf022ac4a",
+  "fetched_at": "2026-10-30T03:18:41Z"
+ },
+ "https://github.blog/changelog/2023-08-02-pnpm-support-for-dependency-graph-dependabot-alerts-and-dependabot-security-updates": {
+  "url": "https://github.blog/changelog/2023-08-02-pnpm-support-for-dependency-graph-dependabot-alerts-and-dependabot-security-updates",
+  "path": "057-m-support-for-dependency-graph-dependabot-alerts-and-dependabot-security-upd.txt",
+  "status": 200,
+  "n_bytes": 97388,
+  "sha256": "86d2b9caad2054d93a44a1bbcd2c9058d43e5829aeddb1ed1c57a23e5ed5ae20",
+  "fetched_at": "2026-10-30T03:19:40Z"
+ },
+ "https://github.blog/changelog/2023-08-03-request-a-cve-identifier-for-your-repository-security-advisory-via-rest-api": {
+  "url": "https://github.blog/changelog/2023-08-03-request-a-cve-identifier-for-your-repository-security-advisory-via-rest-api",
+  "path": "039-8-03-request-a-cve-identifier-for-your-repository-security-advisory-via-rest.txt",
+  "status": 200,
+  "n_bytes": 98697,
+  "sha256": "284116fb1debdc0862d4246c3f7f8f0c81cff79b821cb9b74e456dbfed434912",
+  "fetched_at": "2026-10-30T03:19:15Z"
+ },
+ "https://github.blog/changelog/2023-08-10-actions-runs-triggered-from-tags-or-forks-with-the-same-name-as-a-protected-branch-will-now-be-blocked": {
+  "url": "https://github.blog/changelog/2023-08-10-actions-runs-triggered-from-tags-or-forks-with-the-same-name-as-a-protected-branch-will-now-be-blocked",
+  "path": "046-from-tags-or-forks-with-the-same-name-as-a-protected-branch-will-now-be-bloc.txt",
+  "status": 200,
+  "n_bytes": 128643,
+  "sha256": "ea99dacdb91744628eb8c3141dfac94d56f193baf5f36fc934895dce62bd8f04",
+  "fetched_at": "2026-10-30T03:19:25Z"
+ },
+ "https://github.blog/changelog/2023-08-10-group-dependabot-version-updates-by-development-or-production-dependencies": {
+  "url": "https://github.blog/changelog/2023-08-10-group-dependabot-version-updates-by-development-or-production-dependencies",
+  "path": "019-08-10-group-dependabot-version-updates-by-development-or-production-dependen.txt",
+  "status": 200,
+  "n_bytes": 97574,
+  "sha256": "e1f0c7674956c7e1a7a7c3782b6dee2f7c943c7527ce2f92736cb1706e7e9271",
+  "fetched_at": "2026-10-30T03:18:45Z"
+ },
+ "https://github.blog/changelog/2023-08-21-repository-actions-runners-list": {
+  "url": "https://github.blog/changelog/2023-08-21-repository-actions-runners-list",
+  "path": "045-changelog-2023-08-21-repository-actions-runners-list.txt",
+  "status": 200,
+  "n_bytes": 98913,
+  "sha256": "7c273298a1569deef5a8d347a881b3c457f57388930b57e3a15d98ab93b1b088",
+  "fetched_at": "2026-10-30T03:19:24Z"
+ },
+ "https://github.blog/changelog/2023-08-22-upgrade-with-an-enterprise-account": {
+  "url": "https://github.blog/changelog/2023-08-22-upgrade-with-an-enterprise-account",
+  "path": "010-changelog-2023-08-22-upgrade-with-an-enterprise-account.txt",
+  "status": 200,
+  "n_bytes": 100851,
+  "sha256": "17212bc5bad1e474beac66ec66cf14d15d1359393a435fb9b13f91ef7b58e015",
+  "fetched_at": "2026-10-30T03:18:32Z"
+ },
+ "https://github.blog/changelog/2023-08-29-github-actions-review-network-access-settings-for-the-self-hosted-runners": {
+  "url": "https://github.blog/changelog/2023-08-29-github-actions-review-network-access-settings-for-the-self-hosted-runners",
+  "path": "059-08-29-github-actions-review-network-access-settings-for-the-self-hosted-runn.txt",
+  "status": 200,
+  "n_bytes": 97213,
+  "sha256": "03e7bb90de07ddaef8adbcac9aa3ca25147576f20be72e50836e41e59d38aabf",
+  "fetched_at": "2026-10-30T03:19:43Z"
+ },
+ "https://github.blog/changelog/2023-09-13-github-actions-updates-to-github_ref-and-github-ref": {
+  "url": "https://github.blog/changelog/2023-09-13-github-actions-updates-to-github_ref-and-github-ref",
+  "path": "036-changelog-2023-09-13-github-actions-updates-to-github_ref-and-github-ref.txt",
+  "status": 200,
+  "n_bytes": 96497,
+  "sha256": "3cf038ecccb731f58551f671692cad71fb1f20b7ade41a8dd06692b2fea5c1ce",
+  "fetched_at": "2026-10-30T03:19:11Z"
+ },
+ "https://github.blog/changelog/2023-09-14-custom-auto-triage-rules-for-dependabot-alerts-public-beta": {
+  "url": "https://github.blog/changelog/2023-09-14-custom-auto-triage-rules-for-dependabot-alerts-public-beta",
+  "path": "005-changelog-2023-09-14-custom-auto-triage-rules-for-dependabot-alerts-public-b.txt",
+  "status": 200,
+  "n_bytes": 141303,
+  "sha256": "0e814daef109ac8ab0604d4251f2a94db2843481f3f60d95b57fccae21c97e1b",
+  "fetched_at": "2026-10-30T03:18:25Z"
+ },
+ "https://github.blog/changelog/2023-09-25-breaking-change-to-github-copilot-service-endpoints": {
+  "url": "https://github.blog/changelog/2023-09-25-breaking-change-to-github-copilot-service-endpoints",
+  "path": "038-changelog-2023-09-25-breaking-change-to-github-copilot-service-endpoints.txt",
+  "status": 200,
+  "n_bytes": 99504,
+  "sha256": "fc44f28a95fcebeb35c95dd39987a6708d91c2e9ede7bb6f640d5778dd5f6fa3",
+  "fetched_at": "2026-10-30T03:19:14Z"
+ },
+ "https://github.blog/changelog/2023-09-26-npm-provenance-general-availability": {
+  "url": "https://github.blog/changelog/2023-09-26-npm-provenance-general-availability",
+  "path": "061-changelog-2023-09-26-npm-provenance-general-availability.txt",
+  "status": 200,
+  "n_bytes": 98304,
+  "sha256": "244c891747b2159d7e13140d5965b201b1e3d11ec52630df7a8d46a74a8341cc",
+  "fetched_at": "2026-10-30T03:19:46Z"
+ },
+ "https://github.blog/changelog/2023-09-29-temporary-private-forks-can-now-be-deleted-from-repository-advisories": {
+  "url": "https://github.blog/changelog/2023-09-29-temporary-private-forks-can-now-be-deleted-from-repository-advisories",
+  "path": "055-2023-09-29-temporary-private-forks-can-now-be-deleted-from-repository-adviso.txt",
+  "status": 200,
+  "n_bytes": 98452,
+  "sha256": "bc762fd5710b17f457f5ed44380b39b305c9a19ab20c09638be490acc377f4f3",
+  "fetched_at": "2026-10-30T03:19:38Z"
+ },
+ "https://github.blog/changelog/2023-10-09-updated-ip-addresses-for-github-enterprise-importer": {
+  "url": "https://github.blog/changelog/2023-10-09-updated-ip-addresses-for-github-enterprise-importer",
+  "path": "053-changelog-2023-10-09-updated-ip-addresses-for-github-enterprise-importer.txt",
+  "status": 200,
+  "n_bytes": 98707,
+  "sha256": "2d0485b959f854158d4e56a386176b67d9f5acb5ce66898b254a837238c60e4d",
+  "fetched_at": "2026-10-30T03:19:35Z"
+ },
+ "https://github.blog/changelog/2023-10-17-webhook-delivery-logs-will-only-be-retained-for-3-days": {
+  "url": "https://github.blog/changelog/2023-10-17-webhook-delivery-logs-will-only-be-retained-for-3-days",
+  "path": "015-changelog-2023-10-17-webhook-delivery-logs-will-only-be-retained-for-3-days.txt",
+  "status": 200,
+  "n_bytes": 97621,
+  "sha256": "275c7211fb4fdff92019638d1314b1f3580dc046ff43b4aca279d36bac06fdb8",
+  "fetched_at": "2026-10-30T03:18:40Z"
+ },
+ "https://github.blog/changelog/2023-10-18-migrate-tag-protections-to-repository-rules": {
+  "url": "https://github.blog/changelog/2023-10-18-migrate-tag-protections-to-repository-rules",
+  "path": "049-changelog-2023-10-18-migrate-tag-protections-to-repository-rules.txt",
+  "status": 200,
+  "n_bytes": 130484,
+  "sha256": "bd0a7cfca54bcfe9685cb5e65d50d8b4df05177433dff5da4aa24b2a7f4ba3d4",
+  "fetched_at": "2026-10-30T03:19:30Z"
+ },
+ "https://github.blog/changelog/2023-10-19-mercury-is-now-a-github-secret-scanning-partner": {
+  "url": "https://github.blog/changelog/2023-10-19-mercury-is-now-a-github-secret-scanning-partner",
+  "path": "043-changelog-2023-10-19-mercury-is-now-a-github-secret-scanning-partner.txt",
+  "status": 200,
+  "n_bytes": 98281,
+  "sha256": "b4abeaf3849123998db5be774bfa006afb4995a96ea15eaff1f009bc73eca2a8",
+  "fetched_at": "2026-10-30T03:19:21Z"
+ },
+ "https://github.blog/changelog/2023-10-20-code-scanning-with-codeql-supports-go-1-21": {
+  "url": "https://github.blog/changelog/2023-10-20-code-scanning-with-codeql-supports-go-1-21",
+  "path": "042-changelog-2023-10-20-code-scanning-with-codeql-supports-go-1-21.txt",
+  "status": 200,
+  "n_bytes": 97504,
+  "sha256": "cdf9be8099ca1e14cc2e770d959292f5cf99d8189518ad44865212a8564301e7",
+  "fetched_at": "2026-10-30T03:19:20Z"
+ },
+ "https://github.blog/changelog/2023-10-24-github-advanced-security-is-part-of-github-enterprise-cloud-trial": {
+  "url": "https://github.blog/changelog/2023-10-24-github-advanced-security-is-part-of-github-enterprise-cloud-trial",
+  "path": "030-log-2023-10-24-github-advanced-security-is-part-of-github-enterprise-cloud-t.txt",
+  "status": 200,
+  "n_bytes": 129796,
+  "sha256": "c6050ff11775828993fb24585ba106eb42704cad5904f5e6027762968c402f08",
+  "fetched_at": "2026-10-30T03:19:02Z"
+ },
+ "https://github.blog/changelog/2023-10-31-the-comment-box-becomes-more-consistent-and-accessible": {
+  "url": "https://github.blog/changelog/2023-10-31-the-comment-box-becomes-more-consistent-and-accessible",
+  "path": "003-changelog-2023-10-31-the-comment-box-becomes-more-consistent-and-accessible.txt",
+  "status": 200,
+  "n_bytes": 100234,
+  "sha256": "336641409874c5ebd434411325a6eeaffb320dda4903aaf3a7777033916df2ad",
+  "fetched_at": "2026-10-30T03:18:22Z"
+ },
+ "https://github.blog/changelog/2023-11-08-code-security-insights-on-the-organization-level-security-tab-beta": {
+  "url": "https://github.blog/changelog/2023-11-08-code-security-insights-on-the-organization-level-security-tab-beta",
+  "path": "025-og-2023-11-08-code-security-insights-on-the-organization-level-security-tab-.txt",
+  "status": 200,
+  "n_bytes": 107564,
+  "sha256": "9e8cb43deb36c0df7697f340fa88d8fea2d72adc9a4d9e83ba997d2fc4b14ad4",
+  "fetched_at": "2026-10-30T03:18:54Z"
+ },
+ "https://github.blog/changelog/2023-11-27-creating-temporary-private-forks-via-the-rest-api": {
+  "url": "https://github.blog/changelog/2023-11-27-creating-temporary-private-forks-via-the-rest-api",
+  "path": "060-changelog-2023-11-27-creating-temporary-private-forks-via-the-rest-api.txt",
+  "status": 200,
+  "n_bytes": 98507,
+  "sha256": "82a8d7ab2fd83a6c8eee8eb3f10228d88d908181ee87b48523840d8664be7e14",
+  "fetched_at": "2026-10-30T03:19:44Z"
+ },
+ "https://github.blog/changelog/2023-11-28-improvements-to-nuget-support-for-dependabot": {
+  "url": "https://github.blog/changelog/2023-11-28-improvements-to-nuget-support-for-dependabot",
+  "path": "048-changelog-2023-11-28-improvements-to-nuget-support-for-dependabot.txt",
+  "status": 200,
+  "n_bytes": 98155,
+  "sha256": "218edc7b8f86561150d832b8809eb3a0f59e95b09839884cf044bf846f2d18f6",
+  "fetched_at": "2026-10-30T03:19:28Z"
+ },
+ "https://github.blog/changelog/2023-12-12-secret-scanning-detects-secrets-in-github-pull-requests": {
+  "url": "https://github.blog/changelog/2023-12-12-secret-scanning-detects-secrets-in-github-pull-requests",
+  "path": "011-changelog-2023-12-12-secret-scanning-detects-secrets-in-github-pull-requests.txt",
+  "status": 200,
+  "n_bytes": 126823,
+  "sha256": "73c500b08705134c64cdc2c21efe8e63a7068f2c96f78e4812dc402d7e40bd94",
+  "fetched_at": "2026-10-30T03:18:34Z"
+ },
+ "https://github.blog/changelog/2023-12-13-codeql-2-15-4-performance-improvements-and-updated-language-support": {
+  "url": "https://github.blog/changelog/2023-12-13-codeql-2-15-4-performance-improvements-and-updated-language-support",
+  "path": "035-g-2023-12-13-codeql-2-15-4-performance-improvements-and-updated-language-sup.txt",
+  "status": 200,
+  "n_bytes": 98846,
+  "sha256": "d2f61dd6c1bd9e270f273ad83f039a8cdcc6e40a57072184e1fea8376ca5cadc",
+  "fetched_at": "2026-10-30T03:19:09Z"
+ },
+ "https://github.blog/changelog/2023-12-15-emu-scim-audit-log-metadata-and-sync-status-enhancements-are-generally-available": {
+  "url": "https://github.blog/changelog/2023-12-15-emu-scim-audit-log-metadata-and-sync-status-enhancements-are-generally-available",
+  "path": "027-emu-scim-audit-log-metadata-and-sync-status-enhancements-are-generally-avail.txt",
+  "status": 200,
+  "n_bytes": 102716,
+  "sha256": "29a297945da7c19fb155987c1520d4909b09ca8b447b3b4e8110053cc54b037c",
+  "fetched_at": "2026-10-30T03:18:58Z"
+ },
+ "https://github.blog/changelog/2023-12-19-code-scanning-default-setup-is-now-available-for-self-hosted-runners-on-github-com": {
+  "url": "https://github.blog/changelog/2023-12-19-code-scanning-default-setup-is-now-available-for-self-hosted-runners-on-github-com",
+  "path": "041-de-scanning-default-setup-is-now-available-for-self-hosted-runners-on-github.txt",
+  "status": 200,
+  "n_bytes": 99963,
+  "sha256": "743a243a75a2e0262b0c5a973fd6be25414d629d2ce3dbc29b51561403e25076",
+  "fetched_at": "2026-10-30T03:19:18Z"
+ },
+ "https://github.blog/changelog/2024-01-30-code-faster-and-better-with-github-copilots-new-features-in-visual-studio": {
+  "url": "https://github.blog/changelog/2024-01-30-code-faster-and-better-with-github-copilots-new-features-in-visual-studio",
+  "path": "047-01-30-code-faster-and-better-with-github-copilots-new-features-in-visual-stu.txt",
+  "status": 200,
+  "n_bytes": 107313,
+  "sha256": "9a88bde9754b18d49db015140feb43e6f1dabb08da4b7c7ad8f1262deb345029",
+  "fetched_at": "2026-10-30T03:19:26Z"
+ }
+}

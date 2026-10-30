@@ -1,0 +1,130 @@
+From 1a4ecb7575f12dd2330daf43e2518618c3f6e8cf Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Fri, 3 Jul 2026 20:16:55 -0400
+Subject: [PATCH] ci(release): switch npm publishing to OIDC trusted publishing
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The NPM_TOKEN used by publish-npm is dead (npm classic-token sunset) —
+both June release attempts failed publishing with a disguised auth error
+(E404 on the publish PUT) after PyPI legs succeeded. Each
+@modelcontextprotocol/* package's npm trusted publisher is being bound to
+this workflow (release.yml) + the release environment, so publish-npm now
+authenticates via OIDC instead of a token:
+
+- add id-token: write permission to publish-npm (required to mint the
+  OIDC token; contents: read added explicitly since setting permissions
+  drops the defaults)
+- upgrade the npm CLI in the publish job (trusted publishing requires
+  npm >= 11.5.1; Node 22 bundles an older npm)
+- drop NODE_AUTH_TOKEN from the publish step
+
+Also touch each TypeScript server's README (add everything's missing
+License section; link each package's npm page) so scripts/release.py
+includes all four packages in the next npm publish matrix — they've been
+stranded on npm at 2026.1.26 while PyPI advanced to 2026.6.16.
+
+See #4463 for the rollout plan.
+
+Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01AViME1R9ES2UXT1uQDx1TG
+---
+ .github/workflows/release.yml    | 11 +++++++++--
+ src/everything/README.md         |  4 ++++
+ src/filesystem/README.md         |  2 ++
+ src/memory/README.md             |  2 ++
+ src/sequentialthinking/README.md |  2 ++
+ 5 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index a3ad5387d3..0d9151b903 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -156,6 +156,9 @@ jobs:
+         package: ${{ fromJson(needs.create-metadata.outputs.npm_packages) }}
+     name: Build ${{ matrix.package }}
+     environment: release
++    permissions:
++      contents: read
++      id-token: write # Required for npm trusted publishing (OIDC)
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v6
+@@ -168,6 +171,10 @@ jobs:
+           cache: npm
+           registry-url: 'https://registry.npmjs.org'
+ 
++      # Trusted publishing requires npm >= 11.5.1; Node 22 bundles an older npm
++      - name: Update npm for trusted publishing
++        run: npm install -g npm@latest
++
+       - name: Install dependencies
+         working-directory: src/${{ matrix.package }}
+         run: npm ci
+@@ -186,12 +193,12 @@ jobs:
+         working-directory: src/${{ matrix.package }}
+         run: npm run build
+ 
++      # Authenticates via OIDC trusted publishing (no token) — each package's
++      # npm trusted publisher is bound to this workflow + the release environment
+       - name: Publish package
+         working-directory: src/${{ matrix.package }}
+         run: |
+           npm publish --access public
+-        env:
+-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+ 
+   create-release:
+     needs: [update-packages, create-metadata, publish-pypi, publish-npm]
+diff --git a/src/everything/README.md b/src/everything/README.md
+index 34a948a2fe..a5943c6fce 100644
+--- a/src/everything/README.md
++++ b/src/everything/README.md
+@@ -134,3 +134,7 @@ npx @modelcontextprotocol/server-everything sse
+ ```shell
+ npx @modelcontextprotocol/server-everything streamableHttp
+ ```
++
++## License
++
++This MCP server is licensed under the MIT License. This means you are free to use, modify, and distribute the software, subject to the terms and conditions of the MIT License. For more details, please see the LICENSE file in the project repository.
+diff --git a/src/filesystem/README.md b/src/filesystem/README.md
+index c099da1e8c..76cabd0cce 100644
+--- a/src/filesystem/README.md
++++ b/src/filesystem/README.md
+@@ -2,6 +2,8 @@
+ 
+ Node.js server implementing Model Context Protocol (MCP) for filesystem operations.
+ 
++Published on npm as [`@modelcontextprotocol/server-filesystem`](https://www.npmjs.com/package/@modelcontextprotocol/server-filesystem).
++
+ ## Features
+ 
+ - Read/write files
+diff --git a/src/memory/README.md b/src/memory/README.md
+index e9fb37e241..0f294231a9 100644
+--- a/src/memory/README.md
++++ b/src/memory/README.md
+@@ -2,6 +2,8 @@
+ 
+ A basic implementation of persistent memory using a local knowledge graph. This lets Claude remember information about the user across chats.
+ 
++Published on npm as [`@modelcontextprotocol/server-memory`](https://www.npmjs.com/package/@modelcontextprotocol/server-memory).
++
+ ## Core Concepts
+ 
+ ### Entities
+diff --git a/src/sequentialthinking/README.md b/src/sequentialthinking/README.md
+index 45d2c30f75..b6b853aa56 100644
+--- a/src/sequentialthinking/README.md
++++ b/src/sequentialthinking/README.md
+@@ -2,6 +2,8 @@
+ 
+ An MCP server implementation that provides a tool for dynamic and reflective problem-solving through a structured thinking process.
+ 
++Published on npm as [`@modelcontextprotocol/server-sequential-thinking`](https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking).
++
+ ## Features
+ 
+ - Break down complex problems into manageable steps

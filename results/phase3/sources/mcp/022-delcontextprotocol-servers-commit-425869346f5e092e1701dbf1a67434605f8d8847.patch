@@ -1,0 +1,137 @@
+From dca1e7ed6fde63f70da117b861f3c177340dd21a Mon Sep 17 00:00:00 2001
+From: Adam Jones <adamj+git@anthropic.com>
+Date: Mon, 5 Jan 2026 18:53:30 +0000
+Subject: [PATCH] Add workflow to handle README-only PRs
+
+Adds a GitHub Actions workflow that:
+- Detects PRs that only modify README.md
+- Comments explaining we no longer accept new server additions
+- Directs contributors to the MCP registry instead
+- Allows updates/removals via /i-promise-this-is-not-a-new-server
+- Uses labels (readme: pending / readme: ready for review) for filtering
+- Minimizes bot comment after confirmation to reduce clutter
+
+Claude-Generated-By: Claude Code (cli/claude-opus-4-5=100%)
+Claude-Steers: 10
+Claude-Permission-Prompts: 0
+Claude-Escapes: 0
+---
+ .github/workflows/readme-pr-check.yml | 109 ++++++++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 .github/workflows/readme-pr-check.yml
+
+diff --git a/.github/workflows/readme-pr-check.yml b/.github/workflows/readme-pr-check.yml
+new file mode 100644
+index 0000000000..649316d7cf
+--- /dev/null
++++ b/.github/workflows/readme-pr-check.yml
+@@ -0,0 +1,109 @@
++name: README PR Check
++
++on:
++  pull_request:
++    types: [opened]
++    paths:
++      - 'README.md'
++  issue_comment:
++    types: [created]
++
++jobs:
++  check-readme-only:
++    if: github.event_name == 'pull_request'
++    runs-on: ubuntu-latest
++    permissions:
++      contents: read
++      pull-requests: write
++    steps:
++      - name: Check files and comment if README-only
++        uses: actions/github-script@v7
++        with:
++          script: |
++            const { owner, repo } = context.repo;
++            const prNumber = context.payload.pull_request.number;
++
++            const { data: files } = await github.rest.pulls.listFiles({ owner, repo, pull_number: prNumber });
++
++            if (files.length !== 1 || files[0].filename !== 'README.md') {
++              console.log('PR modifies files other than README, skipping');
++              return;
++            }
++
++            // Check if we've already commented
++            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number: prNumber });
++            if (comments.some(c => c.user.login === 'github-actions[bot]' && c.body.includes('no longer accepting PRs to add new servers'))) {
++              console.log('Already commented on this PR, skipping');
++              return;
++            }
++
++            await github.rest.issues.addLabels({ owner, repo, issue_number: prNumber, labels: ['readme: pending'] });
++
++            await github.rest.issues.createComment({
++              owner,
++              repo,
++              issue_number: prNumber,
++              body: `Thanks for your contribution!
++
++**We are no longer accepting PRs to add new servers to the README.** The server lists are deprecated and will eventually be removed entirely, replaced by the registry.
++
++👉 **To add a new MCP server:** Please publish it to the [MCP Server Registry](https://github.com/modelcontextprotocol/registry) instead. You can browse published servers at [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io/).
++
++👉 **If this PR updates or removes an existing entry:** We do still accept these changes. Please reply with \`/i-promise-this-is-not-a-new-server\` to continue.
++
++If this PR is adding a new server, please close it and submit to the registry instead.`
++            });
++
++  handle-confirmation:
++    if: github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '/i-promise-this-is-not-a-new-server')
++    runs-on: ubuntu-latest
++    permissions:
++      pull-requests: write
++    steps:
++      - name: Swap labels and minimize comments
++        uses: actions/github-script@v7
++        with:
++          script: |
++            const { owner, repo } = context.repo;
++            const prNumber = context.payload.issue.number;
++
++            // Check if pending label exists
++            const { data: labels } = await github.rest.issues.listLabelsOnIssue({ owner, repo, issue_number: prNumber });
++            if (!labels.some(l => l.name === 'readme: pending')) {
++              console.log('No pending label found, skipping');
++              return;
++            }
++
++            // Swap labels
++            try {
++              await github.rest.issues.removeLabel({ owner, repo, issue_number: prNumber, name: 'readme: pending' });
++            } catch (e) {}
++            await github.rest.issues.addLabels({ owner, repo, issue_number: prNumber, labels: ['readme: ready for review'] });
++
++            // Find the bot's original comment
++            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number: prNumber });
++            const botComment = comments.find(c =>
++              c.user.login === 'github-actions[bot]' &&
++              c.body.includes('no longer accepting PRs to add new servers')
++            );
++
++            // Minimize both comments via GraphQL
++            const minimizeComment = async (nodeId) => {
++              await github.graphql(`
++                mutation($id: ID!) {
++                  minimizeComment(input: {subjectId: $id, classifier: RESOLVED}) {
++                    minimizedComment { isMinimized }
++                  }
++                }
++              `, { id: nodeId });
++            };
++
++            if (botComment) {
++              await minimizeComment(botComment.node_id);
++            }
++
++            // Only minimize user's comment if it's just the command
++            const userComment = context.payload.comment.body.trim();
++            if (userComment === '/i-promise-this-is-not-a-new-server') {
++              await minimizeComment(context.payload.comment.node_id);
++            }

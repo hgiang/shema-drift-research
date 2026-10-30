@@ -1,0 +1,163 @@
+From c7e0c7e7302cd94a2f36be753e2b18331504407c Mon Sep 17 00:00:00 2001
+From: Supun Geethanjana Jayasinghe
+ <36534552+SupunGeethanjana@users.noreply.github.com>
+Date: Sun, 15 Mar 2026 21:35:24 +0530
+Subject: [PATCH] add tools | 3573 (#3589)
+
+feat(git): add tool annotations
+
+Adds MCP ToolAnnotations to all 12 git server tools, marking read-only operations (status, diff, log, show, branch) and distinguishing destructive (reset) from non-destructive write operations (add, commit, create_branch, checkout).
+
+Fixes #3573
+---
+ src/git/src/mcp_server_git/server.py | 75 +++++++++++++++++++++++++++-
+ 1 file changed, 73 insertions(+), 2 deletions(-)
+
+diff --git a/src/git/src/mcp_server_git/server.py b/src/git/src/mcp_server_git/server.py
+index d2aa3782dc..5ce953e545 100644
+--- a/src/git/src/mcp_server_git/server.py
++++ b/src/git/src/mcp_server_git/server.py
+@@ -10,6 +10,7 @@
+     Tool,
+     ListRootsResult,
+     RootsCapability,
++    ToolAnnotations,
+ )
+ from enum import Enum
+ import git
+@@ -309,63 +310,133 @@ async def list_tools() -> list[Tool]:
+                 name=GitTools.STATUS,
+                 description="Shows the working tree status",
+                 inputSchema=GitStatus.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.DIFF_UNSTAGED,
+                 description="Shows changes in the working directory that are not yet staged",
+                 inputSchema=GitDiffUnstaged.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.DIFF_STAGED,
+                 description="Shows changes that are staged for commit",
+                 inputSchema=GitDiffStaged.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.DIFF,
+                 description="Shows differences between branches or commits",
+                 inputSchema=GitDiff.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.COMMIT,
+                 description="Records changes to the repository",
+                 inputSchema=GitCommit.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=False,
++                    destructiveHint=False,
++                    idempotentHint=False,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.ADD,
+                 description="Adds file contents to the staging area",
+                 inputSchema=GitAdd.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=False,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.RESET,
+                 description="Unstages all staged changes",
+                 inputSchema=GitReset.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=False,
++                    destructiveHint=True,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.LOG,
+                 description="Shows the commit logs",
+                 inputSchema=GitLog.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.CREATE_BRANCH,
+                 description="Creates a new branch from an optional base branch",
+                 inputSchema=GitCreateBranch.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=False,
++                    destructiveHint=False,
++                    idempotentHint=False,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.CHECKOUT,
+                 description="Switches branches",
+                 inputSchema=GitCheckout.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=False,
++                    destructiveHint=False,
++                    idempotentHint=False,
++                    openWorldHint=False,
++                ),
+             ),
+             Tool(
+                 name=GitTools.SHOW,
+                 description="Shows the contents of a commit",
+                 inputSchema=GitShow.model_json_schema(),
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             ),
+-
+             Tool(
+                 name=GitTools.BRANCH,
+                 description="List Git branches",
+                 inputSchema=GitBranch.model_json_schema(),
+-
++                annotations=ToolAnnotations(
++                    readOnlyHint=True,
++                    destructiveHint=False,
++                    idempotentHint=True,
++                    openWorldHint=False,
++                ),
+             )
+         ]
+ 

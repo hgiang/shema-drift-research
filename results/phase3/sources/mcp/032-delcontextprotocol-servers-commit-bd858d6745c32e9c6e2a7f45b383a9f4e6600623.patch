@@ -1,0 +1,33 @@
+From bd858d6745c32e9c6e2a7f45b383a9f4e6600623 Mon Sep 17 00:00:00 2001
+From: Paul Carleton <paulc@anthropic.com>
+Date: Thu, 18 Dec 2025 14:17:16 +0000
+Subject: [PATCH] fix: add contents write permission to update-packages job
+ (#3138)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The update-packages job needs to push tags to the repository but was
+missing the required `permissions: contents: write`. This caused the
+workflow to fail with a 403 error when trying to push the version tag.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-authored-by: Claude <noreply@anthropic.com>
+---
+ .github/workflows/release.yml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index 2da6ee94bd..20c9f83e70 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -69,6 +69,8 @@ jobs:
+     if: ${{ needs.create-metadata.outputs.npm_packages != '[]' || needs.create-metadata.outputs.pypi_packages != '[]' }}
+     runs-on: ubuntu-latest
+     environment: release
++    permissions:
++      contents: write
+     outputs:
+       changes_made: ${{ steps.commit.outputs.changes_made }}
+     steps:

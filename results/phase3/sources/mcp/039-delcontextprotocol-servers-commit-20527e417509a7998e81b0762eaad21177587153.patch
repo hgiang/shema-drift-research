@@ -1,0 +1,222 @@
+From 20527e417509a7998e81b0762eaad21177587153 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Sat, 13 Dec 2025 15:55:07 -0500
+Subject: [PATCH] Updated doc in all tools
+
+---
+ src/everything/tools/echo.ts                           | 2 +-
+ src/everything/tools/get-annotated-message.ts          | 2 +-
+ src/everything/tools/get-env.ts                        | 2 +-
+ src/everything/tools/get-resource-links.ts             | 2 +-
+ src/everything/tools/get-resource-reference.ts         | 2 +-
+ src/everything/tools/get-roots-list.ts                 | 2 +-
+ src/everything/tools/get-structured-content.ts         | 2 +-
+ src/everything/tools/get-sum.ts                        | 2 +-
+ src/everything/tools/get-tiny-image.ts                 | 2 +-
+ src/everything/tools/gzip-file-as-resource.ts          | 2 +-
+ src/everything/tools/toggle-simulated-logging.ts       | 2 +-
+ src/everything/tools/toggle-subscriber-updates.ts      | 2 +-
+ src/everything/tools/trigger-elicitation-request.ts    | 2 +-
+ src/everything/tools/trigger-long-running-operation.ts | 2 +-
+ src/everything/tools/trigger-sampling-request.ts       | 4 ++--
+ 15 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/src/everything/tools/echo.ts b/src/everything/tools/echo.ts
+index 0a3d1a934c..204a2fb49b 100644
+--- a/src/everything/tools/echo.ts
++++ b/src/everything/tools/echo.ts
+@@ -16,7 +16,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'echo' Tool with the provided McpServer instance.
++ * Registers the 'echo' tool.
+  *
+  * The registered tool validates input arguments using the EchoSchema and
+  * returns a response that echoes the message provided in the arguments.
+diff --git a/src/everything/tools/get-annotated-message.ts b/src/everything/tools/get-annotated-message.ts
+index b842c9c573..ead0660e8f 100644
+--- a/src/everything/tools/get-annotated-message.ts
++++ b/src/everything/tools/get-annotated-message.ts
+@@ -24,7 +24,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'get-annotated-message' tool with the provided McpServer instance.
++ * Registers the 'get-annotated-message' tool.
+  *
+  * The registered tool generates and sends messages with specific types, such as error,
+  * success, or debug, carrying associated annotations like priority level and intended
+diff --git a/src/everything/tools/get-env.ts b/src/everything/tools/get-env.ts
+index a822e60776..0adbf5a14d 100644
+--- a/src/everything/tools/get-env.ts
++++ b/src/everything/tools/get-env.ts
+@@ -11,7 +11,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'get-env' tool with the given MCP server.
++ * Registers the 'get-env' tool.
+  *
+  * The registered tool Retrieves and returns the environment variables
+  * of the current process as a JSON-formatted string encapsulated in a text response.
+diff --git a/src/everything/tools/get-resource-links.ts b/src/everything/tools/get-resource-links.ts
+index 913e1f393b..b1fc627e20 100644
+--- a/src/everything/tools/get-resource-links.ts
++++ b/src/everything/tools/get-resource-links.ts
+@@ -28,7 +28,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'get-resource-reference' tool with the provided McpServer instance.
++ * Registers the 'get-resource-reference' tool.
+  *
+  * The registered tool retrieves a specified number of resource links and their metadata.
+  * Resource links are dynamically generated as either text or binary blob resources,
+diff --git a/src/everything/tools/get-resource-reference.ts b/src/everything/tools/get-resource-reference.ts
+index 0a5284b226..d3dc5d3ecb 100644
+--- a/src/everything/tools/get-resource-reference.ts
++++ b/src/everything/tools/get-resource-reference.ts
+@@ -31,7 +31,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'get-resource-reference' tool with the provided McpServer instance.
++ * Registers the 'get-resource-reference' tool.
+  *
+  * The registered tool validates and processes arguments for retrieving a resource
+  * reference. Supported resource types include predefined `RESOURCE_TYPE_TEXT` and
+diff --git a/src/everything/tools/get-roots-list.ts b/src/everything/tools/get-roots-list.ts
+index 60aba78f15..e073b60c51 100644
+--- a/src/everything/tools/get-roots-list.ts
++++ b/src/everything/tools/get-roots-list.ts
+@@ -12,7 +12,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'get-roots-list' tool with the given MCP server.
++ * Registers the 'get-roots-list' tool.
+  *
+  * If the client does not support the roots capability, the tool is not registered.
+  *
+diff --git a/src/everything/tools/get-structured-content.ts b/src/everything/tools/get-structured-content.ts
+index 2e19d2a76a..a83f72a43d 100644
+--- a/src/everything/tools/get-structured-content.ts
++++ b/src/everything/tools/get-structured-content.ts
+@@ -30,7 +30,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'get-structured-content' tool with the provided McpServer instance.
++ * Registers the 'get-structured-content' tool.
+  *
+  * The registered tool processes incoming arguments using a predefined input schema,
+  * generates structured content with weather information including temperature,
+diff --git a/src/everything/tools/get-sum.ts b/src/everything/tools/get-sum.ts
+index e24566c1f1..522043c88f 100644
+--- a/src/everything/tools/get-sum.ts
++++ b/src/everything/tools/get-sum.ts
+@@ -17,7 +17,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'get-sum' tool with the provided McpServer instance.
++ * Registers the 'get-sum' tool.
+  **
+  * The registered tool processes input arguments, validates them using a predefined schema,
+  * calculates the sum of two numeric values, and returns the result in a content block.
+diff --git a/src/everything/tools/get-tiny-image.ts b/src/everything/tools/get-tiny-image.ts
+index ccfcdb8aba..720707d0ce 100644
+--- a/src/everything/tools/get-tiny-image.ts
++++ b/src/everything/tools/get-tiny-image.ts
+@@ -14,7 +14,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the "get-tiny-image" tool with the provided McpServer instance.
++ * Registers the "get-tiny-image" tool.
+  *
+  * The registered tool returns a response containing a small image alongside some
+  * descriptive text.
+diff --git a/src/everything/tools/gzip-file-as-resource.ts b/src/everything/tools/gzip-file-as-resource.ts
+index 4e1d0955de..608fcf4a0d 100644
+--- a/src/everything/tools/gzip-file-as-resource.ts
++++ b/src/everything/tools/gzip-file-as-resource.ts
+@@ -51,7 +51,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the `gzip-file-as-resource` tool with the provided MCP server.
++ * Registers the `gzip-file-as-resource` tool.
+  *
+  * The registered tool compresses input data using gzip, and makes the resulting file accessible
+  * as a resource for the duration of the session.
+diff --git a/src/everything/tools/toggle-simulated-logging.ts b/src/everything/tools/toggle-simulated-logging.ts
+index 4e157d980f..4941ed77d0 100644
+--- a/src/everything/tools/toggle-simulated-logging.ts
++++ b/src/everything/tools/toggle-simulated-logging.ts
+@@ -17,7 +17,7 @@ const config = {
+ const clients: Set<string | undefined> = new Set<string | undefined>();
+ 
+ /**
+- * Registers the `toggle-simulated-logging` tool with the provided MCP server.
++ * Registers the `toggle-simulated-logging` tool.
+  *
+  * The registered tool enables or disables the sending of periodic, random-leveled
+  * logging messages the connected client.
+diff --git a/src/everything/tools/toggle-subscriber-updates.ts b/src/everything/tools/toggle-subscriber-updates.ts
+index bb96c55a63..03b949e232 100644
+--- a/src/everything/tools/toggle-subscriber-updates.ts
++++ b/src/everything/tools/toggle-subscriber-updates.ts
+@@ -17,7 +17,7 @@ const config = {
+ const clients: Set<string | undefined> = new Set<string | undefined>();
+ 
+ /**
+- * Registers the `toggle-subscriber-updates` tool with the provided MCP server.
++ * Registers the `toggle-subscriber-updates` tool.
+  *
+  * The registered tool enables or disables the sending of periodic, simulated resource
+  * update messages the connected client for any subscriptions they have made.
+diff --git a/src/everything/tools/trigger-elicitation-request.ts b/src/everything/tools/trigger-elicitation-request.ts
+index 171803b785..55c82652ba 100644
+--- a/src/everything/tools/trigger-elicitation-request.ts
++++ b/src/everything/tools/trigger-elicitation-request.ts
+@@ -11,7 +11,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'trigger-elicitation-request' tool within the provided McpServer instance.
++ * Registers the 'trigger-elicitation-request' tool.
+  *
+  * The registered tool sends an elicitation request for the user to provide information
+  * based on a pre-defined schema of fields including text inputs, booleans, numbers,
+diff --git a/src/everything/tools/trigger-long-running-operation.ts b/src/everything/tools/trigger-long-running-operation.ts
+index db6b668627..8af45ce60b 100644
+--- a/src/everything/tools/trigger-long-running-operation.ts
++++ b/src/everything/tools/trigger-long-running-operation.ts
+@@ -20,7 +20,7 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'trigger-tong-running-operation' tool with the provided McpServer instance.
++ * Registers the 'trigger-tong-running-operation' tool.
+  *
+  * The registered tool starts a long-running operation defined by a specific duration and
+  * number of steps.
+diff --git a/src/everything/tools/trigger-sampling-request.ts b/src/everything/tools/trigger-sampling-request.ts
+index 2f687daaf9..5d2c6950d2 100644
+--- a/src/everything/tools/trigger-sampling-request.ts
++++ b/src/everything/tools/trigger-sampling-request.ts
+@@ -24,10 +24,10 @@ const config = {
+ };
+ 
+ /**
+- * Registers the 'trigger-sampling-request' tool within the provided McpServer instance.
++ * Registers the 'trigger-sampling-request' tool.
+  *
+  * The registered tool performs the following operations:
+- * - Validates incoming arguments using `SampleLLMSchema`.
++ * - Validates incoming arguments using `TriggerSamplingRequestSchema`.
+  * - Constructs a `sampling/createMessage` request object using provided prompt and maximum tokens.
+  * - Sends the request to the server for sampling.
+  * - Formats and returns the sampling result content to the client.

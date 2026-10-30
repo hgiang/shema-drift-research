@@ -638,6 +638,23 @@ site and film still show the September analysis; they are rebuilt in Phase 4.
   about-the-rest-api/breaking-changes` as GitHub's own schema-change page;
   `api.github.com/repos/modelcontextprotocol/servers` is 200. Spend unchanged at $19.69.
 
+- 2026-10-30 Collection (Task 2, $0, `phase3/fetch_sources.py`). Archive
+  `results/phase3/sources/`, 16 MB, 254 files, every sha256 in the per-source manifests
+  verified and nothing written outside the archive root. Enumerated in the window
+  2023-01-01 to 2026-09-30: Stripe 783 entries, GitHub 471, MCP 314, Slack 156; **60 drawn
+  and archived per source** in the `SEED_P3` order (`phase3/sampling.py`), 240 entries in
+  all. `robots.txt` was read once per host and respected; requests were paced at 1 s with
+  an identifying User-Agent and no credentials. Stripe and Slack serve markdown, GitHub
+  blog posts are full HTML, MCP entries are git patches.
+  Two notes for the coder. (a) GitHub's own schema-change page
+  (`docs.github.com/en/rest/about-the-rest-api/breaking-changes`) is archived as a GitHub
+  index page and is itself a source of units, so Task 3 codes it directly as well as the
+  drawn blog posts; its URL has no extension, so it is stored with a `.txt` name while the
+  manifest keeps the real URL. (b) The MCP and GitHub draws run over every entry in the
+  window, most of which touch no request parameter, so their qualifying-unit hit rate will
+  be low; if a source does not reach 60 units the fetcher is re-run with a larger
+  `--max-entries` and the new draw continues the same locked order. Spend unchanged at $19.69.
+
 ## Phase 3 pre-registration — LOCKED 2026-10-30
 
 Written before any page is fetched and before any Phase-3 model call. Execution plan: `phase3/PLAN.md`.

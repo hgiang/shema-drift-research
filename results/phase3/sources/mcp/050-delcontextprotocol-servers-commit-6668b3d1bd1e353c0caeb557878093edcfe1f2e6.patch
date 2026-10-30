@@ -1,0 +1,71 @@
+From 6668b3d1bd1e353c0caeb557878093edcfe1f2e6 Mon Sep 17 00:00:00 2001
+From: cliffhall <cliff@futurescale.com>
+Date: Tue, 29 Sep 2026 02:30:39 -0400
+Subject: [PATCH] fix(issue-triage): fail-closed snapshot steps, step 0 temp
+ dir, '#' in manifest issues
+
+Copilot round 7 on #4906:
+- the maintainer list is captured before jq, so a failed page fails the step
+- the pre-class count runs only on a successful pre-class
+- step 0 creates the run's temp dir and says to materialize the response first
+- the close loop accepts '#123' as well as '123' in the issue column
+
+Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+Signed-off-by: cliffhall <cliff@futurescale.com>
+---
+ .claude/skills/issue-triage/SKILL.md | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
+
+diff --git a/.claude/skills/issue-triage/SKILL.md b/.claude/skills/issue-triage/SKILL.md
+index dcd22c2d52..ce434f110c 100644
+--- a/.claude/skills/issue-triage/SKILL.md
++++ b/.claude/skills/issue-triage/SKILL.md
+@@ -81,7 +81,11 @@ one, list them with their classes for a maintainer to confirm, and go on with
+ pass 1 for the rest meanwhile.
+ 
+ ```sh
+-# Close as not planned, with the class's response (body in a file, so quoting is
++# The run's temp dir; create it once, before the first close, and reuse it.
++D=${D:-$(mktemp -d)}
++# Copy the class's response from Canned responses into "$D/response.md" (the
++# text inside the quote, with #ORIGINAL or the SDK link filled in) first.
++# Close as not planned, with that response (body in a file, so quoting is
+ # safe). An empty or missing response stops here instead of closing silently.
+ BODY=$(cat "$D/response.md") && [ -n "$BODY" ] \
+   && gh issue close <N> --repo modelcontextprotocol/servers --reason "not planned" --comment "$BODY" \
+@@ -310,9 +314,12 @@ gh pr list --repo $R --state open --limit 2000 \
+   > "$D/prs.json"
+ jq -e 'length < 2000' "$D/prs.json" >/dev/null \
+   || { echo "PR listing truncated or failed — raise --limit" >&2; rm -f "$D/prs.json"; }
+-gh api "repos/$R/collaborators?per_page=100" --paginate \
+-  --jq '[.[] | select(.role_name=="admin" or .role_name=="maintain") | .login]' \
+-  | jq -s 'add' > "$D/maintainers.json" || rm -f "$D/maintainers.json"
++# Captured first, so a failed page fails the step instead of yielding a short
++# list that would turn maintainers into outside authors.
++RAW=$(gh api "repos/$R/collaborators?per_page=100" --paginate --slurp) \
++  && jq '[.[][] | select(.role_name=="admin" or .role_name=="maintain") | .login]' \
++       <<<"$RAW" > "$D/maintainers.json" \
++  || { echo "maintainer list failed" >&2; rm -f "$D/maintainers.json"; }
+ # A first-guess class from the paths alone. It is a HINT for the reading below,
+ # never the manifest: a "server change" can be a no-op, a racing duplicate or a
+ # security fix, and only reading the diff tells which.
+@@ -326,8 +333,9 @@ jq -r --slurpfile m "$D/maintainers.json" '
+      elif ($p | any(startswith("src/"))) then "server-change?"
+      else "repo-level?" end) as $c
+   | [.number, $c, ([.closingIssuesReferences[].number] | map("#\(.)") | join(" ")), .title[0:70]]
+-  | @tsv' "$D/prs.json" > "$D/pre.tsv"
+-cut -f2 "$D/pre.tsv" | sort | uniq -c
++  | @tsv' "$D/prs.json" > "$D/pre.tsv" \
++  && cut -f2 "$D/pre.tsv" | sort | uniq -c \
++  || { echo "pre-class failed (a missing input above?)" >&2; rm -f "$D/pre.tsv"; }
+ ```
+ 
+ `gh pr list` stops early without saying so, so a listing that fills its limit
+@@ -403,6 +411,7 @@ it.
+ # on a routine pass.
+ SWEEP_LABEL=; SWEEP_REF=
+ while IFS=$'\t' read -r PR CLASS ISSUE _; do
++  ISSUE=${ISSUE#\#}   # accept "#123" as well as "123"
+   case "$CLASS" in
+     listing|new-server) BODY=$(cat "$D/responses/registry.md") ;;
+     archived) BODY=$(cat "$D/responses/archived.md") ;;

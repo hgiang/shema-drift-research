@@ -1,0 +1,139 @@
+From ca7ea2253ee0cea440cf70798b9bb93e128e400e Mon Sep 17 00:00:00 2001
+From: DukeDeSouth <dukeklevenski@gmail.com>
+Date: Fri, 6 Feb 2026 20:14:27 -0500
+Subject: [PATCH] fix(memory): return relations connected to requested nodes in
+ openNodes/searchNodes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Previously, `openNodes` and `searchNodes` only returned relations where
+BOTH endpoints were in the result set (using `&&`). This silently
+dropped all relations to/from nodes outside the set — making it
+impossible to discover a node's connections without calling `read_graph`
+and filtering the entire dataset client-side.
+
+Changed the filter from `&&` to `||` so that any relation with at least
+one endpoint in the result set is included. This matches the expected
+graph-query semantics: when you open a node, you should see all its
+edges, not just edges to other opened nodes.
+
+Fixes #3137
+
+Tests updated and new cases added covering:
+- Outgoing relations to nodes not in the open set
+- Incoming relations from nodes not in the open set
+- Relations connected to a single opened node
+- searchNodes returning outgoing relations to unmatched entities
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+---
+ src/memory/__tests__/knowledge-graph.test.ts | 47 +++++++++++++++++---
+ src/memory/index.ts                          | 12 +++--
+ 2 files changed, 49 insertions(+), 10 deletions(-)
+
+diff --git a/src/memory/__tests__/knowledge-graph.test.ts b/src/memory/__tests__/knowledge-graph.test.ts
+index 7edab5e42c..236242413a 100644
+--- a/src/memory/__tests__/knowledge-graph.test.ts
++++ b/src/memory/__tests__/knowledge-graph.test.ts
+@@ -302,10 +302,20 @@ describe('KnowledgeGraphManager', () => {
+       expect(result.entities[0].name).toBe('Alice');
+     });
+ 
+-    it('should include relations between matched entities', async () => {
++    it('should include relations where at least one endpoint matches', async () => {
+       const result = await manager.searchNodes('Acme');
+       expect(result.entities).toHaveLength(2); // Alice and Acme Corp
+-      expect(result.relations).toHaveLength(1); // Only Alice -> Acme Corp relation
++      // Both relations included: Alice → Acme Corp (Alice matched) and Bob → Acme Corp (Acme Corp matched)
++      expect(result.relations).toHaveLength(2);
++    });
++
++    it('should include outgoing relations to unmatched entities', async () => {
++      const result = await manager.searchNodes('Alice');
++      expect(result.entities).toHaveLength(1);
++      // Alice → Acme Corp relation included because Alice is the source
++      expect(result.relations).toHaveLength(1);
++      expect(result.relations[0].from).toBe('Alice');
++      expect(result.relations[0].to).toBe('Acme Corp');
+     });
+ 
+     it('should return empty graph for no matches', async () => {
+@@ -336,16 +346,41 @@ describe('KnowledgeGraphManager', () => {
+       expect(result.entities.map(e => e.name)).toContain('Bob');
+     });
+ 
+-    it('should include relations between opened nodes', async () => {
++    it('should include all relations connected to opened nodes', async () => {
+       const result = await manager.openNodes(['Alice', 'Bob']);
++      // Alice → Bob (both endpoints opened) and Bob → Charlie (Bob is opened)
++      expect(result.relations).toHaveLength(2);
++      expect(result.relations.some(r => r.from === 'Alice' && r.to === 'Bob')).toBe(true);
++      expect(result.relations.some(r => r.from === 'Bob' && r.to === 'Charlie')).toBe(true);
++    });
++
++    it('should include relations connected to opened nodes', async () => {
++      const result = await manager.openNodes(['Bob']);
++      // Bob has two relations: Alice → Bob and Bob → Charlie
++      expect(result.relations).toHaveLength(2);
++      expect(result.relations.some(r => r.from === 'Alice' && r.to === 'Bob')).toBe(true);
++      expect(result.relations.some(r => r.from === 'Bob' && r.to === 'Charlie')).toBe(true);
++    });
++
++    it('should include outgoing relations to nodes not in the open set', async () => {
++      // This is the core bug fix for #3137: open_nodes should return
++      // relations FROM the opened node, even if the target is not opened
++      const result = await manager.openNodes(['Alice']);
++      expect(result.entities).toHaveLength(1);
++      expect(result.entities[0].name).toBe('Alice');
++      // Alice → Bob relation is included because Alice is opened
+       expect(result.relations).toHaveLength(1);
+       expect(result.relations[0].from).toBe('Alice');
+       expect(result.relations[0].to).toBe('Bob');
+     });
+ 
+-    it('should exclude relations to unopened nodes', async () => {
+-      const result = await manager.openNodes(['Bob']);
+-      expect(result.relations).toHaveLength(0);
++    it('should include incoming relations from nodes not in the open set', async () => {
++      const result = await manager.openNodes(['Charlie']);
++      expect(result.entities).toHaveLength(1);
++      // Bob → Charlie relation is included because Charlie is opened
++      expect(result.relations).toHaveLength(1);
++      expect(result.relations[0].from).toBe('Bob');
++      expect(result.relations[0].to).toBe('Charlie');
+     });
+ 
+     it('should handle opening non-existent nodes', async () => {
+diff --git a/src/memory/index.ts b/src/memory/index.ts
+index 600a7edcc8..b560bf1e53 100644
+--- a/src/memory/index.ts
++++ b/src/memory/index.ts
+@@ -197,9 +197,10 @@ export class KnowledgeGraphManager {
+     // Create a Set of filtered entity names for quick lookup
+     const filteredEntityNames = new Set(filteredEntities.map(e => e.name));
+   
+-    // Filter relations to only include those between filtered entities
++    // Include relations where at least one endpoint matches the search results.
++    // This lets callers discover connections to nodes outside the result set.
+     const filteredRelations = graph.relations.filter(r => 
+-      filteredEntityNames.has(r.from) && filteredEntityNames.has(r.to)
++      filteredEntityNames.has(r.from) || filteredEntityNames.has(r.to)
+     );
+   
+     const filteredGraph: KnowledgeGraph = {
+@@ -219,9 +220,12 @@ export class KnowledgeGraphManager {
+     // Create a Set of filtered entity names for quick lookup
+     const filteredEntityNames = new Set(filteredEntities.map(e => e.name));
+   
+-    // Filter relations to only include those between filtered entities
++    // Include relations where at least one endpoint is in the requested set.
++    // Previously this required BOTH endpoints, which meant relations from a
++    // requested node to an unrequested node were silently dropped — making it
++    // impossible to discover a node's connections without reading the full graph.
+     const filteredRelations = graph.relations.filter(r => 
+-      filteredEntityNames.has(r.from) && filteredEntityNames.has(r.to)
++      filteredEntityNames.has(r.from) || filteredEntityNames.has(r.to)
+     );
+   
+     const filteredGraph: KnowledgeGraph = {

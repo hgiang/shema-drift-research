@@ -1,0 +1,204 @@
+From 67a71f1b602fa3b7bcc9147a073ee8aedacce9fb Mon Sep 17 00:00:00 2001
+From: dhalahayeu <dzmitryi.halahayeu_ges@omio.com>
+Date: Sat, 4 Apr 2026 09:12:45 +0200
+Subject: [PATCH] fix(everything): use relatedTask option to enable elicitation
+ over HTTP (#3228)
+
+---
+ src/everything/__tests__/tools.test.ts        | 85 +++++++++++++++++++
+ .../tools/simulate-research-query.ts          | 34 +++-----
+ 2 files changed, 99 insertions(+), 20 deletions(-)
+
+diff --git a/src/everything/__tests__/tools.test.ts b/src/everything/__tests__/tools.test.ts
+index dbe463b2a5..e2871dd34a 100644
+--- a/src/everything/__tests__/tools.test.ts
++++ b/src/everything/__tests__/tools.test.ts
+@@ -15,6 +15,7 @@ import { registerTriggerSamplingRequestTool } from '../tools/trigger-sampling-re
+ import { registerTriggerElicitationRequestTool } from '../tools/trigger-elicitation-request.js';
+ import { registerGetRootsListTool } from '../tools/get-roots-list.js';
+ import { registerGZipFileAsResourceTool } from '../tools/gzip-file-as-resource.js';
++import { registerSimulateResearchQueryTool } from '../tools/simulate-research-query.js';
+ 
+ // Helper to capture registered tool handlers
+ function createMockServer() {
+@@ -738,6 +739,90 @@ describe('Tools', () => {
+     });
+   });
+ 
++  describe('simulate-research-query', () => {
++    function createMockServerWithTasks() {
++      const taskHandlers: Record<string, any> = {};
++      const mockServer = {
++        experimental: {
++          tasks: {
++            registerToolTask: vi.fn((_name: string, _config: any, handler: any) => {
++              Object.assign(taskHandlers, handler);
++            }),
++          },
++        },
++        server: { getClientCapabilities: vi.fn(() => ({ elicitation: {} })) },
++      } as unknown as McpServer;
++      return { mockServer, taskHandlers };
++    }
++
++    function createMockTaskStore(taskId: string) {
++      return {
++        createTask: vi.fn().mockResolvedValue({
++          taskId,
++          status: 'working',
++          createdAt: new Date().toISOString(),
++          lastUpdatedAt: new Date().toISOString(),
++          ttl: 300000,
++          pollInterval: 1000,
++        }),
++        updateTaskStatus: vi.fn().mockResolvedValue(undefined),
++        storeTaskResult: vi.fn().mockResolvedValue(undefined),
++        getTask: vi.fn(),
++        getTaskResult: vi.fn(),
++      };
++    }
++
++    it('should pass relatedTask to sendRequest when elicitation is triggered', async () => {
++      vi.useFakeTimers();
++
++      const { mockServer, taskHandlers } = createMockServerWithTasks();
++      registerSimulateResearchQueryTool(mockServer);
++
++      const mockTaskStore = createMockTaskStore('task-abc');
++      const mockSendRequest = vi.fn().mockResolvedValue({
++        action: 'accept',
++        content: { interpretation: 'technical' },
++      });
++
++      await taskHandlers.createTask(
++        { topic: 'python', ambiguous: true },
++        { taskStore: mockTaskStore, sendRequest: mockSendRequest }
++      );
++
++      await vi.runAllTimersAsync();
++      vi.useRealTimers();
++
++      expect(mockSendRequest).toHaveBeenCalledWith(
++        expect.objectContaining({ method: 'elicitation/create' }),
++        expect.anything(),
++        expect.objectContaining({ relatedTask: { taskId: 'task-abc' } })
++      );
++    });
++
++    it('should complete without elicitation for non-ambiguous query', async () => {
++      vi.useFakeTimers();
++
++      const { mockServer, taskHandlers } = createMockServerWithTasks();
++      registerSimulateResearchQueryTool(mockServer);
++
++      const mockTaskStore = createMockTaskStore('task-def');
++      const mockSendRequest = vi.fn();
++
++      await taskHandlers.createTask(
++        { topic: 'python', ambiguous: false },
++        { taskStore: mockTaskStore, sendRequest: mockSendRequest }
++      );
++
++      await vi.runAllTimersAsync();
++      vi.useRealTimers();
++
++      expect(mockSendRequest).not.toHaveBeenCalled();
++      expect(mockTaskStore.storeTaskResult).toHaveBeenCalledWith(
++        'task-def', 'completed', expect.anything()
++      );
++    });
++  });
++
+   describe('gzip-file-as-resource', () => {
+     it('should compress data URI and return resource link', async () => {
+       const registeredResources: any[] = [];
+diff --git a/src/everything/tools/simulate-research-query.ts b/src/everything/tools/simulate-research-query.ts
+index 8b485ca2ba..0dd4bf23f1 100644
+--- a/src/everything/tools/simulate-research-query.ts
++++ b/src/everything/tools/simulate-research-query.ts
+@@ -47,11 +47,10 @@ const researchStates = new Map<string, ResearchState>();
+ /**
+  * Runs the background research process.
+  * Updates task status as it progresses through stages.
+- * If clarification is needed, attempts elicitation via sendRequest.
+- *
+- * Note: Elicitation only works on STDIO transport. On HTTP transport,
+- * sendRequest will fail and the task will use a default interpretation.
+- * Full HTTP support requires SDK PR #1210's elicitInputStream API.
++ * If clarification is needed, sends elicitation via sendRequest with relatedTask,
++ * which queues the request in the task message queue. The SDK delivers it through
++ * the tasks/result stream when the client calls tasks/result (per spec input_required flow).
++ * This works on all transports (STDIO, SSE, Streamable HTTP).
+  */
+ async function runResearchProcess(
+   taskId: string,
+@@ -94,7 +93,7 @@ async function runResearchProcess(
+       );
+ 
+       try {
+-        // Try elicitation via sendRequest (works on STDIO, fails on HTTP)
++        // relatedTask queues elicitation via task message queue → delivered through tasks/result on all transports
+         const elicitResult: ElicitResult = await sendRequest(
+           {
+             method: "elicitation/create",
+@@ -115,7 +114,8 @@ async function runResearchProcess(
+               },
+             },
+           },
+-          ElicitResultSchema
++          ElicitResultSchema,
++          { relatedTask: { taskId } }
+         );
+ 
+         // Process elicitation response
+@@ -129,14 +129,12 @@ async function runResearchProcess(
+           state.clarification = "User cancelled - using default interpretation";
+         }
+       } catch (error) {
+-        // Elicitation failed (likely HTTP transport without streaming support)
+-        // Use default interpretation and continue - task should still complete
++        // Elicitation failed - use default interpretation and continue
+         console.warn(
+-          `Elicitation failed for task ${taskId} (HTTP transport?):`,
++          `Elicitation failed for task ${taskId}:`,
+           error instanceof Error ? error.message : String(error)
+         );
+-        state.clarification =
+-          "technical (default - elicitation unavailable on HTTP)";
++        state.clarification = "technical (default - elicitation unavailable)";
+       }
+ 
+       // Resume with working status (spec SHOULD)
+@@ -199,12 +197,8 @@ ${
+ When the query was ambiguous, the server sent an \`elicitation/create\` request
+ to the client. The task status changed to \`input_required\` while awaiting user input.
+ ${
+-  state.clarification.includes("unavailable on HTTP")
+-    ? `
+-**Note:** Elicitation was skipped because this server is running over HTTP transport.
+-The current SDK's \`sendRequest\` only works over STDIO. Full HTTP elicitation support
+-requires SDK PR #1210's streaming \`elicitInputStream\` API.
+-`
++  state.clarification.includes("unavailable")
++    ? `**Note:** Elicitation failed and a default interpretation was used.`
+     : `After receiving clarification ("${state.clarification}"), the task resumed processing and completed.`
+ }
+ `
+@@ -215,7 +209,7 @@ requires SDK PR #1210's streaming \`elicitInputStream\` API.
+ - \`statusMessage\` provides human-readable progress updates
+ - Tasks have TTL (time-to-live) for automatic cleanup
+ - \`pollInterval\` suggests how often to check status
+-- Elicitation requests can be sent directly during task execution
++- Elicitation requests use \`relatedTask\` to queue via tasks/result (works on all transports)
+ 
+ *This is a simulated research report from the Everything MCP Server.*
+ `;
+@@ -279,7 +273,7 @@ export const registerSimulateResearchQueryTool = (server: McpServer) => {
+         researchStates.set(task.taskId, state);
+ 
+         // Start background research (don't await - runs asynchronously)
+-        // Pass sendRequest for elicitation (works on STDIO, gracefully degrades on HTTP)
++        // Pass sendRequest for elicitation (queued via task message queue, works on all transports)
+         runResearchProcess(
+           task.taskId,
+           validatedArgs,

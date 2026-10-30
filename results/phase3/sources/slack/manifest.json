@@ -1,0 +1,490 @@
+{
+ "https://docs.slack.dev/changelog/2023/02/01/preview.md": {
+  "url": "https://docs.slack.dev/changelog/2023/02/01/preview.md",
+  "path": "039-changelog-2023-02-01-preview.md",
+  "status": 200,
+  "n_bytes": 814,
+  "sha256": "ecc721a3ac9915f0c9dcf54b76f7aad346e8dd816406800672de68d5f247852c",
+  "fetched_at": "2026-10-30T03:21:39Z"
+ },
+ "https://docs.slack.dev/changelog/2023/02/23/preview.md": {
+  "url": "https://docs.slack.dev/changelog/2023/02/23/preview.md",
+  "path": "028-changelog-2023-02-23-preview.md",
+  "status": 200,
+  "n_bytes": 1045,
+  "sha256": "4d5959726e8a7cfcf6bcefafcb3979fd17349ad236ed18ca60bbcaa5d1d44e9b",
+  "fetched_at": "2026-10-30T03:21:27Z"
+ },
+ "https://docs.slack.dev/changelog/2023/04/20/preview.md": {
+  "url": "https://docs.slack.dev/changelog/2023/04/20/preview.md",
+  "path": "035-changelog-2023-04-20-preview.md",
+  "status": 200,
+  "n_bytes": 1034,
+  "sha256": "ebfd6ee3fde89bf47f17aac8bcb1a1d1a88d3ffcaad5e2210f24efaa78512991",
+  "fetched_at": "2026-10-30T03:21:34Z"
+ },
+ "https://docs.slack.dev/changelog/2023/04/24/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2023/04/24/slack-cli.md",
+  "path": "012-changelog-2023-04-24-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1554,
+  "sha256": "1d071c0d937a9f56e0d724215c698cf1c5c3932eb837d7f03f6f075d6699506e",
+  "fetched_at": "2026-10-30T03:21:12Z"
+ },
+ "https://docs.slack.dev/changelog/2023/05/02/apis.md": {
+  "url": "https://docs.slack.dev/changelog/2023/05/02/apis.md",
+  "path": "059-changelog-2023-05-02-apis.md",
+  "status": 200,
+  "n_bytes": 635,
+  "sha256": "77a5c13967c326ba94e242f46cdecc71d5fba6552ad0ab3c10478e98727a6bd5",
+  "fetched_at": "2026-10-30T03:21:58Z"
+ },
+ "https://docs.slack.dev/changelog/2023/06/29/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2023/06/29/slack-cli.md",
+  "path": "008-changelog-2023-06-29-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1955,
+  "sha256": "0e46f659a53d8e329c9eed26d713da703c84371b649336e5ac7ef0d534f23d94",
+  "fetched_at": "2026-10-30T03:21:07Z"
+ },
+ "https://docs.slack.dev/changelog/2023/08/10/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2023/08/10/slack-cli.md",
+  "path": "032-changelog-2023-08-10-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1697,
+  "sha256": "f9b0ec0a8416d7883541af04d8cd63b7a74c07ccc025b6cd7329b00d20a8308c",
+  "fetched_at": "2026-10-30T03:21:31Z"
+ },
+ "https://docs.slack.dev/changelog/2023/09/08/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2023/09/08/slack-cli.md",
+  "path": "007-changelog-2023-09-08-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1252,
+  "sha256": "4feb9b2b9c1ac62eacc5974142aa461a87e7add7d79e37baf1c0cbfac3bb7580",
+  "fetched_at": "2026-10-30T03:21:06Z"
+ },
+ "https://docs.slack.dev/changelog/2023/09/21/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2023/09/21/slack-cli.md",
+  "path": "026-changelog-2023-09-21-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1090,
+  "sha256": "7a888276815e372daf45a6a08de5bd9e041bcfe33653e56d2cf3a86a375046a1",
+  "fetched_at": "2026-10-30T03:21:25Z"
+ },
+ "https://docs.slack.dev/changelog/2023/09/29/block-kit.md": {
+  "url": "https://docs.slack.dev/changelog/2023/09/29/block-kit.md",
+  "path": "029-changelog-2023-09-29-block-kit.md",
+  "status": 200,
+  "n_bytes": 981,
+  "sha256": "36531d165652aa58c67206283fb88e5a0416af230ca926738e4cae706c5aad54",
+  "fetched_at": "2026-10-30T03:21:28Z"
+ },
+ "https://docs.slack.dev/changelog/2023/10/05/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2023/10/05/slack-cli.md",
+  "path": "011-changelog-2023-10-05-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1379,
+  "sha256": "25c54c5a1d6ca076a288f215b80041f719708f9bc446816c3b7a82747655645a",
+  "fetched_at": "2026-10-30T03:21:11Z"
+ },
+ "https://docs.slack.dev/changelog/2023/10/26/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2023/10/26/slack-cli.md",
+  "path": "004-changelog-2023-10-26-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1158,
+  "sha256": "f1155239b7c11ee3af3914b8f3200fe9a08ccb3166412e4924c5a6484db96b9f",
+  "fetched_at": "2026-10-30T03:21:04Z"
+ },
+ "https://docs.slack.dev/changelog/2023/11/02/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2023/11/02/slack-cli.md",
+  "path": "050-changelog-2023-11-02-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1139,
+  "sha256": "9a21183c7ab65ae9490b386c93f54972a353e487c7d92df80ddbd7bc0ccc30f9",
+  "fetched_at": "2026-10-30T03:21:50Z"
+ },
+ "https://docs.slack.dev/changelog/2024/01/11/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2024/01/11/slack-cli.md",
+  "path": "052-changelog-2024-01-11-slack-cli.md",
+  "status": 200,
+  "n_bytes": 739,
+  "sha256": "2e6a8888f9d946ad2d2d20ced426dbd5953c7a2870bfd5a211ad232744a58564",
+  "fetched_at": "2026-10-30T03:21:52Z"
+ },
+ "https://docs.slack.dev/changelog/2024/01/16/apis.md": {
+  "url": "https://docs.slack.dev/changelog/2024/01/16/apis.md",
+  "path": "037-changelog-2024-01-16-apis.md",
+  "status": 200,
+  "n_bytes": 859,
+  "sha256": "3c340f7cabc5180f1c567e039ba1993ec754b3de024efa61d169c8f1f4fce261",
+  "fetched_at": "2026-10-30T03:21:36Z"
+ },
+ "https://docs.slack.dev/changelog/2024/04/04/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2024/04/04/slack-cli.md",
+  "path": "053-changelog-2024-04-04-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1237,
+  "sha256": "fa2c7ef75b580f60f0c799a6def44fdc1e5fb9a2407dbb92c62c584993bf020d",
+  "fetched_at": "2026-10-30T03:21:52Z"
+ },
+ "https://docs.slack.dev/changelog/2024/04/16/deno-slack-sdk.md": {
+  "url": "https://docs.slack.dev/changelog/2024/04/16/deno-slack-sdk.md",
+  "path": "042-changelog-2024-04-16-deno-slack-sdk.md",
+  "status": 200,
+  "n_bytes": 1026,
+  "sha256": "415984c8dd2d0742ba594f408ce7fca8f9a819904738b5a72cadf1a2af03fb53",
+  "fetched_at": "2026-10-30T03:21:41Z"
+ },
+ "https://docs.slack.dev/changelog/2024/04/18/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2024/04/18/slack-cli.md",
+  "path": "058-changelog-2024-04-18-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1063,
+  "sha256": "db657ecffa54850230e3f53375dc7a424eea82bf5f8c51e505d6acb688620d19",
+  "fetched_at": "2026-10-30T03:21:57Z"
+ },
+ "https://docs.slack.dev/changelog/2024/05/02/apps.md": {
+  "url": "https://docs.slack.dev/changelog/2024/05/02/apps.md",
+  "path": "019-changelog-2024-05-02-apps.md",
+  "status": 200,
+  "n_bytes": 923,
+  "sha256": "f44f2b3ce00d5894e5ff294c4666a64f6caa67e2b1b35723527d88679e664579",
+  "fetched_at": "2026-10-30T03:21:18Z"
+ },
+ "https://docs.slack.dev/changelog/2024/05/10/deno-slack-sdk.md": {
+  "url": "https://docs.slack.dev/changelog/2024/05/10/deno-slack-sdk.md",
+  "path": "009-changelog-2024-05-10-deno-slack-sdk.md",
+  "status": 200,
+  "n_bytes": 707,
+  "sha256": "af33da3071703f0794c57ef8c4568b542c18e81b5be84c49625a539b9e83f5f7",
+  "fetched_at": "2026-10-30T03:21:08Z"
+ },
+ "https://docs.slack.dev/changelog/2024/06/10/deno-slack-sdk.md": {
+  "url": "https://docs.slack.dev/changelog/2024/06/10/deno-slack-sdk.md",
+  "path": "018-changelog-2024-06-10-deno-slack-sdk.md",
+  "status": 200,
+  "n_bytes": 1205,
+  "sha256": "4b3145422045bb8a8bf2bc56a9cdb176e47fdaa0b46443a7792d3f912d10568e",
+  "fetched_at": "2026-10-30T03:21:17Z"
+ },
+ "https://docs.slack.dev/changelog/2024/06/18/deno-slack-api.md": {
+  "url": "https://docs.slack.dev/changelog/2024/06/18/deno-slack-api.md",
+  "path": "054-changelog-2024-06-18-deno-slack-api.md",
+  "status": 200,
+  "n_bytes": 840,
+  "sha256": "1af6e0e9a84bb1fc1d67053451a10e10b63e2e5f37b8cf557cbfad205f250bb4",
+  "fetched_at": "2026-10-30T03:21:53Z"
+ },
+ "https://docs.slack.dev/changelog/2024/07/25/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2024/07/25/slack-cli.md",
+  "path": "051-changelog-2024-07-25-slack-cli.md",
+  "status": 200,
+  "n_bytes": 631,
+  "sha256": "e768c1f19ae259569405a3ec37287ca72dbcd3a21e5c89207f53159392dccf80",
+  "fetched_at": "2026-10-30T03:21:50Z"
+ },
+ "https://docs.slack.dev/changelog/2024/08/02/deno-slack-api.md": {
+  "url": "https://docs.slack.dev/changelog/2024/08/02/deno-slack-api.md",
+  "path": "036-changelog-2024-08-02-deno-slack-api.md",
+  "status": 200,
+  "n_bytes": 847,
+  "sha256": "87095384aed901942ea501e7a271e935313e2bb342c898ee9e553f16698224b1",
+  "fetched_at": "2026-10-30T03:21:35Z"
+ },
+ "https://docs.slack.dev/changelog/2024/10/17/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2024/10/17/slack-cli.md",
+  "path": "031-changelog-2024-10-17-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1049,
+  "sha256": "a022fda3239cc424e72d66b10389273a027b7ab632f93256e429c3e218235eb9",
+  "fetched_at": "2026-10-30T03:21:30Z"
+ },
+ "https://docs.slack.dev/changelog/2024/10/31/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2024/10/31/slack-cli.md",
+  "path": "041-changelog-2024-10-31-slack-cli.md",
+  "status": 200,
+  "n_bytes": 825,
+  "sha256": "74b8400e2c522d7d34e1b43507c8fb7483577fa96faf8df3a40f606fb1cd920c",
+  "fetched_at": "2026-10-30T03:21:41Z"
+ },
+ "https://docs.slack.dev/changelog/2024/12/10/dev-policy-update.md": {
+  "url": "https://docs.slack.dev/changelog/2024/12/10/dev-policy-update.md",
+  "path": "048-changelog-2024-12-10-dev-policy-update.md",
+  "status": 200,
+  "n_bytes": 2402,
+  "sha256": "8e24c7fac177f02ea53c71b734e3126d606917d50d22269f6491d2d2cb8710f8",
+  "fetched_at": "2026-10-30T03:21:47Z"
+ },
+ "https://docs.slack.dev/changelog/2025/02/27/slack-cli-release.md": {
+  "url": "https://docs.slack.dev/changelog/2025/02/27/slack-cli-release.md",
+  "path": "047-changelog-2025-02-27-slack-cli-release.md",
+  "status": 200,
+  "n_bytes": 2950,
+  "sha256": "2f5ce5bbe1b7c1dc6f7dc3c34b2894572d2c1d15cae94ffa0e57978852a88246",
+  "fetched_at": "2026-10-30T03:21:46Z"
+ },
+ "https://docs.slack.dev/changelog/2025/04/10/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2025/04/10/slack-cli.md",
+  "path": "056-changelog-2025-04-10-slack-cli.md",
+  "status": 200,
+  "n_bytes": 629,
+  "sha256": "130b72fdef393a09bb9f952a04a19a13a6f9ae0fb3d237371e59966f7bcc1761",
+  "fetched_at": "2026-10-30T03:21:55Z"
+ },
+ "https://docs.slack.dev/changelog/2025/06/19/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2025/06/19/slack-cli.md",
+  "path": "025-changelog-2025-06-19-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1434,
+  "sha256": "b09023998c86a51d6da8d0fd14e5dad018e77caba11d25b14c7fb2c6b055b72d",
+  "fetched_at": "2026-10-30T03:21:24Z"
+ },
+ "https://docs.slack.dev/changelog/2025/07/03/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2025/07/03/slack-cli.md",
+  "path": "055-changelog-2025-07-03-slack-cli.md",
+  "status": 200,
+  "n_bytes": 999,
+  "sha256": "94a74e8eeefc32ae3500d00475361f40c518fda43bc289da02c6e01ccc735c2d",
+  "fetched_at": "2026-10-30T03:21:54Z"
+ },
+ "https://docs.slack.dev/changelog/2025/07/21/featured-workflow-api.md": {
+  "url": "https://docs.slack.dev/changelog/2025/07/21/featured-workflow-api.md",
+  "path": "057-changelog-2025-07-21-featured-workflow-api.md",
+  "status": 200,
+  "n_bytes": 1139,
+  "sha256": "ec59782a6872e5df6cc7c8a37c7e2f0f902b36b67f441a0644816543322f0d5e",
+  "fetched_at": "2026-10-30T03:21:56Z"
+ },
+ "https://docs.slack.dev/changelog/2025/08/26/field-deprecation.md": {
+  "url": "https://docs.slack.dev/changelog/2025/08/26/field-deprecation.md",
+  "path": "044-changelog-2025-08-26-field-deprecation.md",
+  "status": 200,
+  "n_bytes": 1365,
+  "sha256": "b9e9c0f60f5a59bc97dfbc26109faf41a74a39012e7f2f078fa23f0aec4d5662",
+  "fetched_at": "2026-10-30T03:21:44Z"
+ },
+ "https://docs.slack.dev/changelog/2025/10/21/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2025/10/21/slack-cli.md",
+  "path": "020-changelog-2025-10-21-slack-cli.md",
+  "status": 200,
+  "n_bytes": 882,
+  "sha256": "15c51254a543877d5842e9501f441396c70e2bae61f93d3281fd5b0ae03f02c7",
+  "fetched_at": "2026-10-30T03:21:19Z"
+ },
+ "https://docs.slack.dev/changelog/2025/10/28/oauth-page.md": {
+  "url": "https://docs.slack.dev/changelog/2025/10/28/oauth-page.md",
+  "path": "021-changelog-2025-10-28-oauth-page.md",
+  "status": 200,
+  "n_bytes": 1437,
+  "sha256": "2b47eeebdc7c80d4921b17222fbd097f49969fd76eed2018151b663ed7ac7ed3",
+  "fetched_at": "2026-10-30T03:21:20Z"
+ },
+ "https://docs.slack.dev/changelog/2025/11/06/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2025/11/06/slack-cli.md",
+  "path": "016-changelog-2025-11-06-slack-cli.md",
+  "status": 200,
+  "n_bytes": 602,
+  "sha256": "75e2d000e48d57c927160ff0c96af9ef574faf4c4811ae831c0927f12f46d824",
+  "fetched_at": "2026-10-30T03:21:15Z"
+ },
+ "https://docs.slack.dev/changelog/2025/11/20/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2025/11/20/slack-cli.md",
+  "path": "040-changelog-2025-11-20-slack-cli.md",
+  "status": 200,
+  "n_bytes": 774,
+  "sha256": "21b86e6255503fb91094bc317fdfc1b812e38ba7b80427b4630efd48b9c05739",
+  "fetched_at": "2026-10-30T03:21:39Z"
+ },
+ "https://docs.slack.dev/changelog/2025/12/08/classic-apps-deprecation-paused.md": {
+  "url": "https://docs.slack.dev/changelog/2025/12/08/classic-apps-deprecation-paused.md",
+  "path": "033-changelog-2025-12-08-classic-apps-deprecation-paused.md",
+  "status": 200,
+  "n_bytes": 1293,
+  "sha256": "2e927cd4a6e73079608e7b9ce759dc0556ffb979bd958d6f226937af614b68aa",
+  "fetched_at": "2026-10-30T03:21:32Z"
+ },
+ "https://docs.slack.dev/changelog/2026/01/22/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2026/01/22/slack-cli.md",
+  "path": "005-changelog-2026-01-22-slack-cli.md",
+  "status": 200,
+  "n_bytes": 634,
+  "sha256": "83bf8bc4591bbde1ce10cbc6bfd863e9ab6be277a5899ce4be933b4461d29f6e",
+  "fetched_at": "2026-10-30T03:21:04Z"
+ },
+ "https://docs.slack.dev/changelog/2026/02/11/task-cards-plan-blocks.md": {
+  "url": "https://docs.slack.dev/changelog/2026/02/11/task-cards-plan-blocks.md",
+  "path": "024-changelog-2026-02-11-task-cards-plan-blocks.md",
+  "status": 200,
+  "n_bytes": 1820,
+  "sha256": "7e42c510fb766f65bb0bb10eb1ff821b6f29d8126092bdbc81caf79e31c6e65c",
+  "fetched_at": "2026-10-30T03:21:23Z"
+ },
+ "https://docs.slack.dev/changelog/2026/02/19/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2026/02/19/slack-cli.md",
+  "path": "022-changelog-2026-02-19-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1698,
+  "sha256": "b29d883b490add70783b9b5bee3c132d35db1e34b5a0f39c4353d7c3eceb6b4e",
+  "fetched_at": "2026-10-30T03:21:22Z"
+ },
+ "https://docs.slack.dev/changelog/2026/03/05/set-status-scope-update.md": {
+  "url": "https://docs.slack.dev/changelog/2026/03/05/set-status-scope-update.md",
+  "path": "030-changelog-2026-03-05-set-status-scope-update.md",
+  "status": 200,
+  "n_bytes": 1335,
+  "sha256": "39fd34a32a9305cb3f828f652ca0ff3681273ed49c1ee216e3f2d1ac693f1417",
+  "fetched_at": "2026-10-30T03:21:29Z"
+ },
+ "https://docs.slack.dev/changelog/2026/03/05/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2026/03/05/slack-cli.md",
+  "path": "017-changelog-2026-03-05-slack-cli.md",
+  "status": 200,
+  "n_bytes": 2535,
+  "sha256": "06e22b80275644055b4dfcd788650fb4a128a590ce0e497a160c7222a07d6d04",
+  "fetched_at": "2026-10-30T03:21:16Z"
+ },
+ "https://docs.slack.dev/changelog/2026/03/06/block-kit-rich-text.md": {
+  "url": "https://docs.slack.dev/changelog/2026/03/06/block-kit-rich-text.md",
+  "path": "060-changelog-2026-03-06-block-kit-rich-text.md",
+  "status": 200,
+  "n_bytes": 1042,
+  "sha256": "2e1caa76806355de997f2085f38e5481c224e8143298f81d0a821fbb70560efb",
+  "fetched_at": "2026-10-30T03:21:59Z"
+ },
+ "https://docs.slack.dev/changelog/2026/03/30/pkce.md": {
+  "url": "https://docs.slack.dev/changelog/2026/03/30/pkce.md",
+  "path": "015-changelog-2026-03-30-pkce.md",
+  "status": 200,
+  "n_bytes": 2460,
+  "sha256": "4be99a0d7ef5daba2e25f40489d5925500d9109843765dcf529ae1c9db3f6315",
+  "fetched_at": "2026-10-30T03:21:14Z"
+ },
+ "https://docs.slack.dev/changelog/2026/04/16/block-kit-new-blocks.md": {
+  "url": "https://docs.slack.dev/changelog/2026/04/16/block-kit-new-blocks.md",
+  "path": "023-changelog-2026-04-16-block-kit-new-blocks.md",
+  "status": 200,
+  "n_bytes": 1338,
+  "sha256": "cfce3de0433e8ae2adeb5041dff00cc4ed405ead8632e89f4736c928ff8ee9f3",
+  "fetched_at": "2026-10-30T03:21:22Z"
+ },
+ "https://docs.slack.dev/changelog/2026/05/18/py-slack-sdk.md": {
+  "url": "https://docs.slack.dev/changelog/2026/05/18/py-slack-sdk.md",
+  "path": "006-changelog-2026-05-18-py-slack-sdk.md",
+  "status": 200,
+  "n_bytes": 1785,
+  "sha256": "8bc890f2c425438f3333d4b1a76a152e090ff246e3707a7cfb96c6b45b6cc8a2",
+  "fetched_at": "2026-10-30T03:21:05Z"
+ },
+ "https://docs.slack.dev/changelog/2026/06/03/java-slack-sdk.md": {
+  "url": "https://docs.slack.dev/changelog/2026/06/03/java-slack-sdk.md",
+  "path": "045-changelog-2026-06-03-java-slack-sdk.md",
+  "status": 200,
+  "n_bytes": 1024,
+  "sha256": "a5784c6789a990867a63f166b1a6d5789cbe789b1862a770ce5edd37e88aa5a3",
+  "fetched_at": "2026-10-30T03:21:44Z"
+ },
+ "https://docs.slack.dev/changelog/2026/06/17/system-notifications.md": {
+  "url": "https://docs.slack.dev/changelog/2026/06/17/system-notifications.md",
+  "path": "043-changelog-2026-06-17-system-notifications.md",
+  "status": 200,
+  "n_bytes": 1881,
+  "sha256": "652e9da4979ca427fe1f42e5e7ff04f19fa660641818f4ecc37f0776b6893104",
+  "fetched_at": "2026-10-30T03:21:42Z"
+ },
+ "https://docs.slack.dev/changelog/2026/06/18/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2026/06/18/slack-cli.md",
+  "path": "002-changelog-2026-06-18-slack-cli.md",
+  "status": 200,
+  "n_bytes": 870,
+  "sha256": "7c03cfd02401fb9d5fc021a3d20a49b78d162ca902baf9883b2a8128d8a15efb",
+  "fetched_at": "2026-10-30T03:21:01Z"
+ },
+ "https://docs.slack.dev/changelog/2026/06/18/slackbot-mcp-client.md": {
+  "url": "https://docs.slack.dev/changelog/2026/06/18/slackbot-mcp-client.md",
+  "path": "001-changelog-2026-06-18-slackbot-mcp-client.md",
+  "status": 200,
+  "n_bytes": 1614,
+  "sha256": "6fdcef69dbd13467a962cb88f9777297bca362552313882f9c9e16b60acae69c",
+  "fetched_at": "2026-10-30T03:21:00Z"
+ },
+ "https://docs.slack.dev/changelog/2026/06/30/py-slack-sdk.md": {
+  "url": "https://docs.slack.dev/changelog/2026/06/30/py-slack-sdk.md",
+  "path": "027-changelog-2026-06-30-py-slack-sdk.md",
+  "status": 200,
+  "n_bytes": 1094,
+  "sha256": "0df3dbc62c3d685e193712a18dd74337f048d621ed1f60833ba530fe8a21ad94",
+  "fetched_at": "2026-10-30T03:21:26Z"
+ },
+ "https://docs.slack.dev/changelog/2026/07/13/notification-changes.md": {
+  "url": "https://docs.slack.dev/changelog/2026/07/13/notification-changes.md",
+  "path": "046-changelog-2026-07-13-notification-changes.md",
+  "status": 200,
+  "n_bytes": 843,
+  "sha256": "9c74bd27b78077f4c16335bdd24918bfa06bf97fcfd37f4442749b0861e80d75",
+  "fetched_at": "2026-10-30T03:21:45Z"
+ },
+ "https://docs.slack.dev/changelog/2026/07/14/node-slack-sdk-release.md": {
+  "url": "https://docs.slack.dev/changelog/2026/07/14/node-slack-sdk-release.md",
+  "path": "013-changelog-2026-07-14-node-slack-sdk-release.md",
+  "status": 200,
+  "n_bytes": 1918,
+  "sha256": "2021a4d8a25555d4bfe2017e0091aa94616ae1af7e8de8c747a3e878d3315719",
+  "fetched_at": "2026-10-30T03:21:12Z"
+ },
+ "https://docs.slack.dev/changelog/2026/07/15/bolt-js-release.md": {
+  "url": "https://docs.slack.dev/changelog/2026/07/15/bolt-js-release.md",
+  "path": "034-changelog-2026-07-15-bolt-js-release.md",
+  "status": 200,
+  "n_bytes": 1804,
+  "sha256": "2aef2e2d05c0342f10bf8fc79c93d49f6db96057d426e16ebeb2bf35e894035c",
+  "fetched_at": "2026-10-30T03:21:33Z"
+ },
+ "https://docs.slack.dev/changelog/2026/07/21/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2026/07/21/slack-cli.md",
+  "path": "003-changelog-2026-07-21-slack-cli.md",
+  "status": 200,
+  "n_bytes": 1289,
+  "sha256": "865dbbac9e44fd15e4ed7dd4edee6c096779d4c5109c756d300fb6a1652e0b2b",
+  "fetched_at": "2026-10-30T03:21:02Z"
+ },
+ "https://docs.slack.dev/changelog/2026/07/31/slack-skills-plugin.md": {
+  "url": "https://docs.slack.dev/changelog/2026/07/31/slack-skills-plugin.md",
+  "path": "038-changelog-2026-07-31-slack-skills-plugin.md",
+  "status": 200,
+  "n_bytes": 1775,
+  "sha256": "ff8e71d7906ae40b17236d5bdb283145a8a0bf25fb4fdb946ee83f7cc660714f",
+  "fetched_at": "2026-10-30T03:21:37Z"
+ },
+ "https://docs.slack.dev/changelog/2026/08/20/slack-code.md": {
+  "url": "https://docs.slack.dev/changelog/2026/08/20/slack-code.md",
+  "path": "010-changelog-2026-08-20-slack-code.md",
+  "status": 200,
+  "n_bytes": 2307,
+  "sha256": "639bc977a549fca9e29b6d0afaa961bb5da1c8075a92d86ad3048bc89dd2ac70",
+  "fetched_at": "2026-10-30T03:21:09Z"
+ },
+ "https://docs.slack.dev/changelog/2026/09/01/slack-marketplace-install-requirement.md": {
+  "url": "https://docs.slack.dev/changelog/2026/09/01/slack-marketplace-install-requirement.md",
+  "path": "014-changelog-2026-09-01-slack-marketplace-install-requirement.md",
+  "status": 200,
+  "n_bytes": 997,
+  "sha256": "f9041db558212b62112146e46b85c066b6f4f3de16f9ad042581e703b4a9f789",
+  "fetched_at": "2026-10-30T03:21:13Z"
+ },
+ "https://docs.slack.dev/changelog/2026/09/15/slack-cli.md": {
+  "url": "https://docs.slack.dev/changelog/2026/09/15/slack-cli.md",
+  "path": "049-changelog-2026-09-15-slack-cli.md",
+  "status": 200,
+  "n_bytes": 943,
+  "sha256": "4794e0368033e656aeb042912a540961ccb85cb31969784e9fed4e69dbe524d8",
+  "fetched_at": "2026-10-30T03:21:48Z"
+ },
+ "https://docs.slack.dev/llms-sitemap.md": {
+  "url": "https://docs.slack.dev/llms-sitemap.md",
+  "path": "000-llms-sitemap.md",
+  "status": 200,
+  "n_bytes": 285323,
+  "sha256": "42b51379333c3be404d5727bc8d9e3c35b671ab520ee5a2026ae6c7a9418064c",
+  "fetched_at": "2026-10-30T03:20:59Z"
+ }
+}
