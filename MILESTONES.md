@@ -542,6 +542,86 @@ condition A included. One `optional_fill` probe call per Llama provider ($0.0005
 `p2-diag-llama-types-*`): Novita and CoreWeave sent `count: "3"`, DeepInfra sent
 `count: 3` and also filled the optional `label`.
 
+## Phase 2 results — 2026-10-30
+
+Source: `results/analysis.json → phase2` (regenerated twice, identical hash
+`7adee74a`). Every arm is complete (`phase2.status` empty); the BH family is the locked
+301 tests (194 existing + 107 new; effective threshold p ≤ 0.0225, 165 survive). The
+`direct` arm did not run, so the family is 301 and not 303. The September and Phase-1
+blocks are unchanged against `e29c0bf` (`models`, `token_costs`, `n_records`, `phase1`,
+`bh_original_family` all byte-identical), and `phase2.bh_changes` is empty: no earlier
+test changes its BH verdict in the wider family. Phase-1 verdicts stay on their 194-test
+family, as pre-registered.
+
+**Verdicts (copied from `phase2.predictions`).**
+- P10 **holds.** C unlocks recovery in both Claude families on all 120 pairs: Sonnet
+  recovery 0.793, CI [0.714, 0.865], C − B_strict +0.733; Haiku 0.646, CI [0.552, 0.740],
+  C − B_strict +0.517. Both survive BH, both noise floors are 0.000.
+- P11 **fails, and the test is uninformative.** Llama 3.3 70B on the pinned route succeeds
+  on 5.0% of condition-A pairs and 2.5% of B_strict, so A − B_strict = 0.025 and recovery
+  is a ratio of noise: C recovery reads 2.333 (needs < 0.5) and `C:user:prose:apply` − C
+  reads +1.667 recovery units (needs ≥ 0.30) off a paired mean of +0.042, which does not
+  survive BH and sits near the family's 0.033 noise floor. The prediction is scored as
+  written, but nothing about Llama's diff-reading can be concluded from it. The cause is
+  the one disclosed in amendment 2: on `novita`@bf16 the model sends integers and booleans
+  as strings, so the strict executor rejects the call whatever the schema does —
+  OTHER_ERROR is 59.5% of its labelled records.
+- P12 **fails (Llama).** D' − D on the 24 newly-required pairs: Sonnet +0.708, CI
+  [0.542, 0.875]; Haiku +0.750, CI [0.583, 0.917]; Llama +0.125, CI [0.000, 0.250], below
+  the 0.30 floor. P5 extends to both Claude families and not to Llama, for the reason
+  above.
+- P13 **fails (both Claude families).** C+D − C is wholly below 0 for Sonnet (−0.146, CI
+  [−0.250, −0.062]) and for Haiku (−0.208, CI [−0.333, −0.104]); Llama is +0.000, CI
+  [−0.062, 0.062]. C+D − D is at or above 0 everywhere. **Reversal, stated plainly:** pin
+  A7 now fails in three of four families where it has been tested — luna in Phase 1 and
+  both Claude models here. Handing a model the v2 schema *in addition to* the diff makes it
+  worse than the diff alone; the diff is not simply extra information.
+- P14 **holds.** Flash: B_fill − B_strict on the 48 required + default_change pairs is
+  +0.771, CI [0.646, 0.875], survives BH, and is far above the 0.133 noise floor; on the
+  72 contrast pairs the CI is [−0.042, 0.000], inside the ±0.10 band. The manipulation
+  check passes: under A_fill the optional-fill rate is 1.000. The one-sentence instruction to
+  pass every parameter explicitly recovers most of the required/default drop without
+  touching the other three drift classes.
+- P15 **not tested.** No luna direct route lifted the decoding constraint in the probe
+  (comply 0/9 with `strict` unset, 2/9 with `strict: false`), so the `direct` arm did not
+  run under the pre-registered rule. luna's diff question is not testable on OpenRouter or
+  on the OpenAI direct API.
+- P16 **fails (descriptive, not in BH).** Over 5,208 replayed drift-step calls: pydantic v2
+  defaults 0.877 and FastAPI 0.877 against the lenient profile (needs ≥ 0.95); JSON Schema
+  with `additionalProperties: false` 1.000 against strict (passes). Every lenient-side
+  disagreement is the same case recorded in Task 4: an integer sent to a parameter that
+  became a string, which the mock's lenient profile coerces and pydantic v2 lax mode does
+  not. The strict profile is a faithful stand-in for a real validator; the lenient one is
+  more permissive than pydantic and FastAPI are.
+
+**Beyond the predictions.**
+- Information beats the diff in both Claude families: D' − C is +0.167, CI [0.062, 0.271]
+  (Sonnet) and +0.146, CI [0.042, 0.271] (Haiku). Together with P13 this says the useful
+  thing is a description of what changed, not the new schema.
+- Placement is a small lever for Claude, unlike Qwen in Phase 1. `C:user:prose:apply` − C
+  is +0.067 (Sonnet) and +0.083 (Haiku); in recovery units +0.072 and +0.104, well under
+  the 0.30 that P11 asks of Llama.
+- Silent failure is family-specific. Under B_strict, accepted-wrong is 0.158 of Sonnet's
+  episodes against 0.033 for Haiku and 0.050 for Llama; error-surfaced is 0.78–0.88
+  everywhere. Sonnet's higher success comes with more wrong calls that the executor accepts.
+- Claude thinks by default (amendment 2): mean reasoning tokens 53–66 per call for both
+  models, dropping to 15.4 for Haiku on the noise arm.
+- Llama's grid is reported but carries no drift conclusion: success 0.050 (A), 0.025
+  (B_strict), 0.083 (C), 0.075 (D), 0.208 (E). E above A is the string-typing artefact, not
+  a finding about retries.
+
+**Known limitations.** Claude's thinking blocks are not returned between turns, so each
+turn of a multi-step episode thinks afresh (amendment 2). One Llama core record was
+replaced by hand (Task 7 deviation, archived verbatim in
+`results/phase2/removed_records.jsonl`; the re-run gave the same outcome). The `direct` arm
+did not run, so P15 stands untested. The label audit was a blind Codex pass, not a hand
+pass (D3): 45/45 agreement, threshold 0.9, so `drift_labels.classify` is kept unchanged.
+
+**Spend.** Cumulative logged total $19.69 of the $50 hard stop; Phase 2 added about
+$7.93 (probe $0.095, run pilots $0.065, full runs $7.80: Sonnet $7.01, Haiku $0.39, Llama
+$0.17, Flash fill $0.23). Tasks 8-10 cost $0. The explorer (`docs/explorer/data.js`), figures,
+site and film still show the September analysis; they are rebuilt in Phase 4.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)
