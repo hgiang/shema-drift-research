@@ -622,6 +622,133 @@ $7.93 (probe $0.095, run pilots $0.065, full runs $7.80: Sonnet $7.01, Haiku $0.
 $0.17, Flash fill $0.23). Tasks 8-10 cost $0. The explorer (`docs/explorer/data.js`), figures,
 site and film still show the September analysis; they are rebuilt in Phase 4.
 
+## Phase 3 run log
+
+- 2026-10-30 Decisions (`phase3/PLAN.md` Task 0; user answered all three as recommended).
+  **D1 scope:** the changelog corpus ($0) plus the large-catalog arm (≈ $2); longer multi-turn moves to
+  its own plan. **D2 sources:** Stripe, GitHub, Slack and `modelcontextprotocol/servers`, window
+  2023-01-01 to 2026-09-30, cap 60 qualifying units per source. **D3 second pass:** the whole corpus is
+  re-coded blind by Codex, as in Phase 2; the user reads only the disagreements.
+  Pre-flight before the lock (entry points checked for reachability and `robots.txt` only; **no entry
+  content was stored**): `docs.stripe.com` allows `/changelog` and serves a markdown index
+  (`changelog.md`, 1,022 entry rows, 2011–2026, each row linking a per-entry `.md`);
+  `api.slack.com/changelog` redirects to `docs.slack.dev/changelog`, whose `robots.txt` is `Allow: /`
+  and whose `llms-sitemap.md` lists 249 per-entry `.md` pages; `github.blog/robots.txt` is
+  `Disallow:` (empty) and `github.blog/changelog/` is 200, with `docs.github.com/en/rest/
+  about-the-rest-api/breaking-changes` as GitHub's own schema-change page;
+  `api.github.com/repos/modelcontextprotocol/servers` is 200. Spend unchanged at $19.69.
+
+## Phase 3 pre-registration — LOCKED 2026-10-30
+
+Written before any page is fetched and before any Phase-3 model call. Execution plan: `phase3/PLAN.md`.
+Phase-1 and Phase-2 rules (recovery, "unlocks", noise floors, BH) carry over unless restated here. The
+SchemaDrift-120 testbed (sha256 `e8bbd71c…`) is not touched; the catalog arm gets its own testbed file
+and its own hash, recorded in the run log when it is built.
+
+### Arm 1 — changelog corpus (observational, $0, no model call)
+
+**Sources and entry points (D2).** Four, each with one entry point fixed here:
+1. **Stripe** — `https://docs.stripe.com/changelog.md`, following each row's per-entry `.md`.
+2. **GitHub** — `https://docs.github.com/en/rest/about-the-rest-api/breaking-changes`, plus
+   `https://github.blog/changelog/` entries whose own labels mark them as API changes.
+3. **Slack** — the changelog pages listed in `https://docs.slack.dev/llms-sitemap.md`.
+4. **MCP** — commits in `modelcontextprotocol/servers` that change a tool's input schema, read through
+   the GitHub API.
+
+**Window.** The entry's own publication or commit date is in [2023-01-01, 2026-09-30] inclusive. Dates
+outside the window are excluded even when the entry is otherwise in scope.
+
+**Unit of analysis.** One parameter-level change to one existing endpoint or tool. An entry that changes
+two parameters yields two units; an entry that changes one parameter in two ways yields one unit (see
+`compound`). Units are identified by (source, entry id, endpoint/tool, parameter).
+
+**Inclusion.** A unit qualifies when a **request** parameter of an **existing** endpoint or tool changes
+its name, type, allowed values, requiredness, or default. **Excluded:** response-only changes; brand-new
+endpoints, tools or parameters that add no constraint to an existing call; pure documentation wording;
+deprecation notices that take effect outside the window; changes to authentication, rate limits,
+pagination envelopes or transport.
+
+**Sampling (this is a prevalence estimate, so the draw is random, not the newest first).** For each
+source, enumerate every entry in the window, then draw entries without replacement in an order fixed by
+`RNG_P3`, coding every qualifying unit in each drawn entry, until that source reaches **60 qualifying
+units** or its entries run out. The enumeration list, the draw order and the stopping point are written
+into `results/phase3/corpus.jsonl` so the sample can be reconstructed. Target 120–200 units in total.
+
+**Labels (mutually exclusive, decided by the rule written in `phase3/code_changes.py` before collection):**
+`rename`, `enum_tighten`, `required` (a parameter that was optional becomes required), `type_change`,
+`default_change`, `compound` (two or more of the five on the same parameter in one release), `other`
+(qualifies under the inclusion rule but is none of the above).
+
+**`agent_visible` (decided without looking at the label).** True when the parameter is required before or
+after the change, **or** appears in at least one example request for that endpoint or tool in the
+source's own documentation. False otherwise. Unknown when the source publishes no example and no
+requiredness; unknowns are reported separately and are not counted as either.
+
+**Reliability (D3).** The whole corpus is re-coded blind by Codex from a reading copy that carries the
+evidence span and no labels, `agent_visible` or rule clause, the way the Phase-2 audit copy was built.
+Raw agreement and Cohen's kappa are reported for `label` and for `agent_visible`. **Threshold: raw
+agreement ≥ 0.90 on `label`.** Below it, the coding rule is fixed and **both** passes are re-run before
+any prevalence number is quoted, and the fix is described in the results section.
+
+**Predictions.** Each is scored on the pooled corpus with a 95% bootstrap CI on the share (`RNG_P3`,
+`N_BOOT = 10_000`): **holds** when the CI lies wholly on the predicted side of the threshold, **fails**
+when it lies wholly on the other side, **undecided** (`None`) when it straddles. Shares are also reported
+per source, and the pooled figure is labelled source-weighted.
+- **P17 (coverage).** The five SchemaDrift classes plus `compound` cover ≥ 0.70 of qualifying units;
+  equivalently `other` ≤ 0.30.
+- **P18 (the costly classes).** `required` + `default_change` ≥ 0.20 of qualifying units.
+- **P19 (reach).** `agent_visible` is true for ≥ 0.50 of qualifying units with a decided value.
+- **P20 (compound).** `compound` ≥ 0.10 of qualifying units. This is the number that decides whether the
+  compound-drift plan (Phase-2 decision D2) is worth running.
+
+**BH.** The corpus is descriptive: prevalence shares are not paired tests and join no family.
+
+### Arm 2 — large tool catalog (experimental)
+
+**Testbed.** A new file `phase3/catalog_frozen.json` with its own sha256: the six SchemaDrift tools
+**byte-identical** to `testbed_frozen.json`, plus distractor tools from the existing domain generators
+until the catalog holds **100** declarations. Distractor names and parameter names never collide with a
+frozen tool's. The drifted tool's position in the catalog is drawn once from `RNG_P3` and fixed in the
+file. A `catalog_small` view holds the six frozen tools only, so catalog size is a within-testbed
+manipulation.
+
+**Pairs.** 40 of the 120 primary pairs, **8 per drift class**, drawn with `RNG_P3` and fixed in the
+testbed file.
+
+**Grid.** Families Gemini Flash (thinking `MINIMAL`) and Claude Haiku 5.5 (`anthropic` on OpenRouter,
+provider default thinking, per Phase 2 amendment 2). Conditions A, B_strict, C, at catalog sizes 6 and
+100: 40 × 3 × 2 = 240 episodes per family, 480 in total. Temperature 0; `max_tokens` 700 (OpenRouter),
+1024 (Gemini); one pinned provider, `allow_fallbacks: false`. Records carry the catalog sha256, the
+catalog size and the drifted tool's index.
+
+**Prediction.**
+- **P21 (catalog size does not break diff-following).** In each family, the paired difference
+  C(100 tools) − C(6 tools) on the same 40 pairs has a 95% CI inside [−0.10, +0.10]. It fails in a family
+  when the CI leaves the band. A(100) − A(6) and B_strict(100) − B_strict(6) are reported as the
+  manipulation check: if A alone drops, the catalog hurts tool use in general and P21 says nothing about
+  the diff.
+
+**Noise floor.** The catalog arm runs no noise arm; each family keeps the floor it already has (Flash
+0.133 from September, Haiku 0.000 from Phase 2). A difference below the floor is "within noise".
+
+**BH.** One family, as always: **301 + 6 = 307**. The six new tests are, per family, the paired
+`100 − 6` difference at A, at B_strict and at C, with labels prefixed `p3:`. Phase-1 verdicts stay on
+their 194-test family and Phase-2 verdicts on their 301-test family; `phase3.bh_changes` lists any
+earlier test whose BH verdict moves in the 307 family.
+
+### Rules for both arms
+
+- Analysis RNG `RNG_P3 = default_rng(20261030)`; `N_BOOT = 10_000`, `N_PERM = 20_000`. The September
+  `RNG`, Phase-1 `RNG_P1` and Phase-2 `RNG_P2` draws are untouched, and `analysis.json`'s existing blocks
+  must stay byte-identical against `a8971be`.
+- Fetched pages are untrusted data: archived verbatim under `results/phase3/sources/<source>/` with a
+  per-source manifest (URL, fetch time, HTTP status, sha256), never executed, never imported.
+- Collection is read-only HTTP GET on public documentation, ≥ 1 s between requests, an identifying
+  User-Agent, `robots.txt` respected, no credentials. No drifted call ever reaches a real third-party
+  API; the executor stays the local mock.
+- `HARD_STOP_USD = 50.00`; the Phase-3 projection is ≤ $3 and the pilot re-projects before the full run.
+- Any reversal is reported plainly, as in Phases 1 and 2.
+
 ## CP1 · Lit review + pre-emption — DONE 2026-09-08, awaiting approval
 - [x] Angle agents (4) + recency sweep -> lit_review/lit_review.csv (55 ids, all verified
       against export.arxiv.org on 2026-09-08)
